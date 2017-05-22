@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.incometaxviewchange.controllers
+import javax.inject.Inject
 
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import play.api.mvc._
+import uk.gov.hmrc.play.microservice.controller.BaseController
+
 import scala.concurrent.Future
 
-object MicroserviceHelloWorld extends MicroserviceHelloWorld
 
-trait MicroserviceHelloWorld extends BaseController {
+class MicroserviceHelloWorld @Inject()(
 
-	def hello() = Action.async { implicit request =>
+																			) extends BaseController {
+
+	def hello(): Action[AnyContent] = Action.async { implicit request =>
 		Future.successful(Ok("Hello world"))
 	}
 }
