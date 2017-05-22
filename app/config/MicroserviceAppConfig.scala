@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-import javax.inject.Inject
+package config
 
-import play.api.mvc._
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import javax.inject.Singleton
+import com.google.inject.Inject
+import play.api.Configuration
+import uk.gov.hmrc.play.config.ServicesConfig
 
-import scala.concurrent.Future
+trait AppConfig {
 
+}
 
-class MicroserviceHelloWorld @Inject()(
+@Singleton
+class MicroserviceAppConfig @Inject()(val configuration: Configuration) extends AppConfig with ServicesConfig{
 
-																			) extends BaseController {
+  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-	def hello(): Action[AnyContent] = Action.async { implicit request =>
-		Future.successful(Ok("Hello world"))
-	}
 }
