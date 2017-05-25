@@ -15,6 +15,8 @@
  */
 
 package controllers
+
+import auth.MockAuthorisedFunctions
 import config.MockAppConfig
 import play.api.http.Status
 import play.api.test.FakeRequest
@@ -23,14 +25,25 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class MicroserviceHelloWorldControllerSpec extends UnitSpec with WithFakeApplication {
 
-  object TestController extends MicroserviceHelloWorld()(MockAppConfig)
+  object TestController extends MicroserviceHelloWorld()(MockAppConfig, MockAuthorisedFunctions)
 
-  val fakeRequest = FakeRequest("GET", "/")
+  val fakeRequest = FakeRequest()
+  val authorisedFakeRequest = FakeRequest().withHeaders(("Authorization","Some Bearer Token"))
 
-  "GET /" should {
-    "return 200" in {
-      val result = TestController.hello()(fakeRequest)
-      status(result) shouldBe Status.OK
+  "The MicroserviceHelloWorld.hello action" when {
+
+    "called with an Unauthenticated user" should {
+      "return Unauthorised (401)" in {
+        val result = TestController.hello()(fakeRequest)
+        status(result) shouldBe Status.UNAUTHORIZED
+      }
+    }
+
+    "called with an authenticated user" should {
+      "return OK (200)" in {
+        val result = TestController.hello()(authorisedFakeRequest)
+        status(result) shouldBe Status.OK
+      }
     }
   }
 

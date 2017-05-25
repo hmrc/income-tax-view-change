@@ -17,19 +17,26 @@
 package controllers
 
 import javax.inject.Singleton
+import javax.inject.Inject
 
-import com.google.inject.Inject
 import config.AppConfig
 import play.api.mvc._
+import uk.gov.hmrc.auth.core.AuthorisedFunctions
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class MicroserviceHelloWorld @Inject()(implicit val appConfig: AppConfig
+class MicroserviceHelloWorld @Inject()(implicit val appConfig: AppConfig,
+																			 val authorisedFunctions: AuthorisedFunctions
 																			) extends BaseController {
 
 	def hello(): Action[AnyContent] = Action.async { implicit request =>
-		Future.successful(Ok("Hello world"))
+		authorisedFunctions.authorised() {
+			Future.successful(Ok("Hello world"))
+		} recoverWith {
+			case _ => Future.successful(Unauthorized)
+		}
 	}
 }
