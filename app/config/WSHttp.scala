@@ -20,10 +20,11 @@ import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.config.{AppName, RunMode}
-import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
+import uk.gov.hmrc.play.http.ws._
 
 @Singleton
 class WSHttp @Inject()(override val auditConnector: MicroserviceAuditConnector)
-  extends WSGet with WSPut with WSPost with WSDelete with AppName with RunMode with HttpAuditing {
+  extends WSGet with WSPut with WSPost with WSDelete with WSPatch with AppName with RunMode with HttpAuditing {
   override val hooks = Seq(AuditingHook)
 }
+object WSHttp extends WSHttp(MicroserviceAuditConnector)

@@ -30,6 +30,7 @@ object MicroServiceBuild extends Build with MicroService {
     ws,
     "uk.gov.hmrc" %% "microservice-bootstrap" % "5.15.0",
     "uk.gov.hmrc" %% "play-authorisation" % "4.3.0",
+    "uk.gov.hmrc" %% "play-auth" % "1.0.0",
     "uk.gov.hmrc" %% "play-health" % "2.1.0",
     "uk.gov.hmrc" %% "play-url-binders" % "2.1.0",
     "uk.gov.hmrc" %% "play-config" % "4.3.0",
@@ -42,7 +43,8 @@ object MicroServiceBuild extends Build with MicroService {
     "org.scalatest" %% "scalatest" % "3.0.0" % scope,
     "org.scalatestplus" %% "play" % "1.2.0" % scope,
     "org.pegdown" % "pegdown" % "1.6.0" % scope,
-    "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
+    "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+    "org.mockito" % "mockito-core" % "2.7.6" % scope
   )
 
 }
