@@ -14,34 +14,38 @@
  * limitations under the License.
  */
 
-package controllers
+package auth
 
-import auth.MockAuthentication
-import config.MockAppConfig
+import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status
-import play.api.test.FakeRequest
+import play.api.mvc.Results.Ok
+import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.logging.Authorization
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
-class MicroserviceHelloWorldControllerSpec extends UnitSpec with WithFakeApplication {
 
-  object TestController extends MicroserviceHelloWorld()(MockAppConfig, MockAuthentication)
+class AuthenticationSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  val fakeRequest = FakeRequest()
-  val authorisedFakeRequest = FakeRequest().withHeaders("Authorization" -> "Some Bearer Token")
+  object TestAuthentication extends Authentication(MockAuthorisedFunctions)
+
+  implicit val hc = HeaderCarrier()
+  implicit val authorisedHc = HeaderCarrier(authorization = Some(Authorization("Some Bearer Token")))
 
   "The MicroserviceHelloWorld.hello action" when {
 
     "called with an Unauthenticated user" should {
       "return Unauthorised (401)" in {
-        val result = TestController.hello()(fakeRequest)
+        val result = TestAuthentication.authenticated(Future.successful(Ok))(hc, implicitly[ExecutionContext])
         status(result) shouldBe Status.UNAUTHORIZED
       }
     }
 
     "called with an authenticated user" should {
       "return OK (200)" in {
-        val result = TestController.hello()(authorisedFakeRequest)
+        val result = TestAuthentication.authenticated(Future.successful(Ok))(authorisedHc, implicitly[ExecutionContext])
         status(result) shouldBe Status.OK
       }
     }

@@ -16,27 +16,24 @@
 
 package controllers
 
-import javax.inject.Singleton
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+import auth.Authentication
 import config.AppConfig
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AuthorisedFunctions
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @Singleton
 class MicroserviceHelloWorld @Inject()(implicit val appConfig: AppConfig,
-																			 val authorisedFunctions: AuthorisedFunctions
+																			 val authentication: Authentication
 																			) extends BaseController {
 
 	def hello(): Action[AnyContent] = Action.async { implicit request =>
-		authorisedFunctions.authorised() {
+		authentication.authenticated {
 			Future.successful(Ok("Hello world"))
-		} recoverWith {
-			case _ => Future.successful(Unauthorized)
 		}
 	}
 }
