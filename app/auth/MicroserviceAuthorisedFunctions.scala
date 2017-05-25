@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package config
+package auth
 
-import com.google.inject.AbstractModule
+import javax.inject.{Inject, Singleton}
 
-class DIModule extends AbstractModule{
-  def configure(): Unit = {
-    bind(classOf[AppConfig]) to classOf[MicroserviceAppConfig]
-  }
-}
+import config.MicroserviceAuthConnector
+import uk.gov.hmrc.auth.core.AuthorisedFunctions
 
+@Singleton
+class MicroserviceAuthorisedFunctions @Inject()(val authConnector: MicroserviceAuthConnector) extends AuthorisedFunctions
