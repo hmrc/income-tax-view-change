@@ -34,7 +34,7 @@ class Authentication @Inject()(val authorisedFunctions: AuthorisedFunctions) {
       action
     } recoverWith {
       case _ =>
-        Logger.debug("[Authentication][authenticated] Unauthorised Request to Backed. Propagating Unauthorised Response")
+        Logger.debug("[Authentication][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response")
         Future.successful(Unauthorized)
     }
 
