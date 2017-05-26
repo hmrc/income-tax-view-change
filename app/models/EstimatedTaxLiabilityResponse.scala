@@ -20,9 +20,9 @@ import play.api.libs.json.Json
 
 sealed trait EstimatedTaxLiabilityResponse
 
-case class EstimatedTaxLiability(yearToDate: BigDecimal,
-                                 c2NIC: BigDecimal,
-                                 c4NIC: BigDecimal,
+case class EstimatedTaxLiability(total: BigDecimal,
+                                 nic2: BigDecimal,
+                                 nic4: BigDecimal,
                                  incomeTax: BigDecimal) extends EstimatedTaxLiabilityResponse
 
 case class EstimatedTaxLiabilityError(status: Int, message: String) extends EstimatedTaxLiabilityResponse

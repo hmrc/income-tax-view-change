@@ -37,24 +37,24 @@ class EstimatedTaxLiabilityResponseModelSpec extends UnitSpec with Matchers{
     }
 
     "have the correct C2 NIC value assigned in the model" in {
-      model.c2NIC shouldBe 0
+      model.nic2 shouldBe 0
     }
 
     "have the correct C4 NIC value assigned in the model" in {
-      model.c4NIC shouldBe 2
+      model.nic4 shouldBe 2
     }
 
     "have the correct Year to Date value assigned in the model" in {
-      model.yearToDate shouldBe 10
+      model.total shouldBe 10
     }
 
     "be translated to Json correctly" in {
       Json.toJson(model) should be
         s"""
           |{
-          |  "yearToDate":"$total",
-          |  "c2NIC" : "$nic2",
-          |  "c4NIC" : "$nic4",
+          |  "total":"$total",
+          |  "nic2" : "$nic2",
+          |  "nic4" : "$nic4",
           |  "incomeTax" : "$incomeTax"
           |}
           |""".stripMargin.trim
