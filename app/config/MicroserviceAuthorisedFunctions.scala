@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
-package auth
+package config
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.Logger
-import play.api.mvc.Result
-import play.api.mvc.Results.Unauthorized
 import uk.gov.hmrc.auth.core.AuthorisedFunctions
-import uk.gov.hmrc.play.http.HeaderCarrier
-
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class Authentication @Inject()(val authorisedFunctions: AuthorisedFunctions) {
-
-  def authenticated(action: => Future[Result])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Result] =
-    authorisedFunctions.authorised() {
-      action
-    } recoverWith {
-      case _ =>
-        Logger.debug("[Authentication][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response")
-        Future.successful(Unauthorized)
-    }
-
-}
+class MicroserviceAuthorisedFunctions @Inject()(val authConnector: MicroserviceAuthConnector) extends AuthorisedFunctions

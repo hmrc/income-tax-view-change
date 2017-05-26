@@ -23,12 +23,18 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-object MockAuthorisedFunctions extends AuthorisedFunctions with MockitoSugar {
-
+trait MockAuthorisedFunctions extends AuthorisedFunctions with MockitoSugar {
   override val authConnector = mock[MicroserviceAuthConnector]
+}
 
+object MockAuthorisedUser extends MockAuthorisedFunctions {
   override def authorised(): AuthorisedFunction = new AuthorisedFunction(EmptyPredicate) {
-    override def apply[A](body: => Future[A])(implicit hc: HeaderCarrier): Future[A] =
-      hc.authorization.fold[Future[A]](Future.failed(new MissingBearerToken))(_ => body)
+    override def apply[A](body: => Future[A])(implicit hc: HeaderCarrier): Future[A] = body
+  }
+}
+
+object MockUnauthorisedUser extends MockAuthorisedFunctions {
+  override def authorised(): AuthorisedFunction = new AuthorisedFunction(EmptyPredicate) {
+    override def apply[A](body: => Future[A])(implicit hc: HeaderCarrier): Future[A] = Future.failed(new MissingBearerToken)
   }
 }

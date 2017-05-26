@@ -14,39 +14,44 @@
  * limitations under the License.
  */
 
-package auth
+package controllers.predicates
 
+import auth.{MockAuthorisedUser, MockUnauthorisedUser}
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status
+import play.api.mvc.Result
 import play.api.mvc.Results.Ok
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.http.logging.Authorization
+import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 
-class AuthenticationSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
+class AuthenticationPredicateSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  object TestAuthentication extends Authentication(MockAuthorisedFunctions)
 
-  implicit val hc = HeaderCarrier()
-  implicit val authorisedHc = HeaderCarrier(authorization = Some(Authorization("Some Bearer Token")))
+  "The AuthenticationPredicate.authenticated method" when {
 
-  "The Authentication.authenticated method" when {
+    def result(authenticationPredicate: AuthenticationPredicate): Future[Result] = authenticationPredicate.async {
+      implicit request =>
+        Future.successful(Ok)
+    }.apply(FakeRequest())
 
     "called with an Unauthenticated user (No Bearer Token in Header)" should {
+
+      object TestAuthenticationPredicate extends AuthenticationPredicate(MockUnauthorisedUser)
+
       "return Unauthorised (401)" in {
-        val result = TestAuthentication.authenticated(Future.successful(Ok))(hc, implicitly[ExecutionContext])
-        status(result) shouldBe Status.UNAUTHORIZED
+        status(result(TestAuthenticationPredicate)) shouldBe Status.UNAUTHORIZED
       }
     }
 
     "called with an authenticated user (Some Bearer Token in Header)" should {
+
+      object TestAuthenticationPredicate extends AuthenticationPredicate(MockAuthorisedUser)
+
       "return OK (200)" in {
-        val result = TestAuthentication.authenticated(Future.successful(Ok))(authorisedHc, implicitly[ExecutionContext])
-        status(result) shouldBe Status.OK
+        status(result(TestAuthenticationPredicate)) shouldBe Status.OK
       }
     }
   }

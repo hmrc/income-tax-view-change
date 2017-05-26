@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.predicates
 
 import javax.inject.{Inject, Singleton}
 
-import config.AppConfig
-import controllers.predicates.AuthenticationPredicate
-import play.api.mvc._
+import play.api.Logger
+import play.api.mvc.{Action, AnyContent, Request, Result}
+import uk.gov.hmrc.auth.core.AuthorisedFunctions
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class MicroserviceHelloWorld @Inject()(implicit val appConfig: AppConfig,
-                                       val authentication: AuthenticationPredicate
-                                      ) extends BaseController {
+class AuthenticationPredicate @Inject()(val authorisedFunctions: AuthorisedFunctions) extends BaseController {
 
-  def hello(): Action[AnyContent] = authentication.async { implicit request =>
-		Future.successful(Ok("Hello world"))
-  }
+  def async(action: Request[AnyContent] => Future[Result]): Action[AnyContent] =
+    Action.async { implicit request =>
+      authorisedFunctions.authorised() {
+        action(request)
+      } recoverWith {
+        case _ =>
+          Logger.debug("[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response")
+          Future.successful(Unauthorized)
+      }
+    }
 }
