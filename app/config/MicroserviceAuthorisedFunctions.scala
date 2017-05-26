@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package auth
+package config
 
 import javax.inject.{Inject, Singleton}
 
-import config.MicroserviceAuthConnector
 import uk.gov.hmrc.auth.core.AuthorisedFunctions
 
 @Singleton

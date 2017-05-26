@@ -17,19 +17,24 @@
 package auth
 
 import config.MicroserviceAuthConnector
+import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, EmptyPredicate, MissingBearerToken}
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-trait MockAuthorisedFunctions extends AuthorisedFunctions {
+trait MockAuthorisedFunctions extends AuthorisedFunctions with MockitoSugar {
+  override val authConnector = mock[MicroserviceAuthConnector]
+}
 
-  override val authConnector = MicroserviceAuthConnector
-
+object MockAuthorisedUser extends MockAuthorisedFunctions {
   override def authorised(): AuthorisedFunction = new AuthorisedFunction(EmptyPredicate) {
-    override def apply[A](body: => Future[A])(implicit hc: HeaderCarrier): Future[A] =
-      hc.authorization.fold[Future[A]](Future.failed(new MissingBearerToken))(_ => body)
+    override def apply[A](body: => Future[A])(implicit hc: HeaderCarrier): Future[A] = body
   }
 }
 
-object MockAuthorisedFunctions extends MockAuthorisedFunctions
+object MockUnauthorisedUser extends MockAuthorisedFunctions {
+  override def authorised(): AuthorisedFunction = new AuthorisedFunction(EmptyPredicate) {
+    override def apply[A](body: => Future[A])(implicit hc: HeaderCarrier): Future[A] = Future.failed(new MissingBearerToken)
+  }
+}
