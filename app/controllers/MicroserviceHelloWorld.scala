@@ -28,12 +28,12 @@ import scala.concurrent.Future
 
 @Singleton
 class MicroserviceHelloWorld @Inject()(implicit val appConfig: AppConfig,
-																			 val authentication: Authentication
-																			) extends BaseController {
+                                       val authentication: Authentication
+                                      ) extends BaseController {
 
-	def hello(): Action[AnyContent] = Action.async { implicit request =>
-		authentication.authenticated {
-			Future.successful(Ok("Hello world"))
-		}
-	}
+  def hello(): Action[AnyContent] = Action.async { implicit request =>
+    authentication.authenticated {
+      Future.successful(Ok("Hello world"))
+    }
+  }
 }

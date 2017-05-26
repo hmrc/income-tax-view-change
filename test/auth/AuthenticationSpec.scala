@@ -34,16 +34,16 @@ class AuthenticationSpec extends UnitSpec with MockitoSugar with WithFakeApplica
   implicit val hc = HeaderCarrier()
   implicit val authorisedHc = HeaderCarrier(authorization = Some(Authorization("Some Bearer Token")))
 
-  "The MicroserviceHelloWorld.hello action" when {
+  "The Authentication.authenticated method" when {
 
-    "called with an Unauthenticated user" should {
+    "called with an Unauthenticated user (No Bearer Token in Header)" should {
       "return Unauthorised (401)" in {
         val result = TestAuthentication.authenticated(Future.successful(Ok))(hc, implicitly[ExecutionContext])
         status(result) shouldBe Status.UNAUTHORIZED
       }
     }
 
-    "called with an authenticated user" should {
+    "called with an authenticated user (Some Bearer Token in Header)" should {
       "return OK (200)" in {
         val result = TestAuthentication.authenticated(Future.successful(Ok))(authorisedHc, implicitly[ExecutionContext])
         status(result) shouldBe Status.OK
