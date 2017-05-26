@@ -24,26 +24,26 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 
-class MicroserviceHelloWorldControllerSpec extends UnitSpec with WithFakeApplication {
+class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplication {
 
-  "The MicroserviceHelloWorld.hello action" when {
+  "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
 
     "called with an Unauthenticated user" should {
 
-      object TestController extends MicroserviceHelloWorld()(MockAppConfig, new AuthenticationPredicate(MockUnauthorisedUser))
+      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(MockAppConfig, new AuthenticationPredicate(MockUnauthorisedUser))
 
       "return Unauthorised (401)" in {
-        val result = TestController.hello()(FakeRequest())
+        val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(FakeRequest())
         status(result) shouldBe Status.UNAUTHORIZED
       }
     }
 
-    "called with an authenticated user" should {
+    "called with an Authenticated user" should {
 
-      object TestController extends MicroserviceHelloWorld()(MockAppConfig, new AuthenticationPredicate(MockAuthorisedUser))
+      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(MockAppConfig, new AuthenticationPredicate(MockAuthorisedUser))
 
       "return OK (200)" in {
-        val result = TestController.hello()(FakeRequest())
+        val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(FakeRequest())
         status(result) shouldBe Status.OK
       }
     }

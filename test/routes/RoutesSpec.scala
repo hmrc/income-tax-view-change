@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package controllers
+package routes
 
-import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-import config.AppConfig
-import controllers.predicates.AuthenticationPredicate
-import play.api.mvc._
-import uk.gov.hmrc.play.microservice.controller.BaseController
+class RoutesSpec extends UnitSpec with WithFakeApplication {
 
-import scala.concurrent.Future
+  val contextRoute: String = "/income-tax-view-change"
 
-@Singleton
-class MicroserviceHelloWorld @Inject()(implicit val appConfig: AppConfig,
-                                       val authentication: AuthenticationPredicate
-                                      ) extends BaseController {
-
-  def hello(): Action[AnyContent] = authentication.async { implicit request =>
-		Future.successful(Ok("Hello world"))
+  // Estimated Tax Liability routes
+  "The URL for the EstimatedTaxLiabilityController.getEstimateTaxLiability action" should {
+    s"be equal to $contextRoute/estimated-tax-liability" in {
+      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability().url shouldBe s"$contextRoute/estimated-tax-liability"
+    }
   }
 }
