@@ -18,7 +18,7 @@ package connectors
 
 import javax.inject.{Inject, Singleton}
 
-import models.{FinancialDataError, FinancialDataResponse, FinancialDataSuccess}
+import models.{FinancialDataError, FinancialDataResult, FinancialDataSuccess}
 import play.api.Logger
 import play.api.http.Status._
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -33,7 +33,7 @@ class FinancialDataConnector @Inject()(val http: HttpGet) extends ServicesConfig
   lazy val desBaseUrl: String = baseUrl("des")
   val getFinancialDataUrl: String => String = mtditid => s"$desBaseUrl/calculation-store/financial-data/MTDBSA/$mtditid"
 
-  def getFinancialData(mtditid: String)(implicit headerCarrier: HeaderCarrier): Future[FinancialDataResponse] = {
+  def getFinancialData(mtditid: String)(implicit headerCarrier: HeaderCarrier): Future[FinancialDataResult] = {
 
     val url = getFinancialDataUrl(mtditid)
     Logger.debug(s"[FinancialDataConnector][getFinancialData] - GET $url")
