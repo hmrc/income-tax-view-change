@@ -1,0 +1,33 @@
+/*
+ * Copyright 2017 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package helpers.servicemocks
+
+import helpers.{IntegrationTestConstants, WiremockHelper}
+import play.api.http.Status
+
+object FinancialDataStub {
+
+  val url: String => String = mtditid => s"/calculation-store/financial-data/MTDBSA/$mtditid"
+
+  def stubGetFinancialData(mtditid: String, incomeTax: BigDecimal, nic2: BigDecimal, nic4: BigDecimal): Unit = {
+    val financialDataResponse = IntegrationTestConstants.GetFinancialDataResponse.successResponse(incomeTax, nic2, nic4).toString()
+    WiremockHelper.stubGet(url(mtditid), Status.OK, financialDataResponse)
+  }
+
+  def verifyGetFinancialData(mtditid: String): Unit =
+    WiremockHelper.verifyGet(url(mtditid))
+}

@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package routes
+package helpers.servicemocks
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import helpers.WiremockHelper
+import play.api.http.Status
 
-class RoutesSpec extends UnitSpec with WithFakeApplication {
+object AuthStub {
 
-  val contextRoute: String = "/income-tax-view-change"
+  val postAuthoriseUrl = "/auth/authorise"
 
-  // Estimated Tax Liability routes
-  "The URL for the EstimatedTaxLiabilityController.getEstimateTaxLiability action" should {
-    s"be equal to $contextRoute/estimated-tax-liability" in {
-      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability("1234").url shouldBe s"$contextRoute/estimated-tax-liability/1234"
-    }
+  def stubAuthorised(): Unit = {
+    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
+  }
+
+  def stubUnatuhorised(): Unit = {
+    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
   }
 }

@@ -20,17 +20,31 @@ import javax.inject.{Inject, Singleton}
 
 import config.AppConfig
 import controllers.predicates.AuthenticationPredicate
+import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError}
+import play.api.Logger
+import play.api.libs.json.Json
 import play.api.mvc._
+import services.EstimatedTaxLiabilityService
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class EstimatedTaxLiabilityController @Inject()(implicit val appConfig: AppConfig,
-                                                val authentication: AuthenticationPredicate
+                                                val authentication: AuthenticationPredicate,
+                                                val estimatedTaxLiabilityService: EstimatedTaxLiabilityService
                                       ) extends BaseController {
 
-  val getEstimatedTaxLiability: Action[AnyContent] = authentication.async { implicit request =>
-		Future.successful(Ok("Hello world"))
+  def getEstimatedTaxLiability(mtditid: String): Action[AnyContent] = authentication.async { implicit request =>
+    Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Requesting Estimate from EstimatedTaxLiabilityService for mtditid: $mtditid")
+    estimatedTaxLiabilityService.getEstimatedTaxLiability(mtditid).flatMap {
+      case success: EstimatedTaxLiability =>
+        Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Successful Response: $success")
+        Future.successful(Ok(Json.toJson(success)))
+      case error: EstimatedTaxLiabilityError =>
+        Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Error Response: $error")
+        Future.successful(Status(error.status)(Json.toJson(error)))
+    }
   }
 }

@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package routes
+package models
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.libs.json.JsValue
 
-class RoutesSpec extends UnitSpec with WithFakeApplication {
-
-  val contextRoute: String = "/income-tax-view-change"
-
-  // Estimated Tax Liability routes
-  "The URL for the EstimatedTaxLiabilityController.getEstimateTaxLiability action" should {
-    s"be equal to $contextRoute/estimated-tax-liability" in {
-      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability("1234").url shouldBe s"$contextRoute/estimated-tax-liability/1234"
-    }
-  }
-}
+sealed trait FinancialDataResponseModel
+case class FinancialData(financialData: JsValue) extends FinancialDataResponseModel
+case class FinancialDataError(status: Int, message: String) extends FinancialDataResponseModel
