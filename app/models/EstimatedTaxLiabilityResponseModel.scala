@@ -18,14 +18,14 @@ package models
 
 import play.api.libs.json.Json
 
-sealed trait EstimatedTaxLiabilityResponse
+sealed trait EstimatedTaxLiabilityResponseModel
 
 case class EstimatedTaxLiability(total: BigDecimal,
                                  nic2: BigDecimal,
                                  nic4: BigDecimal,
-                                 incomeTax: BigDecimal) extends EstimatedTaxLiabilityResponse
+                                 incomeTax: BigDecimal) extends EstimatedTaxLiabilityResponseModel
 
-case class EstimatedTaxLiabilityError(status: Int, message: String) extends EstimatedTaxLiabilityResponse
+case class EstimatedTaxLiabilityError(status: Int, message: String) extends EstimatedTaxLiabilityResponseModel
 
 
 object EstimatedTaxLiability {

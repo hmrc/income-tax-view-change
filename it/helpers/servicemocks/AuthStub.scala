@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package controllers
+package helpers.servicemocks
 
-import javax.inject.{Inject, Singleton}
+import helpers.WiremockHelper
+import play.api.http.Status
 
-import config.AppConfig
-import controllers.predicates.AuthenticationPredicate
-import play.api.mvc._
-import uk.gov.hmrc.play.microservice.controller.BaseController
+object AuthStub {
 
-import scala.concurrent.Future
+  val postAuthoriseUrl = "/auth/authorise"
 
-@Singleton
-class MicroserviceHelloWorld @Inject()(implicit val appConfig: AppConfig,
-                                       val authentication: AuthenticationPredicate
-                                      ) extends BaseController {
+  def stubAuthorised(): Unit = {
+    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
+  }
 
-  def hello(): Action[AnyContent] = authentication.async { implicit request =>
-		Future.successful(Ok("Hello world"))
+  def stubUnatuhorised(): Unit = {
+    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
   }
 }

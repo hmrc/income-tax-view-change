@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package services
+package controllers
 
-import connectors.FinancialDataConnector
-import models.FinancialDataResponseModel
+import models.EstimatedTaxLiabilityResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
+import services.EstimatedTaxLiabilityService
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
 
-trait MockFinancialDataConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockEstimatedTaxLiabilityService extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockFinancialDataConnector: FinancialDataConnector = mock[FinancialDataConnector]
+  val mockEstimateTaxLiabilityService: EstimatedTaxLiabilityService = mock[EstimatedTaxLiabilityService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFinancialDataConnector)
+    reset(mockEstimateTaxLiabilityService)
   }
 
-  def setupMockFinancialDataResult(mtditid: String)(response: FinancialDataResponseModel): Unit =
-    when(mockFinancialDataConnector.getFinancialData(ArgumentMatchers.eq(mtditid))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+  def setupMockEstimatedTaxLiabilityResponse(mtditid: String)(response: EstimatedTaxLiabilityResponseModel): Unit =
+    when(mockEstimateTaxLiabilityService.getEstimatedTaxLiability(ArgumentMatchers.eq(mtditid))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 }

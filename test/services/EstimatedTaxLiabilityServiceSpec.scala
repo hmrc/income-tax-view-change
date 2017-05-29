@@ -16,7 +16,7 @@
 
 package services
 
-import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError, FinancialDataError, FinancialDataSuccess}
+import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError, FinancialDataError, FinancialData}
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -35,7 +35,7 @@ class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication
     "a successful response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted EstimateTaxLiability model" in {
-        val financialData = FinancialDataSuccess(Json.parse(
+        val financialData = FinancialData(Json.parse(
           """
             |{
             |  "nic2":"200",

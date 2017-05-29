@@ -37,7 +37,7 @@ sbt 'run 9082'
 To test the application execute
 
 ```
-sbt test
+sbt clean scalastyle coverage test it:test coverageOff coverageReport
 ```
 
 

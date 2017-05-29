@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import play.api.libs.json.JsValue
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 
-sealed trait FinancialDataResult
-case class FinancialDataSuccess(financialData: JsValue) extends FinancialDataResult
-case class FinancialDataError(status: Int, message: String) extends FinancialDataResult
+trait MaterializerSupport {
+  implicit val system = ActorSystem("Sys")
+  implicit val materializer = ActorMaterializer()
+}
