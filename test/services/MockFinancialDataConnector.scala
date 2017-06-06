@@ -17,7 +17,7 @@
 package services
 
 import connectors.FinancialDataConnector
-import models.FinancialDataResponseModel
+import models.ConnectorResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -36,6 +36,6 @@ trait MockFinancialDataConnector extends UnitSpec with MockitoSugar with BeforeA
     reset(mockFinancialDataConnector)
   }
 
-  def setupMockFinancialDataResult(mtditid: String)(response: FinancialDataResponseModel): Unit =
+  def setupMockFinancialDataResult(mtditid: String)(response: ConnectorResponseModel): Unit =
     when(mockFinancialDataConnector.getFinancialData(ArgumentMatchers.eq(mtditid))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 }

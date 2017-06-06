@@ -16,7 +16,7 @@
 
 package connectors
 
-import models.{FinancialDataError, FinancialData}
+import models.{ErrorResponse, SuccessResponse}
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
@@ -29,21 +29,21 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
 
   val successResponse = HttpResponse(Status.OK, Some(Json.parse("{}")))
   val badResponse = HttpResponse(Status.BAD_REQUEST, responseString = Some("Error Message"))
-  val expectedSuccess = FinancialData(Json.parse("{}"))
-  val expectedBadResponse = FinancialDataError(Status.BAD_REQUEST, "Error Message")
+  val expectedSuccess = SuccessResponse(Json.parse("{}"))
+  val expectedBadResponse = ErrorResponse(Status.BAD_REQUEST, "Error Message")
 
   object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet)
 
-  "FinancialDataConnector.getFinancialData" should {
+  "FinancialDataConnector.getJsonBody" should {
 
-    "return Status (OK) and a JSON body when successful as a FinancialData model" in {
+    "return Status (OK) and a JSON body when successful as a SuccessResponse model" in {
       setupMockHttpGet(TestFinancialDataConnector.getFinancialDataUrl("1234"))(successResponse)
       val result = TestFinancialDataConnector.getFinancialData("1234")
       val enrolResponse = await(result)
       enrolResponse shouldBe expectedSuccess
     }
 
-    "return FinancialDataError model in case of failure" in {
+    "return ErrorResponse model in case of failure" in {
       setupMockHttpGet(TestFinancialDataConnector.getFinancialDataUrl("1234"))(badResponse)
       val result = TestFinancialDataConnector.getFinancialData("1234")
       val enrolResponse = await(result)

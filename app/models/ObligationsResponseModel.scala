@@ -16,8 +16,24 @@
 
 package models
 
-import play.api.libs.json.JsValue
+import java.time.LocalDate
 
-sealed trait FinancialDataResponseModel
-case class FinancialData(financialData: JsValue) extends FinancialDataResponseModel
-case class FinancialDataError(status: Int, message: String) extends FinancialDataResponseModel
+import play.api.libs.json.Json
+
+case class ObligationModel(start: LocalDate,
+                           end: LocalDate,
+                           due: LocalDate,
+                           met: Boolean
+                          )
+
+case class ObligationsModel(obligations: Seq[ObligationModel])
+
+
+
+object ObligationModel {
+  implicit val format = Json.format[ObligationModel]
+}
+
+object ObligationsModel {
+  implicit val format = Json.format[ObligationsModel]
+}
