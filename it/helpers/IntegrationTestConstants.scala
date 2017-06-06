@@ -16,14 +16,14 @@
 
 package helpers
 
-import models.FinancialDataError
+import models.ErrorResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 
 object IntegrationTestConstants {
 
   val testMtditid = "XAITSA123456"
-  val testErrorResponse = FinancialDataError(INTERNAL_SERVER_ERROR, "Internal Server Error Message")
+  val testErrorResponse = ErrorResponse(INTERNAL_SERVER_ERROR, "Internal Server Error Message")
 
   object GetFinancialDataResponse {
     def successResponse(incomeTax: BigDecimal, nic2: BigDecimal, nic4: BigDecimal): JsValue =

@@ -18,7 +18,7 @@ package connectors
 
 import javax.inject.{Inject, Singleton}
 
-import models.{FinancialDataError, FinancialDataResponseModel, FinancialData}
+import models.{ErrorResponse, ConnectorResponseModel, SuccessResponse}
 import play.api.Logger
 import play.api.http.Status._
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -33,20 +33,20 @@ class FinancialDataConnector @Inject()(val http: HttpGet) extends ServicesConfig
   lazy val desBaseUrl: String = baseUrl("des")
   val getFinancialDataUrl: String => String = mtditid => s"$desBaseUrl/calculation-store/financial-data/MTDBSA/$mtditid"
 
-  def getFinancialData(mtditid: String)(implicit headerCarrier: HeaderCarrier): Future[FinancialDataResponseModel] = {
+  def getFinancialData(mtditid: String)(implicit headerCarrier: HeaderCarrier): Future[ConnectorResponseModel] = {
 
     val url = getFinancialDataUrl(mtditid)
-    Logger.debug(s"[FinancialDataConnector][getFinancialData] - GET $url")
+    Logger.debug(s"[FinancialDataConnector][getJsonBody] - GET $url")
 
     http.GET[HttpResponse](url) flatMap {
       response =>
         response.status match {
           case OK =>
-            Logger.debug(s"[AuthConnector][getFinancialData] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Future.successful(FinancialData(response.json))
+            Logger.debug(s"[AuthConnector][getJsonBody] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Future.successful(SuccessResponse(response.json))
           case _ =>
-            Logger.warn(s"[FinancialDataConnector][getFinancialData] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Future.successful(FinancialDataError(response.status, response.body))
+            Logger.warn(s"[FinancialDataConnector][getJsonBody] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Future.successful(ErrorResponse(response.status, response.body))
         }
     }
   }

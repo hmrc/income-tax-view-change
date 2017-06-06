@@ -16,7 +16,7 @@
 
 package services
 
-import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError, FinancialDataError, FinancialData}
+import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError, ErrorResponse, SuccessResponse}
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -35,7 +35,7 @@ class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication
     "a successful response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted EstimateTaxLiability model" in {
-        val financialData = FinancialData(Json.parse(
+        val financialData = SuccessResponse(Json.parse(
           """
             |{
             |  "nic2":"200",
@@ -53,7 +53,7 @@ class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication
     "an Error Response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted EstimateTaxLiability model" in {
-        val financialDataError = FinancialDataError(Status.INTERNAL_SERVER_ERROR, "Error Message")
+        val financialDataError = ErrorResponse(Status.INTERNAL_SERVER_ERROR, "Error Message")
         val expectedResponse = EstimatedTaxLiabilityError(Status.INTERNAL_SERVER_ERROR, "Error Message")
         setupMockFinancialDataResult(mtditid)(financialDataError)
         await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(mtditid)) shouldBe expectedResponse

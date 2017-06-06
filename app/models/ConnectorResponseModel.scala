@@ -18,6 +18,6 @@ package models
 
 import play.api.libs.json.JsValue
 
-sealed trait FinancialDataResponseModel
-case class FinancialData(financialData: JsValue) extends FinancialDataResponseModel
-case class FinancialDataError(status: Int, message: String) extends FinancialDataResponseModel
+sealed trait ConnectorResponseModel
+case class SuccessResponse(jsonBody: JsValue) extends ConnectorResponseModel
+case class ErrorResponse(status: Int, message: String) extends ConnectorResponseModel
