@@ -16,38 +16,43 @@
 
 package connectors
 
-import models.{FinancialDataError, FinancialData}
+import mocks.MockHttp
+import models.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
+import assets.TestConstants.FinancialData._
 
 class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with MockHttp {
 
   implicit val hc = HeaderCarrier()
 
-  val successResponse = HttpResponse(Status.OK, Some(Json.parse("{}")))
-  val badResponse = HttpResponse(Status.BAD_REQUEST, responseString = Some("Error Message"))
-  val expectedSuccess = FinancialData(Json.parse("{}"))
-  val expectedBadResponse = FinancialDataError(Status.BAD_REQUEST, "Error Message")
+  val lastTaxCalcSuccessResponse =
+    HttpResponse(Status.OK, Some(Json.parse(
+      """{"calcId": "testCalcId",
+         "calcTimestamp": "testTimestamp",
+         "calcAmount":2345.67}
+      """.stripMargin.split("(?<!\\d)\\s+(?!\\d)").mkString)))
+
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 
   object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet)
 
   "FinancialDataConnector.getFinancialData" should {
 
-    "return Status (OK) and a JSON body when successful as a FinancialData model" in {
-      setupMockHttpGet(TestFinancialDataConnector.getFinancialDataUrl("1234"))(successResponse)
-      val result = TestFinancialDataConnector.getFinancialData("1234")
+    "return Status (OK) and a JSON body when successful as a LatTaxCalculation model" in {
+      setupMockHttpGet(TestFinancialDataConnector.getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))(lastTaxCalcSuccessResponse)
+      val result = TestFinancialDataConnector.getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
       val enrolResponse = await(result)
-      enrolResponse shouldBe expectedSuccess
+      enrolResponse shouldBe expectedLastTaxCalcResponse
     }
 
-    "return FinancialDataError model in case of failure" in {
-      setupMockHttpGet(TestFinancialDataConnector.getFinancialDataUrl("1234"))(badResponse)
-      val result = TestFinancialDataConnector.getFinancialData("1234")
+    "return LastTaxCalculationError model in case of failure" in {
+      setupMockHttpGet(TestFinancialDataConnector.getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))(badResponse)
+      val result = TestFinancialDataConnector.getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
       val enrolResponse = await(result)
-      enrolResponse shouldBe expectedBadResponse
+      enrolResponse shouldBe lastTaxCalculationError
     }
 
   }

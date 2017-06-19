@@ -19,20 +19,19 @@ package controllers
 import auth.{MockAuthorisedUser, MockUnauthorisedUser}
 import config.MockAppConfig
 import controllers.predicates.AuthenticationPredicate
-import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError}
+import mocks.MockEstimatedTaxLiabilityService
+import models.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.MaterializerSupport
-
+import assets.TestConstants.FinancialData._
 import scala.concurrent.Future
 
 
 class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplication with MockEstimatedTaxLiabilityService with MaterializerSupport {
-
-  val mtditid = "1234"
 
   "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
 
@@ -46,15 +45,10 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
 
       "a valid response from the Estimated Tax Liability Service" should {
 
-        val expectedJson = EstimatedTaxLiability(
-          total = 1000.56,
-          incomeTax = 200.54,
-          nic2 = 100.02,
-          nic4 = 700.00
-        )
+
         def result: Future[Result] = {
-          setupMockEstimatedTaxLiabilityResponse(mtditid)(expectedJson)
-          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(mtditid)(FakeRequest())
+          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(expectedLastTaxCalcResponse)
+          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         }
 
         "return a OK result (200)" in {
@@ -65,20 +59,16 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
           await(result).body.contentType shouldBe Some("application/json")
         }
 
-        "return the EstimatedTaxLiability JSON response" in {
-          await(bodyOf(result)) shouldBe Json.toJson(expectedJson).toString()
+        "return the LastTaxCalculation response" in {
+          await(bodyOf(result)) shouldBe Json.toJson(expectedLastTaxCalcResponse).toString
         }
       }
 
       "an invalid response from the Estimated Tax Liability Service" should {
 
-        val expectedJson = EstimatedTaxLiabilityError(
-          status = Status.INTERNAL_SERVER_ERROR,
-          message = "Error Message"
-        )
         def result: Future[Result] = {
-          setupMockEstimatedTaxLiabilityResponse(mtditid)(expectedJson)
-          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(mtditid)(FakeRequest())
+          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(lastTaxCalculationError)
+          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         }
 
         "return a OK result (200)" in {
@@ -89,8 +79,8 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
           await(result).body.contentType shouldBe Some("application/json")
         }
 
-        "return the EstimatedTaxLiability JSON response" in {
-          await(jsonBodyOf(result)) shouldBe Json.toJson(expectedJson)
+        "return the LastTaxCalculationError response" in {
+          await(jsonBodyOf(result)) shouldBe Json.toJson(lastTaxCalculationError)
         }
       }
     }
@@ -104,7 +94,7 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
       )
 
       "return Unauthorised (401)" in {
-        val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(mtditid)(FakeRequest())
+        val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         status(result) shouldBe Status.UNAUTHORIZED
       }
     }

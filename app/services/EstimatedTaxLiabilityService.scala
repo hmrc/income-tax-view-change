@@ -21,7 +21,6 @@ import javax.inject.{Inject, Singleton}
 import connectors.FinancialDataConnector
 import models._
 import play.api.Logger
-import play.api.libs.json.JsValue
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -30,31 +29,16 @@ import scala.concurrent.Future
 @Singleton
 class EstimatedTaxLiabilityService @Inject()(val financialDataConnector: FinancialDataConnector) {
 
-  def getEstimatedTaxLiability(mtditid: String)(implicit headerCarrier: HeaderCarrier): Future[EstimatedTaxLiabilityResponseModel] = {
-    Logger.debug("[EstimatedTaxLiabilityService][getEstimateTaxLiability] - Requesting Financial Data from Connector")
-    financialDataConnector.getFinancialData(mtditid).map[EstimatedTaxLiabilityResponseModel] {
-      case success: FinancialData =>
-        Logger.debug(s"[EstimatedTaxLiabilityService][getEstimateTaxLiability] - Retrieved Finacial Data:\n\n${success.financialData}")
-        createEstimatedTaxLiabilityResponse(success.financialData)
-      case error: FinancialDataError =>
-        EstimatedTaxLiabilityError(error.status, error.message)
+  def getEstimatedTaxLiability(nino: String, year: String, calcType: String)
+                              (implicit headerCarrier: HeaderCarrier): Future[LastTaxCalculationResponseModel] = {
+    Logger.debug("[EstimatedTaxLiabilityService][getEstimateTaxLiability] - Requesting Last Tax Calculation from Connector")
+    financialDataConnector.getLastEstimatedTaxCalculation(nino, year, calcType).map[LastTaxCalculationResponseModel] {
+      case success: LastTaxCalculation =>
+        Logger.debug(s"[EstimatedTaxLiabilityService][getEstimateTaxLiability] - Retrieved Financial Data:\n\n$success")
+        //TODO for now just return the Last Calculation amount.  Add additional calc breakdown data
+        success
+      case error: LastTaxCalculationError =>
+        LastTaxCalculationError(error.status, error.message)
     }
-  }
-
-  // TODO: This assumes a simplistic JSON response. This will need to be replaced with the API#26 response from DES
-  private[EstimatedTaxLiabilityService] def createEstimatedTaxLiabilityResponse(financialData: JsValue): EstimatedTaxLiability = {
-
-    val nic2: BigDecimal = (financialData \ "nic2").as[BigDecimal]
-    val nic4: BigDecimal = (financialData \ "nic4").as[BigDecimal]
-    val incomeTax: BigDecimal = (financialData \ "incomeTax").as[BigDecimal]
-
-    val total: BigDecimal = nic2 + nic4 + incomeTax
-
-    EstimatedTaxLiability(
-      total = total,
-      nic2 = nic2,
-      nic4 = nic4,
-      incomeTax = incomeTax
-    )
   }
 }

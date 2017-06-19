@@ -14,27 +14,34 @@
  * limitations under the License.
  */
 
-package connectors
+package mocks
 
+import models.LastTaxCalculationResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpResponse}
+import services.EstimatedTaxLiabilityService
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
 
-trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockEstimatedTaxLiabilityService extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockHttpGet: HttpGet = mock[HttpGet]
+  val mockEstimateTaxLiabilityService: EstimatedTaxLiabilityService = mock[EstimatedTaxLiabilityService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockHttpGet)
+    reset(mockEstimateTaxLiabilityService)
   }
 
-  def setupMockHttpGet(url: String)(response: HttpResponse): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
+  def setupMockEstimatedTaxLiabilityResponse(nino: String, year: String, calcType: String)(response: LastTaxCalculationResponseModel): Unit =
+    when(mockEstimateTaxLiabilityService
+      .getEstimatedTaxLiability(
+        ArgumentMatchers.eq(nino),
+        ArgumentMatchers.eq(year),
+        ArgumentMatchers.eq(calcType))
+      (ArgumentMatchers.any()))
+      .thenReturn(Future.successful(response))
 }
