@@ -18,8 +18,9 @@ package connectors
 
 import javax.inject.{Inject, Singleton}
 
-import models.{FinancialDataError, FinancialDataResponseModel, FinancialData}
+import models._
 import play.api.Logger
+import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HeaderCarrier, _}
@@ -31,23 +32,36 @@ import scala.concurrent.Future
 class FinancialDataConnector @Inject()(val http: HttpGet) extends ServicesConfig with RawResponseReads {
 
   lazy val desBaseUrl: String = baseUrl("des")
-  val getFinancialDataUrl: String => String = mtditid => s"$desBaseUrl/calculation-store/financial-data/MTDBSA/$mtditid"
+  val getLastEstimatedTaxCalculationUrl: (String, String, String) => String =
+    (nino, year, calcType) => s"$desBaseUrl/calculationstore/lastcalculation/$nino?year=$year&type=$calcType"
 
-  def getFinancialData(mtditid: String)(implicit headerCarrier: HeaderCarrier): Future[FinancialDataResponseModel] = {
+  def getLastEstimatedTaxCalculation(nino: String, year: String, `type`:String)
+                                    (implicit headerCarrier: HeaderCarrier): Future[LastTaxCalculationResponseModel] = {
 
-    val url = getFinancialDataUrl(mtditid)
-    Logger.debug(s"[FinancialDataConnector][getFinancialData] - GET $url")
+    val url = getLastEstimatedTaxCalculationUrl(nino, year, `type`)
+    Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - GET $url")
 
     http.GET[HttpResponse](url) flatMap {
       response =>
         response.status match {
           case OK =>
-            Logger.debug(s"[AuthConnector][getFinancialData] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Future.successful(FinancialData(response.json))
+            Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Future.successful(response.json.validate[LastTaxCalculation].fold(
+              invalid => {
+                Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Json ValidationError. Parsing Financial Data")
+                Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response possibly returned `None` for calcAmount: ${response.body}")
+                LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Financial Data ")
+              },
+              valid => valid
+            ))
           case _ =>
-            Logger.warn(s"[FinancialDataConnector][getFinancialData] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Future.successful(FinancialDataError(response.status, response.body))
+            Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Future.successful(LastTaxCalculationError(response.status, response.body))
         }
+    } recoverWith {
+      case _ =>
+        Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future on call to $url")
+        Future.successful(LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future on call to $url"))
     }
   }
 }

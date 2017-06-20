@@ -21,7 +21,7 @@ import play.api.http.Status
 
 object FinancialDataStub {
 
-  val url: String => String = mtditid => s"/calculation-store/financial-data/MTDBSA/$mtditid"
+  val url: String => String = nino => s"/calculationstore/lastcalculation/"
 
   def stubGetFinancialData(mtditid: String, incomeTax: BigDecimal, nic2: BigDecimal, nic4: BigDecimal): Unit = {
     val financialDataResponse = IntegrationTestConstants.GetFinancialDataResponse.successResponse(incomeTax, nic2, nic4).toString()
@@ -30,4 +30,5 @@ object FinancialDataStub {
 
   def verifyGetFinancialData(mtditid: String): Unit =
     WiremockHelper.verifyGet(url(mtditid))
+
 }

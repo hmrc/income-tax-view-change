@@ -16,17 +16,16 @@
 
 package services
 
-import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError, FinancialDataError, FinancialData}
-import play.api.libs.json.Json
+import mocks.MockFinancialDataConnector
+import models._
 import play.mvc.Http.Status
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
+import assets.TestConstants.FinancialData._
 
 class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication with MockFinancialDataConnector {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  val mtditid = "1234"
 
   object TestEstimatedTaxLiabilityService extends EstimatedTaxLiabilityService(mockFinancialDataConnector)
 
@@ -34,29 +33,18 @@ class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication
 
     "a successful response is returned from the FinancialDataConnector" should {
 
-      "return a correctly formatted EstimateTaxLiability model" in {
-        val financialData = FinancialData(Json.parse(
-          """
-            |{
-            |  "nic2":"200",
-            |  "nic4":"500",
-            |  "incomeTax":"300"
-            |}
-          """.stripMargin.trim
-        ))
-        val expectedResponse = EstimatedTaxLiability(1000,200,500,300)
-        setupMockFinancialDataResult(mtditid)(financialData)
-        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(mtditid)) shouldBe expectedResponse
+      "return a correctly formatted LastTaxCalculation model" in {
+        setupMockFinancialDataResult(testNino, testYear, testCalcType)(expectedLastTaxCalcResponse)
+        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe expectedLastTaxCalcResponse
       }
     }
 
     "an Error Response is returned from the FinancialDataConnector" should {
 
-      "return a correctly formatted EstimateTaxLiability model" in {
-        val financialDataError = FinancialDataError(Status.INTERNAL_SERVER_ERROR, "Error Message")
-        val expectedResponse = EstimatedTaxLiabilityError(Status.INTERNAL_SERVER_ERROR, "Error Message")
-        setupMockFinancialDataResult(mtditid)(financialDataError)
-        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(mtditid)) shouldBe expectedResponse
+      "return a correctly formatted LastTaxCalculationError model" in {
+        val expectedResponse = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
+        setupMockFinancialDataResult(testNino, testYear, testCalcType)(lastTaxCalculationError)
+        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe expectedResponse
       }
     }
   }

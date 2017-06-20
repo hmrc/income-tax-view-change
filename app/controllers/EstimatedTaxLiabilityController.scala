@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import config.AppConfig
 import controllers.predicates.AuthenticationPredicate
-import models.{EstimatedTaxLiability, EstimatedTaxLiabilityError}
+import models.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -36,13 +36,13 @@ class EstimatedTaxLiabilityController @Inject()(implicit val appConfig: AppConfi
                                                 val estimatedTaxLiabilityService: EstimatedTaxLiabilityService
                                       ) extends BaseController {
 
-  def getEstimatedTaxLiability(mtditid: String): Action[AnyContent] = authentication.async { implicit request =>
-    Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Requesting Estimate from EstimatedTaxLiabilityService for mtditid: $mtditid")
-    estimatedTaxLiabilityService.getEstimatedTaxLiability(mtditid).flatMap {
-      case success: EstimatedTaxLiability =>
+  def getEstimatedTaxLiability(nino: String, year: String, calcType: String): Action[AnyContent] = authentication.async { implicit request =>
+    Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Requesting Estimate from EstimatedTaxLiabilityService for NINO: $nino")
+    estimatedTaxLiabilityService.getEstimatedTaxLiability(nino, year, calcType).flatMap {
+      case success: LastTaxCalculation =>
         Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Successful Response: $success")
         Future.successful(Ok(Json.toJson(success)))
-      case error: EstimatedTaxLiabilityError =>
+      case error: LastTaxCalculationError =>
         Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Error Response: $error")
         Future.successful(Status(error.status)(Json.toJson(error)))
     }

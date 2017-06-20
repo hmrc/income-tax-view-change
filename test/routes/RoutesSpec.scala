@@ -22,10 +22,16 @@ class RoutesSpec extends UnitSpec with WithFakeApplication {
 
   val contextRoute: String = "/income-tax-view-change"
 
+  val testNino = "BB123456A"
+  val testYear = "2018"
+  val testCalcType = "it"
+
   // Estimated Tax Liability routes
   "The URL for the EstimatedTaxLiabilityController.getEstimateTaxLiability action" should {
     s"be equal to $contextRoute/estimated-tax-liability" in {
-      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability("1234").url shouldBe s"$contextRoute/estimated-tax-liability/1234"
+      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType).url.shouldBe(
+        s"$contextRoute/estimated-tax-liability/$testNino/$testYear/$testCalcType")
+
     }
   }
 }
