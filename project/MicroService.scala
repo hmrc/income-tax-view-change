@@ -42,6 +42,9 @@ trait MicroService {
     .settings(scoverageSettings: _*)
     .settings(defaultSettings(): _*)
     .settings(
+      Keys.fork in Test := true,
+      javaOptions in Test += "-Dlogger.resource=logback-test.xml")
+    .settings(
       libraryDependencies ++= appDependencies,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
@@ -61,10 +64,12 @@ trait MicroService {
       ))
 }
 
+
 private object TestPhases {
 
   def oneForkedJvmPerTest(tests: Seq[TestDefinition]) =
     tests map {
-      test => new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
+      test => new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions =
+        Seq("-Dtest.name=" + test.name, "-Dlogger.resource=logback-test.xml"))))
     }
 }

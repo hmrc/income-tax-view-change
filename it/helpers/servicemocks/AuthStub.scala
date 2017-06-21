@@ -16,8 +16,10 @@
 
 package helpers.servicemocks
 
+import helpers.IntegrationTestConstants._
 import helpers.WiremockHelper
 import play.api.http.Status
+import play.api.libs.json.Json
 
 object AuthStub {
 
@@ -27,7 +29,7 @@ object AuthStub {
     WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
   }
 
-  def stubUnatuhorised(): Unit = {
+  def stubUnauthorised(): Unit = {
     WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
   }
 }

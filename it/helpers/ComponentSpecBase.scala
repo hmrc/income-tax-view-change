@@ -22,10 +22,8 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
-import uk.gov.hmrc.play.test.UnitSpec
 
-trait ComponentSpecBase extends UnitSpec
-  with GivenWhenThen with TestSuite
+trait ComponentSpecBase extends TestSuite with CustomMatchers
   with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience with Matchers
   with WiremockHelper with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
 
@@ -58,6 +56,6 @@ trait ComponentSpecBase extends UnitSpec
   object IncomeTaxViewChange {
     def get(uri: String): WSResponse = await(buildClient(uri).get())
 
-    def getEstimatedTaxLiability(mtditid: String): WSResponse = get(s"/estimated-tax-liability/$mtditid")
+    def getEstimatedTaxLiability(nino: String, year: String, calcType: String): WSResponse = get(s"/estimated-tax-liability/$nino/$year/$calcType")
   }
 }

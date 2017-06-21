@@ -16,22 +16,33 @@
 
 package helpers
 
-import models.FinancialDataError
-import play.api.http.Status._
+import models.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.libs.json.{JsValue, Json}
+import play.mvc.Http.Status
 
 object IntegrationTestConstants {
 
+  val testMtditidEnrolmentKey = "HMRC-MTD-IT"
+  val testMtditidEnrolmentIdentifier = "MTDITID"
   val testMtditid = "XAITSA123456"
-  val testErrorResponse = FinancialDataError(INTERNAL_SERVER_ERROR, "Internal Server Error Message")
 
-  object GetFinancialDataResponse {
-    def successResponse(incomeTax: BigDecimal, nic2: BigDecimal, nic4: BigDecimal): JsValue =
+  val testNinoEnrolmentKey = "HMRC-NI"
+  val testNinoEnrolmentIdentifier = "NINO"
+  val testNino = "BB123456A"
+  val testYear = "2018"
+  val testCalcType = "it"
+
+  val lastTaxCalculation = LastTaxCalculation("01234567", "2017-07-06 12:34:56.789", 2345.67)
+
+  val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
+
+  object GetFinancialData {
+    def successResponse(calcId: String, calcTimestamp: String, calcAmount: BigDecimal): JsValue =
       Json.parse(s"""
          |{
-         |   "incomeTax": $incomeTax,
-         |   "nic2": $nic2,
-         |   "nic4": $nic4
+         |   "calcId": "$calcId",
+         |   "calcTimestamp": "$calcTimestamp",
+         |   "calcAmount": $calcAmount
          |}
       """.stripMargin)
 
