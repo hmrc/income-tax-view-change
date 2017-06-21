@@ -16,13 +16,12 @@
 
 package connectors
 
+import assets.TestConstants.FinancialData._
 import mocks.MockHttp
-import models.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.TestConstants.FinancialData._
 
 class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with MockHttp {
 

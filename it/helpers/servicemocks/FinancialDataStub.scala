@@ -17,18 +17,22 @@
 package helpers.servicemocks
 
 import helpers.{IntegrationTestConstants, WiremockHelper}
+import models.LastTaxCalculation
 import play.api.http.Status
 
 object FinancialDataStub {
 
-  val url: String => String = nino => s"/calculationstore/lastcalculation/"
+  val url: (String, String, String) => String = (nino, year, calcType) => s"""/calculationstore/lastcalculation/$nino?year=$year&type=$calcType"""
 
-  def stubGetFinancialData(mtditid: String, incomeTax: BigDecimal, nic2: BigDecimal, nic4: BigDecimal): Unit = {
-    val financialDataResponse = IntegrationTestConstants.GetFinancialDataResponse.successResponse(incomeTax, nic2, nic4).toString()
-    WiremockHelper.stubGet(url(mtditid), Status.OK, financialDataResponse)
+  def stubGetFinancialData(nino: String, year: String, calcType: String, response: LastTaxCalculation): Unit = {
+    val lastTaxCalculationResponse =
+      IntegrationTestConstants.GetFinancialData
+      .successResponse(response.calcId, response.calcTimestamp, response.calcAmount).toString
+
+    WiremockHelper.stubGet(url(nino, year, calcType), Status.OK, lastTaxCalculationResponse)
   }
 
-  def verifyGetFinancialData(mtditid: String): Unit =
-    WiremockHelper.verifyGet(url(mtditid))
+  def verifyGetFinancialData(nino: String, year: String, calcType: String): Unit =
+    WiremockHelper.verifyGet(url(nino, year, calcType))
 
 }
