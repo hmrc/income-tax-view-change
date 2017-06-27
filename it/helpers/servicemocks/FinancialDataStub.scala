@@ -27,7 +27,7 @@ object FinancialDataStub {
   def stubGetFinancialData(nino: String, year: String, calcType: String, response: LastTaxCalculation): Unit = {
     val lastTaxCalculationResponse =
       IntegrationTestConstants.GetFinancialData
-      .successResponse(response.calcId, response.calcTimestamp, response.calcAmount).toString
+      .successResponse(response.calcID, response.calcTimestamp, response.calcAmount).toString
 
     WiremockHelper.stubGet(url(nino, year, calcType), Status.OK, lastTaxCalculationResponse)
   }
