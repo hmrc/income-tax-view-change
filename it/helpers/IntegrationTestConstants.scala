@@ -32,7 +32,7 @@ object IntegrationTestConstants {
   val testYear = "2018"
   val testCalcType = "it"
 
-  val lastTaxCalculation = LastTaxCalculation("01234567", "2017-07-06 12:34:56.789", 2345.67)
+  val lastTaxCalculation = LastTaxCalculation("01234567", "2017-07-06T12:34:56.789Z", 2345.67)
 
   val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
@@ -40,7 +40,7 @@ object IntegrationTestConstants {
     def successResponse(calcId: String, calcTimestamp: String, calcAmount: BigDecimal): JsValue =
       Json.parse(s"""
          |{
-         |   "calcId": "$calcId",
+         |   "calcID": "$calcId",
          |   "calcTimestamp": "$calcTimestamp",
          |   "calcAmount": $calcAmount
          |}

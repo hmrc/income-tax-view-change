@@ -29,7 +29,7 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
 
   val lastTaxCalcSuccessResponse =
     HttpResponse(Status.OK, Some(Json.parse(
-      """{"calcId": "testCalcId",
+      """{"calcID": "testCalcId",
          "calcTimestamp": "testTimestamp",
          "calcAmount":2345.67}
       """.stripMargin.split("(?<!\\d)\\s+(?!\\d)").mkString)))

@@ -26,7 +26,7 @@ class LastTaxCalculationResponseModelSpec extends UnitSpec with Matchers{
   "LastTaxCalculationResponseMode model" when {
 
     val calcId = "01234567"
-    val calcTimestamp = "2017-07-06 12:34:56.789"
+    val calcTimestamp = "2017-07-06T12:34:56.789Z"
     val calcAmount = 2345.67
     val errorStatus = 500
     val errorMessage = "Error Message"
@@ -36,11 +36,11 @@ class LastTaxCalculationResponseModelSpec extends UnitSpec with Matchers{
 
     "successful" should {
       "have the correct calcId assigned in the model" in {
-        successModel.calcId shouldBe "01234567"
+        successModel.calcID shouldBe "01234567"
       }
 
       "have the correct timestamp assigned in the model" in {
-        successModel.calcTimestamp shouldBe "2017-07-06 12:34:56.789"
+        successModel.calcTimestamp shouldBe "2017-07-06T12:34:56.789Z"
       }
 
       "have the correct calculation amount assigned in the model" in {
@@ -51,7 +51,7 @@ class LastTaxCalculationResponseModelSpec extends UnitSpec with Matchers{
         Json.toJson(successModel) should be
         s"""
            |{
-           |  "calcId":"$calcId",
+           |  "calcID":"$calcId",
            |  "calcTimestamp" : "$calcTimestamp",
            |  "calcAmouunt" : "$calcAmount"
            |}
