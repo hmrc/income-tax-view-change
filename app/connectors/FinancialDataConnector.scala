@@ -18,6 +18,7 @@ package connectors
 
 import javax.inject.{Inject, Singleton}
 
+import config.MicroserviceAppConfig
 import models._
 import play.api.Logger
 import play.api.http.Status
@@ -29,7 +30,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class FinancialDataConnector @Inject()(val http: HttpGet) extends ServicesConfig with RawResponseReads {
+class FinancialDataConnector @Inject()(val http: HttpGet,
+                                      val appConfig: MicroserviceAppConfig
+                                      ) extends ServicesConfig with RawResponseReads {
 
   lazy val desBaseUrl: String = baseUrl("des")
   val getLastEstimatedTaxCalculationUrl: (String, String, String) => String =
@@ -39,9 +42,10 @@ class FinancialDataConnector @Inject()(val http: HttpGet) extends ServicesConfig
                                     (implicit headerCarrier: HeaderCarrier): Future[LastTaxCalculationResponseModel] = {
 
     val url = getLastEstimatedTaxCalculationUrl(nino, year, `type`)
-    Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - GET $url")
+    val desHC = headerCarrier.withExtraHeaders(HeaderNames.authorisation -> appConfig.desToken, "Environment" -> appConfig.desEnvironment)
 
-    http.GET[HttpResponse](url) flatMap {
+    Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Calling GET $url \n\nHeaders: $desHC")
+    http.GET[HttpResponse](url)(httpReads, desHC) flatMap {
       response =>
         response.status match {
           case OK =>
