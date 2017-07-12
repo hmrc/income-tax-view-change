@@ -17,10 +17,11 @@
 package connectors
 
 import assets.TestConstants.FinancialData._
+import config.MicroserviceAppConfig
 import mocks.MockHttp
 import play.api.libs.json.Json
 import play.mvc.Http.Status
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HeaderNames, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with MockHttp {
@@ -36,20 +37,27 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
 
   val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 
-  object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet)
+  object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet, fakeApplication.injector.instanceOf[MicroserviceAppConfig])
 
   "FinancialDataConnector.getFinancialData" should {
 
+    import TestFinancialDataConnector._
+
+    lazy val expectedHc = hc.withExtraHeaders(
+      HeaderNames.authorisation -> appConfig.desToken,
+      "Environment" -> appConfig.desEnvironment
+    )
+
     "return Status (OK) and a JSON body when successful as a LatTaxCalculation model" in {
-      setupMockHttpGet(TestFinancialDataConnector.getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))(lastTaxCalcSuccessResponse)
-      val result = TestFinancialDataConnector.getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
+      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(lastTaxCalcSuccessResponse)
+      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
       val enrolResponse = await(result)
       enrolResponse shouldBe expectedLastTaxCalcResponse
     }
 
     "return LastTaxCalculationError model in case of failure" in {
-      setupMockHttpGet(TestFinancialDataConnector.getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))(badResponse)
-      val result = TestFinancialDataConnector.getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
+      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(badResponse)
+      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
       val enrolResponse = await(result)
       enrolResponse shouldBe lastTaxCalculationError
     }

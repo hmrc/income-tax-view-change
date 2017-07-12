@@ -16,18 +16,18 @@
 
 package controllers
 
+import assets.TestConstants.FinancialData._
 import auth.{MockAuthorisedUser, MockUnauthorisedUser}
-import config.MockAppConfig
+import config.MicroserviceAppConfig
 import controllers.predicates.AuthenticationPredicate
 import mocks.MockEstimatedTaxLiabilityService
-import models.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.MaterializerSupport
-import assets.TestConstants.FinancialData._
+
 import scala.concurrent.Future
 
 
@@ -38,7 +38,7 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
     "called with an Authenticated user" when {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = MockAppConfig,
+        appConfig = fakeApplication.injector.instanceOf[MicroserviceAppConfig],
         authentication = new AuthenticationPredicate(MockAuthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )
@@ -88,7 +88,7 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
     "called with an Unauthenticated user" should {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = MockAppConfig,
+        appConfig = fakeApplication.injector.instanceOf[MicroserviceAppConfig],
         authentication = new AuthenticationPredicate(MockUnauthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )
