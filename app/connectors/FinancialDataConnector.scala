@@ -24,6 +24,7 @@ import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.http.logging.Authorization
 import uk.gov.hmrc.play.http.{HeaderCarrier, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -42,7 +43,8 @@ class FinancialDataConnector @Inject()(val http: HttpGet,
                                     (implicit headerCarrier: HeaderCarrier): Future[LastTaxCalculationResponseModel] = {
 
     val url = getLastEstimatedTaxCalculationUrl(nino, year, `type`)
-    val desHC = headerCarrier.withExtraHeaders(HeaderNames.authorisation -> appConfig.desToken, "Environment" -> appConfig.desEnvironment)
+    val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
+      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
     Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Calling GET $url \n\nHeaders: $desHC")
     http.GET[HttpResponse](url)(httpReads, desHC) flatMap {

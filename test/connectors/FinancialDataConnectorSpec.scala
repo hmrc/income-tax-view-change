@@ -21,6 +21,7 @@ import config.MicroserviceAppConfig
 import mocks.MockHttp
 import play.api.libs.json.Json
 import play.mvc.Http.Status
+import uk.gov.hmrc.play.http.logging.Authorization
 import uk.gov.hmrc.play.http.{HeaderCarrier, HeaderNames, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -43,10 +44,8 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
 
     import TestFinancialDataConnector._
 
-    lazy val expectedHc = hc.withExtraHeaders(
-      HeaderNames.authorisation -> appConfig.desToken,
-      "Environment" -> appConfig.desEnvironment
-    )
+    lazy val expectedHc =
+      hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
     "return Status (OK) and a JSON body when successful as a LatTaxCalculation model" in {
       setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(lastTaxCalcSuccessResponse)
