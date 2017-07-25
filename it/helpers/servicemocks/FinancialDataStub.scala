@@ -22,7 +22,8 @@ import play.api.http.Status
 
 object FinancialDataStub {
 
-  val url: (String, String, String) => String = (nino, year, calcType) => s"""/calculationstore/lastcalculation/$nino?year=$year&type=$calcType"""
+  val url: (String, String, String) => String = (nino, year, calcType) =>
+    s"""/income-tax-view-change-dynamic-stub/calculationstore/lastcalculation/$nino?year=$year&type=$calcType"""
 
   def stubGetFinancialData(nino: String, year: String, calcType: String, response: LastTaxCalculation): Unit = {
     val lastTaxCalculationResponse =
