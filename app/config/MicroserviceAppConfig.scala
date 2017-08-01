@@ -24,6 +24,7 @@ import uk.gov.hmrc.play.config.ServicesConfig
 trait AppConfig {
   val desToken: String
   val desEnvironment: String
+  val desUrl: String
 }
 
 @Singleton
@@ -33,5 +34,6 @@ class MicroserviceAppConfig @Inject()(val configuration: Configuration) extends 
 
   override val desEnvironment: String = loadConfig("microservice.services.des.environment")
   override val desToken: String = loadConfig("microservice.services.des.authorization-token")
+  override val desUrl: String = loadConfig("microservice.services.des.url")
 
 }
