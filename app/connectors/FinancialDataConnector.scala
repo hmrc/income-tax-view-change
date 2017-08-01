@@ -35,9 +35,8 @@ class FinancialDataConnector @Inject()(val http: HttpGet,
                                       val appConfig: MicroserviceAppConfig
                                       ) extends ServicesConfig with RawResponseReads {
 
-  lazy val desBaseUrl: String = baseUrl("des")
   val getLastEstimatedTaxCalculationUrl: (String, String, String) => String =
-    (nino, year, calcType) => s"$desBaseUrl/calculationstore/lastcalculation/$nino?year=$year&type=$calcType"
+    (nino, year, calcType) => s"${appConfig.desUrl}/calculationstore/lastcalculation/$nino?year=$year&type=$calcType"
 
   def getLastEstimatedTaxCalculation(nino: String, year: String, `type`:String)
                                     (implicit headerCarrier: HeaderCarrier): Future[LastTaxCalculationResponseModel] = {
