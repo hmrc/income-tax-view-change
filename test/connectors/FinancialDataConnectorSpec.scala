@@ -19,10 +19,11 @@ package connectors
 import assets.TestConstants.FinancialData._
 import config.MicroserviceAppConfig
 import mocks.MockHttp
+import models.LastTaxCalculationError
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.play.http.logging.Authorization
-import uk.gov.hmrc.play.http.{HeaderCarrier, HeaderNames, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with MockHttp {
@@ -36,6 +37,7 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
          "calcAmount":2345.67}
       """.stripMargin.split("(?<!\\d)\\s+(?!\\d)").mkString)))
 
+  val badJson = HttpResponse(Status.OK, responseJson = Some(Json.parse("{}")))
   val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 
   object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet, fakeApplication.injector.instanceOf[MicroserviceAppConfig])
@@ -59,6 +61,20 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
       val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
       val enrolResponse = await(result)
       enrolResponse shouldBe lastTaxCalculationError
+    }
+
+    "return LastTaxCalculationError model in case of bad JSON" in {
+      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(badJson)
+      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
+      val enrolResponse = await(result)
+      enrolResponse shouldBe LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Financial Data ")
+    }
+
+    "return LastTaxCalculationError model in case of failed future" in {
+      setupMockHttpGetFailed(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))
+      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
+      val enrolResponse = await(result)
+      enrolResponse shouldBe LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
     }
 
   }
