@@ -7,6 +7,53 @@ This is the protected backend for the Quarterly Reporting Service (MTD ITSA).
 Frontend: https://github.com/hmrc/income-tax-view-change-frontend
 Stub: https://github.tools.tax.service.gov.uk/hmrc/itvc-dynamic-stub
 
+
+## APIs
+
+### **GET** /income-tax-view-change/estimated-tax-liability/**:nino**/**:year**/**:calcType**
+
+Where:
+
+* **:nino** is a valid NINO in format XX999999X, for example: "AB123456C"
+* **:year** is a four-digit tax year in format YYYY, for example: (for 06/04/2016 to 05/04/2017 supply "2017")
+* **:calcType** should currently always be set to "it" for Income Tax
+
+#### Success Response
+
+**HTTP Status**: 200
+
+**Example HTTP Response Body**:
+```
+{   
+   "calcID": "00abcdef",
+   "calcTimestamp": "2017-12-17T09:30:47Z",
+   "calcAmount": 99999999.99
+}
+```
+Where:
+* **calcID** is 8 characters alphanumeric
+* **calcTimestamp** is format date-time
+* **calcAmount** is Number(10,2)
+
+#### Error Responses
+
+##### INVALID_NINO
+* **Status**: 400
+* **Body**: `{status: "400",meesage: "Submission has not passed validation. Invalid parameter NINO."}`
+
+##### NOT_FOUND_NINO
+* **Status**: 404
+* **Body**: `{status: "400",meesage: "The remote endpoint has indicated that no data can be found for the given NINO."}`
+
+#### SERVER_ERROR
+* **Status**: 500
+* **Body**: `{status: "400",meesage: "DES is currently experiencing problems that require live serviceintervention"}`
+
+#### SERVICE_UNAVAILABLE
+* **Status**: 503
+* **Body**: `{status: "400",meesage: "Dependent systems are currently not responding"}`
+
+
 Requirements
 ------------
 
