@@ -18,13 +18,19 @@ package config
 
 import javax.inject.{Inject, Singleton}
 
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.config.{AppName, RunMode}
 import uk.gov.hmrc.play.http.ws._
 
 @Singleton
 class WSHttp @Inject()(override val auditConnector: MicroserviceAuditConnector)
-  extends WSGet with WSPut with WSPost with WSDelete with WSPatch with AppName with RunMode with HttpAuditing {
+  extends WSGet with HttpGet
+  with WSPut with HttpPut
+  with WSPost with HttpPost
+  with WSDelete with HttpDelete
+  with WSPatch with HttpPatch
+  with AppName with RunMode with HttpAuditing {
   override val hooks = Seq(AuditingHook)
 }
 object WSHttp extends WSHttp(MicroserviceAuditConnector)
