@@ -19,9 +19,9 @@ package services
 import mocks.MockFinancialDataConnector
 import models._
 import play.mvc.Http.Status
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.TestConstants.FinancialData._
+import uk.gov.hmrc.http.HeaderCarrier
 
 class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication with MockFinancialDataConnector {
 

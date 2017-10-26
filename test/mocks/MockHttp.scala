@@ -20,10 +20,10 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
 
 
 trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
@@ -36,11 +36,11 @@ trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
   }
 
   def setupMockHttpGet(url: String)(response: HttpResponse): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
+    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def setupMockHttpGetFailed(url: String): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.failed(new Exception("Error")))
+    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.failed(new Exception("Error")))
 
   def setupMockHttpGetWithHeaderCarrier(url: String, hc: HeaderCarrier)(response: HttpResponse): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.eq(hc))).thenReturn(Future.successful(response))
+    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.eq(hc), ArgumentMatchers.any())).thenReturn(Future.successful(response))
 }

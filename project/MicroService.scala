@@ -43,6 +43,7 @@ trait MicroService {
     .settings(defaultSettings(): _*)
     .settings(
       Keys.fork in Test := true,
+      scalaVersion :="2.11.11",
       javaOptions in Test += "-Dlogger.resource=logback-test.xml")
     .settings(
       libraryDependencies ++= appDependencies,

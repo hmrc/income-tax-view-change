@@ -24,14 +24,15 @@ import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.logging.Authorization
-import uk.gov.hmrc.play.http.{HeaderCarrier, _}
+import uk.gov.hmrc.play.http._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{CoreGet, HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.http.logging.Authorization
 
 @Singleton
-class FinancialDataConnector @Inject()(val http: HttpGet,
+class FinancialDataConnector @Inject()(val http: CoreGet,
                                       val appConfig: MicroserviceAppConfig
                                       ) extends ServicesConfig with RawResponseReads {
 
@@ -46,7 +47,7 @@ class FinancialDataConnector @Inject()(val http: HttpGet,
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
     Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Calling GET $url \n\nHeaders: $desHC")
-    http.GET[HttpResponse](url)(httpReads, desHC) flatMap {
+    http.GET[HttpResponse](url)(httpReads, desHC, implicitly) flatMap {
       response =>
         response.status match {
           case OK =>

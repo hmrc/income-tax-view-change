@@ -19,10 +19,11 @@ package config
 import javax.inject.Singleton
 import javax.inject.Inject
 
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.play.audit.http.config.LoadAuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.config.{RunMode, ServicesConfig}
+import uk.gov.hmrc.play.microservice.config.LoadAuditingConfig
 
 
 @Singleton

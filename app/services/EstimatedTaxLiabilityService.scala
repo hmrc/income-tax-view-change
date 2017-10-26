@@ -21,10 +21,10 @@ import javax.inject.{Inject, Singleton}
 import connectors.FinancialDataConnector
 import models._
 import play.api.Logger
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 @Singleton
 class EstimatedTaxLiabilityService @Inject()(val financialDataConnector: FinancialDataConnector) {

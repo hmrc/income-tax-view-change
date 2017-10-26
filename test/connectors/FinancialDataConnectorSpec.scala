@@ -22,9 +22,9 @@ import mocks.MockHttp
 import models.LastTaxCalculationError
 import play.api.libs.json.Json
 import play.mvc.Http.Status
-import uk.gov.hmrc.play.http.logging.Authorization
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
+import uk.gov.hmrc.http.logging.Authorization
 
 class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with MockHttp {
 
