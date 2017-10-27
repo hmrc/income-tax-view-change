@@ -16,9 +16,8 @@
 
 package config
 
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 
-import com.google.inject.Inject
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
