@@ -17,8 +17,9 @@
 package config
 
 import javax.inject.Singleton
+
 import com.google.inject.Inject
-import play.api.Configuration
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 trait AppConfig {
@@ -29,6 +30,9 @@ trait AppConfig {
 
 @Singleton
 class MicroserviceAppConfig @Inject()(val configuration: Configuration) extends AppConfig with ServicesConfig{
+
+  override protected def mode = Play.current.mode
+  override protected def runModeConfiguration = Play.current.configuration
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 

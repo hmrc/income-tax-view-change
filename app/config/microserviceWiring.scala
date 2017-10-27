@@ -16,23 +16,26 @@
 
 package config
 
-import javax.inject.Singleton
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
-import uk.gov.hmrc.http._
+import play.api.Play
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
 import uk.gov.hmrc.play.config.{RunMode, ServicesConfig}
-import uk.gov.hmrc.play.microservice.config.LoadAuditingConfig
 
 
 @Singleton
 class MicroserviceAuditConnector extends AuditConnector with RunMode {
-  override lazy val auditingConfig = LoadAuditingConfig(s"auditing")
+  override protected def mode = Play.current.mode
+  override protected def runModeConfiguration = Play.current.configuration
+  override lazy val auditingConfig = LoadAuditingConfig(runModeConfiguration, mode, s"auditing")
 }
 
 @Singleton
 class MicroserviceAuthConnector @Inject()(val WSHttp: WSHttp) extends PlayAuthConnector with ServicesConfig {
+  override protected def mode = Play.current.mode
+  override protected def runModeConfiguration = Play.current.configuration
   lazy val serviceUrl = baseUrl("auth")
   lazy val http = WSHttp
 }
