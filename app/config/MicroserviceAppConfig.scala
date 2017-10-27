@@ -19,7 +19,8 @@ package config
 import javax.inject.Singleton
 
 import com.google.inject.Inject
-import play.api.{Configuration, Play}
+import play.api.Mode.Mode
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 trait AppConfig {
@@ -29,12 +30,12 @@ trait AppConfig {
 }
 
 @Singleton
-class MicroserviceAppConfig @Inject()(val configuration: Configuration) extends AppConfig with ServicesConfig{
+class MicroserviceAppConfig @Inject()(val environment: Environment,
+                                      val conf: Configuration) extends AppConfig with ServicesConfig {
 
-  override protected def mode = Play.current.mode
-  override protected def runModeConfiguration = Play.current.configuration
-
-  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+  override protected def runModeConfiguration: Configuration = conf
+  override protected def mode: Mode = environment.mode
+  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
   override val desEnvironment: String = loadConfig("microservice.services.des.environment")
   override val desToken: String = loadConfig("microservice.services.des.authorization-token")

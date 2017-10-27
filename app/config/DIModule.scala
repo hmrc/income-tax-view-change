@@ -34,8 +34,6 @@ package config
 
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.auth.core.AuthorisedFunctions
-import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.http.ws._
 import uk.gov.hmrc.http._
 
 class DIModule extends AbstractModule{
@@ -43,12 +41,9 @@ class DIModule extends AbstractModule{
     bind(classOf[AppConfig]).to(classOf[MicroserviceAppConfig]).asEagerSingleton()
     bind(classOf[AuthorisedFunctions]).to(classOf[MicroserviceAuthorisedFunctions]).asEagerSingleton()
     bind(classOf[CoreGet]).to(classOf[WSHttp]).asEagerSingleton()
-//    bind(classOf[HttpGet]).to(classOf[WSHttp]).asEagerSingleton()
     bind(classOf[CorePost]).to(classOf[WSHttp]).asEagerSingleton()
     bind(classOf[CoreDelete]).to(classOf[WSHttp]).asEagerSingleton()
-//    bind(classOf[HttpDelete]).to(classOf[WSHttp]).asEagerSingleton()
     bind(classOf[CorePut]).to(classOf[WSHttp]).asEagerSingleton()
-//    bind(classOf[HttpPut]).to(classOf[WSHttp]).asEagerSingleton()
     bind(classOf[CorePatch]).to(classOf[WSHttp]).asEagerSingleton()
   }
 }

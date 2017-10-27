@@ -18,7 +18,8 @@ package config
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.Play
+import play.api.Mode.Mode
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
@@ -26,20 +27,20 @@ import uk.gov.hmrc.play.config.{RunMode, ServicesConfig}
 
 
 @Singleton
-class MicroserviceAuditConnector extends AuditConnector with RunMode {
-  override protected def mode = Play.current.mode
-  override protected def runModeConfiguration = Play.current.configuration
+class MicroserviceAuditConnector @Inject()(val environment: Environment,
+                                           val conf: Configuration
+                                          ) extends AuditConnector with RunMode {
+  override protected def runModeConfiguration: Configuration = conf
+  override protected def mode: Mode = environment.mode
   override lazy val auditingConfig = LoadAuditingConfig(runModeConfiguration, mode, s"auditing")
 }
 
 @Singleton
-class MicroserviceAuthConnector @Inject()(val WSHttp: WSHttp) extends PlayAuthConnector with ServicesConfig {
-  override protected def mode = Play.current.mode
-  override protected def runModeConfiguration = Play.current.configuration
+class MicroserviceAuthConnector @Inject()( val environment: Environment,
+                                           val conf: Configuration,
+                                           val WSHttp: WSHttp) extends PlayAuthConnector with ServicesConfig {
+  override protected def runModeConfiguration: Configuration = conf
+  override protected def mode: Mode = environment.mode
   lazy val serviceUrl = baseUrl("auth")
   lazy val http = WSHttp
 }
-
-object MicroserviceAuditConnector extends MicroserviceAuditConnector
-
-object MicroserviceAuthConnector extends MicroserviceAuthConnector(WSHttp)
