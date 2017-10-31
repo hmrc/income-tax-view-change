@@ -20,24 +20,16 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
+import uk.gov.hmrc.play.config.RunMode
 
-trait AppConfig {
-  val desToken: String
-  val desEnvironment: String
-  val desUrl: String
-}
 
 @Singleton
-class MicroserviceAppConfig @Inject()(val environment: Environment,
-                                      val conf: Configuration) extends AppConfig with ServicesConfig {
-
+class MicroserviceAuditConnector @Inject()(val environment: Environment,
+                                           val conf: Configuration
+                                          ) extends AuditConnector with RunMode {
   override protected def runModeConfiguration: Configuration = conf
   override protected def mode: Mode = environment.mode
-  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
-
-  override val desEnvironment: String = loadConfig("microservice.services.des.environment")
-  override val desToken: String = loadConfig("microservice.services.des.authorization-token")
-  override val desUrl: String = loadConfig("microservice.services.des.url")
-
+  override lazy val auditingConfig = LoadAuditingConfig(runModeConfiguration, mode, s"auditing")
 }

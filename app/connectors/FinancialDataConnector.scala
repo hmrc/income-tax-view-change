@@ -23,18 +23,16 @@ import models._
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http._
-
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import scala.concurrent.Future
-import uk.gov.hmrc.http.{CoreGet, HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.http.logging.Authorization
+import uk.gov.hmrc.http.{CoreGet, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+
+import scala.concurrent.Future
 
 @Singleton
 class FinancialDataConnector @Inject()(val http: CoreGet,
                                       val appConfig: MicroserviceAppConfig
-                                      ) extends ServicesConfig with RawResponseReads {
+                                      ) extends RawResponseReads {
 
   val getLastEstimatedTaxCalculationUrl: (String, String, String) => String =
     (nino, year, calcType) => s"${appConfig.desUrl}/calculation-store/previous-calculation/$nino?year=$year&type=$calcType"

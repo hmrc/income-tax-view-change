@@ -25,7 +25,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.EstimatedTaxLiabilityService
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
