@@ -30,13 +30,7 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
 
   implicit val hc = HeaderCarrier()
 
-  val lastTaxCalcSuccessResponse =
-    HttpResponse(Status.OK, Some(Json.parse(
-      """{"calcID": "testCalcId",
-         "calcTimestamp": "testTimestamp",
-         "calcAmount":2345.67}
-      """.stripMargin.split("(?<!\\d)\\s+(?!\\d)").mkString)))
-
+  val successResponse = HttpResponse(Status.OK, Some(Json.toJson(lastTaxCalc )))
   val badJson = HttpResponse(Status.OK, responseJson = Some(Json.parse("{}")))
   val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 
@@ -45,36 +39,33 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
   "FinancialDataConnector.getFinancialData" should {
 
     import TestFinancialDataConnector._
-
-    lazy val expectedHc =
+    lazy val expectedHc: HeaderCarrier =
       hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
+    def mock: (HttpResponse) => Unit =
+      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(_)
+
     "return Status (OK) and a JSON body when successful as a LatTaxCalculation model" in {
-      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(lastTaxCalcSuccessResponse)
-      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
-      val enrolResponse = await(result)
-      enrolResponse shouldBe expectedLastTaxCalcResponse
+      mock(successResponse)
+      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe lastTaxCalc
     }
 
     "return LastTaxCalculationError model in case of failure" in {
-      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(badResponse)
-      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
-      val enrolResponse = await(result)
-      enrolResponse shouldBe lastTaxCalculationError
+      mock(badResponse)
+      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe lastTaxCalculationError
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
-      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(badJson)
-      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
-      val enrolResponse = await(result)
-      enrolResponse shouldBe LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Financial Data ")
+      mock(badJson)
+      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe
+        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Financial Data ")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))
-      val result = getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)
-      val enrolResponse = await(result)
-      enrolResponse shouldBe LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
+      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe
+        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
+
     }
 
   }

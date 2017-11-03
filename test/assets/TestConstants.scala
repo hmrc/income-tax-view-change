@@ -25,8 +25,7 @@ object TestConstants {
     val testYear = "2018"
     val testCalcType = "it"
 
-    val expectedLastTaxCalcResponse = LastTaxCalculation("testCalcId", "testTimestamp", 2345.67)
-
+    val lastTaxCalc = LastTaxCalculation("testCalcId", "testTimestamp", 2345.67)
     val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
   }

@@ -34,8 +34,8 @@ class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication
     "a successful response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted LastTaxCalculation model" in {
-        setupMockFinancialDataResult(testNino, testYear, testCalcType)(expectedLastTaxCalcResponse)
-        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe expectedLastTaxCalcResponse
+        setupMockFinancialDataResult(testNino, testYear, testCalcType)(lastTaxCalc)
+        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe lastTaxCalc
       }
     }
 

@@ -47,7 +47,7 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
 
 
         def result: Future[Result] = {
-          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(expectedLastTaxCalcResponse)
+          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(lastTaxCalc)
           TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         }
 
@@ -60,7 +60,7 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
         }
 
         "return the LastTaxCalculation response" in {
-          await(bodyOf(result)) shouldBe Json.toJson(expectedLastTaxCalcResponse).toString
+          await(bodyOf(result)) shouldBe Json.toJson(lastTaxCalc).toString
         }
       }
 
