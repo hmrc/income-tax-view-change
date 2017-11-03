@@ -35,7 +35,6 @@ class EstimatedTaxLiabilityService @Inject()(val financialDataConnector: Financi
     financialDataConnector.getLastEstimatedTaxCalculation(nino, year, calcType).map[LastTaxCalculationResponseModel] {
       case success: LastTaxCalculation =>
         Logger.debug(s"[EstimatedTaxLiabilityService][getEstimateTaxLiability] - Retrieved Financial Data:\n\n$success")
-        //TODO for now just return the Last Calculation amount.  Add additional calc breakdown data
         success
       case error: LastTaxCalculationError =>
         LastTaxCalculationError(error.status, error.message)

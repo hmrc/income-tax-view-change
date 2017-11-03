@@ -28,7 +28,6 @@ import services.EstimatedTaxLiabilityService
 import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 @Singleton
 class EstimatedTaxLiabilityController @Inject()(implicit val appConfig: AppConfig,
@@ -38,13 +37,13 @@ class EstimatedTaxLiabilityController @Inject()(implicit val appConfig: AppConfi
 
   def getEstimatedTaxLiability(nino: String, year: String, calcType: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Requesting Estimate from EstimatedTaxLiabilityService for NINO: $nino")
-    estimatedTaxLiabilityService.getEstimatedTaxLiability(nino, year, calcType).flatMap {
+    estimatedTaxLiabilityService.getEstimatedTaxLiability(nino, year, calcType).map {
       case success: LastTaxCalculation =>
         Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Successful Response: $success")
-        Future.successful(Ok(Json.toJson(success)))
+        Ok(Json.toJson(success))
       case error: LastTaxCalculationError =>
         Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Error Response: $error")
-        Future.successful(Status(error.status)(Json.toJson(error)))
+        Status(error.status)(Json.toJson(error))
     }
   }
 }
