@@ -17,10 +17,9 @@
 package controllers
 
 import assets.TestConstants.FinancialData._
-import auth.{MockAuthorisedUser, MockUnauthorisedUser}
 import config.MicroserviceAppConfig
 import controllers.predicates.AuthenticationPredicate
-import mocks.MockEstimatedTaxLiabilityService
+import mocks.{MockAuthorisedUser, MockEstimatedTaxLiabilityService, MockUnauthorisedUser}
 import play.api.http.Status
 import play.api.test.FakeRequest
 

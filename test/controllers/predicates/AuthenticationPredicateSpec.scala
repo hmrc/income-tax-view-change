@@ -16,17 +16,17 @@
 
 package controllers.predicates
 
-import auth.{MockAuthorisedUser, MockUnauthorisedUser}
+import controllers.ControllerBaseSpec
+import mocks.{MockAuthorisedUser, MockUnauthorisedUser}
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
-import utils.TestSupport
 
 import scala.concurrent.Future
 
 
-class AuthenticationPredicateSpec extends TestSupport {
+class AuthenticationPredicateSpec extends ControllerBaseSpec {
 
   "The AuthenticationPredicate.authenticated method" when {
 
@@ -36,23 +36,13 @@ class AuthenticationPredicateSpec extends TestSupport {
     }.apply(FakeRequest())
 
     "called with an Unauthenticated user (No Bearer Token in Header)" should {
-
       object TestAuthenticationPredicate extends AuthenticationPredicate(MockUnauthorisedUser)
-
-      "return Unauthorised (401)" in {
-        status(result(TestAuthenticationPredicate)) shouldBe Status.UNAUTHORIZED
-      }
+      checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
     }
 
     "called with an authenticated user (Some Bearer Token in Header)" should {
-
       object TestAuthenticationPredicate extends AuthenticationPredicate(MockAuthorisedUser)
-
-      "return OK (200)" in {
-        status(result(TestAuthenticationPredicate)) shouldBe Status.OK
-      }
+      checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
     }
   }
-
-
 }
