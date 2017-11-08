@@ -22,9 +22,12 @@ import models._
 import play.mvc.Http.Status
 import utils.TestSupport
 
+import scala.concurrent.Future
+
 class EstimatedTaxLiabilityServiceSpec extends TestSupport with MockFinancialDataConnector {
 
   object TestEstimatedTaxLiabilityService extends EstimatedTaxLiabilityService(mockFinancialDataConnector)
+  def result: Future[LastTaxCalculationResponseModel] = TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)
 
   "The EstimatedTaxLiabilityService.getEstimatedTaxLiability method" when {
 
@@ -32,16 +35,15 @@ class EstimatedTaxLiabilityServiceSpec extends TestSupport with MockFinancialDat
 
       "return a correctly formatted LastTaxCalculation model" in {
         mockFinancialDataResult(lastTaxCalc)
-        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe lastTaxCalc
+        await(result) shouldBe lastTaxCalc
       }
     }
 
     "an Error Response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted LastTaxCalculationError model" in {
-        val expectedResponse = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
         mockFinancialDataResult(lastTaxCalculationError)
-        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe expectedResponse
+        await(result) shouldBe lastTaxCalculationError
       }
     }
   }
