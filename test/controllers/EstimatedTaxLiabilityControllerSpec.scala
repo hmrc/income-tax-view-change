@@ -30,7 +30,7 @@ import utils.TestSupport
 import scala.concurrent.Future
 
 
-class EstimatedTaxLiabilityControllerSpec extends TestSupport with MockEstimatedTaxLiabilityService {
+class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEstimatedTaxLiabilityService {
 
   "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
 
@@ -49,17 +49,9 @@ class EstimatedTaxLiabilityControllerSpec extends TestSupport with MockEstimated
           TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         }
 
-        "return a OK result (200)" in {
-          status(result) shouldBe Status.OK
-        }
-
-        "content type of result should be Application/Json" in {
-          await(result).body.contentType shouldBe Some("application/json")
-        }
-
-        "return the LastTaxCalculation response" in {
-          await(bodyOf(result)) shouldBe Json.toJson(lastTaxCalc).toString
-        }
+        checkStatusOf(result)(Status.OK)
+        checkContentTypeOf(result)("application/json")
+        checkBodyOf(result)(lastTaxCalc)
       }
 
       "an invalid response from the Estimated Tax Liability Service" should {
@@ -69,17 +61,9 @@ class EstimatedTaxLiabilityControllerSpec extends TestSupport with MockEstimated
           TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         }
 
-        "return a OK result (200)" in {
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-        }
-
-        "content type of result should be Application/Json" in {
-          await(result).body.contentType shouldBe Some("application/json")
-        }
-
-        "return the LastTaxCalculationError response" in {
-          await(jsonBodyOf(result)) shouldBe Json.toJson(lastTaxCalculationError)
-        }
+        checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
+        checkContentTypeOf(result)("application/json")
+        checkBodyOf(result)(lastTaxCalculationError)
       }
     }
 
@@ -91,10 +75,9 @@ class EstimatedTaxLiabilityControllerSpec extends TestSupport with MockEstimated
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )
 
-      "return Unauthorised (401)" in {
-        val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
-        status(result) shouldBe Status.UNAUTHORIZED
-      }
+      lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
+
+      checkStatusOf(result)(Status.UNAUTHORIZED)
     }
   }
 }
