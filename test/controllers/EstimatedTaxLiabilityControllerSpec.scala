@@ -25,29 +25,27 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import utils.MaterializerSupport
+import utils.TestSupport
 
 import scala.concurrent.Future
 
 
-class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplication with MockEstimatedTaxLiabilityService with MaterializerSupport {
+class EstimatedTaxLiabilityControllerSpec extends TestSupport with MockEstimatedTaxLiabilityService {
 
   "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
 
     "called with an Authenticated user" when {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = fakeApplication.injector.instanceOf[MicroserviceAppConfig],
+        appConfig = app.injector.instanceOf[MicroserviceAppConfig],
         authentication = new AuthenticationPredicate(MockAuthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )
 
       "a valid response from the Estimated Tax Liability Service" should {
 
-
         def result: Future[Result] = {
-          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(lastTaxCalc)
+          mockEstimateTaxLiabilityResponse(lastTaxCalc)
           TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         }
 
@@ -67,7 +65,7 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
       "an invalid response from the Estimated Tax Liability Service" should {
 
         def result: Future[Result] = {
-          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(lastTaxCalculationError)
+          mockEstimateTaxLiabilityResponse(lastTaxCalculationError)
           TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
         }
 
@@ -88,7 +86,7 @@ class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplicat
     "called with an Unauthenticated user" should {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = fakeApplication.injector.instanceOf[MicroserviceAppConfig],
+        appConfig = app.injector.instanceOf[MicroserviceAppConfig],
         authentication = new AuthenticationPredicate(MockUnauthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )

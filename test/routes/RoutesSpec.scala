@@ -16,9 +16,9 @@
 
 package routes
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import utils.TestSupport
 
-class RoutesSpec extends UnitSpec with WithFakeApplication {
+class RoutesSpec extends TestSupport {
 
   val contextRoute: String = "/income-tax-view-change"
 

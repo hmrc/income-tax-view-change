@@ -19,9 +19,9 @@ package models
 import org.scalatest.Matchers
 import play.api.http.Status
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.TestSupport
 
-class LastTaxCalculationResponseModelSpec extends UnitSpec with Matchers{
+class LastTaxCalculationResponseModelSpec extends TestSupport with Matchers {
 
   "LastTaxCalculationResponseMode model" when {
 

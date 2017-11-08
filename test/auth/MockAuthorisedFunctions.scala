@@ -25,7 +25,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 
 trait MockAuthorisedFunctions extends AuthorisedFunctions with MockitoSugar {
-  override val authConnector = mock[MicroserviceAuthConnector]
+  override val authConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 }
 
 object MockAuthorisedUser extends MockAuthorisedFunctions {

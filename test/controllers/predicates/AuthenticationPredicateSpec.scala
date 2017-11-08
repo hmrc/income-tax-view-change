@@ -17,18 +17,16 @@
 package controllers.predicates
 
 import auth.{MockAuthorisedUser, MockUnauthorisedUser}
-import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import utils.TestSupport
 
 import scala.concurrent.Future
 
 
-class AuthenticationPredicateSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
-
+class AuthenticationPredicateSpec extends TestSupport {
 
   "The AuthenticationPredicate.authenticated method" when {
 

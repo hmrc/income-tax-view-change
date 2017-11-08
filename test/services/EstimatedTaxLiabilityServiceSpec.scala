@@ -16,16 +16,13 @@
 
 package services
 
+import assets.TestConstants.FinancialData._
 import mocks.MockFinancialDataConnector
 import models._
 import play.mvc.Http.Status
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.TestConstants.FinancialData._
-import uk.gov.hmrc.http.HeaderCarrier
+import utils.TestSupport
 
-class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication with MockFinancialDataConnector {
-
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+class EstimatedTaxLiabilityServiceSpec extends TestSupport with MockFinancialDataConnector {
 
   object TestEstimatedTaxLiabilityService extends EstimatedTaxLiabilityService(mockFinancialDataConnector)
 
@@ -34,7 +31,7 @@ class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication
     "a successful response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted LastTaxCalculation model" in {
-        setupMockFinancialDataResult(testNino, testYear, testCalcType)(lastTaxCalc)
+        mockFinancialDataResult(lastTaxCalc)
         await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe lastTaxCalc
       }
     }
@@ -43,7 +40,7 @@ class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication
 
       "return a correctly formatted LastTaxCalculationError model" in {
         val expectedResponse = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
-        setupMockFinancialDataResult(testNino, testYear, testCalcType)(lastTaxCalculationError)
+        mockFinancialDataResult(lastTaxCalculationError)
         await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe expectedResponse
       }
     }

@@ -17,16 +17,24 @@
 package assets
 
 import models.{LastTaxCalculation, LastTaxCalculationError}
+import play.api.libs.json.Json
 import play.mvc.Http.Status
+import uk.gov.hmrc.http.HttpResponse
 
 object TestConstants {
   object FinancialData {
+
     val testNino = "BB123456A"
     val testYear = "2018"
     val testCalcType = "it"
 
     val lastTaxCalc = LastTaxCalculation("testCalcId", "testTimestamp", 2345.67)
     val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
+
+    //Connector Responses
+    val successResponse = HttpResponse(Status.OK, Some(Json.toJson(lastTaxCalc)))
+    val badJson = HttpResponse(Status.OK, responseJson = Some(Json.parse("{}")))
+    val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 
   }
 }

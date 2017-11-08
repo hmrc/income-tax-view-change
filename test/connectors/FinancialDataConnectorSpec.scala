@@ -20,21 +20,14 @@ import assets.TestConstants.FinancialData._
 import config.MicroserviceAppConfig
 import mocks.MockHttp
 import models.LastTaxCalculationError
-import play.api.libs.json.Json
 import play.mvc.Http.Status
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
 import uk.gov.hmrc.http.logging.Authorization
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import utils.TestSupport
 
-class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with MockHttp {
+class FinancialDataConnectorSpec extends TestSupport with MockHttp {
 
-  implicit val hc = HeaderCarrier()
-
-  val successResponse = HttpResponse(Status.OK, Some(Json.toJson(lastTaxCalc )))
-  val badJson = HttpResponse(Status.OK, responseJson = Some(Json.parse("{}")))
-  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
-
-  object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet, fakeApplication.injector.instanceOf[MicroserviceAppConfig])
+  object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet, app.injector.instanceOf[MicroserviceAppConfig])
 
   "FinancialDataConnector.getFinancialData" should {
 
@@ -65,9 +58,6 @@ class FinancialDataConnectorSpec extends UnitSpec with WithFakeApplication with 
       setupMockHttpGetFailed(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))
       await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe
         LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
-
     }
-
   }
-
 }
