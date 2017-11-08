@@ -45,28 +45,28 @@ class FinancialDataConnector @Inject()(val http: CoreGet,
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
     Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Calling GET $url \n\nHeaders: $desHC")
-    http.GET[HttpResponse](url)(httpReads, desHC, implicitly) flatMap {
+    http.GET[HttpResponse](url)(httpReads, desHC, implicitly) map {
       response =>
         response.status match {
           case OK =>
             Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Future.successful(response.json.validate[LastTaxCalculation].fold(
+            response.json.validate[LastTaxCalculation].fold(
               invalid => {
                 Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Json ValidationError. Parsing Financial Data")
                 Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response possibly returned `None` for calcAmount: ${response.body}")
                 LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Financial Data ")
               },
               valid => valid
-            ))
+            )
           case _ =>
             Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
             Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response status: [${response.status}] returned from Latest Calc call")
-            Future.successful(LastTaxCalculationError(response.status, response.body))
+            LastTaxCalculationError(response.status, response.body)
         }
-    } recoverWith {
+    } recover {
       case _ =>
         Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future")
-        Future.successful(LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future"))
+        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
     }
   }
 }

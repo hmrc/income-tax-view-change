@@ -33,10 +33,10 @@ class AuthenticationPredicate @Inject()(val authorisedFunctions: AuthorisedFunct
     Action.async { implicit request =>
       authorisedFunctions.authorised() {
         action(request)
-      } recoverWith {
+      } recover {
         case _ =>
           Logger.debug("[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response")
-          Future.successful(Unauthorized)
+          Unauthorized
       }
     }
 }

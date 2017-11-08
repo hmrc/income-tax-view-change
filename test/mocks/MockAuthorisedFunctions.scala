@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package auth
+package mocks
 
 import config.MicroserviceAuthConnector
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.auth.core.authorise.EmptyPredicate
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, MissingBearerToken}
-
-import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import scala.concurrent.{ExecutionContext, Future}
+
 trait MockAuthorisedFunctions extends AuthorisedFunctions with MockitoSugar {
-  override val authConnector = mock[MicroserviceAuthConnector]
+  override val authConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 }
 
 object MockAuthorisedUser extends MockAuthorisedFunctions {

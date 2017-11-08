@@ -16,9 +16,11 @@
 
 package mocks
 
+import assets.TestConstants.FinancialData.{testCalcType, testNino, testYear}
 import models.LastTaxCalculationResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import services.EstimatedTaxLiabilityService
@@ -36,7 +38,8 @@ trait MockEstimatedTaxLiabilityService extends UnitSpec with MockitoSugar with B
     reset(mockEstimateTaxLiabilityService)
   }
 
-  def setupMockEstimatedTaxLiabilityResponse(nino: String, year: String, calcType: String)(response: LastTaxCalculationResponseModel): Unit =
+  def setupMockEstimatedTaxLiabilityResponse(nino: String, year: String, calcType: String)(response: LastTaxCalculationResponseModel)
+  : OngoingStubbing[Future[LastTaxCalculationResponseModel]] =
     when(mockEstimateTaxLiabilityService
       .getEstimatedTaxLiability(
         ArgumentMatchers.eq(nino),
@@ -44,4 +47,7 @@ trait MockEstimatedTaxLiabilityService extends UnitSpec with MockitoSugar with B
         ArgumentMatchers.eq(calcType))
       (ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
+
+  def mockEstimateTaxLiabilityResponse(lastTaxCalcResponse: LastTaxCalculationResponseModel): OngoingStubbing[Future[LastTaxCalculationResponseModel]] =
+    setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(lastTaxCalcResponse)
 }

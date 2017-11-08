@@ -17,86 +17,57 @@
 package controllers
 
 import assets.TestConstants.FinancialData._
-import auth.{MockAuthorisedUser, MockUnauthorisedUser}
 import config.MicroserviceAppConfig
 import controllers.predicates.AuthenticationPredicate
-import mocks.MockEstimatedTaxLiabilityService
+import mocks.{MockAuthorisedUser, MockEstimatedTaxLiabilityService, MockUnauthorisedUser}
 import play.api.http.Status
-import play.api.libs.json.Json
-import play.api.mvc.Result
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import utils.MaterializerSupport
-
-import scala.concurrent.Future
 
 
-class EstimatedTaxLiabilityControllerSpec extends UnitSpec with WithFakeApplication with MockEstimatedTaxLiabilityService with MaterializerSupport {
+class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEstimatedTaxLiabilityService {
 
   "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
 
     "called with an Authenticated user" when {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = fakeApplication.injector.instanceOf[MicroserviceAppConfig],
+        appConfig = app.injector.instanceOf[MicroserviceAppConfig],
         authentication = new AuthenticationPredicate(MockAuthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )
 
       "a valid response from the Estimated Tax Liability Service" should {
 
+        mockEstimateTaxLiabilityResponse(lastTaxCalc)
+        lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
 
-        def result: Future[Result] = {
-          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(expectedLastTaxCalcResponse)
-          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
-        }
-
-        "return a OK result (200)" in {
-          status(result) shouldBe Status.OK
-        }
-
-        "content type of result should be Application/Json" in {
-          await(result).body.contentType shouldBe Some("application/json")
-        }
-
-        "return the LastTaxCalculation response" in {
-          await(bodyOf(result)) shouldBe Json.toJson(expectedLastTaxCalcResponse).toString
-        }
+        checkStatusOf(result)(Status.OK)
+        checkContentTypeOf(result)("application/json")
+        checkJsonBodyOf(result)(lastTaxCalc)
       }
 
       "an invalid response from the Estimated Tax Liability Service" should {
 
-        def result: Future[Result] = {
-          setupMockEstimatedTaxLiabilityResponse(testNino, testYear, testCalcType)(lastTaxCalculationError)
-          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
-        }
+        mockEstimateTaxLiabilityResponse(lastTaxCalculationError)
+        lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
 
-        "return a OK result (200)" in {
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-        }
-
-        "content type of result should be Application/Json" in {
-          await(result).body.contentType shouldBe Some("application/json")
-        }
-
-        "return the LastTaxCalculationError response" in {
-          await(jsonBodyOf(result)) shouldBe Json.toJson(lastTaxCalculationError)
-        }
+        checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
+        checkContentTypeOf(result)("application/json")
+        checkJsonBodyOf(result)(lastTaxCalculationError)
       }
     }
 
     "called with an Unauthenticated user" should {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = fakeApplication.injector.instanceOf[MicroserviceAppConfig],
+        appConfig = app.injector.instanceOf[MicroserviceAppConfig],
         authentication = new AuthenticationPredicate(MockUnauthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )
 
-      "return Unauthorised (401)" in {
-        val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
-        status(result) shouldBe Status.UNAUTHORIZED
-      }
+      lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
+
+      checkStatusOf(result)(Status.UNAUTHORIZED)
     }
   }
 }

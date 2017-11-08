@@ -16,35 +16,34 @@
 
 package services
 
+import assets.TestConstants.FinancialData._
 import mocks.MockFinancialDataConnector
 import models._
 import play.mvc.Http.Status
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.TestConstants.FinancialData._
-import uk.gov.hmrc.http.HeaderCarrier
+import utils.TestSupport
 
-class EstimatedTaxLiabilityServiceSpec extends UnitSpec with WithFakeApplication with MockFinancialDataConnector {
+import scala.concurrent.Future
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+class EstimatedTaxLiabilityServiceSpec extends TestSupport with MockFinancialDataConnector {
 
   object TestEstimatedTaxLiabilityService extends EstimatedTaxLiabilityService(mockFinancialDataConnector)
+  def result: Future[LastTaxCalculationResponseModel] = TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)
 
   "The EstimatedTaxLiabilityService.getEstimatedTaxLiability method" when {
 
     "a successful response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted LastTaxCalculation model" in {
-        setupMockFinancialDataResult(testNino, testYear, testCalcType)(expectedLastTaxCalcResponse)
-        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe expectedLastTaxCalcResponse
+        mockFinancialDataResult(lastTaxCalc)
+        await(result) shouldBe lastTaxCalc
       }
     }
 
     "an Error Response is returned from the FinancialDataConnector" should {
 
       "return a correctly formatted LastTaxCalculationError model" in {
-        val expectedResponse = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
-        setupMockFinancialDataResult(testNino, testYear, testCalcType)(lastTaxCalculationError)
-        await(TestEstimatedTaxLiabilityService.getEstimatedTaxLiability(testNino, testYear, testCalcType)) shouldBe expectedResponse
+        mockFinancialDataResult(lastTaxCalculationError)
+        await(result) shouldBe lastTaxCalculationError
       }
     }
   }

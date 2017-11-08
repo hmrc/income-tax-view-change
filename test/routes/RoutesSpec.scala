@@ -16,9 +16,9 @@
 
 package routes
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import utils.TestSupport
 
-class RoutesSpec extends UnitSpec with WithFakeApplication {
+class RoutesSpec extends TestSupport {
 
   val contextRoute: String = "/income-tax-view-change"
 
@@ -29,9 +29,8 @@ class RoutesSpec extends UnitSpec with WithFakeApplication {
   // Estimated Tax Liability routes
   "The URL for the EstimatedTaxLiabilityController.getEstimateTaxLiability action" should {
     s"be equal to $contextRoute/estimated-tax-liability" in {
-      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType).url.shouldBe(
-        s"$contextRoute/estimated-tax-liability/$testNino/$testYear/$testCalcType")
-
+      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType).url shouldBe
+        s"$contextRoute/estimated-tax-liability/$testNino/$testYear/$testCalcType"
     }
   }
 }
