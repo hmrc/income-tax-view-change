@@ -29,9 +29,8 @@ class RoutesSpec extends TestSupport {
   // Estimated Tax Liability routes
   "The URL for the EstimatedTaxLiabilityController.getEstimateTaxLiability action" should {
     s"be equal to $contextRoute/estimated-tax-liability" in {
-      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType).url.shouldBe(
-        s"$contextRoute/estimated-tax-liability/$testNino/$testYear/$testCalcType")
-
+      controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType).url shouldBe
+        s"$contextRoute/estimated-tax-liability/$testNino/$testYear/$testCalcType"
     }
   }
 }

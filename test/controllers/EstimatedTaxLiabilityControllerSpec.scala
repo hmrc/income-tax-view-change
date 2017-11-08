@@ -22,12 +22,7 @@ import config.MicroserviceAppConfig
 import controllers.predicates.AuthenticationPredicate
 import mocks.MockEstimatedTaxLiabilityService
 import play.api.http.Status
-import play.api.libs.json.Json
-import play.api.mvc.Result
 import play.api.test.FakeRequest
-import utils.TestSupport
-
-import scala.concurrent.Future
 
 
 class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEstimatedTaxLiabilityService {
@@ -44,10 +39,8 @@ class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEs
 
       "a valid response from the Estimated Tax Liability Service" should {
 
-        def result: Future[Result] = {
-          mockEstimateTaxLiabilityResponse(lastTaxCalc)
-          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
-        }
+        mockEstimateTaxLiabilityResponse(lastTaxCalc)
+        lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
         checkContentTypeOf(result)("application/json")
@@ -56,10 +49,8 @@ class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEs
 
       "an invalid response from the Estimated Tax Liability Service" should {
 
-        def result: Future[Result] = {
-          mockEstimateTaxLiabilityResponse(lastTaxCalculationError)
-          TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
-        }
+        mockEstimateTaxLiabilityResponse(lastTaxCalculationError)
+        lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
