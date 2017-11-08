@@ -37,9 +37,9 @@ class ControllerBaseSpec extends TestSupport {
     }
   }
 
-  def checkBodyOf[A](result: Future[Result])(expectedBody: A)(implicit format: Format[A]): Unit = {
+  def checkJsonBodyOf[A](result: Future[Result])(expectedBody: A)(implicit format: Format[A]): Unit = {
     s"return the response body $expectedBody" in {
-      await(bodyOf(result)) shouldBe Json.toJson(expectedBody).toString
+      await(jsonBodyOf(result)) shouldBe Json.toJson(expectedBody)
     }
   }
 }

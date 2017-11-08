@@ -43,7 +43,7 @@ class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEs
 
         checkStatusOf(result)(Status.OK)
         checkContentTypeOf(result)("application/json")
-        checkBodyOf(result)(lastTaxCalc)
+        checkJsonBodyOf(result)(lastTaxCalc)
       }
 
       "an invalid response from the Estimated Tax Liability Service" should {
@@ -53,7 +53,7 @@ class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEs
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
-        checkBodyOf(result)(lastTaxCalculationError)
+        checkJsonBodyOf(result)(lastTaxCalculationError)
       }
     }
 
