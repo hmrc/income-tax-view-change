@@ -30,8 +30,7 @@ class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEs
 
     "called with an Authenticated user" when {
 
-      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = app.injector.instanceOf[MicroserviceAppConfig],
+      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController(
         authentication = new AuthenticationPredicate(MockAuthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )
@@ -59,8 +58,7 @@ class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEs
 
     "called with an Unauthenticated user" should {
 
-      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController()(
-        appConfig = app.injector.instanceOf[MicroserviceAppConfig],
+      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController(
         authentication = new AuthenticationPredicate(MockUnauthorisedUser),
         estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
       )

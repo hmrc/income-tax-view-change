@@ -18,7 +18,6 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import config.AppConfig
 import controllers.predicates.AuthenticationPredicate
 import models.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.Logger
@@ -30,8 +29,7 @@ import uk.gov.hmrc.play.bootstrap.controller.BaseController
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class EstimatedTaxLiabilityController @Inject()(implicit val appConfig: AppConfig,
-                                                val authentication: AuthenticationPredicate,
+class EstimatedTaxLiabilityController @Inject()(val authentication: AuthenticationPredicate,
                                                 val estimatedTaxLiabilityService: EstimatedTaxLiabilityService
                                       ) extends BaseController {
 

@@ -38,7 +38,6 @@ import uk.gov.hmrc.http._
 
 class DIModule extends AbstractModule{
   def configure(): Unit = {
-    bind(classOf[AppConfig]).to(classOf[MicroserviceAppConfig]).asEagerSingleton()
     bind(classOf[AuthorisedFunctions]).to(classOf[MicroserviceAuthorisedFunctions]).asEagerSingleton()
     bind(classOf[CoreGet]).to(classOf[WSHttp]).asEagerSingleton()
     bind(classOf[CorePost]).to(classOf[WSHttp]).asEagerSingleton()

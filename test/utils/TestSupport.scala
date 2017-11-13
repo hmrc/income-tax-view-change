@@ -16,6 +16,7 @@
 
 package utils
 
+import config.MicroserviceAppConfig
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -29,5 +30,7 @@ trait TestSupport extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar wi
 
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  val microserviceAppConfig: MicroserviceAppConfig = app.injector.instanceOf[MicroserviceAppConfig]
 
 }

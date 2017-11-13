@@ -27,11 +27,12 @@ import utils.TestSupport
 
 class FinancialDataConnectorSpec extends TestSupport with MockHttp {
 
-  object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet, app.injector.instanceOf[MicroserviceAppConfig])
+  object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet, microserviceAppConfig)
 
   "FinancialDataConnector.getFinancialData" should {
 
     import TestFinancialDataConnector._
+
     lazy val expectedHc: HeaderCarrier =
       hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
