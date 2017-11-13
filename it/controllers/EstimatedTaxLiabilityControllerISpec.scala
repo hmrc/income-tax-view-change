@@ -27,8 +27,7 @@ class EstimatedTaxLiabilityControllerISpec extends ComponentSpecBase {
     "authorised with a valid request" should {
       "return a valid simple calculation estimate" in {
 
-        Given("I wiremock stub an authorised user response")
-        AuthStub.stubAuthorised()
+        isAuthorised(true)
 
         And("I wiremock stub a successful Get Financial Data response")
         FinancialDataStub.stubGetFinancialData(testNino, testYear, testCalcType, lastTaxCalculation)
@@ -51,8 +50,7 @@ class EstimatedTaxLiabilityControllerISpec extends ComponentSpecBase {
     "unauthorised" should {
       "return an error" in {
 
-        Given("I wiremock stub an unauthorised user response")
-        AuthStub.stubUnauthorised()
+        isAuthorised(false)
 
         When(s"I call GET /income-tax-view-change/estimated-tax-liability/$testNino/$testYear")
         val res = IncomeTaxViewChange.getEstimatedTaxLiability(testNino, testYear, testCalcType)
