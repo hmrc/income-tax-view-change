@@ -16,6 +16,7 @@
 
 package helpers
 
+import helpers.servicemocks.AuthStub
 import org.scalatest._
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -56,5 +57,15 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     def get(uri: String): WSResponse = await(buildClient(uri).get())
 
     def getEstimatedTaxLiability(nino: String, year: String, calcType: String): WSResponse = get(s"/estimated-tax-liability/$nino/$year/$calcType")
+  }
+
+  def isAuthorised(authorised: Boolean): Unit = {
+    if(authorised){
+      Given("I wiremock stub an authorised user response")
+      AuthStub.stubAuthorised()
+    } else {
+      Given("I wiremock stub an unauthorised user response")
+      AuthStub.stubUnauthorised()
+    }
   }
 }
