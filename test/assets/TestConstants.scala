@@ -16,15 +16,18 @@
 
 package assets
 
-import models.{LastTaxCalculation, LastTaxCalculationError}
+import models._
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 
 object TestConstants {
+
+  val testNino = "BB123456A"
+  val mtdRef = "123456789012345"
+
   object FinancialData {
 
-    val testNino = "BB123456A"
     val testYear = "2018"
     val testCalcType = "it"
 
@@ -36,5 +39,45 @@ object TestConstants {
     val badJson = HttpResponse(Status.OK, responseJson = Some(Json.parse("{}")))
     val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 
+  }
+  object DesBusinessDetails {
+
+    val testBusiness =
+      BusinessDataModel(
+        incomeSourceId = "111111111111111",
+        accountingPeriodStartDate = "2017-06-01",
+        accountingPeriodEndDate = "2018-05-31",
+        tradingName = "Test Business",
+        businessAddressDetails =
+          BusinessAddressModel(
+            addressLine1 = "Test Lane",
+            addressLine2 = "Test Unit",
+            addressLine3 = "Test Town",
+            addressLine4 = "Test City",
+            postalCode = "TE5 7TE",
+            countryCode = "GB"
+          ),
+        businessContactDetails =
+          BusinessContactModel(
+            phoneNumber = "01332752856",
+            mobileNumber = "07782565326",
+            faxNumber = "01332754256",
+            emailAddress = "stephen@manncorpone.co.uk"
+          ),
+        tradingStartDate = "2017-01-01",
+        cashOrAccruals = cash,
+        seasonal = true,
+        paperless = true
+      )
+
+
+    val desBusinessResponse =
+      DesBusinessDetails(
+        safeId = "XAIT12345678908",
+        nino = testNino,
+        mtdbsa = mtdRef,
+        propertyIncome = false,
+        businessData = testBusiness
+      )
   }
 }
