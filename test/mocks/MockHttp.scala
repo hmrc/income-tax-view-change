@@ -20,7 +20,8 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -28,7 +29,7 @@ import scala.concurrent.Future
 
 trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockHttpGet: HttpGet = mock[HttpGet]
+  val mockHttpGet: HttpClient = mock[HttpClient]
 
   override def beforeEach(): Unit = {
     super.beforeEach()

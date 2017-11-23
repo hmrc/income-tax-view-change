@@ -19,7 +19,6 @@ package services
 import assets.TestConstants.FinancialData._
 import mocks.MockFinancialDataConnector
 import models._
-import play.mvc.Http.Status
 import utils.TestSupport
 
 import scala.concurrent.Future
