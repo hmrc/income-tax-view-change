@@ -19,6 +19,7 @@ package models
 import org.scalatest.Matchers
 import play.api.libs.json._
 import assets.TestConstants.DesBusinessDetails._
+import assets.TestConstants._
 import play.api.http.Status
 import utils.TestSupport
 
@@ -26,7 +27,7 @@ class DesResponseModelSpec extends TestSupport with Matchers {
 
   "The DesResponseModel" should {
     "read from Json" in {
-      Json.fromJson[DesBusinessDetailsModel](testBusinessModelJson) shouldBe JsSuccess(desBusinessResponse(testBusinessModel))
+      Json.fromJson[DesBusinessDetails](testBusinessModelJson) shouldBe JsSuccess(desBusinessResponse(testBusinessModel))
     }
   }
 
@@ -35,10 +36,10 @@ class DesResponseModelSpec extends TestSupport with Matchers {
       "the minimum amount of fields are returned" in {
         val res = desBusinessResponse(testMinimumBusinessModel)
         val tstJson = Json.parse(
-          """{
+          s"""{
               |"safeId":"XAIT12345678908",
-              |"nino":"nino",
-              |"mtdbsa":"mtdRef",
+              |"nino":"$testNino",
+              |"mtdbsa":"$mtdRef",
               |"propertyIncome":false,
               |"businessData": [
               |{
@@ -50,7 +51,7 @@ class DesResponseModelSpec extends TestSupport with Matchers {
             |}
           """.stripMargin
         )
-        Json.fromJson[DesBusinessDetailsModel](tstJson) shouldBe JsSuccess(res)
+        Json.fromJson[DesBusinessDetails](tstJson) shouldBe JsSuccess(res)
       }
     }
   }
