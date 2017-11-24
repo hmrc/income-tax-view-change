@@ -77,14 +77,14 @@ case class PropertyDataModel(
 case class DesBusinessDetailsErrorModel(status: Int, reason: String)
 
 object DesBusinessDetailsModel {
-  implicit val format: OFormat[DesBusinessDetailsModel] = Json.format[DesBusinessDetailsModel]
   implicit val bFormat: OFormat[BusinessDataModel] = BusinessDataModel.format
   implicit val pFormat: OFormat[PropertyDataModel] = PropertyDataModel.format
+  implicit val format: OFormat[DesBusinessDetailsModel] = Json.format[DesBusinessDetailsModel]
 }
 object BusinessDataModel {
-  implicit val format: OFormat[BusinessDataModel] = Json.format[BusinessDataModel]
   implicit val contactFormat: OFormat[BusinessContactModel] = BusinessContactModel.format
   implicit val addressFormat: OFormat[BusinessAddressModel] = BusinessAddressModel.format
+  implicit val format: OFormat[BusinessDataModel] = Json.format[BusinessDataModel]
 }
 object BusinessContactModel {
   implicit val format: OFormat[BusinessContactModel] = Json.format[BusinessContactModel]

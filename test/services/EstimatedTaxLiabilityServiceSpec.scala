@@ -17,6 +17,7 @@
 package services
 
 import assets.TestConstants.FinancialData._
+import assets.TestConstants._
 import mocks.MockFinancialDataConnector
 import models._
 import utils.TestSupport

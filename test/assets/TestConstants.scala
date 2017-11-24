@@ -17,7 +17,7 @@
 package assets
 
 import models._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 
@@ -40,44 +40,101 @@ object TestConstants {
     val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 
   }
+
   object DesBusinessDetails {
 
-    val testBusiness =
+    val testBusinessModel = Some(List(
       BusinessDataModel(
         incomeSourceId = "111111111111111",
         accountingPeriodStartDate = "2017-06-01",
         accountingPeriodEndDate = "2018-05-31",
-        tradingName = "Test Business",
-        businessAddressDetails =
+        tradingName = Some("Test Business"),
+        businessAddressDetails = Some(
           BusinessAddressModel(
             addressLine1 = "Test Lane",
-            addressLine2 = "Test Unit",
-            addressLine3 = "Test Town",
-            addressLine4 = "Test City",
+            addressLine2 = Some("Test Unit"),
+            addressLine3 = Some("Test Town"),
+            addressLine4 = Some("Test City"),
             postalCode = "TE5 7TE",
             countryCode = "GB"
-          ),
-        businessContactDetails =
+          )),
+        businessContactDetails = Some(
           BusinessContactModel(
-            phoneNumber = "01332752856",
-            mobileNumber = "07782565326",
-            faxNumber = "01332754256",
-            emailAddress = "stephen@manncorpone.co.uk"
-          ),
-        tradingStartDate = "2017-01-01",
-        cashOrAccruals = cash,
-        seasonal = true,
-        paperless = true
+            phoneNumber = Some("01332752856"),
+            mobileNumber = Some("07782565326"),
+            faxNumber = Some("01332754256"),
+            emailAddress = Some("stephen@manncorpone.co.uk")
+          )),
+        tradingStartDate = Some("2017-01-01"),
+        cashOrAccruals = Some("cash"),
+        cessationDate = None,
+        cessationReason = None,
+        seasonal = Some(true),
+        paperless = Some(true)
+      )))
+
+    val testMinimumBusinessModel = Some(List(
+      BusinessDataModel(
+        incomeSourceId = "111111111111111",
+        accountingPeriodStartDate = "2017-06-01",
+        accountingPeriodEndDate = "2018-05-31",
+        tradingName = None,
+        businessAddressDetails = None,
+        businessContactDetails = None,
+        tradingStartDate = None,
+        cashOrAccruals = None,
+        cessationDate = None,
+        cessationReason = None,
+        seasonal = None,
+        paperless = None
       )
-
-
-    val desBusinessResponse =
-      DesBusinessDetails(
+    ))
+    def desBusinessResponse(businessModel: Option[List[BusinessDataModel]]): DesBusinessDetailsModel =
+      DesBusinessDetailsModel(
         safeId = "XAIT12345678908",
-        nino = testNino,
-        mtdbsa = mtdRef,
-        propertyIncome = false,
-        businessData = testBusiness
+        nino = "nino",
+        mtdbsa = "mtdRef",
+        propertyIncome = Some(false),
+        businessData = businessModel,
+        propertyData = None
       )
+
+    val testBusinessModelJson: JsValue = Json.parse(
+      s"""{
+        |"safeId":"XAIT12345678908",
+        |"nino":"nino",
+        |"mtdbsa":"mtdRef",
+        |"propertyIncome":false,
+        |"businessData": [
+        | {
+        |   "incomeSourceId":"111111111111111",
+        |   "accountingPeriodStartDate":"2017-06-01",
+        |   "accountingPeriodEndDate":"2018-05-31",
+        |   "tradingName":"Test Business",
+        |   "businessAddressDetails":{
+        |     "addressLine1":"Test Lane",
+        |     "addressLine2":"Test Unit",
+        |     "addressLine3":"Test Town",
+        |     "addressLine4":"Test City",
+        |     "postalCode":"TE5 7TE",
+        |     "countryCode":"GB"
+        |   },
+        |   "businessContactDetails":{
+        |     "phoneNumber":"01332752856",
+        |     "mobileNumber":"07782565326",
+        |     "faxNumber":"01332754256",
+        |     "emailAddress":"stephen@manncorpone.co.uk"
+        |   },
+        |   "tradingStartDate":"2017-01-01",
+        |   "cashOrAccruals":"cash",
+        |   "seasonal":true,
+        |   "paperless":true
+        |  }
+        | ]
+        |}
+      """.stripMargin
+    )
+
+    val testDesResponseError = DesBusinessDetailsErrorModel(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
   }
 }
