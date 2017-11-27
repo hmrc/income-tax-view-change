@@ -41,16 +41,16 @@ object TestConstants {
 
   }
 
-  object DesBusinessDetails {
+  object BusinessDetails {
 
     val testBusinessModel = Some(List(
-      BusinessDataModel(
+      BusinessData(
         incomeSourceId = "111111111111111",
         accountingPeriodStartDate = "2017-06-01",
         accountingPeriodEndDate = "2018-05-31",
         tradingName = Some("Test Business"),
         businessAddressDetails = Some(
-          BusinessAddressModel(
+          BusinessAddress(
             addressLine1 = "Test Lane",
             addressLine2 = Some("Test Unit"),
             addressLine3 = Some("Test Town"),
@@ -59,7 +59,7 @@ object TestConstants {
             countryCode = "GB"
           )),
         businessContactDetails = Some(
-          BusinessContactModel(
+          BusinessContact(
             phoneNumber = Some("01332752856"),
             mobileNumber = Some("07782565326"),
             faxNumber = Some("01332754256"),
@@ -74,7 +74,8 @@ object TestConstants {
       )))
 
     val testMinimumBusinessModel = Some(List(
-      BusinessDataModel(
+
+      BusinessData(
         incomeSourceId = "111111111111111",
         accountingPeriodStartDate = "2017-06-01",
         accountingPeriodEndDate = "2018-05-31",
@@ -89,11 +90,12 @@ object TestConstants {
         paperless = None
       )
     ))
-    def desBusinessResponse(businessModel: Option[List[BusinessDataModel]]): DesBusinessDetailsModel =
-      DesBusinessDetailsModel(
+
+    def desBusinessResponse(businessModel: Option[List[BusinessData]]): DesBusinessDetails =
+      DesBusinessDetails(
         safeId = "XAIT12345678908",
-        nino = "nino",
-        mtdbsa = "mtdRef",
+        nino = testNino,
+        mtdbsa = mtdRef,
         propertyIncome = Some(false),
         businessData = businessModel,
         propertyData = None
@@ -102,8 +104,8 @@ object TestConstants {
     val testBusinessModelJson: JsValue = Json.parse(
       s"""{
         |"safeId":"XAIT12345678908",
-        |"nino":"nino",
-        |"mtdbsa":"mtdRef",
+        |"nino":"$testNino",
+        |"mtdbsa":"$mtdRef",
         |"propertyIncome":false,
         |"businessData": [
         | {
@@ -135,6 +137,11 @@ object TestConstants {
       """.stripMargin
     )
 
-    val testDesResponseError = DesBusinessDetailsErrorModel(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+    val testDesResponseError = DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+
+    //Connector Responses
+    val successResponse = HttpResponse(Status.OK, Some(Json.toJson(desBusinessResponse(testBusinessModel))))
+    val badJson = HttpResponse(Status.OK, Some(Json.toJson("{}")))
+    val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Dummy error message"))
   }
 }
