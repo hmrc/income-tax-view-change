@@ -78,6 +78,9 @@ case class PropertyData(
 
 case class DesBusinessDetailsError(status: Int, reason: String) extends DesResponseModel
 
+object Nino {
+  implicit val format: OFormat[Nino] = Json.format[Nino]
+}
 object DesBusinessDetails {
   implicit val bFormat: OFormat[BusinessData] = BusinessData.format
   implicit val pFormat: OFormat[PropertyData] = PropertyData.format
@@ -96,4 +99,7 @@ object BusinessAddress {
 }
 object PropertyData {
   implicit val format: OFormat[PropertyData] = Json.format[PropertyData]
+}
+object DesBusinessDetailsError {
+  implicit val format: OFormat[DesBusinessDetailsError] = Json.format[DesBusinessDetailsError]
 }
