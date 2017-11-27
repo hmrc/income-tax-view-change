@@ -41,7 +41,7 @@ object TestConstants {
 
   }
 
-  object DesBusinessDetails {
+  object BusinessDetails {
 
     val testBusinessModel = Some(List(
       BusinessData(

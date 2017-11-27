@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.TestConstants.DesBusinessDetailsResponse._
+import assets.TestConstants.BusinessDetails._
 import assets.TestConstants._
 import mocks.MockHttp
 import models.DesBusinessDetailsError
