@@ -1,3 +1,5 @@
 # microservice specific routes
 
 GET        /estimated-tax-liability/:nino/:year/:calcType             @controllers.EstimatedTaxLiabilityController.getEstimatedTaxLiability(nino, year, calcType)
+
+GET        /nino-lookup/:mtdRef                                       @controllers.NinoLookupController.getNino(mtdRef)
