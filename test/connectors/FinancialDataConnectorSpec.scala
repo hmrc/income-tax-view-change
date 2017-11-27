@@ -17,7 +17,7 @@
 package connectors
 
 import assets.TestConstants.FinancialData._
-import config.MicroserviceAppConfig
+import assets.TestConstants._
 import mocks.MockHttp
 import models.LastTaxCalculationError
 import play.mvc.Http.Status
