@@ -43,6 +43,8 @@ object TestConstants {
 
   object BusinessDetails {
 
+    val testNinoModel = Nino(testNino)
+
     val testBusinessModel = Some(List(
       BusinessData(
         incomeSourceId = "111111111111111",

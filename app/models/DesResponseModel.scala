@@ -20,6 +20,8 @@ import play.api.libs.json.{Json, OFormat}
 
 sealed trait DesResponseModel
 
+case class Nino(nino: String) extends DesResponseModel
+
 case class DesBusinessDetails(
                                safeId: String,
                                nino: String,
