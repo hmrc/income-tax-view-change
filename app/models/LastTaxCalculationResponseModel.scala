@@ -23,7 +23,7 @@ sealed trait LastTaxCalculationResponseModel
 case class LastTaxCalculation(calcID: String,
                               calcTimestamp: String,
                               calcAmount: BigDecimal,
-                              crystalisedFlag: Option[String] = None) extends LastTaxCalculationResponseModel
+                              crystallisedFlag: Option[String] = None) extends LastTaxCalculationResponseModel
 
 case class LastTaxCalculationError(status: Int, message: String) extends LastTaxCalculationResponseModel
 
