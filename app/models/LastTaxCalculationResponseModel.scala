@@ -22,7 +22,8 @@ sealed trait LastTaxCalculationResponseModel
 
 case class LastTaxCalculation(calcID: String,
                               calcTimestamp: String,
-                              calcAmount: BigDecimal) extends LastTaxCalculationResponseModel
+                              calcAmount: BigDecimal,
+                              calcStatus: Option[String] = None) extends LastTaxCalculationResponseModel
 
 case class LastTaxCalculationError(status: Int, message: String) extends LastTaxCalculationResponseModel
 
