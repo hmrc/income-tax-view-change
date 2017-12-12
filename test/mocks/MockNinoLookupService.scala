@@ -16,37 +16,36 @@
 
 package mocks
 
-import assets.TestConstants.FinancialData._
 import assets.TestConstants._
-import connectors.FinancialDataConnector
-import models.LastTaxCalculationResponseModel
+import models.DesResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
+import services.NinoLookupService
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
 
-trait MockFinancialDataConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockNinoLookupService extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockFinancialDataConnector: FinancialDataConnector = mock[FinancialDataConnector]
+  val mockNinoLookupService: NinoLookupService = mock[NinoLookupService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFinancialDataConnector)
+    reset(mockNinoLookupService)
   }
 
-  def setupMockFinancialDataResult(nino: String, year: String, calcType: String)(response: LastTaxCalculationResponseModel)
-  : OngoingStubbing[Future[LastTaxCalculationResponseModel]] =
-    when(mockFinancialDataConnector.getLastEstimatedTaxCalculation(
-      ArgumentMatchers.eq(nino),
-      ArgumentMatchers.eq(year),
-      ArgumentMatchers.eq(calcType))(ArgumentMatchers.any()))
+  def setupMockNinoLookupServiceResponse(mtdRef: String)(response: DesResponseModel)
+  : OngoingStubbing[Future[DesResponseModel]] =
+    when(mockNinoLookupService
+      .getNino(
+        ArgumentMatchers.eq(mtdRef))
+      (ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
 
-  def mockFinancialDataResult(taxCalcResponse: LastTaxCalculationResponseModel): OngoingStubbing[Future[LastTaxCalculationResponseModel]] =
-    setupMockFinancialDataResult(testNino, testYear, testCalcType)(taxCalcResponse)
+  def mockNinoLookupResponse(desResponse: DesResponseModel): OngoingStubbing[Future[DesResponseModel]] =
+    setupMockNinoLookupServiceResponse(mtdRef)(desResponse)
 }

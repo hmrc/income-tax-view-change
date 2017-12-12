@@ -16,54 +16,54 @@
 
 package controllers
 
-import assets.TestConstants.FinancialData._
+import assets.TestConstants.BusinessDetails._
 import assets.TestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockAuthorisedUser, MockEstimatedTaxLiabilityService, MockUnauthorisedUser}
+import mocks.{MockAuthorisedUser, MockNinoLookupService, MockUnauthorisedUser}
 import play.api.http.Status
 import play.api.test.FakeRequest
 
 
-class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEstimatedTaxLiabilityService {
+class NinoLookupControllerSpec extends ControllerBaseSpec with MockNinoLookupService {
 
-  "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
+  "The NinoLookupController.getNino action" when {
 
     "called with an Authenticated user" when {
 
-      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController(
+      object TestNinoLookupController extends NinoLookupController(
         authentication = new AuthenticationPredicate(MockAuthorisedUser),
-        estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
+        ninoLookupService = mockNinoLookupService
       )
 
-      "a valid response from the Estimated Tax Liability Service" should {
+      "a valid response from the Nino Lookup Service" should {
 
-        mockEstimateTaxLiabilityResponse(lastTaxCalc)
-        lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
+        mockNinoLookupResponse(testNinoModel)
+        lazy val result = TestNinoLookupController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
         checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(lastTaxCalc)
+        checkJsonBodyOf(result)(testNinoModel)
       }
 
       "an invalid response from the Estimated Tax Liability Service" should {
 
-        mockEstimateTaxLiabilityResponse(lastTaxCalculationError)
-        lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
+        mockNinoLookupResponse(testDesResponseError)
+        lazy val result = TestNinoLookupController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(lastTaxCalculationError)
+        checkJsonBodyOf(result)(testDesResponseError)
       }
     }
 
     "called with an Unauthenticated user" should {
 
-      object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController(
+      object TestNinoLookupController extends NinoLookupController(
         authentication = new AuthenticationPredicate(MockUnauthorisedUser),
-        estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
+        ninoLookupService = mockNinoLookupService
       )
 
-      lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())
+      lazy val result = TestNinoLookupController.getNino(mtdRef)(FakeRequest())
 
       checkStatusOf(result)(Status.UNAUTHORIZED)
     }

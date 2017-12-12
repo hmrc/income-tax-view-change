@@ -16,49 +16,49 @@
 
 package connectors
 
-import assets.TestConstants.FinancialData._
+import assets.TestConstants.BusinessDetails._
 import assets.TestConstants._
 import mocks.MockHttp
-import models.LastTaxCalculationError
+import models.DesBusinessDetailsError
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.TestSupport
 
-class FinancialDataConnectorSpec extends TestSupport with MockHttp {
+class NinoLookupConnectorSpec extends TestSupport with MockHttp {
 
-  object TestFinancialDataConnector extends FinancialDataConnector(mockHttpGet, microserviceAppConfig)
+  object TestNinoLookupConnector extends NinoLookupConnector(mockHttpGet, microserviceAppConfig)
 
-  "FinancialDataConnector.getFinancialData" should {
+  "NinoLookupConnecytor.getDesBusinessDetails" should {
 
-    import TestFinancialDataConnector._
+    import TestNinoLookupConnector._
 
     lazy val expectedHc: HeaderCarrier =
       hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
     def mock: (HttpResponse) => Unit =
-      setupMockHttpGetWithHeaderCarrier(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType), expectedHc)(_)
+      setupMockHttpGetWithHeaderCarrier(getDesBusinessDetailsUrl(mtdRef), expectedHc)(_)
 
-    "return Status (OK) and a JSON body when successful as a LatTaxCalculation model" in {
+    "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
-      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe lastTaxCalc
+      await(getDesBusinessDetails(mtdRef)) shouldBe desBusinessResponse(testBusinessModel)
     }
 
     "return LastTaxCalculationError model in case of failure" in {
       mock(badResponse)
-      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe lastTaxCalculationError
+      await(getDesBusinessDetails(mtdRef)) shouldBe testDesResponseError
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
       mock(badJson)
-      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe
-        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Financial Data ")
+      await(getDesBusinessDetails(mtdRef)) shouldBe
+        DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
-      setupMockHttpGetFailed(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))
-      await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe
-        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
+      setupMockHttpGetFailed(getDesBusinessDetailsUrl(mtdRef))
+      await(getDesBusinessDetails(mtdRef)) shouldBe
+        DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
     }
   }
 }

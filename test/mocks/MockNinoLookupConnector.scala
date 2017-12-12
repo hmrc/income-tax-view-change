@@ -16,10 +16,9 @@
 
 package mocks
 
-import assets.TestConstants.FinancialData._
 import assets.TestConstants._
-import connectors.FinancialDataConnector
-import models.LastTaxCalculationResponseModel
+import connectors.NinoLookupConnector
+import models.DesResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
@@ -30,23 +29,21 @@ import uk.gov.hmrc.play.test.UnitSpec
 import scala.concurrent.Future
 
 
-trait MockFinancialDataConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockNinoLookupConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockFinancialDataConnector: FinancialDataConnector = mock[FinancialDataConnector]
+  val mockNinoLookupConnector: NinoLookupConnector = mock[NinoLookupConnector]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockFinancialDataConnector)
+    reset(mockNinoLookupConnector)
   }
 
-  def setupMockFinancialDataResult(nino: String, year: String, calcType: String)(response: LastTaxCalculationResponseModel)
-  : OngoingStubbing[Future[LastTaxCalculationResponseModel]] =
-    when(mockFinancialDataConnector.getLastEstimatedTaxCalculation(
-      ArgumentMatchers.eq(nino),
-      ArgumentMatchers.eq(year),
-      ArgumentMatchers.eq(calcType))(ArgumentMatchers.any()))
+  def setupMockDesBusinessDetailsResult(mtdRef: String)(response: DesResponseModel)
+  : OngoingStubbing[Future[DesResponseModel]] =
+    when(mockNinoLookupConnector.getDesBusinessDetails(
+      ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
 
-  def mockFinancialDataResult(taxCalcResponse: LastTaxCalculationResponseModel): OngoingStubbing[Future[LastTaxCalculationResponseModel]] =
-    setupMockFinancialDataResult(testNino, testYear, testCalcType)(taxCalcResponse)
+  def mockDesBusinessDetailsResult(desBusinessDetailsResponse: DesResponseModel): OngoingStubbing[Future[DesResponseModel]] =
+    setupMockDesBusinessDetailsResult(mtdRef)(desBusinessDetailsResponse)
 }
