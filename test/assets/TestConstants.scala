@@ -23,6 +23,22 @@ import uk.gov.hmrc.http.HttpResponse
 
 object TestConstants {
 
+  object incomeSources {
+
+    val testIncomeSources = IncomeSourceDetailsModel(List(
+      IncomeModel("1","1",None),
+      IncomeModel("2","2",None),
+      IncomeModel("3","3",None),
+      IncomeModel("4","4",None),
+      IncomeModel("4","5",None)
+    ))
+
+    val successResponse = HttpResponse(Status.OK, Some(Json.toJson(testIncomeSources)))
+    val badJson = HttpResponse(Status.OK, Some(Json.toJson("{}")))
+    val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Dummy error message"))
+
+  }
+
   val testNino = "BB123456A"
   val mtdRef = "123456789012345"
 
