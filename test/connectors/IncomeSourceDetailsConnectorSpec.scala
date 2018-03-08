@@ -46,20 +46,20 @@ class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp{
     "return IncomeSourcesError model in case of bad JSON" in {
       mock(badJson)
       await(getIncomeSourceDetails(mtdRef)) shouldBe
-        IncomeSourcesError(Status.INTERNAL_SERVER_ERROR, "json")
+        IncomeSourcesError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing IncomeSourceDetails")
     }
 
     "return IncomeSourcesError model when status is not OK" in {
       mock(badResponse)
       await(getIncomeSourceDetails(mtdRef)) shouldBe
-        IncomeSourcesError(Status.INTERNAL_SERVER_ERROR, "status")
+        IncomeSourcesError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
     }
 
 
     "return IncomeSourcesError model in case of failed future" in {
       setupMockHttpGetFailed(getIncomeSourceDetailsUrl(mtdRef))
       await(getIncomeSourceDetails(mtdRef)) shouldBe
-        IncomeSourcesError(Status.INTERNAL_SERVER_ERROR, "recover")
+        IncomeSourcesError(Status.INTERNAL_SERVER_ERROR,"Unexpected failed future")
     }
 
   }

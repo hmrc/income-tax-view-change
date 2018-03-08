@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import play.api.http.Status._
 import scala.concurrent.Future
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import play.api.Logger
 
 
 @Singleton
@@ -43,17 +44,27 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
     val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
+    Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Calling GET $url \n\nHeaders: $desHC")
     http.GET[HttpResponse](url)(httpReads, desHC, implicitly) map {
       response =>
         response.status match {
-          case OK => response.json.validate[IncomeSourceDetailsModel].fold(
-            invalid => IncomeSourcesError(Status.INTERNAL_SERVER_ERROR,"json"),
-            valid => valid
-          )
-          case _ => IncomeSourcesError(response.status,"status")
+          case OK =>
+            Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status:${response.status}, body:${response.body}")
+            response.json.validate[IncomeSourceDetailsModel].fold(
+              invalid => {
+                Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Json ValidationError. Parsing IncomeSourceDetails")
+                IncomeSourcesError(Status.INTERNAL_SERVER_ERROR,"Json Validation Error. Parsing IncomeSourceDetails")
+              }, valid => valid
+            )
+          case _ =>
+            Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Response status: [${response.status}] returned from getIncomeSourceDetails")
+            IncomeSourcesError(response.status,response.body)
         }
     } recover {
-      case _ => IncomeSourcesError(Status.INTERNAL_SERVER_ERROR,"recover")
+      case _ =>
+        Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Unexpected failed future")
+        IncomeSourcesError(Status.INTERNAL_SERVER_ERROR,"Unexpected failed future")
     }
   }
 }
