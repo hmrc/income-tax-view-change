@@ -29,15 +29,15 @@ import scala.concurrent.Future
 @Singleton
 class NinoLookupService @Inject()(val ninoLookupConnector: NinoLookupConnector) {
 
-  def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[DesResponseModel] = {
+  def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     Logger.debug("[NinoLookupService][getNino] - Requesting Des Business Details from Connector")
-    ninoLookupConnector.getDesBusinessDetails(mtdRef).map[DesResponseModel] {
-      case success: DesBusinessDetails =>
+    ninoLookupConnector.getDesBusinessDetails(mtdRef).map[IncomeSourceDetailsResponseModel] {
+      case success: IncomeSourceDetailsModel =>
         Logger.debug(s"[NinoLookupService][getNino] - Retrieved Des Business Details:\n\n$success")
         Logger.debug(s"[NinoLookupService][getNino] - Converting to Nino Response Model")
-        Nino(success.nino)
-      case error: DesBusinessDetailsError =>
-        DesBusinessDetailsError(error.status, error.reason)
+        NinoModel(success.nino)
+      case error: IncomeSourceDetailsError =>
+        IncomeSourceDetailsError(error.status, error.reason)
     }
   }
 }
