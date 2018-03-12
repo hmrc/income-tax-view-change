@@ -16,27 +16,64 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat, Reads, Writes}
+import java.time.LocalDate
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, Reads, _}
 
 case class BusinessDetailsModel(incomeSourceId: String,
                                 accountingPeriod: AccountingPeriodModel,
                                 tradingName: Option[String],
                                 address: Option[AddressModel],
                                 contactDetails: Option[ContactDetailsModel],
-                                tradingStartDate: Option[String],
+                                tradingStartDate: Option[LocalDate],
                                 cashOrAccruals: Option[String],
                                 seasonal: Option[Boolean],
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean])
 
+
 object BusinessDetailsModel {
-  implicit val contactReads: Reads[ContactDetailsModel] = ContactDetailsModel.reads
-  implicit val contactWrites: Writes[ContactDetailsModel] = ContactDetailsModel.writes
-  implicit val addressReads: Reads[AddressModel] = AddressModel.reads
-  implicit val addressWrites: Writes[AddressModel] = AddressModel.writes
-  implicit val cessationReads: Reads[CessationModel] = CessationModel.reads
-  implicit val cessationWrites: Writes[CessationModel] = CessationModel.writes
-  implicit val accountingPeriodReads: Reads[AccountingPeriodModel] = AccountingPeriodModel.reads
-  implicit val accountingPeriodWrites: Writes[AccountingPeriodModel] = AccountingPeriodModel.writes
-  implicit val format: OFormat[BusinessDetailsModel] = Json.format[BusinessDetailsModel]
+
+  implicit val reads: Reads[BusinessDetailsModel] = (
+    (__ \ "incomeSourceId").read[String] and
+      __.read[AccountingPeriodModel] and
+      (__ \ "tradingName").readNullable[String] and
+      (__ \ "businessAddressDetails").readNullable[AddressModel] and
+      (__ \ "businessContactDetails").readNullable[ContactDetailsModel] and
+      (__ \ "tradingStartDate").readNullable[LocalDate] and
+      (__ \ "cashOrAccruals").readNullable[String] and
+      (__ \ "seasonal").readNullable[Boolean] and
+      (__ \ "cessationDate").readNullable[LocalDate] and
+      (__ \ "cessationReason").readNullable[String] and
+      (__ \ "paperless").readNullable[Boolean]
+    )(BusinessDetailsModel.applyWithFields _)
+
+  def applyWithFields(incomeSourceId: String,
+                    accountingPeriodModel: AccountingPeriodModel,
+                    tradingName: Option[String],
+                    address: Option[AddressModel],
+                    contactDetails: Option[ContactDetailsModel],
+                    tradingStartDate: Option[LocalDate],
+                    cashOrAccruals: Option[String],
+                    seasonal: Option[Boolean],
+                    cessationDate: Option[LocalDate],
+                    cessationReason: Option[String],
+                    paperless: Option[Boolean]): BusinessDetailsModel =
+    BusinessDetailsModel(
+      incomeSourceId,
+      accountingPeriodModel,
+      tradingName,
+      address,
+      contactDetails,
+      tradingStartDate,
+      cashOrAccruals,
+      seasonal,
+      CessationModel.cessation(cessationDate, cessationReason),
+      paperless
+    )
+
+  implicit val writes: Writes[BusinessDetailsModel] = Json.writes[BusinessDetailsModel]
+
+
 }

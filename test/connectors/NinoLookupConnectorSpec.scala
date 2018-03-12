@@ -19,7 +19,7 @@ package connectors
 import assets.TestConstants.BusinessDetails._
 import assets.TestConstants._
 import mocks.MockHttp
-import models.DesBusinessDetailsError
+import models.IncomeSourceDetailsError
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -29,7 +29,7 @@ class NinoLookupConnectorSpec extends TestSupport with MockHttp {
 
   object TestNinoLookupConnector extends NinoLookupConnector(mockHttpGet, microserviceAppConfig)
 
-  "NinoLookupConnecytor.getDesBusinessDetails" should {
+  "NinoLookupConnector.getIncomeSourceDetails" should {
 
     import TestNinoLookupConnector._
 
@@ -41,24 +41,24 @@ class NinoLookupConnectorSpec extends TestSupport with MockHttp {
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
-      await(getDesBusinessDetails(mtdRef)) shouldBe desBusinessResponse(testBusinessModel)
+      await(getIncomeSourceDetails(mtdRef)) shouldBe testIncomeSourceDetailsModel
     }
 
     "return LastTaxCalculationError model in case of failure" in {
       mock(badResponse)
-      await(getDesBusinessDetails(mtdRef)) shouldBe testDesResponseError
+      await(getIncomeSourceDetails(mtdRef)) shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
       mock(badJson)
-      await(getDesBusinessDetails(mtdRef)) shouldBe
-        DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
+      await(getIncomeSourceDetails(mtdRef)) shouldBe
+        IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getDesBusinessDetailsUrl(mtdRef))
-      await(getDesBusinessDetails(mtdRef)) shouldBe
-        DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
+      await(getIncomeSourceDetails(mtdRef)) shouldBe
+        IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
     }
   }
 }

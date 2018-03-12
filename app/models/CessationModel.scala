@@ -30,5 +30,10 @@ object CessationModel {
       (__ \ "cessationReason").readNullable[String]
   )(CessationModel.apply _)
 
+  def cessation(date: Option[LocalDate], reason: Option[String]): Option[CessationModel] =
+    (date,reason) match{
+      case (None,None) => None
+      case _ => Some(CessationModel(date,reason))
+    }
   implicit val writes: Writes[CessationModel] = Json.writes[CessationModel]
 }

@@ -24,11 +24,18 @@ case class PropertiesRentedModel(uk:Option[Int], eea:Option[Int], nonEea:Option[
 object PropertiesRentedModel {
 
   implicit val reads: Reads[PropertiesRentedModel] = (
-    (__ \ "numPropRented").readNullable[Int] and
-      (__ \ "numPropRentedUK").readNullable[Int] and
+    (__ \ "numPropRentedUK").readNullable[Int] and
       (__ \ "numPropRentedEEA").readNullable[Int] and
-      (__ \ "numPropRentedNONEEA").readNullable[Int]
+      (__ \ "numPropRentedNONEEA").readNullable[Int] and
+      (__ \ "numPropRented").readNullable[Int]
   )(PropertiesRentedModel.apply _)
+
+  def propertiesRented(uk:Option[Int], eea:Option[Int], nonEea:Option[Int], total:Option[Int]): Option[PropertiesRentedModel] = {
+    (uk,eea,nonEea,total) match {
+      case (None,None,None,None) => None
+      case _ => Some(PropertiesRentedModel(uk,eea,nonEea,total))
+    }
+  }
 
   implicit val writes: Writes[PropertiesRentedModel] = Json.writes[PropertiesRentedModel]
 

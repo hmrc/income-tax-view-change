@@ -16,23 +16,50 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat, Reads, Writes}
+import java.time.LocalDate
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, Reads, _}
+
 
 case class PropertyDetailsModel(incomeSourceId: String,
                                 accountingPeriod: AccountingPeriodModel,
                                 contactDetails: Option[ContactDetailsModel],
                                 propertiesRented: Option[PropertiesRentedModel],
-                                cessationDate: Option[String],
-                                cessationReason: Option[String],
+                                cessation: Option[CessationModel],
                                 paperless: Option[Boolean])
 
 object PropertyDetailsModel {
 
-  implicit val cessationReads: Reads[CessationModel] = CessationModel.reads
-  implicit val cessationWrites: Writes[CessationModel] = CessationModel.writes
-  implicit val accountingPeriodReads: Reads[AccountingPeriodModel] = AccountingPeriodModel.reads
-  implicit val accountingPeriodWrites: Writes[AccountingPeriodModel] = AccountingPeriodModel.writes
-  implicit val propertiesRentedReads: Reads[PropertiesRentedModel] = PropertiesRentedModel.reads
-  implicit val propertiesRentedWrites: Writes[PropertiesRentedModel] = PropertiesRentedModel.writes
-  implicit val format: OFormat[PropertyDetailsModel] = Json.format[PropertyDetailsModel]
+  implicit val reads: Reads[PropertyDetailsModel] = (
+    (__ \ "incomeSourceId").read[String] and
+      __.read[AccountingPeriodModel] and
+      (__ \ "emailAddress").readNullable[String] and
+      (__ \ "numPropRentedUK").readNullable[Int] and
+      (__ \ "numPropRentedEEA").readNullable[Int] and
+      (__ \ "numPropRentedNONEEA").readNullable[Int] and
+      (__ \ "numPropRented").readNullable[Int] and
+      (__ \ "cessationDate").readNullable[LocalDate] and
+      (__ \ "cessationReason").readNullable[String] and
+      (__ \ "paperless").readNullable[Boolean]
+    )(PropertyDetailsModel.applyWithFields _)
+
+  def applyWithFields(incomeSourceId: String,
+                 accountingPeriod: AccountingPeriodModel,
+                 email: Option[String],
+                 uk: Option[Int],
+                 eea: Option[Int],
+                 nonEea: Option[Int],
+                 total: Option[Int],
+                 cessationDate: Option[LocalDate],
+                 cessationReason: Option[String],
+                 paperless: Option[Boolean]): PropertyDetailsModel = new PropertyDetailsModel(
+    incomeSourceId,
+    accountingPeriod,
+    ContactDetailsModel.propertyContactDetails(email),
+    PropertiesRentedModel.propertiesRented(uk,eea,nonEea,total),
+    CessationModel.cessation(cessationDate, cessationReason),
+    paperless)
+  implicit val writes: Writes[PropertyDetailsModel] = Json.writes[PropertyDetailsModel]
+
 }

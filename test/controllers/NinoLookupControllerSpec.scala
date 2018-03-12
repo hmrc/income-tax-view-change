@@ -47,12 +47,12 @@ class NinoLookupControllerSpec extends ControllerBaseSpec with MockNinoLookupSer
 
       "an invalid response from the Estimated Tax Liability Service" should {
 
-        mockNinoLookupResponse(testDesResponseError)
+        mockNinoLookupResponse(testIncomeSourceDetailsError)
         lazy val result = TestNinoLookupController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testDesResponseError)
+        checkJsonBodyOf(result)(testIncomeSourceDetailsError)
       }
     }
 

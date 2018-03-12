@@ -27,14 +27,14 @@ import scala.concurrent.Future
 class NinoLookupServiceSpec extends TestSupport with MockNinoLookupConnector {
 
   object TestNinoLookupService extends NinoLookupService(mockNinoLookupConnector)
-  def result: Future[DesResponseModel] = TestNinoLookupService.getNino(mtdRef)
+  def result: Future[IncomeSourceDetailsResponseModel] = TestNinoLookupService.getNino(mtdRef)
 
   "The NinoLookupService.getNino method" when {
 
     "a successful response is returned from the NinoLookupConnector" should {
 
       "return a correctly formatted DesBusinessDetails model" in {
-        val resp: DesResponseModel = desBusinessResponse(testBusinessModel)
+        val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
         mockDesBusinessDetailsResult(resp)
         await(result) shouldBe testNinoModel
       }
@@ -43,8 +43,8 @@ class NinoLookupServiceSpec extends TestSupport with MockNinoLookupConnector {
     "an Error Response is returned from the NinoLookupConnector" should {
 
       "return a correctly formatted DesBusinessDetailsError model" in {
-        mockDesBusinessDetailsResult(testDesResponseError)
-        await(result) shouldBe testDesResponseError
+        mockDesBusinessDetailsResult(testIncomeSourceDetailsError)
+        await(result) shouldBe testIncomeSourceDetailsError
       }
     }
   }

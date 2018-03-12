@@ -33,6 +33,13 @@ object ContactDetailsModel {
       (__ \ "emailAddress").readNullable[String]
   )(ContactDetailsModel.apply _)
 
+
+  def propertyContactDetails(email: Option[String]): Option[ContactDetailsModel] =
+    email match{
+      case None => None
+      case _ => Some(ContactDetailsModel(None,None,None,email))
+    }
+
   implicit val writes: Writes[ContactDetailsModel] = Json.writes[ContactDetailsModel]
 
 }

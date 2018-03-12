@@ -53,6 +53,7 @@ class NinoLookupConnector @Inject()(val http: HttpClient,
             response.json.validate[IncomeSourceDetailsModel] fold(
               invalid => {
                 Logger.warn(s"[NinoLookupConnector][getDesBusinessDetails] - Json ValidationError. Parsing Des Business Details")
+                Logger.debug(s"[NinoLookupConnector][getDesBusinessDetails] - Validation Errors: $invalid")
                 IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
               },
               valid => valid

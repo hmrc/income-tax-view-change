@@ -31,7 +31,7 @@ class NinoLookupService @Inject()(val ninoLookupConnector: NinoLookupConnector) 
 
   def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     Logger.debug("[NinoLookupService][getNino] - Requesting Des Business Details from Connector")
-    ninoLookupConnector.getDesBusinessDetails(mtdRef).map[IncomeSourceDetailsResponseModel] {
+    ninoLookupConnector.getIncomeSourceDetails(mtdRef).map[IncomeSourceDetailsResponseModel] {
       case success: IncomeSourceDetailsModel =>
         Logger.debug(s"[NinoLookupService][getNino] - Retrieved Des Business Details:\n\n$success")
         Logger.debug(s"[NinoLookupService][getNino] - Converting to Nino Response Model")

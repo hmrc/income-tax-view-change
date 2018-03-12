@@ -33,7 +33,7 @@ object AddressModel {
       (__ \ "addressLine2").readNullable[String] and
       (__ \ "addressLine3").readNullable[String] and
       (__ \ "addressLine4").readNullable[String] and
-      (__ \ "postalcode").readNullable[String] and
+      (__ \ "postalCode").readNullable[String] and
       (__ \ "countryCode").read[String]
   )(AddressModel.apply _)
 

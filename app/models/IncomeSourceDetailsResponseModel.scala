@@ -16,15 +16,15 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, Reads, _}
 
 sealed trait IncomeSourceDetailsResponseModel
 
 case class NinoModel(nino: String) extends IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsModel(nino: String,
-                                    propertyIncome: Option[Boolean],
-                                    businessData: Option[List[BusinessDetailsModel]],
+                                    businessData: List[BusinessDetailsModel],
                                     propertyData: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
@@ -34,9 +34,30 @@ object NinoModel {
 }
 
 object IncomeSourceDetailsModel {
-  implicit val bFormat: OFormat[BusinessDetailsModel] = BusinessDetailsModel.format
-  implicit val pFormat: OFormat[PropertyDetailsModel] = PropertyDetailsModel.format
-  implicit val format: OFormat[IncomeSourceDetailsModel] = Json.format[IncomeSourceDetailsModel]
+
+  def applyWithFields(nino: String,
+           businessData: Option[List[BusinessDetailsModel]],
+           propertyData: Option[PropertyDetailsModel]): IncomeSourceDetailsModel = {
+
+    val businessDetails = businessData match {
+      case Some(data) => data
+      case None => List()
+    }
+    IncomeSourceDetailsModel(
+      nino,
+      businessDetails,
+      propertyData
+    )
+  }
+
+  implicit val reads: Reads[IncomeSourceDetailsModel] = (
+    (__ \ "nino").read[String] and
+      (__ \ "businessData").readNullable[List[BusinessDetailsModel]] and
+      (__ \ "propertyData").readNullable[PropertyDetailsModel]
+    )(IncomeSourceDetailsModel.applyWithFields _)
+
+  implicit val writes: Writes[IncomeSourceDetailsModel] = Json.writes[IncomeSourceDetailsModel]
+
 }
 
 object IncomeSourceDetailsError {

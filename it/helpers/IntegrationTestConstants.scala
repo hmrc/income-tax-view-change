@@ -16,6 +16,8 @@
 
 package helpers
 
+import java.time.LocalDate
+
 import models._
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
@@ -37,46 +39,40 @@ object IntegrationTestConstants {
 
   val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
-  val ninoLookup = Nino(testNino)
+  val ninoLookup = NinoModel(testNino)
 
-  val ninoLookupError = DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, "Error Message")
+  val ninoLookupError = IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
-  val testBusinessModel = Some(List(
-    BusinessData(
+  val testBusinessModel = List(
+    BusinessDetailsModel(
       incomeSourceId = "111111111111111",
-      accountingPeriodStartDate = "2017-06-01",
-      accountingPeriodEndDate = "2018-05-31",
+      accountingPeriod = AccountingPeriodModel(
+        start = LocalDate.parse("2017-06-01"),
+        end = LocalDate.parse("2018-05-31")),
       tradingName = Some("Test Business"),
-      businessAddressDetails = Some(
-        BusinessAddress(
-          addressLine1 = "Test Lane",
-          addressLine2 = Some("Test Unit"),
-          addressLine3 = Some("Test Town"),
-          addressLine4 = Some("Test City"),
-          postalCode = "TE5 7TE",
-          countryCode = "GB"
-        )),
-      businessContactDetails = Some(
-        BusinessContact(
-          phoneNumber = Some("01332752856"),
-          mobileNumber = Some("07782565326"),
-          faxNumber = Some("01332754256"),
-          emailAddress = Some("stephen@manncorpone.co.uk")
-        )),
-      tradingStartDate = Some("2017-01-01"),
+      address = Some(AddressModel(
+        addressLine1 = "Test Lane",
+        addressLine2 = Some("Test Unit"),
+        addressLine3 = Some("Test Town"),
+        addressLine4 = Some("Test City"),
+        postCode = Some("TE5 7TE"),
+        countryCode = "GB")),
+      contactDetails = Some(ContactDetailsModel(
+        phoneNumber = Some("01332752856"),
+        mobileNumber = Some("07782565326"),
+        faxNumber = Some("01332754256"),
+        emailAddress = Some("stephen@manncorpone.co.uk"))),
+      tradingStartDate = Some(LocalDate.parse("2017-01-01")),
       cashOrAccruals = Some("cash"),
-      cessationDate = None,
-      cessationReason = None,
       seasonal = Some(true),
+      cessation = None,
       paperless = Some(true)
-    )))
+    )
+  )
 
-  val desBusinessDetails: DesBusinessDetails =
-  DesBusinessDetails(
-    safeId = "XAIT12345678908",
+  val desBusinessDetails: IncomeSourceDetailsModel =
+  IncomeSourceDetailsModel(
     nino = testNino,
-    mtdbsa = testMtdRef,
-    propertyIncome = Some(false),
     businessData = testBusinessModel,
     propertyData = None
   )

@@ -17,7 +17,7 @@
 package mocks
 
 import assets.TestConstants._
-import models.DesResponseModel
+import models.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
@@ -38,14 +38,10 @@ trait MockNinoLookupService extends UnitSpec with MockitoSugar with BeforeAndAft
     reset(mockNinoLookupService)
   }
 
-  def setupMockNinoLookupServiceResponse(mtdRef: String)(response: DesResponseModel)
-  : OngoingStubbing[Future[DesResponseModel]] =
-    when(mockNinoLookupService
-      .getNino(
-        ArgumentMatchers.eq(mtdRef))
-      (ArgumentMatchers.any()))
-      .thenReturn(Future.successful(response))
+  def setupMockNinoLookupServiceResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockNinoLookupService.getNino(
+        ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
-  def mockNinoLookupResponse(desResponse: DesResponseModel): OngoingStubbing[Future[DesResponseModel]] =
-    setupMockNinoLookupServiceResponse(mtdRef)(desResponse)
+  def mockNinoLookupResponse(desResponse: IncomeSourceDetailsResponseModel):
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockNinoLookupServiceResponse(mtdRef)(desResponse)
 }
