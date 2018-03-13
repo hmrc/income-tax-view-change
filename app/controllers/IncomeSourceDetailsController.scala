@@ -46,13 +46,10 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
     getIncomeSourceDetailsResponse(mtdRef).map {
       case error: IncomeSourceDetailsError =>
         Logger.debug(s"[IncomeSourceDetailsController][getResponse] - Error Response: $error")
-        Status(error.status)(Json.toJson(error))
-      case success: IncomeSourceDetailsModel =>
+        Status(error.status)(error.toJson)
+      case success =>
         Logger.debug(s"[IncomeSourceDetailsController][getResponse] - Successful Response: $success")
-        Ok(Json.toJson(success))
-      case success: NinoModel =>
-        Logger.debug(s"[IncomeSourceDetailsController][getResponse] - Successful Response: $success")
-        Ok(Json.toJson(success))
+        Ok(success.toJson)
     }
   }
 
