@@ -19,7 +19,7 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import controllers.predicates.AuthenticationPredicate
-import models.{DesBusinessDetailsError, Nino}
+import models.{IncomeSourceDetailsError, NinoModel}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -36,10 +36,10 @@ class NinoLookupController @Inject()(val authentication: AuthenticationPredicate
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[NinoLookupController][getNino] - Requesting NINO from NinoLookupService for MtdRef: $mtdRef")
     ninoLookupService.getNino(mtdRef).map {
-      case success: Nino =>
+      case success: NinoModel =>
         Logger.debug(s"[NinoLookupController][getNino] - Successful Response: $success")
         Ok(Json.toJson(success))
-      case error: DesBusinessDetailsError =>
+      case error: IncomeSourceDetailsError =>
         Logger.debug(s"[NinoLookupController][getNino] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
     }

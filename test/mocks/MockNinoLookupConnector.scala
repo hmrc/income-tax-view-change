@@ -17,8 +17,8 @@
 package mocks
 
 import assets.TestConstants._
-import connectors.NinoLookupConnector
-import models.DesResponseModel
+import connectors.IncomeSourceDetailsConnector
+import models.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
@@ -31,19 +31,19 @@ import scala.concurrent.Future
 
 trait MockNinoLookupConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockNinoLookupConnector: NinoLookupConnector = mock[NinoLookupConnector]
+  val mockNinoLookupConnector: IncomeSourceDetailsConnector = mock[IncomeSourceDetailsConnector]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockNinoLookupConnector)
   }
 
-  def setupMockDesBusinessDetailsResult(mtdRef: String)(response: DesResponseModel)
-  : OngoingStubbing[Future[DesResponseModel]] =
-    when(mockNinoLookupConnector.getDesBusinessDetails(
+  def setupMockDesBusinessDetailsResult(mtdRef: String)(response: IncomeSourceDetailsResponseModel)
+  : OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
+    when(mockNinoLookupConnector.getIncomeSourceDetails(
       ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
 
-  def mockDesBusinessDetailsResult(desBusinessDetailsResponse: DesResponseModel): OngoingStubbing[Future[DesResponseModel]] =
+  def mockDesBusinessDetailsResult(desBusinessDetailsResponse: IncomeSourceDetailsResponseModel): OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
     setupMockDesBusinessDetailsResult(mtdRef)(desBusinessDetailsResponse)
 }
