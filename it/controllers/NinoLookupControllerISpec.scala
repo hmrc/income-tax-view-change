@@ -19,7 +19,7 @@ package controllers
 import helpers.ComponentSpecBase
 import helpers.IntegrationTestConstants._
 import helpers.servicemocks.DesBusinessDetailsStub
-import models.Nino
+import models.NinoModel
 import play.api.http.Status._
 
 class NinoLookupControllerISpec extends ComponentSpecBase {
@@ -43,7 +43,7 @@ class NinoLookupControllerISpec extends ComponentSpecBase {
           //Check for Status OK response (200)
           httpStatus(OK),
           //Check the response is a Nino
-          jsonBodyAs[Nino](ninoLookup)
+          jsonBodyAs[NinoModel](ninoLookup)
         )
       }
     }

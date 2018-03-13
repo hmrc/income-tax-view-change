@@ -17,14 +17,14 @@
 package helpers.servicemocks
 
 import helpers.{IntegrationTestConstants, WiremockHelper}
-import models.DesBusinessDetails
+import models.IncomeSourceDetailsModel
 import play.api.http.Status
 
 object DesBusinessDetailsStub {
 
   val url: (String) => String = (mtdRef) => s"""/registration/business-details/mtdbsa/$mtdRef"""
 
-  def stubGetDesBusinessDetails(mtdRef:String, response: DesBusinessDetails): Unit = {
+  def stubGetDesBusinessDetails(mtdRef:String, response: IncomeSourceDetailsModel): Unit = {
     val desBusinessDetailsResponse =
       IntegrationTestConstants.GetDesBusinessDetails
       .successResponse(response.nino).toString

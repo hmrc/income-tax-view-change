@@ -19,12 +19,12 @@ package controllers
 import assets.TestConstants.BusinessDetails._
 import assets.TestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockAuthorisedUser, MockNinoLookupService, MockUnauthorisedUser}
+import mocks.{MockAuthorisedUser, MockIncomeSourceDetailsService, MockUnauthorisedUser}
 import play.api.http.Status
 import play.api.test.FakeRequest
 
 
-class NinoLookupControllerSpec extends ControllerBaseSpec with MockNinoLookupService {
+class NinoLookupControllerSpec extends ControllerBaseSpec with MockIncomeSourceDetailsService {
 
   "The NinoLookupController.getNino action" when {
 
@@ -32,7 +32,7 @@ class NinoLookupControllerSpec extends ControllerBaseSpec with MockNinoLookupSer
 
       object TestNinoLookupController extends NinoLookupController(
         authentication = new AuthenticationPredicate(MockAuthorisedUser),
-        ninoLookupService = mockNinoLookupService
+        incomeSourceDetailsService = mockIncomeSourceDetailsService
       )
 
       "a valid response from the Nino Lookup Service" should {
@@ -47,12 +47,12 @@ class NinoLookupControllerSpec extends ControllerBaseSpec with MockNinoLookupSer
 
       "an invalid response from the Estimated Tax Liability Service" should {
 
-        mockNinoLookupResponse(testDesResponseError)
+        mockNinoLookupResponse(testIncomeSourceDetailsError)
         lazy val result = TestNinoLookupController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testDesResponseError)
+        checkJsonBodyOf(result)(testIncomeSourceDetailsError)
       }
     }
 
@@ -60,7 +60,7 @@ class NinoLookupControllerSpec extends ControllerBaseSpec with MockNinoLookupSer
 
       object TestNinoLookupController extends NinoLookupController(
         authentication = new AuthenticationPredicate(MockUnauthorisedUser),
-        ninoLookupService = mockNinoLookupService
+        incomeSourceDetailsService = mockIncomeSourceDetailsService
       )
 
       lazy val result = TestNinoLookupController.getNino(mtdRef)(FakeRequest())

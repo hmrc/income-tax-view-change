@@ -17,33 +17,31 @@
 package mocks
 
 import assets.TestConstants._
-import connectors.NinoLookupConnector
-import models.DesResponseModel
+import models.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
+import services.IncomeSourceDetailsService
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
 
-trait MockNinoLookupConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockIncomeSourceDetailsService extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockNinoLookupConnector: NinoLookupConnector = mock[NinoLookupConnector]
+  val mockIncomeSourceDetailsService: IncomeSourceDetailsService = mock[IncomeSourceDetailsService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockNinoLookupConnector)
+    reset(mockIncomeSourceDetailsService)
   }
 
-  def setupMockDesBusinessDetailsResult(mtdRef: String)(response: DesResponseModel)
-  : OngoingStubbing[Future[DesResponseModel]] =
-    when(mockNinoLookupConnector.getDesBusinessDetails(
-      ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any()))
-      .thenReturn(Future.successful(response))
+  def setupMockNinoLookupServiceResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockIncomeSourceDetailsService.getNino(
+        ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
-  def mockDesBusinessDetailsResult(desBusinessDetailsResponse: DesResponseModel): OngoingStubbing[Future[DesResponseModel]] =
-    setupMockDesBusinessDetailsResult(mtdRef)(desBusinessDetailsResponse)
+  def mockNinoLookupResponse(desResponse: IncomeSourceDetailsResponseModel):
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockNinoLookupServiceResponse(mtdRef)(desResponse)
 }
