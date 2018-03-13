@@ -23,23 +23,23 @@ import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import services.NinoLookupService
+import services.IncomeSourceDetailsService
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
 
-trait MockNinoLookupService extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockIncomeSourceDetailsService extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockNinoLookupService: NinoLookupService = mock[NinoLookupService]
+  val mockIncomeSourceDetailsService: IncomeSourceDetailsService = mock[IncomeSourceDetailsService]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockNinoLookupService)
+    reset(mockIncomeSourceDetailsService)
   }
 
   def setupMockNinoLookupServiceResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
-    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockNinoLookupService.getNino(
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockIncomeSourceDetailsService.getNino(
         ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def mockNinoLookupResponse(desResponse: IncomeSourceDetailsResponseModel):

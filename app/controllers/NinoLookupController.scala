@@ -23,19 +23,19 @@ import models.{IncomeSourceDetailsError, NinoModel}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.NinoLookupService
+import services.IncomeSourceDetailsService
 import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class NinoLookupController @Inject()(val authentication: AuthenticationPredicate,
-                                     val ninoLookupService: NinoLookupService
+                                     val incomeSourceDetailsService: IncomeSourceDetailsService
                                       ) extends BaseController {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[NinoLookupController][getNino] - Requesting NINO from NinoLookupService for MtdRef: $mtdRef")
-    ninoLookupService.getNino(mtdRef).map {
+    incomeSourceDetailsService.getNino(mtdRef).map {
       case success: NinoModel =>
         Logger.debug(s"[NinoLookupController][getNino] - Successful Response: $success")
         Ok(Json.toJson(success))

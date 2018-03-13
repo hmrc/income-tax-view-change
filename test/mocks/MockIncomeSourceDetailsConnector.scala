@@ -29,21 +29,21 @@ import uk.gov.hmrc.play.test.UnitSpec
 import scala.concurrent.Future
 
 
-trait MockNinoLookupConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockIncomeSourceDetailsConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockNinoLookupConnector: IncomeSourceDetailsConnector = mock[IncomeSourceDetailsConnector]
+  val mockIncomeSourceDetailsConnector: IncomeSourceDetailsConnector = mock[IncomeSourceDetailsConnector]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockNinoLookupConnector)
+    reset(mockIncomeSourceDetailsConnector)
   }
 
-  def setupMockDesBusinessDetailsResult(mtdRef: String)(response: IncomeSourceDetailsResponseModel)
+  def setupMockIncomeSourceDetailsResult(mtdRef: String)(response: IncomeSourceDetailsResponseModel)
   : OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
-    when(mockNinoLookupConnector.getIncomeSourceDetails(
+    when(mockIncomeSourceDetailsConnector.getIncomeSourceDetails(
       ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
 
-  def mockDesBusinessDetailsResult(desBusinessDetailsResponse: IncomeSourceDetailsResponseModel): OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
-    setupMockDesBusinessDetailsResult(mtdRef)(desBusinessDetailsResponse)
+  def mockIncomeSourceDetailsResult(incomeSourceDetailsResponse: IncomeSourceDetailsResponseModel): OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
+    setupMockIncomeSourceDetailsResult(mtdRef)(incomeSourceDetailsResponse)
 }
