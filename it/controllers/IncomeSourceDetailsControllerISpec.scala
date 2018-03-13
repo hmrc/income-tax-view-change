@@ -22,14 +22,14 @@ import helpers.servicemocks.DesBusinessDetailsStub
 import models.NinoModel
 import play.api.http.Status._
 
-class NinoLookupControllerISpec extends ComponentSpecBase {
-  "Calling the NinoLookupController" when {
+class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
+  "Calling the IncomeSourceDetailsController" when {
     "authorised with a valid request" should {
       "return a valid NINO" in {
 
         isAuthorised(true)
 
-        And("I wiremock stub a successful Get Des Business Details response")
+        And("I wiremock stub a successful getIncomeSOurceDetails response")
         DesBusinessDetailsStub.stubGetDesBusinessDetails(testMtdRef, desBusinessDetails)
 
         When(s"I call GET income-tax-view-change/nino-lookup/$testMtdRef")

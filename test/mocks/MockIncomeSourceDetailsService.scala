@@ -38,10 +38,17 @@ trait MockIncomeSourceDetailsService extends UnitSpec with MockitoSugar with Bef
     reset(mockIncomeSourceDetailsService)
   }
 
-  def setupMockNinoLookupServiceResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
+  def setupMockIncomeSourceDetailsResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockIncomeSourceDetailsService.getIncomeSourceDetails(
+        ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+
+  def setupMockNinoResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
     OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockIncomeSourceDetailsService.getNino(
         ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
-  def mockNinoLookupResponse(desResponse: IncomeSourceDetailsResponseModel):
-    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockNinoLookupServiceResponse(mtdRef)(desResponse)
+  def mockIncomeSourceDetailsResponse(desResponse: IncomeSourceDetailsResponseModel):
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockIncomeSourceDetailsResponse(mtdRef)(desResponse)
+
+  def mockNinoResponse(desResponse: IncomeSourceDetailsResponseModel):
+    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockNinoResponse(mtdRef)(desResponse)
 }
