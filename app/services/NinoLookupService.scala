@@ -18,7 +18,7 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import connectors.NinoLookupConnector
+import connectors.IncomeSourceDetailsConnector
 import models._
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
@@ -27,7 +27,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class NinoLookupService @Inject()(val ninoLookupConnector: NinoLookupConnector) {
+class NinoLookupService @Inject()(val ninoLookupConnector: IncomeSourceDetailsConnector) {
 
   def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     Logger.debug("[NinoLookupService][getNino] - Requesting Des Business Details from Connector")

@@ -17,7 +17,7 @@
 package mocks
 
 import assets.TestConstants._
-import connectors.NinoLookupConnector
+import connectors.IncomeSourceDetailsConnector
 import models.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
@@ -31,7 +31,7 @@ import scala.concurrent.Future
 
 trait MockNinoLookupConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockNinoLookupConnector: NinoLookupConnector = mock[NinoLookupConnector]
+  val mockNinoLookupConnector: IncomeSourceDetailsConnector = mock[IncomeSourceDetailsConnector]
 
   override def beforeEach(): Unit = {
     super.beforeEach()

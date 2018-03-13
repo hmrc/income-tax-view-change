@@ -24,7 +24,7 @@ import utils.TestSupport
 
 import scala.concurrent.Future
 
-class NinoLookupServiceSpec extends TestSupport with MockNinoLookupConnector {
+class IncomeSourceDetailsConnectorSpec extends TestSupport with MockNinoLookupConnector {
 
   object TestNinoLookupService extends NinoLookupService(mockNinoLookupConnector)
   def result: Future[IncomeSourceDetailsResponseModel] = TestNinoLookupService.getNino(mtdRef)

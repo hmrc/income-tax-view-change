@@ -25,19 +25,19 @@ import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.TestSupport
 
-class NinoLookupConnectorSpec extends TestSupport with MockHttp {
+class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp {
 
-  object TestNinoLookupConnector extends NinoLookupConnector(mockHttpGet, microserviceAppConfig)
+  object TestIncomeSourceDetailsConnector extends IncomeSourceDetailsConnector(mockHttpGet, microserviceAppConfig)
 
   "NinoLookupConnector.getIncomeSourceDetails" should {
 
-    import TestNinoLookupConnector._
+    import TestIncomeSourceDetailsConnector._
 
     lazy val expectedHc: HeaderCarrier =
       hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
     def mock: (HttpResponse) => Unit =
-      setupMockHttpGetWithHeaderCarrier(getDesBusinessDetailsUrl(mtdRef), expectedHc)(_)
+      setupMockHttpGetWithHeaderCarrier(getIncomeSourceDetailsUrl(mtdRef), expectedHc)(_)
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
@@ -56,7 +56,7 @@ class NinoLookupConnectorSpec extends TestSupport with MockHttp {
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
-      setupMockHttpGetFailed(getDesBusinessDetailsUrl(mtdRef))
+      setupMockHttpGetFailed(getIncomeSourceDetailsUrl(mtdRef))
       await(getIncomeSourceDetails(mtdRef)) shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
     }
