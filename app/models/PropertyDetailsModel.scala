@@ -41,7 +41,7 @@ object PropertyDetailsModel {
       (__ \ "numPropRented").readNullable[Int] and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
-      (__ \ "paperless").readNullable[Boolean]
+      (__ \ "paperLess").readNullable[Boolean]
     )(PropertyDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,

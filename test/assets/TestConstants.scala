@@ -224,7 +224,7 @@ object TestConstants {
       "seasonal" -> true,
       "cessationDate" -> "2017-06-01",
       "cessationReason" -> "Dummy reason",
-      "paperless" -> true
+      "paperLess" -> true
     )
 
     val testBusinessDetailsToJson = Json.obj(
@@ -257,7 +257,7 @@ object TestConstants {
       "numPropRented" -> 4,
       "cessationDate" -> "2017-06-01",
       "cessationReason" -> "Dummy reason",
-      "paperless" -> true
+      "paperLess" -> true
     )
 
     val testMinimumBusinessDetailsToJson = Json.obj(
@@ -303,6 +303,7 @@ object TestConstants {
     )
 
     val testIncomeSourceDetailsError = IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+    val testNinoError = NinoErrorModel(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
 
     //Connector Responses
     val successResponse = HttpResponse(Status.OK, Some(testIncomeSourceDetailsJson))

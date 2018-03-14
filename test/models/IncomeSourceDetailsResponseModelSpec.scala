@@ -37,7 +37,7 @@ class IncomeSourceDetailsResponseModelSpec extends TestSupport with Matchers {
     }
   }
 
-  "The DesResponseErrorModel" should {
+  "The IncomeSourceDetailsErrorModel" should {
     "have the correct status code in the model" in {
       testIncomeSourceDetailsError.status shouldBe Status.INTERNAL_SERVER_ERROR
     }

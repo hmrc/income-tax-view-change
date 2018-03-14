@@ -128,7 +128,7 @@ object IntegrationTestConstants {
            |   "tradingStartDate":"2017-01-01",
            |   "cashOrAccruals":"cash",
            |   "seasonal":true,
-           |   "paperless":true
+           |   "paperLess":true
            |  }
            | ]
            |}

@@ -46,7 +46,7 @@ object BusinessDetailsModel {
       (__ \ "seasonal").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
-      (__ \ "paperless").readNullable[Boolean]
+      (__ \ "paperLess").readNullable[Boolean]
     )(BusinessDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,

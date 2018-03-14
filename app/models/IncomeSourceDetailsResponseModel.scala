@@ -19,27 +19,13 @@ package models
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
-sealed trait IncomeSourceDetailsResponseModel {
-  def toJson: JsValue
-}
-
-case class NinoModel(nino: String) extends IncomeSourceDetailsResponseModel {
-  override def toJson: JsValue = Json.toJson(this)
-}
+sealed trait IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsModel(nino: String,
                                     businessData: List[BusinessDetailsModel],
-                                    propertyData: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel {
-  override def toJson: JsValue = Json.toJson(this)
-}
+                                    propertyData: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
 
-case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeSourceDetailsResponseModel {
-  override def toJson: JsValue = Json.toJson(this)
-}
-
-object NinoModel {
-  implicit val format: OFormat[NinoModel] = Json.format[NinoModel]
-}
+case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
 
 object IncomeSourceDetailsModel {
 

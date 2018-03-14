@@ -47,12 +47,12 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
       "an invalid response from the IncomeSourceDetailsService" should {
 
-        mockNinoResponse(testIncomeSourceDetailsError)
+        mockNinoResponse(testNinoError)
         lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testIncomeSourceDetailsError)
+        checkJsonBodyOf(result)(testNinoError)
       }
     }
 

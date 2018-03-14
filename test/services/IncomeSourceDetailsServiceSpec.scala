@@ -54,7 +54,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
 
     "getNino method is called" when {
 
-      def result: Future[IncomeSourceDetailsResponseModel] = TestIncomeSourceDetailsService.getNino(mtdRef)
+      def result: Future[NinoResponse] = TestIncomeSourceDetailsService.getNino(mtdRef)
 
       "a successful response is returned from the IncomeSourceDetailsConnector" should {
 
@@ -69,7 +69,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
 
         "return a correctly formatted IncomeSourceDetailsError model" in {
           mockIncomeSourceDetailsResult(testIncomeSourceDetailsError)
-          await(result) shouldBe testIncomeSourceDetailsError
+          await(result) shouldBe testNinoError
         }
       }
     }

@@ -42,12 +42,12 @@ class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: Inc
     }
   }
 
-  def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
+  def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[NinoResponse] = {
     getIncomeSourceDetails(mtdRef).map {
       case success: IncomeSourceDetailsModel =>
         Logger.debug(s"[IncomeSourceDetailsService][getNino] - Converting to Nino Model")
         NinoModel(success.nino)
-      case error: IncomeSourceDetailsError => error
+      case error: IncomeSourceDetailsError => NinoErrorModel(error.status, error.reason)
     }
   }
 
