@@ -27,12 +27,12 @@ class PropertiesRentedModelSpec extends TestSupport with Matchers {
 
   "The PropertiesRentedModel" should {
 
-    "read from Json with all fields" in {
-      Json.fromJson[PropertiesRentedModel](testPropertiesRentedJson) shouldBe JsSuccess(testPropertiesRentedModel)
+    "read from DES Json with all fields" in {
+      Json.fromJson(testPropertiesRentedJson)(PropertiesRentedModel.desReads) shouldBe JsSuccess(testPropertiesRentedModel)
     }
 
-    "read from Json with minimum fields" in {
-      Json.fromJson[PropertiesRentedModel](Json.obj()) shouldBe JsSuccess(PropertiesRentedModel(None,None,None,None))
+    "read from DES Json with minimum fields" in {
+      Json.fromJson(Json.obj())(PropertiesRentedModel.desReads) shouldBe JsSuccess(PropertiesRentedModel(None,None,None,None))
     }
 
     "write to Json" in {

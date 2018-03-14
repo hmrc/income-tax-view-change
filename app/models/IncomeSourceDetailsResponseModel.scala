@@ -16,6 +16,7 @@
 
 package models
 
+import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
@@ -32,7 +33,6 @@ object IncomeSourceDetailsModel {
   def applyWithFields(nino: String,
            businessData: Option[List[BusinessDetailsModel]],
            propertyData: Option[PropertyDetailsModel]): IncomeSourceDetailsModel = {
-
     val businessDetails = businessData match {
       case Some(data) => data
       case None => List()
@@ -44,16 +44,16 @@ object IncomeSourceDetailsModel {
     )
   }
 
-  implicit val reads: Reads[IncomeSourceDetailsModel] = (
+  val desReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "nino").read[String] and
-      (__ \ "businessData").readNullable[List[BusinessDetailsModel]] and
-      (__ \ "propertyData").readNullable[PropertyDetailsModel]
+      (__ \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
+      (__ \ "propertyData").readNullable(PropertyDetailsModel.desReads)
     )(IncomeSourceDetailsModel.applyWithFields _)
 
-  implicit val writes: Writes[IncomeSourceDetailsModel] = Json.writes[IncomeSourceDetailsModel]
+  implicit val format: Format[IncomeSourceDetailsModel] = Json.format[IncomeSourceDetailsModel]
 
 }
 
 object IncomeSourceDetailsError {
-  implicit val format: OFormat[IncomeSourceDetailsError] = Json.format[IncomeSourceDetailsError]
+  implicit val format: Format[IncomeSourceDetailsError] = Json.format[IncomeSourceDetailsError]
 }

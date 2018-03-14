@@ -27,12 +27,12 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
 
   "The BusinessDetailsaModel" should {
 
-    "read from Json with all fields" in {
-      Json.fromJson[BusinessDetailsModel](testBusinessDetailsJson) shouldBe JsSuccess(testBusinessDetailsModel)
+    "read from DES Json with all fields" in {
+      Json.fromJson(testBusinessDetailsJson)(BusinessDetailsModel.desReads) shouldBe JsSuccess(testBusinessDetailsModel)
     }
 
-    "read from Json with minimum fields" in {
-      Json.fromJson[BusinessDetailsModel](testMinimumBusinessDetailsJson) shouldBe JsSuccess(testMinimumBusinessDetailsModel)
+    "read from DES Json with minimum fields" in {
+      Json.fromJson(testMinimumBusinessDetailsJson)(BusinessDetailsModel.desReads) shouldBe JsSuccess(testMinimumBusinessDetailsModel)
     }
 
     "write to Json" in {

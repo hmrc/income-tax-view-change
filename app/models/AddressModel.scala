@@ -28,7 +28,7 @@ case class AddressModel(addressLine1: String,
 
 object AddressModel {
 
-  implicit val reads: Reads[AddressModel] = (
+  val desReads: Reads[AddressModel] = (
     (__ \ "addressLine1").read[String] and
       (__ \ "addressLine2").readNullable[String] and
       (__ \ "addressLine3").readNullable[String] and
@@ -37,7 +37,7 @@ object AddressModel {
       (__ \ "countryCode").read[String]
   )(AddressModel.apply _)
 
-  implicit val writes: Writes[AddressModel] = Json.writes[AddressModel]
+  implicit val format: Format[AddressModel] = Json.format[AddressModel]
 
 }
 

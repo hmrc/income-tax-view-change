@@ -16,25 +16,21 @@
 
 package models
 
-import java.time.LocalDate
-
+import assets.TestConstants.BusinessDetails._
 import org.scalatest.Matchers
 import play.api.libs.json._
-import assets.TestConstants.BusinessDetails._
-import assets.TestConstants._
-import play.api.http.Status
 import utils.TestSupport
 
 class ContactDetailsModelSpec extends TestSupport with Matchers {
 
   "The ContactDetailsModel" should {
 
-    "read from json with all fields" in {
-      Json.fromJson[ContactDetailsModel](testContactDetailsJson) shouldBe JsSuccess(testContactDetailsModel)
+    "read from DES json with all fields" in {
+      Json.fromJson(testContactDetailsJson)(ContactDetailsModel.desReads) shouldBe JsSuccess(testContactDetailsModel)
     }
 
-    "read from Json with minimum fields" in {
-      Json.fromJson[ContactDetailsModel](Json.obj()) shouldBe JsSuccess(ContactDetailsModel(None,None,None,None))
+    "read from DES Json with minimum fields" in {
+      Json.fromJson(Json.obj())(ContactDetailsModel.desReads) shouldBe JsSuccess(ContactDetailsModel(None,None,None,None))
     }
 
     "write to Json" in {

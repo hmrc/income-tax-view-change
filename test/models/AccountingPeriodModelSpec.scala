@@ -27,8 +27,8 @@ class AccountingPeriodModelSpec extends TestSupport with Matchers {
 
   "The AccountingPeriodModel" should {
 
-    "read from Json" in {
-      Json.fromJson[AccountingPeriodModel](testAccountingPeriodJson) shouldBe JsSuccess(testAccountingPeriodModel)
+    "read from the DES Json" in {
+      Json.fromJson(testAccountingPeriodJson)(AccountingPeriodModel.desReads) shouldBe JsSuccess(testAccountingPeriodModel)
     }
 
     "write to Json" in {

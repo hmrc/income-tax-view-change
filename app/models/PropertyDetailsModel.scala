@@ -31,9 +31,9 @@ case class PropertyDetailsModel(incomeSourceId: String,
 
 object PropertyDetailsModel {
 
-  implicit val reads: Reads[PropertyDetailsModel] = (
+  val desReads: Reads[PropertyDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
-      __.read[AccountingPeriodModel] and
+      __.read(AccountingPeriodModel.desReads) and
       (__ \ "emailAddress").readNullable[String] and
       (__ \ "numPropRentedUK").readNullable[Int] and
       (__ \ "numPropRentedEEA").readNullable[Int] and
@@ -53,13 +53,15 @@ object PropertyDetailsModel {
                  total: Option[Int],
                  cessationDate: Option[LocalDate],
                  cessationReason: Option[String],
-                 paperless: Option[Boolean]): PropertyDetailsModel = new PropertyDetailsModel(
+                 paperless: Option[Boolean]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,
     ContactDetailsModel.propertyContactDetails(email),
     PropertiesRentedModel.propertiesRented(uk,eea,nonEea,total),
     CessationModel.cessation(cessationDate, cessationReason),
-    paperless)
-  implicit val writes: Writes[PropertyDetailsModel] = Json.writes[PropertyDetailsModel]
+    paperless
+  )
+
+  implicit val format: Format[PropertyDetailsModel] = Json.format[PropertyDetailsModel]
 
 }

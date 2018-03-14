@@ -23,7 +23,7 @@ case class PropertiesRentedModel(uk:Option[Int], eea:Option[Int], nonEea:Option[
 
 object PropertiesRentedModel {
 
-  implicit val reads: Reads[PropertiesRentedModel] = (
+  val desReads: Reads[PropertiesRentedModel] = (
     (__ \ "numPropRentedUK").readNullable[Int] and
       (__ \ "numPropRentedEEA").readNullable[Int] and
       (__ \ "numPropRentedNONEEA").readNullable[Int] and
@@ -37,6 +37,6 @@ object PropertiesRentedModel {
     }
   }
 
-  implicit val writes: Writes[PropertiesRentedModel] = Json.writes[PropertiesRentedModel]
+  implicit val format: Format[PropertiesRentedModel] = Json.format[PropertiesRentedModel]
 
 }

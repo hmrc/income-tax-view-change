@@ -50,7 +50,7 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
         response.status match {
           case OK =>
             Logger.debug(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - RESPONSE status:${response.status}, body:${response.body}")
-            response.json.validate[IncomeSourceDetailsModel] fold(
+            response.json.validate[IncomeSourceDetailsModel](IncomeSourceDetailsModel.desReads) fold(
               invalid => {
                 Logger.warn(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - Json ValidationError. Parsing Des Business Details")
                 Logger.debug(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - Validation Errors: $invalid")

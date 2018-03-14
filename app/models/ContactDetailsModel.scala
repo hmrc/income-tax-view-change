@@ -26,7 +26,7 @@ case class ContactDetailsModel(phoneNumber: Option[String],
 
 object ContactDetailsModel {
 
-  implicit val reads: Reads[ContactDetailsModel] = (
+  val desReads: Reads[ContactDetailsModel] = (
     (__ \ "phoneNumber").readNullable[String] and
       (__ \ "mobileNumber").readNullable[String] and
       (__ \ "faxNumber").readNullable[String] and
@@ -40,6 +40,6 @@ object ContactDetailsModel {
       case _ => Some(ContactDetailsModel(None,None,None,email))
     }
 
-  implicit val writes: Writes[ContactDetailsModel] = Json.writes[ContactDetailsModel]
+  implicit val format: Format[ContactDetailsModel] = Json.format[ContactDetailsModel]
 
 }

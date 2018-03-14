@@ -19,32 +19,53 @@ package controllers
 import helpers.ComponentSpecBase
 import helpers.IntegrationTestConstants._
 import helpers.servicemocks.DesBusinessDetailsStub
-import models.NinoModel
+import models.{IncomeSourceDetailsError, IncomeSourceDetailsModel, NinoErrorModel, NinoModel}
 import play.api.http.Status._
 
 class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
-  "Calling the IncomeSourceDetailsController" when {
-    "authorised with a valid request" should {
-      "return a valid NINO" in {
 
-        isAuthorised(true)
+  "Calling the IncomeSourceDetailsController.getNino method" when {
+    "authorised with a valid request" when {
+      "A success response is returned from DES" should {
+        "return a valid NINO" in {
 
-        And("I wiremock stub a successful getIncomeSOurceDetails response")
-        DesBusinessDetailsStub.stubGetDesBusinessDetails(testMtdRef, desBusinessDetails)
+          isAuthorised(true)
 
-        When(s"I call GET income-tax-view-change/nino-lookup/$testMtdRef")
-        val res = IncomeTaxViewChange.getNino(testMtdRef)
+          And("I wiremock stub a successful getIncomeSOurceDetails response")
+          DesBusinessDetailsStub.stubGetDesBusinessDetails(testMtdRef, incomeSourceDetailsSuccess)
 
-        DesBusinessDetailsStub.verifyGetDesBusinessDetails(testMtdRef)
+          When(s"I call GET income-tax-view-change/nino-lookup/$testMtdRef")
+          val res = IncomeTaxViewChange.getNino(testMtdRef)
 
-        Then("a successful response is returned with the correct NINO")
+          DesBusinessDetailsStub.verifyGetDesBusinessDetails(testMtdRef)
 
-        res should have(
-          //Check for Status OK response (200)
-          httpStatus(OK),
-          //Check the response is a Nino
-          jsonBodyAs[NinoModel](ninoLookup)
-        )
+          Then("a successful response is returned with the correct NINO")
+
+          res should have(
+            httpStatus(OK),
+            jsonBodyAs[NinoModel](ninoLookup)
+          )
+        }
+      }
+      "An error response is returned from DES" should {
+        "return an Error Response model" in {
+          isAuthorised(true)
+
+          And("I wiremock stub an error response")
+          DesBusinessDetailsStub.stubGetDesBusinessDetailsError(testMtdRef)
+
+          When(s"I call GET income-tax-view-change/income-sources/$testMtdRef")
+          val res = IncomeTaxViewChange.getNino(testMtdRef)
+
+          DesBusinessDetailsStub.verifyGetDesBusinessDetails(testMtdRef)
+
+          Then("an error response is returned")
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR),
+            jsonBodyAs[NinoErrorModel](ninoError)
+          )
+        }
       }
     }
     "unauthorised" should {
@@ -56,9 +77,67 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
         val res = IncomeTaxViewChange.getNino(testMtdRef)
 
         res should have(
-          //Check for an Unauthorised response UNAUTHORIZED (401)
           httpStatus(UNAUTHORIZED),
-          //Check for an empty response body
+          emptyBody
+        )
+      }
+    }
+  }
+
+  "Calling the IncomeSourceDetailsController.getIncomeSourceDetails method" when {
+    "authorised with a valid request" when {
+      "A successful response is returned from DES" should {
+        "return a valid IncomeSourceDetails model" in {
+
+          isAuthorised(true)
+
+          And("I wiremock stub a successful getIncomeSOurceDetails response")
+          DesBusinessDetailsStub.stubGetDesBusinessDetails(testMtdRef, incomeSourceDetailsSuccess)
+
+          When(s"I call GET income-tax-view-change/income-sources/$testMtdRef")
+          val res = IncomeTaxViewChange.getIncomeSources(testMtdRef)
+
+          DesBusinessDetailsStub.verifyGetDesBusinessDetails(testMtdRef)
+
+          Then("a successful response is returned with the correct NINO")
+
+          res should have(
+            httpStatus(OK),
+            jsonBodyAs[IncomeSourceDetailsModel](incomeSourceDetailsSuccess)
+          )
+        }
+      }
+      "An error response is returned from DES" should {
+        "return an Error Response model" in {
+          isAuthorised(true)
+
+          And("I wiremock stub an error response")
+          DesBusinessDetailsStub.stubGetDesBusinessDetailsError(testMtdRef)
+
+          When(s"I call GET income-tax-view-change/income-sources/$testMtdRef")
+          val res = IncomeTaxViewChange.getIncomeSources(testMtdRef)
+
+          DesBusinessDetailsStub.verifyGetDesBusinessDetails(testMtdRef)
+
+          Then("an error response is returned")
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR),
+            jsonBodyAs[IncomeSourceDetailsError](incomeSourceDetailsError)
+          )
+        }
+      }
+    }
+    "unauthorised" should {
+      "return an error" in {
+
+        isAuthorised(false)
+
+        When(s"I call GET income-tax-view-change/nino-lookup/$testMtdRef")
+        val res = IncomeTaxViewChange.getNino(testMtdRef)
+
+        res should have(
+          httpStatus(UNAUTHORIZED),
           emptyBody
         )
       }

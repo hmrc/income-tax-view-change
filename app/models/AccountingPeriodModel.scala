@@ -25,10 +25,10 @@ case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
 
 object AccountingPeriodModel {
 
-  implicit val reads: Reads[AccountingPeriodModel] = (
+  val desReads: Reads[AccountingPeriodModel] = (
     (__ \ "accountingPeriodStartDate").read[LocalDate] and
       (__ \ "accountingPeriodEndDate").read[LocalDate]
   )(AccountingPeriodModel.apply _)
 
-  implicit val writes: Writes[AccountingPeriodModel] = Json.writes[AccountingPeriodModel]
+  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
 }

@@ -25,7 +25,7 @@ case class CessationModel(date: Option[LocalDate], reason: Option[String])
 
 object CessationModel {
 
-  implicit val reads: Reads[CessationModel] = (
+  val desReads: Reads[CessationModel] = (
     (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String]
   )(CessationModel.apply _)
@@ -35,5 +35,6 @@ object CessationModel {
       case (None,None) => None
       case _ => Some(CessationModel(date,reason))
     }
-  implicit val writes: Writes[CessationModel] = Json.writes[CessationModel]
+
+  implicit val format: Format[CessationModel] = Json.format[CessationModel]
 }

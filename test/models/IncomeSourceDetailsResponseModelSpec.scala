@@ -26,11 +26,11 @@ import utils.TestSupport
 class IncomeSourceDetailsResponseModelSpec extends TestSupport with Matchers {
 
   "The IncomeSourceDetailsResponseModel" should {
-    "read from Json when all fields are returned" in {
-      Json.fromJson[IncomeSourceDetailsModel](testIncomeSourceDetailsJson) shouldBe JsSuccess(testIncomeSourceDetailsModel)
+    "read from DES Json when all fields are returned" in {
+      Json.fromJson(testIncomeSourceDetailsJson)(IncomeSourceDetailsModel.desReads) shouldBe JsSuccess(testIncomeSourceDetailsModel)
     }
-    "read from Json when minimum fields are returned" in {
-      Json.fromJson[IncomeSourceDetailsModel](testMinimumIncomeSourceDetailsJson) shouldBe JsSuccess(testMinimumIncomeSourceDetailsModel)
+    "read from DES Json when minimum fields are returned" in {
+      Json.fromJson(testMinimumIncomeSourceDetailsJson)(IncomeSourceDetailsModel.desReads) shouldBe JsSuccess(testMinimumIncomeSourceDetailsModel)
     }
     "write to Json" in {
       Json.toJson(testIncomeSourceDetailsModel) shouldBe testIncomeSourceDetailsToJson

@@ -70,13 +70,15 @@ object IntegrationTestConstants {
     )
   )
 
-  val desBusinessDetails: IncomeSourceDetailsModel =
+  val incomeSourceDetailsSuccess: IncomeSourceDetailsModel =
   IncomeSourceDetailsModel(
     nino = testNino,
     businesses = testBusinessModel,
     property = None
   )
 
+  val incomeSourceDetailsError: IncomeSourceDetailsError = IncomeSourceDetailsError(500,"""{"code":"500","reason":"ISE"}""")
+  val ninoError: NinoErrorModel = NinoErrorModel(500,"""{"code":"500","reason":"ISE"}""")
 
   object GetFinancialData {
     def successResponse(calcId: String, calcTimestamp: String, calcAmount: BigDecimal): JsValue =
@@ -98,9 +100,10 @@ object IntegrationTestConstants {
   }
 
   object GetDesBusinessDetails {
-    def successResponse(nino: String): JsValue =
-      Json.parse(
-        s"""{
+    def successResponse(nino: String): JsValue = {
+
+    val x = Json.parse(
+      s"""{
            |"safeId":"XAIT12345678908",
            |"nino":"$nino",
            |"mtdbsa":"$testMtdRef",
@@ -134,11 +137,14 @@ object IntegrationTestConstants {
            |}
       """.stripMargin
       )
+      println(s"\n\n\n$x\n\n\n")
+      x
+    }
 
-    def failureResponse(status: String, reason: String): JsValue =
+    def failureResponse(code: String, reason: String): JsValue =
       Json.parse(s"""
                     |{
-                    |   "status": "$status",
+                    |   "code": "$code",
                     |   "reason":"$reason"
                     |}
       """.stripMargin)

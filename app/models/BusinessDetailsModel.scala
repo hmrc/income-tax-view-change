@@ -35,12 +35,12 @@ case class BusinessDetailsModel(incomeSourceId: String,
 
 object BusinessDetailsModel {
 
-  implicit val reads: Reads[BusinessDetailsModel] = (
+  val desReads: Reads[BusinessDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
-      __.read[AccountingPeriodModel] and
+      __.read(AccountingPeriodModel.desReads) and
       (__ \ "tradingName").readNullable[String] and
-      (__ \ "businessAddressDetails").readNullable[AddressModel] and
-      (__ \ "businessContactDetails").readNullable[ContactDetailsModel] and
+      (__ \ "businessAddressDetails").readNullable(AddressModel.desReads) and
+      (__ \ "businessContactDetails").readNullable(ContactDetailsModel.desReads) and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "cashOrAccruals").readNullable[String] and
       (__ \ "seasonal").readNullable[Boolean] and
@@ -73,7 +73,7 @@ object BusinessDetailsModel {
       paperless
     )
 
-  implicit val writes: Writes[BusinessDetailsModel] = Json.writes[BusinessDetailsModel]
+  implicit val format: Format[BusinessDetailsModel] = Json.format[BusinessDetailsModel]
 
 
 }

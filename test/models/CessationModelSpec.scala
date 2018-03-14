@@ -29,12 +29,12 @@ class CessationModelSpec extends TestSupport with Matchers {
 
   "The CessationModel" should {
 
-    "read from Json with all fields" in {
-      Json.fromJson[CessationModel](testCessationJson) shouldBe JsSuccess(testCessationModel)
+    "read from DES Json with all fields" in {
+      Json.fromJson(testCessationJson)(CessationModel.desReads) shouldBe JsSuccess(testCessationModel)
     }
 
-    "read from Json with minimum fields" in {
-      Json.fromJson[CessationModel](Json.obj()) shouldBe JsSuccess(CessationModel(None,None))
+    "read from DES Json with minimum fields" in {
+      Json.fromJson(Json.obj())(CessationModel.desReads) shouldBe JsSuccess(CessationModel(None,None))
     }
 
     "write to Json" in {
@@ -42,7 +42,7 @@ class CessationModelSpec extends TestSupport with Matchers {
     }
 
     "return Some Cessation Model when CessationModel.cessation is given either a date, reason or both" in {
-      CessationModel.cessation(Some(LocalDate.parse("2017-06-01")),Some("Dummy reason"))shouldBe Some(testCessationModel)
+      CessationModel.cessation(Some(LocalDate.parse("2017-06-01")),Some("Dummy reason")) shouldBe Some(testCessationModel)
       CessationModel.cessation(None,Some("")) shouldBe Some(CessationModel(None,Some("")))
       CessationModel.cessation(Some(LocalDate.parse("2017-06-01")),None) shouldBe Some(CessationModel(Some(LocalDate.parse("2017-06-01")),None))
     }
