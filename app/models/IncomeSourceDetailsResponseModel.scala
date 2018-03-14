@@ -22,8 +22,8 @@ import play.api.libs.json.{Json, Reads, _}
 sealed trait IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsModel(nino: String,
-                                    businessData: List[BusinessDetailsModel],
-                                    propertyData: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
+                                    businesses: List[BusinessDetailsModel],
+                                    property: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
 

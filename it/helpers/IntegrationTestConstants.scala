@@ -73,8 +73,8 @@ object IntegrationTestConstants {
   val desBusinessDetails: IncomeSourceDetailsModel =
   IncomeSourceDetailsModel(
     nino = testNino,
-    businessData = testBusinessModel,
-    propertyData = None
+    businesses = testBusinessModel,
+    property = None
   )
 
 
