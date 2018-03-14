@@ -2,4 +2,6 @@
 
 GET        /estimated-tax-liability/:nino/:year/:calcType             @controllers.EstimatedTaxLiabilityController.getEstimatedTaxLiability(nino, year, calcType)
 
-GET        /nino-lookup/:mtdRef                                       @controllers.NinoLookupController.getNino(mtdRef)
+GET        /nino-lookup/:mtdRef                                       @controllers.IncomeSourceDetailsController.getNino(mtdRef)
+
+GET        /income-sources/:mtdRef                                    @controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)

@@ -16,6 +16,8 @@
 
 package helpers
 
+import java.time.LocalDate
+
 import models._
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
@@ -37,50 +39,46 @@ object IntegrationTestConstants {
 
   val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
-  val ninoLookup = Nino(testNino)
+  val ninoLookup = NinoModel(testNino)
 
-  val ninoLookupError = DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, "Error Message")
+  val ninoLookupError = IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
-  val testBusinessModel = Some(List(
-    BusinessData(
+  val testBusinessModel = List(
+    BusinessDetailsModel(
       incomeSourceId = "111111111111111",
-      accountingPeriodStartDate = "2017-06-01",
-      accountingPeriodEndDate = "2018-05-31",
+      accountingPeriod = AccountingPeriodModel(
+        start = LocalDate.parse("2017-06-01"),
+        end = LocalDate.parse("2018-05-31")),
       tradingName = Some("Test Business"),
-      businessAddressDetails = Some(
-        BusinessAddress(
-          addressLine1 = "Test Lane",
-          addressLine2 = Some("Test Unit"),
-          addressLine3 = Some("Test Town"),
-          addressLine4 = Some("Test City"),
-          postalCode = "TE5 7TE",
-          countryCode = "GB"
-        )),
-      businessContactDetails = Some(
-        BusinessContact(
-          phoneNumber = Some("01332752856"),
-          mobileNumber = Some("07782565326"),
-          faxNumber = Some("01332754256"),
-          emailAddress = Some("stephen@manncorpone.co.uk")
-        )),
-      tradingStartDate = Some("2017-01-01"),
+      address = Some(AddressModel(
+        addressLine1 = "Test Lane",
+        addressLine2 = Some("Test Unit"),
+        addressLine3 = Some("Test Town"),
+        addressLine4 = Some("Test City"),
+        postCode = Some("TE5 7TE"),
+        countryCode = "GB")),
+      contactDetails = Some(ContactDetailsModel(
+        phoneNumber = Some("01332752856"),
+        mobileNumber = Some("07782565326"),
+        faxNumber = Some("01332754256"),
+        emailAddress = Some("stephen@manncorpone.co.uk"))),
+      tradingStartDate = Some(LocalDate.parse("2017-01-01")),
       cashOrAccruals = Some("cash"),
-      cessationDate = None,
-      cessationReason = None,
       seasonal = Some(true),
+      cessation = None,
       paperless = Some(true)
-    )))
-
-  val desBusinessDetails: DesBusinessDetails =
-  DesBusinessDetails(
-    safeId = "XAIT12345678908",
-    nino = testNino,
-    mtdbsa = testMtdRef,
-    propertyIncome = Some(false),
-    businessData = testBusinessModel,
-    propertyData = None
+    )
   )
 
+  val incomeSourceDetailsSuccess: IncomeSourceDetailsModel =
+  IncomeSourceDetailsModel(
+    nino = testNino,
+    businesses = testBusinessModel,
+    property = None
+  )
+
+  val incomeSourceDetailsError: IncomeSourceDetailsError = IncomeSourceDetailsError(500,"""{"code":"500","reason":"ISE"}""")
+  val ninoError: NinoErrorModel = NinoErrorModel(500,"""{"code":"500","reason":"ISE"}""")
 
   object GetFinancialData {
     def successResponse(calcId: String, calcTimestamp: String, calcAmount: BigDecimal): JsValue =
@@ -102,9 +100,10 @@ object IntegrationTestConstants {
   }
 
   object GetDesBusinessDetails {
-    def successResponse(nino: String): JsValue =
-      Json.parse(
-        s"""{
+    def successResponse(nino: String): JsValue = {
+
+    val x = Json.parse(
+      s"""{
            |"safeId":"XAIT12345678908",
            |"nino":"$nino",
            |"mtdbsa":"$testMtdRef",
@@ -132,17 +131,20 @@ object IntegrationTestConstants {
            |   "tradingStartDate":"2017-01-01",
            |   "cashOrAccruals":"cash",
            |   "seasonal":true,
-           |   "paperless":true
+           |   "paperLess":true
            |  }
            | ]
            |}
       """.stripMargin
       )
+      println(s"\n\n\n$x\n\n\n")
+      x
+    }
 
-    def failureResponse(status: String, reason: String): JsValue =
+    def failureResponse(code: String, reason: String): JsValue =
       Json.parse(s"""
                     |{
-                    |   "status": "$status",
+                    |   "code": "$code",
                     |   "reason":"$reason"
                     |}
       """.stripMargin)
