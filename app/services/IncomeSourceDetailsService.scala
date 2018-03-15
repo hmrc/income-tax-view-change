@@ -37,7 +37,7 @@ class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: Inc
         Logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")
         success
       case error: IncomeSourceDetailsError =>
-        Logger.debug(s"[IncomeSourceDetailsService][get] - Retrieved Income Source Details:\n\n$error")
+        Logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$error")
         IncomeSourceDetailsError(error.status, error.reason)
     }
   }

@@ -47,10 +47,10 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
   def getIncomeSourceDetails(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getIncomeSourceDetails(mtdRef).map {
       case error: IncomeSourceDetailsError =>
-        Logger.debug(s"[IncomeSourceDetailsController][getResponse] - Error Response: $error")
+        Logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: IncomeSourceDetailsModel =>
-        Logger.debug(s"[IncomeSourceDetailsController][getResponse] - Successful Response: $success")
+        Logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Successful Response: $success")
         Ok(Json.toJson(success))
     }
   }

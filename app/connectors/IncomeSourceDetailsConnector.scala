@@ -44,28 +44,28 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
     val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    Logger.debug(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - Calling GET $url \n\nHeaders: $desHC")
+    Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Calling GET $url \n\nHeaders: $desHC")
     http.GET[HttpResponse](url)(httpReads, desHC, implicitly) map {
       response =>
         response.status match {
           case OK =>
-            Logger.debug(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - RESPONSE status:${response.status}, body:${response.body}")
+            Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status:${response.status}, body:${response.body}")
             response.json.validate[IncomeSourceDetailsModel](IncomeSourceDetailsModel.desReads) fold(
               invalid => {
-                Logger.warn(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - Json ValidationError. Parsing Des Business Details")
-                Logger.debug(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - Validation Errors: $invalid")
+                Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Json ValidationError. Parsing Des Business Details")
+                Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Validation Errors: $invalid")
                 IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
               },
               valid => valid
             )
           case _ =>
-            Logger.debug(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Logger.warn(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - Response status: [${response.status}] returned from Des Business Details call")
+            Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Response status: [${response.status}] returned from Des Business Details call")
             IncomeSourceDetailsError(response.status, response.body)
         }
     } recover {
         case _ =>
-          Logger.warn(s"[IncomeSourceDetailsConnector][getDesBusinessDetails] - Unexpected failed future")
+          Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Unexpected failed future")
           IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
 
     }
