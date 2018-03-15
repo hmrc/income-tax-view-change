@@ -35,6 +35,10 @@ class PropertiesRentedModelSpec extends TestSupport with Matchers {
       Json.fromJson(Json.obj())(PropertiesRentedModel.desReads) shouldBe JsSuccess(PropertiesRentedModel(None,None,None,None))
     }
 
+    "read from DES Json that has String for the Integer values" in {
+      Json.fromJson(testPropertiesRentedJsonString)(PropertiesRentedModel.desReads) shouldBe JsSuccess(testPropertiesRentedModel)
+    }
+
     "write to Json" in {
       Json.toJson(testPropertiesRentedModel) shouldBe testPropertiesRentedToJson
     }

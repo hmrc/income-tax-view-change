@@ -18,9 +18,9 @@ package models
 
 import java.time.LocalDate
 
+import models.CustomReads.readInt
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
-
 
 case class PropertyDetailsModel(incomeSourceId: String,
                                 accountingPeriod: AccountingPeriodModel,
@@ -35,10 +35,10 @@ object PropertyDetailsModel {
     (__ \ "incomeSourceId").read[String] and
       __.read(AccountingPeriodModel.desReads) and
       (__ \ "emailAddress").readNullable[String] and
-      (__ \ "numPropRentedUK").readNullable[Int] and
-      (__ \ "numPropRentedEEA").readNullable[Int] and
-      (__ \ "numPropRentedNONEEA").readNullable[Int] and
-      (__ \ "numPropRented").readNullable[Int] and
+      (__ \ "numPropRentedUK").readNullable[Int](readInt) and
+      (__ \ "numPropRentedEEA").readNullable[Int](readInt) and
+      (__ \ "numPropRentedNONEEA").readNullable[Int](readInt) and
+      (__ \ "numPropRented").readNullable[Int](readInt) and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
       (__ \ "paperLess").readNullable[Boolean]

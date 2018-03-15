@@ -155,6 +155,13 @@ object TestConstants {
       "numPropRentedNONEEA" -> 1
     )
 
+    val testPropertiesRentedJsonString = Json.obj(
+      "numPropRented" -> "4",
+      "numPropRentedUK" -> "3",
+      "numPropRentedEEA" -> "2",
+      "numPropRentedNONEEA" -> "1"
+    )
+
     val testPropertiesRentedToJson = Json.obj(
       "uk" -> 3,
       "eea" -> 2,
@@ -255,6 +262,20 @@ object TestConstants {
       "numPropRentedEEA" -> 2,
       "numPropRentedNONEEA" -> 1,
       "numPropRented" -> 4,
+      "cessationDate" -> "2017-06-01",
+      "cessationReason" -> "Dummy reason",
+      "paperLess" -> true
+    )
+
+    val testPropertyDetailsJsonString = Json.obj(
+      "incomeSourceId" -> "111111111111111",
+      "accountingPeriodStartDate"->"2017-06-01",
+      "accountingPeriodEndDate"->"2018-05-31",
+      "emailAddress" -> "stephen@manncorpone.co.uk",
+      "numPropRentedUK" -> "3",
+      "numPropRentedEEA" -> "2",
+      "numPropRentedNONEEA" -> "1",
+      "numPropRented" -> "4",
       "cessationDate" -> "2017-06-01",
       "cessationReason" -> "Dummy reason",
       "paperLess" -> true
