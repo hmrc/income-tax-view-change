@@ -59,6 +59,9 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     def getEstimatedTaxLiability(nino: String, year: String, calcType: String): WSResponse = get(s"/estimated-tax-liability/$nino/$year/$calcType")
 
     def getNino(mtdRef: String): WSResponse = get(s"/nino-lookup/$mtdRef")
+
+    def getIncomeSources(mtdRef: String): WSResponse = get(s"/income-sources/$mtdRef")
+
   }
 
   def isAuthorised(authorised: Boolean): Unit = {

@@ -19,29 +19,40 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import controllers.predicates.AuthenticationPredicate
-import models.{DesBusinessDetailsError, Nino}
+import models._
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.NinoLookupService
+import services.IncomeSourceDetailsService
 import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class NinoLookupController @Inject()(val authentication: AuthenticationPredicate,
-                                     val ninoLookupService: NinoLookupService
+class IncomeSourceDetailsController @Inject()(val authentication: AuthenticationPredicate,
+                                     val incomeSourceDetailsService: IncomeSourceDetailsService
                                       ) extends BaseController {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    Logger.debug(s"[NinoLookupController][getNino] - Requesting NINO from NinoLookupService for MtdRef: $mtdRef")
-    ninoLookupService.getNino(mtdRef).map {
-      case success: Nino =>
-        Logger.debug(s"[NinoLookupController][getNino] - Successful Response: $success")
-        Ok(Json.toJson(success))
-      case error: DesBusinessDetailsError =>
-        Logger.debug(s"[NinoLookupController][getNino] - Error Response: $error")
+    incomeSourceDetailsService.getNino(mtdRef).map {
+      case error: NinoErrorModel =>
+        Logger.debug(s"[IncomeSourceDetailsController][getNino] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
+      case success: NinoModel =>
+        Logger.debug(s"[IncomeSourceDetailsController][getNino] - Successful Response: $success")
+        Ok(Json.toJson(success))
     }
   }
+
+  def getIncomeSourceDetails(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
+    incomeSourceDetailsService.getIncomeSourceDetails(mtdRef).map {
+      case error: IncomeSourceDetailsError =>
+        Logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Error Response: $error")
+        Status(error.status)(Json.toJson(error))
+      case success: IncomeSourceDetailsModel =>
+        Logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Successful Response: $success")
+        Ok(Json.toJson(success))
+    }
+  }
+
 }

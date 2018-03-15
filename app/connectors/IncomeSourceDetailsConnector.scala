@@ -19,7 +19,7 @@ package connectors
 import javax.inject.{Inject, Singleton}
 
 import config.MicroserviceAppConfig
-import models.{DesBusinessDetails, DesBusinessDetailsError, DesResponseModel}
+import models._
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
@@ -28,45 +28,45 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-
 import scala.concurrent.Future
 
 @Singleton
-class NinoLookupConnector @Inject()(val http: HttpClient,
+class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
                                     val appConfig: MicroserviceAppConfig
                                    ) extends RawResponseReads {
 
-  val getDesBusinessDetailsUrl: String => String =
+  val getIncomeSourceDetailsUrl: String => String =
     mtdRef => s"${appConfig.desUrl}/registration/business-details/mtdbsa/$mtdRef"
 
-  def getDesBusinessDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[DesResponseModel] = {
+  def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
-    val url = getDesBusinessDetailsUrl(mtdRef)
+    val url = getIncomeSourceDetailsUrl(mtdRef)
     val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    Logger.debug(s"[NinoLookupConnector][getDesBusinessDetails] - Calling GET $url \n\nHeaders: $desHC")
+    Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Calling GET $url \n\nHeaders: $desHC")
     http.GET[HttpResponse](url)(httpReads, desHC, implicitly) map {
       response =>
         response.status match {
           case OK =>
-            Logger.debug(s"[NinoLookupConnector][getDesBusinessDetails] - RESPONSE status:${response.status}, body:${response.body}")
-            response.json.validate[DesBusinessDetails] fold(
+            Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status:${response.status}, body:${response.body}")
+            response.json.validate[IncomeSourceDetailsModel](IncomeSourceDetailsModel.desReads) fold(
               invalid => {
-                Logger.warn(s"[NinoLookupConnector][getDesBusinessDetails] - Json ValidationError. Parsing Des Business Details")
-                DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
+                Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Json ValidationError. Parsing Des Business Details")
+                Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Validation Errors: $invalid")
+                IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
               },
               valid => valid
             )
           case _ =>
-            Logger.debug(s"[NinoLookupConnector][getDesBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Logger.warn(s"[NinoLookupConnector][getDesBusinessDetails] - Response status: [${response.status}] returned from Des Business Details call")
-            DesBusinessDetailsError(response.status, response.body)
+            Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Response status: [${response.status}] returned from Des Business Details call")
+            IncomeSourceDetailsError(response.status, response.body)
         }
     } recover {
         case _ =>
-          Logger.warn(s"[NinoLookupConnector][getDesBusinessDetails] - Unexpected failed future")
-          DesBusinessDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
+          Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Unexpected failed future")
+          IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
 
     }
   }
