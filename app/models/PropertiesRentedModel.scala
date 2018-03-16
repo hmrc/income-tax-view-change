@@ -16,6 +16,7 @@
 
 package models
 
+import models.CustomReads.readInt
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
@@ -23,19 +24,19 @@ case class PropertiesRentedModel(uk:Option[Int], eea:Option[Int], nonEea:Option[
 
 object PropertiesRentedModel {
 
-  val desReads: Reads[PropertiesRentedModel] = (
-    (__ \ "numPropRentedUK").readNullable[Int] and
-      (__ \ "numPropRentedEEA").readNullable[Int] and
-      (__ \ "numPropRentedNONEEA").readNullable[Int] and
-      (__ \ "numPropRented").readNullable[Int]
-  )(PropertiesRentedModel.apply _)
-
   def propertiesRented(uk:Option[Int], eea:Option[Int], nonEea:Option[Int], total:Option[Int]): Option[PropertiesRentedModel] = {
     (uk,eea,nonEea,total) match {
       case (None,None,None,None) => None
       case _ => Some(PropertiesRentedModel(uk,eea,nonEea,total))
     }
   }
+
+  val desReads: Reads[PropertiesRentedModel] = (
+    (__ \ "numPropRentedUK").readNullable[Int](readInt) and
+      (__ \ "numPropRentedEEA").readNullable[Int](readInt) and
+      (__ \ "numPropRentedNONEEA").readNullable[Int](readInt) and
+      (__ \ "numPropRented").readNullable[Int](readInt)
+    )(PropertiesRentedModel.apply _)
 
   implicit val format: Format[PropertiesRentedModel] = Json.format[PropertiesRentedModel]
 
