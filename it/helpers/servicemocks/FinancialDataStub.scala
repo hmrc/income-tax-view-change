@@ -16,7 +16,8 @@
 
 package helpers.servicemocks
 
-import helpers.{IntegrationTestConstants, WiremockHelper}
+import assets.FinancialTransactionIntegrationTestConstants._
+import helpers.WiremockHelper
 import models.LastTaxCalculation
 import play.api.http.Status
 
@@ -25,9 +26,7 @@ object FinancialDataStub {
   val url: (String, String, String) => String = (nino, year, calcType) => s"""/calculation-store/previous-calculation/$nino?year=$year&type=$calcType"""
 
   def stubGetFinancialData(nino: String, year: String, calcType: String, response: LastTaxCalculation): Unit = {
-    val lastTaxCalculationResponse =
-      IntegrationTestConstants.GetFinancialData
-      .successResponse(response.calcID, response.calcTimestamp, response.calcAmount).toString
+    val lastTaxCalculationResponse = successResponse(response.calcID, response.calcTimestamp, response.calcAmount).toString
 
     WiremockHelper.stubGet(url(nino, year, calcType), Status.OK, lastTaxCalculationResponse)
   }

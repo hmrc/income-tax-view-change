@@ -16,8 +16,10 @@
 
 package controllers
 
+import assets.BaseIntegrationTestConstants._
+import assets.IncomeSourceIntegrationTestConstants._
+import assets.NinoIntegrationTestConstants._
 import helpers.ComponentSpecBase
-import helpers.IntegrationTestConstants._
 import helpers.servicemocks.DesBusinessDetailsStub
 import models.{IncomeSourceDetailsError, IncomeSourceDetailsModel, NinoErrorModel, NinoModel}
 import play.api.http.Status._

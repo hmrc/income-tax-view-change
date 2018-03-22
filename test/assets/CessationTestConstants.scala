@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-package helpers.servicemocks
+package assets
 
-import helpers.WiremockHelper
-import play.api.http.Status
+import java.time.LocalDate
+import models.CessationModel
+import play.api.libs.json.Json
 
-object AuthStub {
+object CessationTestConstants {
 
-  val postAuthoriseUrl = "/auth/authorise"
+  val testCessationModel = CessationModel(
+    Some(LocalDate.parse("2017-06-01")),
+    Some("Dummy reason")
+  )
 
-  def stubAuthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
-  }
+  val testCessationJson = Json.obj(
+    "cessationDate" -> "2017-06-01",
+    "cessationReason" -> "Dummy reason"
+  )
 
-  def stubUnauthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
-  }
+  val testCessationToJson = Json.obj(
+    "date" -> "2017-06-01",
+    "reason" -> "Dummy reason"
+  )
 }

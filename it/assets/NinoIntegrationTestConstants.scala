@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package helpers.servicemocks
+package assets
 
-import helpers.WiremockHelper
-import play.api.http.Status
+import assets.BaseIntegrationTestConstants.testNino
+import models.{NinoErrorModel, NinoModel}
+import play.api.libs.json.Json
 
-object AuthStub {
+object NinoIntegrationTestConstants {
 
-  val postAuthoriseUrl = "/auth/authorise"
+  val ninoLookup = NinoModel(testNino)
 
-  def stubAuthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
-  }
+  val ninoErrorJson = Json.obj(
+    "code" -> "500",
+    "reason" -> "ISE"
+  )
 
-  def stubUnauthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
-  }
+  val ninoError: NinoErrorModel = NinoErrorModel(500,ninoErrorJson.toString())
+
+
 }

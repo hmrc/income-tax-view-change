@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package models
+package assets
 
-import assets.AccountingPeriodTestConstants._
-import org.scalatest.Matchers
-import play.api.libs.json._
-import utils.TestSupport
+import play.api.libs.json.Json
+import play.mvc.Http.Status
+import uk.gov.hmrc.http.HttpResponse
+import assets.IncomeSourceDetailsTestConstants.testIncomeSourceDetailsJson
 
-class AccountingPeriodModelSpec extends TestSupport with Matchers {
+object BaseTestConstants {
 
-  "The AccountingPeriodModel" should {
+  val testNino = "BB123456A"
+  val mtdRef = "123456789012345"
 
-    "read from the DES Json" in {
-      Json.fromJson(testAccountingPeriodJson)(AccountingPeriodModel.desReads) shouldBe JsSuccess(testAccountingPeriodModel)
-    }
-
-    "write to Json" in {
-      Json.toJson(testAccountingPeriodModel) shouldBe testAccountingPeriodToJson
-    }
-
-  }
-
+  //Connector Responses
+  val successResponse = HttpResponse(Status.OK, Some(testIncomeSourceDetailsJson))
+  val badJson = HttpResponse(Status.OK, Some(Json.toJson("{}")))
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Dummy error message"))
 }

@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.TestConstants.FinancialData._
-import assets.TestConstants._
+import assets.FinancialDataTestConstants._
+import assets.BaseTestConstants.testNino
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockAuthorisedUser, MockEstimatedTaxLiabilityService, MockUnauthorisedUser}
 import play.api.http.Status

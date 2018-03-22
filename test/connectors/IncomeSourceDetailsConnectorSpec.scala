@@ -16,8 +16,10 @@
 
 package connectors
 
-import assets.TestConstants.BusinessDetails._
-import assets.TestConstants._
+import assets.IncomeSourceDetailsTestConstants._
+import assets.BaseTestConstants._
+//import assets.TestConstants.BusinessDetails._
+//import assets.TestConstants._
 import mocks.MockHttp
 import models.IncomeSourceDetailsError
 import play.mvc.Http.Status

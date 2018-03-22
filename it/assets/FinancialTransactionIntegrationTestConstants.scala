@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package helpers.servicemocks
+package assets
 
-import helpers.WiremockHelper
-import play.api.http.Status
+import play.api.libs.json.{JsValue, Json}
 
-object AuthStub {
+object FinancialTransactionIntegrationTestConstants {
 
-  val postAuthoriseUrl = "/auth/authorise"
+  def successResponse(calcId: String, calcTimestamp: String, calcAmount: BigDecimal): JsValue =
+    Json.obj(
+      "calcID" -> calcId,
+      "calcTimestamp" -> calcTimestamp,
+      "calcAmount" -> calcAmount
+    )
 
-  def stubAuthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
-  }
+  def failureResponse(code: String, reason: String): JsValue =
+    Json.obj(
+      "code" -> code,
+      "reason" -> reason
 
-  def stubUnauthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
-  }
+    )
+
 }

@@ -16,7 +16,8 @@
 
 package helpers.servicemocks
 
-import helpers.{IntegrationTestConstants, WiremockHelper}
+import assets.BusinessDetailsIntegrationTestConstants._
+import helpers.WiremockHelper
 import models.IncomeSourceDetailsModel
 import play.api.http.Status
 
@@ -25,12 +26,12 @@ object DesBusinessDetailsStub {
   val url: (String) => String = (mtdRef) => s"""/registration/business-details/mtdbsa/$mtdRef"""
 
   def stubGetDesBusinessDetails(mtdRef:String, response: IncomeSourceDetailsModel): Unit = {
-    val desBusinessDetailsResponse = IntegrationTestConstants.GetDesBusinessDetails.successResponse(response.nino).toString
+    val desBusinessDetailsResponse = successResponse(response.nino).toString
     WiremockHelper.stubGet(url(mtdRef), Status.OK, desBusinessDetailsResponse)
   }
 
   def stubGetDesBusinessDetailsError(mtdRef: String): Unit = {
-    val errorResponse = IntegrationTestConstants.GetDesBusinessDetails.failureResponse("500", "ISE")
+    val errorResponse = failureResponse("500", "ISE")
     WiremockHelper.stubGet(url(mtdRef), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
 

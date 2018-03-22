@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package helpers.servicemocks
+package assets
 
-import helpers.WiremockHelper
-import play.api.http.Status
+object BaseIntegrationTestConstants {
 
-object AuthStub {
+  val testMtditidEnrolmentKey = "HMRC-MTD-IT"
+  val testMtditidEnrolmentIdentifier = "MTDITID"
+  val testMtditid = "XAITSA123456"
 
-  val postAuthoriseUrl = "/auth/authorise"
+  val testNinoEnrolmentKey = "HMRC-NI"
+  val testNinoEnrolmentIdentifier = "NINO"
+  val testNino = "BB123456A"
+  val testMtdRef = "123456789012345"
+  val testYear = "2018"
+  val testCalcType = "it"
 
-  def stubAuthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
-  }
-
-  def stubUnauthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
-  }
 }
