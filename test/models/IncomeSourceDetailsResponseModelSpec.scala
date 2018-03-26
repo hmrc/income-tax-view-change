@@ -16,11 +16,10 @@
 
 package models
 
+import assets.IncomeSourceDetailsTestConstants._
 import org.scalatest.Matchers
-import play.api.libs.json._
-import assets.TestConstants.BusinessDetails._
-import assets.TestConstants._
 import play.api.http.Status
+import play.api.libs.json._
 import utils.TestSupport
 
 class IncomeSourceDetailsResponseModelSpec extends TestSupport with Matchers {

@@ -16,8 +16,8 @@
 
 package mocks
 
-import assets.TestConstants.FinancialData._
-import assets.TestConstants._
+import assets.FinancialDataTestConstants.{testYear,testCalcType}
+import assets.BaseTestConstants.testNino
 import connectors.FinancialDataConnector
 import models.LastTaxCalculationResponseModel
 import org.mockito.ArgumentMatchers

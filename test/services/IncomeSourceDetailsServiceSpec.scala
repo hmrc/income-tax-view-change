@@ -16,8 +16,8 @@
 
 package services
 
-import assets.TestConstants.BusinessDetails._
-import assets.TestConstants._
+import assets.IncomeSourceDetailsTestConstants._
+import assets.BaseTestConstants.mtdRef
 import mocks.MockIncomeSourceDetailsConnector
 import models._
 import utils.TestSupport

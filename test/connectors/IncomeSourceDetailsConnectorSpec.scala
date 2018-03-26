@@ -16,8 +16,8 @@
 
 package connectors
 
-import assets.TestConstants.BusinessDetails._
-import assets.TestConstants._
+import assets.IncomeSourceDetailsTestConstants._
+import assets.BaseTestConstants._
 import mocks.MockHttp
 import models.IncomeSourceDetailsError
 import play.mvc.Http.Status
@@ -36,8 +36,7 @@ class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp {
     lazy val expectedHc: HeaderCarrier =
       hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    def mock: (HttpResponse) => Unit =
-      setupMockHttpGetWithHeaderCarrier(getIncomeSourceDetailsUrl(mtdRef), expectedHc)(_)
+    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getIncomeSourceDetailsUrl(mtdRef), expectedHc)(_)
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)

@@ -16,10 +16,8 @@
 
 package models
 
-import assets.TestConstants.BusinessDetails._
-import assets.TestConstants._
+import assets.BusinessDetailsTestConstants._
 import org.scalatest.Matchers
-import play.api.http.Status
 import play.api.libs.json._
 import utils.TestSupport
 

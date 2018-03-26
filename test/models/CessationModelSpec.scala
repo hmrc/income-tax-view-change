@@ -18,11 +18,9 @@ package models
 
 import java.time.LocalDate
 
+import assets.CessationTestConstants._
 import org.scalatest.Matchers
 import play.api.libs.json._
-import assets.TestConstants.BusinessDetails._
-import assets.TestConstants._
-import play.api.http.Status
 import utils.TestSupport
 
 class CessationModelSpec extends TestSupport with Matchers {

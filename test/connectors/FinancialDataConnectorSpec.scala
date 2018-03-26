@@ -16,8 +16,8 @@
 
 package connectors
 
-import assets.TestConstants.FinancialData._
-import assets.TestConstants._
+import assets.FinancialDataTestConstants._
+import assets.BaseTestConstants.testNino
 import mocks.MockHttp
 import models.LastTaxCalculationError
 import play.mvc.Http.Status

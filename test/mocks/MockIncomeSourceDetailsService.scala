@@ -16,7 +16,7 @@
 
 package mocks
 
-import assets.TestConstants._
+import assets.BaseTestConstants.mtdRef
 import models.{IncomeSourceDetailsResponseModel, NinoResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._

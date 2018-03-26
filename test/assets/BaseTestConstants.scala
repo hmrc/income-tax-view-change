@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-package helpers.servicemocks
+package assets
 
-import helpers.WiremockHelper
-import play.api.http.Status
+object BaseTestConstants {
 
-object AuthStub {
+  val testNino = "BB123456A"
+  val mtdRef = "123456789012345"
 
-  val postAuthoriseUrl = "/auth/authorise"
-
-  def stubAuthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
-  }
-
-  def stubUnauthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
-  }
 }

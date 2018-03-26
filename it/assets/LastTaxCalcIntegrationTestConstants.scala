@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package helpers.servicemocks
+package assets
 
-import helpers.WiremockHelper
-import play.api.http.Status
+import models.{LastTaxCalculation, LastTaxCalculationError}
+import play.mvc.Http.Status
 
-object AuthStub {
+object LastTaxCalcIntegrationTestConstants {
 
-  val postAuthoriseUrl = "/auth/authorise"
+  val lastTaxCalculation = LastTaxCalculation("01234567", "2017-07-06T12:34:56.789Z", 2345.67)
 
-  def stubAuthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
-  }
+  val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
-  def stubUnauthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.UNAUTHORIZED, "{}")
-  }
 }
