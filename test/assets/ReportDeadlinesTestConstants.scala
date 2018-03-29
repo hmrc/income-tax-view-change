@@ -18,11 +18,12 @@ package assets
 
 import java.time.LocalDate
 
-import models.reportDeadlines.ReportDeadlineModel
-import play.api.libs.json.{JsObject, Json}
+import models.reportDeadlines.{ReportDeadlineModel, ReportDeadlinesModel}
+import play.api.libs.json.{JsObject, JsValue, Json}
 
 object ReportDeadlinesTestConstants {
 
+  //Report Deadline
   val testReceivedDeadline: ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
@@ -31,7 +32,7 @@ object ReportDeadlinesTestConstants {
     dateReceived = Some(LocalDate.parse("2018-05-01"))
   )
 
-  val testReceivedDeadlineFromJson: JsObject = Json.obj(
+  val testReceivedDeadlineFromJson: JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
@@ -39,7 +40,7 @@ object ReportDeadlinesTestConstants {
     "inboundCorrespondenceDateReceived" -> "2018-05-01"
   )
 
-  val testReceivedDeadlineToJson: JsObject = Json.obj(
+  val testReceivedDeadlineToJson: JsValue = Json.obj(
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
@@ -55,18 +56,30 @@ object ReportDeadlinesTestConstants {
     dateReceived = None
   )
 
-  val testDeadlineFromJson: JsObject = Json.obj(
+  val testDeadlineFromJson: JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
     "periodKey" -> "#001"
   )
 
-  val testDeadlineToJson: JsObject = Json.obj(
+  val testDeadlineToJson: JsValue = Json.obj(
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
     "periodKey" -> "#001"
   )
 
+
+  //Report Deadlines
+  val testReportDeadlines: ReportDeadlinesModel =
+    ReportDeadlinesModel(Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+
+  val testReportDeadlinesFromJson: JsValue = Json.obj(
+    "obligations" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
+  )
+
+  val testReportDeadlinesToJson: JsValue = Json.obj(
+    "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+  )
 }
