@@ -17,6 +17,7 @@
 package models
 
 import assets.ContactDetailsTestConstants._
+import models.core.ContactDetailsModel
 import org.scalatest.Matchers
 import play.api.libs.json._
 import utils.TestSupport

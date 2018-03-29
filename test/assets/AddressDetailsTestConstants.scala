@@ -16,7 +16,7 @@
 
 package assets
 
-import models.AddressModel
+import models.core.AddressModel
 import play.api.libs.json.Json
 
 object AddressDetailsTestConstants {

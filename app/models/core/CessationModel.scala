@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
 import java.time.LocalDate
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
-case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
+case class CessationModel(date: Option[LocalDate], reason: Option[String])
 
-object AccountingPeriodModel {
+object CessationModel {
 
-  val desReads: Reads[AccountingPeriodModel] = (
-    (__ \ "accountingPeriodStartDate").read[LocalDate] and
-      (__ \ "accountingPeriodEndDate").read[LocalDate]
-  )(AccountingPeriodModel.apply _)
+  val desReads: Reads[CessationModel] = (
+    (__ \ "cessationDate").readNullable[LocalDate] and
+      (__ \ "cessationReason").readNullable[String]
+  )(CessationModel.apply _)
 
-  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
+  def cessation(date: Option[LocalDate], reason: Option[String]): Option[CessationModel] =
+    (date,reason) match{
+      case (None,None) => None
+      case _ => Some(CessationModel(date,reason))
+    }
+
+  implicit val format: Format[CessationModel] = Json.format[CessationModel]
 }

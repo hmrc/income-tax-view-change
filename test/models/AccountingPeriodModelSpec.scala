@@ -17,6 +17,7 @@
 package models
 
 import assets.AccountingPeriodTestConstants._
+import models.core.AccountingPeriodModel
 import org.scalatest.Matchers
 import play.api.libs.json._
 import utils.TestSupport
