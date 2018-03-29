@@ -16,6 +16,7 @@
 
 package models
 
+import models.core.CustomReads
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 

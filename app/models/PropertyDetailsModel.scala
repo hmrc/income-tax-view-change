@@ -18,7 +18,7 @@ package models
 
 import java.time.LocalDate
 
-import models.core.{AccountingPeriodModel, CessationModel, ContactDetailsModel}
+import models.core.{AccountingPeriodModel, CessationModel, ContactDetailsModel, CustomReads}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
