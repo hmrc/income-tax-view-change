@@ -21,7 +21,7 @@ import play.api.libs.json.Reads
 
 import scala.util.{Success, Try}
 
-object CustomReads {
+trait CustomReads {
 
   val readInt: Reads[Int] = implicitly[Reads[Int]].orElse(implicitly[Reads[String]]
     .map(x => Try(x.toInt))
