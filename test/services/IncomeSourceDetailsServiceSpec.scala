@@ -20,6 +20,7 @@ import assets.IncomeSourceDetailsTestConstants._
 import assets.BaseTestConstants.mtdRef
 import mocks.MockIncomeSourceDetailsConnector
 import models._
+import models.core.NinoResponse
 import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import utils.TestSupport
 

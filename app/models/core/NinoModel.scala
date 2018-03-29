@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
 import play.api.libs.json.{Format, Json}
 

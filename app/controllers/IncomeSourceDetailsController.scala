@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import controllers.predicates.AuthenticationPredicate
 import models._
+import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import play.api.Logger
 import play.api.libs.json.Json
