@@ -20,6 +20,7 @@ import assets.BaseTestConstants.testNino
 import assets.FinancialDataTestConstants._
 import mocks.MockFinancialDataConnector
 import models._
+import models.latestTaxCalculation.LastTaxCalculationResponseModel
 import utils.TestSupport
 
 import scala.concurrent.Future

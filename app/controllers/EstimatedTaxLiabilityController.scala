@@ -19,7 +19,7 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import controllers.predicates.AuthenticationPredicate
-import models.{LastTaxCalculation, LastTaxCalculationError}
+import models.latestTaxCalculation.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._

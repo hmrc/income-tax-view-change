@@ -23,7 +23,6 @@ import helpers.ComponentSpecBase
 import helpers.servicemocks.DesBusinessDetailsStub
 import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
-import models.{IncomeSourceDetailsError, NinoErrorModel}
 import play.api.http.Status._
 
 class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
