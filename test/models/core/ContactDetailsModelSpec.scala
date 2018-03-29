@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
 import assets.ContactDetailsTestConstants._
-import models.core.ContactDetailsModel
 import org.scalatest.Matchers
 import play.api.libs.json._
 import utils.TestSupport

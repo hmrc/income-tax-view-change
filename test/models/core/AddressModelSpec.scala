@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
-import assets.AccountingPeriodTestConstants._
-import models.core.AccountingPeriodModel
+import assets.AddressDetailsTestConstants._
 import org.scalatest.Matchers
 import play.api.libs.json._
 import utils.TestSupport
 
-class AccountingPeriodModelSpec extends TestSupport with Matchers {
+class AddressModelSpec extends TestSupport with Matchers {
 
-  "The AccountingPeriodModel" should {
+  "The AddressModel" should {
 
-    "read from the DES Json" in {
-      Json.fromJson(testAccountingPeriodJson)(AccountingPeriodModel.desReads) shouldBe JsSuccess(testAccountingPeriodModel)
+    "read from DES Json with all fields" in {
+      Json.fromJson(testAddressJson)(AddressModel.desReads) shouldBe JsSuccess(testAddressModel)
+    }
+
+    "read from DES Json with minimum fields" in {
+      Json.fromJson(testMinimumAddressJson)(AddressModel.desReads) shouldBe JsSuccess(testMinimumAddressModel)
     }
 
     "write to Json" in {
-      Json.toJson(testAccountingPeriodModel) shouldBe testAccountingPeriodToJson
+      Json.toJson(testAddressModel) shouldBe testAddressToJson
     }
 
   }
