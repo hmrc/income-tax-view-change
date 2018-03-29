@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
 import assets.IncomeSourceDetailsTestConstants._
 import org.scalatest.Matchers

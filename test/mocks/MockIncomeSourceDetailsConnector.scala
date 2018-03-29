@@ -18,7 +18,7 @@ package mocks
 
 import assets.BaseTestConstants.mtdRef
 import connectors.IncomeSourceDetailsConnector
-import models.IncomeSourceDetailsResponseModel
+import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
 import java.time.LocalDate
 

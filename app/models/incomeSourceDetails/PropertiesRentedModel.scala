@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
 import models.core.CustomReads
 import play.api.libs.functional.syntax._

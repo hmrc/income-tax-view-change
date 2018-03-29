@@ -20,7 +20,8 @@ import java.time.LocalDate
 
 import assets.BaseIntegrationTestConstants.testMtdRef
 import models.core.{AccountingPeriodModel, AddressModel, ContactDetailsModel}
-import models.{AddressModel, BusinessDetailsModel, ContactDetailsModel}
+import models.incomeSourceDetails.BusinessDetailsModel
+import models.{AddressModel, ContactDetailsModel}
 import play.api.libs.json.{JsValue, Json}
 
 object BusinessDetailsIntegrationTestConstants {
