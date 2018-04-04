@@ -17,7 +17,7 @@
 package assets
 
 
-import models.{LastTaxCalculation, LastTaxCalculationError}
+import models.latestTaxCalculation.{LastTaxCalculation, LastTaxCalculationError}
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse

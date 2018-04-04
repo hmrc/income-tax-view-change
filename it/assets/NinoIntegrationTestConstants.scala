@@ -17,7 +17,7 @@
 package assets
 
 import assets.BaseIntegrationTestConstants.testNino
-import models.{NinoErrorModel, NinoModel}
+import models.core.{NinoErrorModel, NinoModel}
 import play.api.libs.json.Json
 
 object NinoIntegrationTestConstants {

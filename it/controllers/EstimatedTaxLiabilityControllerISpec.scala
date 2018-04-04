@@ -5,7 +5,7 @@ import assets.BaseIntegrationTestConstants._
 import assets.LastTaxCalcIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.FinancialDataStub
-import models.LastTaxCalculation
+import models.latestTaxCalculation.LastTaxCalculation
 import play.api.http.Status._
 
 class EstimatedTaxLiabilityControllerISpec extends ComponentSpecBase {

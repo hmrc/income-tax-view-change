@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
 import java.time.LocalDate
 
-import models.CustomReads.readInt
+import models.core.{AccountingPeriodModel, CessationModel, ContactDetailsModel, CustomReads}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
@@ -29,7 +29,7 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean])
 
-object PropertyDetailsModel {
+object PropertyDetailsModel extends CustomReads {
 
   val desReads: Reads[PropertyDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and

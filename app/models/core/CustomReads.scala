@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
-import java.time.LocalDate
+import play.api.data.validation.ValidationError
+import play.api.libs.json.Reads
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+import scala.util.{Success, Try}
 
-case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
+trait CustomReads {
 
-object AccountingPeriodModel {
-
-  val desReads: Reads[AccountingPeriodModel] = (
-    (__ \ "accountingPeriodStartDate").read[LocalDate] and
-      (__ \ "accountingPeriodEndDate").read[LocalDate]
-  )(AccountingPeriodModel.apply _)
-
-  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
+  val readInt: Reads[Int] = implicitly[Reads[Int]].orElse(implicitly[Reads[String]]
+    .map(x => Try(x.toInt))
+    .collect (ValidationError(Seq("Parsing error"))) {
+      case Success(a) => a
+    })
 }

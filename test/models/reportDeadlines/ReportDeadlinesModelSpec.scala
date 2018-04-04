@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package models
+package models.reportDeadlines
 
-import play.api.libs.json.{Format, Json}
+import assets.ReportDeadlinesTestConstants._
+import org.scalatest.Matchers
+import play.api.libs.json._
+import utils.TestSupport
 
+class ReportDeadlinesModelSpec extends TestSupport with Matchers {
 
-sealed trait NinoResponse
+  "The ReportDeadlinesModel" should {
 
-case class NinoModel(nino: String) extends NinoResponse
+    "read from the DES Json" in {
+      Json.fromJson(testReportDeadlinesFromJson)(ReportDeadlinesModel.desReadsApi1330).fold(
+        invalid => invalid,
+        valid => valid
+      ) shouldBe testReportDeadlines
+    }
 
-case class NinoErrorModel(status: Int, reason: String) extends NinoResponse
+    "write to Json" in {
+      Json.toJson(testReportDeadlines) shouldBe testReportDeadlinesToJson
+    }
+  }
 
-object NinoModel {
-  implicit val format: Format[NinoModel] = Json.format[NinoModel]
-}
-
-object NinoErrorModel {
-  implicit val format: Format[NinoErrorModel] = Json.format[NinoErrorModel]
 }

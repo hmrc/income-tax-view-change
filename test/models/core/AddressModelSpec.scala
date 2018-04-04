@@ -14,32 +14,29 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
-import assets.PropertyDetailsTestConstants._
+import assets.AddressDetailsTestConstants._
 import org.scalatest.Matchers
 import play.api.libs.json._
 import utils.TestSupport
 
-class PropertyDetailsModelSpec extends TestSupport with Matchers {
+class AddressModelSpec extends TestSupport with Matchers {
 
-  "The PropertyDetailsModel" should {
+  "The AddressModel" should {
 
     "read from DES Json with all fields" in {
-      Json.fromJson(testPropertyDetailsJson)(PropertyDetailsModel.desReads) shouldBe JsSuccess(testPropertyDetailsModel)
-    }
-
-    "read from DES Json where Ints are Strings" in {
-      Json.fromJson(testPropertyDetailsJsonString)(PropertyDetailsModel.desReads) shouldBe JsSuccess(testPropertyDetailsModel)
+      Json.fromJson(testAddressJson)(AddressModel.desReads) shouldBe JsSuccess(testAddressModel)
     }
 
     "read from DES Json with minimum fields" in {
-      Json.fromJson(testMinimumPropertyDetailsJson)(PropertyDetailsModel.desReads) shouldBe JsSuccess(testMinimumPropertyDetailsModel)
+      Json.fromJson(testMinimumAddressJson)(AddressModel.desReads) shouldBe JsSuccess(testMinimumAddressModel)
     }
 
     "write to Json" in {
-      Json.toJson(testPropertyDetailsModel) shouldBe testPropertyDetailsToJson
+      Json.toJson(testAddressModel) shouldBe testAddressToJson
     }
-  }
-}
 
+  }
+
+}

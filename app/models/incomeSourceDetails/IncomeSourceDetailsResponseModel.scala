@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
-import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 

@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package models.reportDeadlines
 
-import assets.AccountingPeriodTestConstants._
-import org.scalatest.Matchers
-import play.api.libs.json._
-import utils.TestSupport
+import play.api.libs.json.{Format, Json, Reads, __}
 
-class AccountingPeriodModelSpec extends TestSupport with Matchers {
+case class ReportDeadlinesModel(obligations: Seq[ReportDeadlineModel])
 
-  "The AccountingPeriodModel" should {
+object ReportDeadlinesModel {
 
-    "read from the DES Json" in {
-      Json.fromJson(testAccountingPeriodJson)(AccountingPeriodModel.desReads) shouldBe JsSuccess(testAccountingPeriodModel)
-    }
+  val desReadsApi1330: Reads[ReportDeadlinesModel] =
+    (__ \ "obligations").read(Reads.seq(ReportDeadlineModel.desReadsApi1330)).map(ReportDeadlinesModel(_))
 
-    "write to Json" in {
-      Json.toJson(testAccountingPeriodModel) shouldBe testAccountingPeriodToJson
-    }
-
-  }
-
+  implicit val format: Format[ReportDeadlinesModel] = Json.format[ReportDeadlinesModel]
 }
+
+

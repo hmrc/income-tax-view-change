@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import config.MicroserviceAppConfig
 import models._
+import models.latestTaxCalculation.{LastTaxCalculation, LastTaxCalculationError, LastTaxCalculationResponseModel}
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._

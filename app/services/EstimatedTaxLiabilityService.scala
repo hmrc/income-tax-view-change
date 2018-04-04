@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import connectors.FinancialDataConnector
 import models._
+import models.latestTaxCalculation.{LastTaxCalculation, LastTaxCalculationError, LastTaxCalculationResponseModel}
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package assets
+package models.core
 
-import models.latestTaxCalculation.{LastTaxCalculation, LastTaxCalculationError}
-import play.mvc.Http.Status
+import java.time.LocalDate
 
-object LastTaxCalcIntegrationTestConstants {
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, Reads, _}
 
-  val lastTaxCalculation = LastTaxCalculation("01234567", "2017-07-06T12:34:56.789Z", 2345.67)
+case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
 
-  val lastTaxCalculationError = LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Error Message")
+object AccountingPeriodModel {
 
+  val desReads: Reads[AccountingPeriodModel] = (
+    (__ \ "accountingPeriodStartDate").read[LocalDate] and
+      (__ \ "accountingPeriodEndDate").read[LocalDate]
+  )(AccountingPeriodModel.apply _)
+
+  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
 }

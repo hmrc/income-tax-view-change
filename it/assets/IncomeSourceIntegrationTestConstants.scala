@@ -17,9 +17,9 @@
 package assets
 
 import assets.BaseIntegrationTestConstants.testNino
-import assets.NinoIntegrationTestConstants.ninoErrorJson
 import assets.BusinessDetailsIntegrationTestConstants.testBusinessModel
-import models.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
+import assets.NinoIntegrationTestConstants.ninoErrorJson
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import play.mvc.Http.Status
 
 object IncomeSourceIntegrationTestConstants {

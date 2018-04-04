@@ -20,6 +20,8 @@ import javax.inject.{Inject, Singleton}
 
 import connectors.IncomeSourceDetailsConnector
 import models._
+import models.core.{NinoErrorModel, NinoModel, NinoResponse}
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 
