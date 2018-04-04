@@ -29,7 +29,7 @@ class BusinessDeadlinesConnectorSpec extends TestSupport with MockHttp {
 
   object TestBusinessDeadlinesConnector extends BusinessDeadlinesConnector(mockHttpGet, microserviceAppConfig)
 
-  "FinancialDataConnector.getFinancialData" should {
+  "BusinessDeadlinesConnector.getBusinessDeadlines" should {
 
     import TestBusinessDeadlinesConnector._
 
@@ -39,23 +39,23 @@ class BusinessDeadlinesConnectorSpec extends TestSupport with MockHttp {
     def mock: (HttpResponse) => Unit =
       setupMockHttpGetWithHeaderCarrier(getBusinessDeadlinesUrl(testNino), expectedHc)(_)
 
-    "return Status (OK) and a JSON body when successful as a LatTaxCalculation model" in {
+    "return Status (OK) and a JSON body when successful as a BusinessDeadlines model" in {
       mock(successResponse)
       await(getBusinessDeadlines(testNino)) shouldBe testReportDeadlines
     }
 
-    "return LastTaxCalculationError model in case of failure" in {
+    "return BusinessDeadlinesError model in case of failure" in {
       mock(badResponse)
       await(getBusinessDeadlines(testNino)) shouldBe ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message")
     }
 
-    "return LastTaxCalculationError model in case of bad JSON" in {
+    "return BusinessDeadlinesError model in case of bad JSON" in {
       mock(badJson)
       await(getBusinessDeadlines(testNino)) shouldBe
         ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Deadlines Data ")
     }
 
-    "return LastTaxCalculationError model in case of failed future" in {
+    "return BusinessDeadlinesError model in case of failed future" in {
       setupMockHttpGetFailed(getBusinessDeadlinesUrl(testNino))
       await(getBusinessDeadlines(testNino)) shouldBe
         ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Unexpected failed future")

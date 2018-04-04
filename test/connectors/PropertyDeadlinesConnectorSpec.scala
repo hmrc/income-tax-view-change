@@ -29,7 +29,7 @@ class PropertyDeadlinesConnectorSpec extends TestSupport with MockHttp {
 
   object TestPropertyDeadlinesConnector extends PropertyDeadlinesConnector(mockHttpGet, microserviceAppConfig)
 
-  "FinancialDataConnector.getFinancialData" should {
+  "PropertyDeadlinesConnector.getPropertyDeadlines" should {
 
     import TestPropertyDeadlinesConnector._
 
@@ -39,23 +39,23 @@ class PropertyDeadlinesConnectorSpec extends TestSupport with MockHttp {
     def mock: (HttpResponse) => Unit =
       setupMockHttpGetWithHeaderCarrier(getPropertyDeadlinesUrl(testNino), expectedHc)(_)
 
-    "return Status (OK) and a JSON body when successful as a LatTaxCalculation model" in {
+    "return Status (OK) and a JSON body when successful as a PropertyDeadlines model" in {
       mock(successResponse)
       await(getPropertyDeadlines(testNino)) shouldBe testReportDeadlines
     }
 
-    "return LastTaxCalculationError model in case of failure" in {
+    "return PropertyDeadlinesError model in case of failure" in {
       mock(badResponse)
       await(getPropertyDeadlines(testNino)) shouldBe ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message")
     }
 
-    "return LastTaxCalculationError model in case of bad JSON" in {
+    "return PropertyDeadlinesError model in case of bad JSON" in {
       mock(badJson)
       await(getPropertyDeadlines(testNino)) shouldBe
         ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Property Deadlines Data ")
     }
 
-    "return LastTaxCalculationError model in case of failed future" in {
+    "return PropertyDeadlinesError model in case of failed future" in {
       setupMockHttpGetFailed(getPropertyDeadlinesUrl(testNino))
       await(getPropertyDeadlines(testNino)) shouldBe
         ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Unexpected failed future")
