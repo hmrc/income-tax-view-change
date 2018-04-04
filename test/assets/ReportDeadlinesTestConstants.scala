@@ -20,6 +20,8 @@ import java.time.LocalDate
 
 import models.reportDeadlines.{ReportDeadlineModel, ReportDeadlinesModel}
 import play.api.libs.json.{JsObject, JsValue, Json}
+import uk.gov.hmrc.http.HttpResponse
+import play.mvc.Http.Status
 
 object ReportDeadlinesTestConstants {
 
@@ -82,4 +84,10 @@ object ReportDeadlinesTestConstants {
   val testReportDeadlinesToJson: JsValue = Json.obj(
     "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
   )
+
+
+  //Connector Responses
+  val successResponse = HttpResponse(Status.OK, Some(Json.toJson(testReportDeadlines)))
+  val badJson = HttpResponse(Status.OK, responseJson = Some(Json.parse("{}")))
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
 }

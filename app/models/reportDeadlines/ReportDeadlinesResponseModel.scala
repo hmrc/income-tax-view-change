@@ -18,7 +18,11 @@ package models.reportDeadlines
 
 import play.api.libs.json.{Format, Json, Reads, __}
 
-case class ReportDeadlinesModel(obligations: Seq[ReportDeadlineModel])
+sealed trait ReportDeadlinesResponseModel
+
+case class ReportDeadlinesModel(obligations: Seq[ReportDeadlineModel]) extends ReportDeadlinesResponseModel
+
+case class ReportDeadlinesErrorModel(status: Int, reason: String) extends ReportDeadlinesResponseModel
 
 object ReportDeadlinesModel {
 
@@ -28,4 +32,6 @@ object ReportDeadlinesModel {
   implicit val format: Format[ReportDeadlinesModel] = Json.format[ReportDeadlinesModel]
 }
 
-
+object ReportDeadlinesErrorModel {
+  implicit val format: Format[ReportDeadlinesErrorModel] = Json.format[ReportDeadlinesErrorModel]
+}
