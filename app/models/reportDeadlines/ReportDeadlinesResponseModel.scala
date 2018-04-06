@@ -20,7 +20,7 @@ import play.api.libs.json.{Format, Json, Reads, __}
 
 sealed trait ReportDeadlinesResponseModel
 
-case class ReportDeadlinesModel(obligations: Seq[IncomeSourceModel])
+case class ReportDeadlinesModel(obligations: Seq[IncomeSourceModel]) extends ReportDeadlinesResponseModel
 
 case class ReportDeadlinesErrorModel(status: Int, reason: String) extends ReportDeadlinesResponseModel
 
