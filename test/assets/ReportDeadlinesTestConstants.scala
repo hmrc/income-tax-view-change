@@ -18,7 +18,7 @@ package assets
 
 import java.time.LocalDate
 
-import models.reportDeadlines.{ReportDeadlineModel, ReportDeadlinesModel}
+import models.reportDeadlines.{IncomeSourceModel, ReportDeadlineModel, ReportDeadlinesModel}
 import play.api.libs.json.{JsObject, JsValue, Json}
 
 object ReportDeadlinesTestConstants {
@@ -28,8 +28,7 @@ object ReportDeadlinesTestConstants {
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
-    periodKey = "#001",
-    dateReceived = Some(LocalDate.parse("2018-05-01"))
+    periodKey = "#001"
   )
 
   val testReceivedDeadlineFromJson: JsValue = Json.obj(
@@ -44,16 +43,14 @@ object ReportDeadlinesTestConstants {
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
-    "periodKey" -> "#001",
-    "dateReceived" -> "2018-05-01"
+    "periodKey" -> "#001"
   )
 
   val testDeadline: ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
-    periodKey = "#001",
-    dateReceived = None
+    periodKey = "#001"
   )
 
   val testDeadlineFromJson: JsValue = Json.obj(
@@ -71,15 +68,58 @@ object ReportDeadlinesTestConstants {
   )
 
 
+  //IncomeSourceModels
+  val testIncomeSourceModel: IncomeSourceModel = IncomeSourceModel("12345" ,"Biz" ,Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+
+  val testIncomeSourceModelFromJson: JsValue =
+    Json.obj(
+      "identification" -> Json.obj(
+        "incomeSourceType" -> "ITSB",
+        "referenceNumber" -> "12345",
+        "referenceType" -> "MTDBSA"
+      ),
+      "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
+    )
+
+  val testIncomeSourceModelPropFromJson: JsValue =
+    Json.obj(
+      "identification" -> Json.obj(
+        "incomeSourceType" -> "ITSP",
+        "referenceNumber" -> "12345",
+        "referenceType" -> "MTDBSA"
+      ),
+      "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
+    )
+
+  val testIncomeSourceModelITSAFromJson: JsValue =
+    Json.obj(
+      "identification" -> Json.obj(
+        "incomeSourceType" -> "ITSA",
+        "referenceNumber" -> "12345",
+        "referenceType" -> "MTDBSA"
+      ),
+      "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
+    )
+
+  val testIncomeSourceModelToJson: JsValue =
+    Json.obj(
+      "incomeSourceId" -> "12345",
+      "propOrBiz" -> "Biz",
+      "obligationDetails" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+    )
+
+
   //Report Deadlines
   val testReportDeadlines: ReportDeadlinesModel =
-    ReportDeadlinesModel(Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+    ReportDeadlinesModel(Seq(testIncomeSourceModel))
 
   val testReportDeadlinesFromJson: JsValue = Json.obj(
-    "obligations" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
+    "obligations" -> Json.arr(
+      testIncomeSourceModelFromJson
+    )
   )
 
   val testReportDeadlinesToJson: JsValue = Json.obj(
-    "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+    "obligations" -> Seq(testIncomeSourceModelToJson)
   )
 }

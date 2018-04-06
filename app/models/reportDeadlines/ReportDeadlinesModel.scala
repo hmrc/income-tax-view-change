@@ -18,12 +18,12 @@ package models.reportDeadlines
 
 import play.api.libs.json.{Format, Json, Reads, __}
 
-case class ReportDeadlinesModel(obligations: Seq[ReportDeadlineModel])
+case class ReportDeadlinesModel(obligations: Seq[IncomeSourceModel])
 
 object ReportDeadlinesModel {
 
   val desReadsApi1330: Reads[ReportDeadlinesModel] =
-    (__ \ "obligations").read(Reads.seq(ReportDeadlineModel.desReadsApi1330)).map(ReportDeadlinesModel(_))
+    (__ \ "obligations").read(Reads.seq(IncomeSourceModel.desReadsApi1330)).map(ReportDeadlinesModel(_))
 
   implicit val format: Format[ReportDeadlinesModel] = Json.format[ReportDeadlinesModel]
 }
