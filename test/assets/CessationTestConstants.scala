@@ -17,7 +17,8 @@
 package assets
 
 import java.time.LocalDate
-import models.CessationModel
+
+import models.core.CessationModel
 import play.api.libs.json.Json
 
 object CessationTestConstants {

@@ -22,7 +22,7 @@ import assets.AccountingPeriodTestConstants._
 import assets.AddressDetailsTestConstants._
 import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
-import models.BusinessDetailsModel
+import models.incomeSourceDetails.BusinessDetailsModel
 import play.api.libs.json.Json
 
 object BusinessDetailsTestConstants {

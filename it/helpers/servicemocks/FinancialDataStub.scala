@@ -18,7 +18,7 @@ package helpers.servicemocks
 
 import assets.FinancialTransactionIntegrationTestConstants._
 import helpers.WiremockHelper
-import models.LastTaxCalculation
+import models.latestTaxCalculation.LastTaxCalculation
 import play.api.http.Status
 
 object FinancialDataStub {

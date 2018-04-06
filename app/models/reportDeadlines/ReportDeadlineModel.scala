@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package models
+package models.reportDeadlines
 
 import java.time.LocalDate
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
-case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
+case class ReportDeadlineModel(start: LocalDate,
+                               end: LocalDate,
+                               due: LocalDate,
+                               periodKey: String)
 
-object AccountingPeriodModel {
+object ReportDeadlineModel {
 
-  val desReads: Reads[AccountingPeriodModel] = (
-    (__ \ "accountingPeriodStartDate").read[LocalDate] and
-      (__ \ "accountingPeriodEndDate").read[LocalDate]
-  )(AccountingPeriodModel.apply _)
+  val desReadsApi1330: Reads[ReportDeadlineModel] = (
+    (__ \ "inboundCorrespondenceFromDate").read[LocalDate] and
+      (__ \ "inboundCorrespondenceToDate").read[LocalDate] and
+      (__ \ "inboundCorrespondenceDueDate").read[LocalDate] and
+      (__ \ "periodKey").read[String]
+    )(ReportDeadlineModel.apply _)
 
-  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
+  implicit val format: Format[ReportDeadlineModel] = Json.format[ReportDeadlineModel]
 }

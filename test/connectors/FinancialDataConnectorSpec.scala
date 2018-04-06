@@ -19,7 +19,7 @@ package connectors
 import assets.FinancialDataTestConstants._
 import assets.BaseTestConstants.testNino
 import mocks.MockHttp
-import models.LastTaxCalculationError
+import models.latestTaxCalculation.LastTaxCalculationError
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}

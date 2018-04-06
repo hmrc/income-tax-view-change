@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
-import play.api.data.validation.ValidationError
-import play.api.libs.json.Reads
+import play.api.libs.json.{Format, Json}
 
-import scala.util.{Success, Try}
 
-object CustomReads {
+sealed trait NinoResponse
 
-  val readInt: Reads[Int] = implicitly[Reads[Int]].orElse(implicitly[Reads[String]]
-    .map(x => Try(x.toInt))
-    .collect (ValidationError(Seq("Parsing error"))) {
-      case Success(a) => a
-    })
+case class NinoModel(nino: String) extends NinoResponse
+
+case class NinoErrorModel(status: Int, reason: String) extends NinoResponse
+
+object NinoModel {
+  implicit val format: Format[NinoModel] = Json.format[NinoModel]
+}
+
+object NinoErrorModel {
+  implicit val format: Format[NinoErrorModel] = Json.format[NinoErrorModel]
 }

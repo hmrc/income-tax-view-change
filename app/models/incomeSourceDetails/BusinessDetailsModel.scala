@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
 import java.time.LocalDate
 
+import models.core.{AccountingPeriodModel, AddressModel, CessationModel, ContactDetailsModel}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 

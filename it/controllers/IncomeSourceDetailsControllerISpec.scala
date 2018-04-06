@@ -21,7 +21,8 @@ import assets.IncomeSourceIntegrationTestConstants._
 import assets.NinoIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesBusinessDetailsStub
-import models.{IncomeSourceDetailsError, IncomeSourceDetailsModel, NinoErrorModel, NinoModel}
+import models.core.{NinoErrorModel, NinoModel}
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import play.api.http.Status._
 
 class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {

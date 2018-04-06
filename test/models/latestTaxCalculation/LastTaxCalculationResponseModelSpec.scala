@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package models.latestTaxCalculation
 
 import org.scalatest.Matchers
 import play.api.http.Status

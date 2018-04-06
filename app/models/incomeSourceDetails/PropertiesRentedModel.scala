@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
-import models.CustomReads.readInt
+import models.core.CustomReads
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
 case class PropertiesRentedModel(uk:Option[Int], eea:Option[Int], nonEea:Option[Int], total:Option[Int])
 
-object PropertiesRentedModel {
+object PropertiesRentedModel extends CustomReads {
 
   def propertiesRented(uk:Option[Int], eea:Option[Int], nonEea:Option[Int], total:Option[Int]): Option[PropertiesRentedModel] = {
     (uk,eea,nonEea,total) match {

@@ -14,28 +14,32 @@
  * limitations under the License.
  */
 
-package models
+package models.incomeSourceDetails
 
-import assets.BusinessDetailsTestConstants._
+import assets.PropertyDetailsTestConstants._
 import org.scalatest.Matchers
 import play.api.libs.json._
 import utils.TestSupport
 
-class BusinessDetailsModelSpec extends TestSupport with Matchers {
+class PropertyDetailsModelSpec extends TestSupport with Matchers {
 
-  "The BusinessDetailsaModel" should {
+  "The PropertyDetailsModel" should {
 
     "read from DES Json with all fields" in {
-      Json.fromJson(testBusinessDetailsJson)(BusinessDetailsModel.desReads) shouldBe JsSuccess(testBusinessDetailsModel)
+      Json.fromJson(testPropertyDetailsJson)(PropertyDetailsModel.desReads) shouldBe JsSuccess(testPropertyDetailsModel)
+    }
+
+    "read from DES Json where Ints are Strings" in {
+      Json.fromJson(testPropertyDetailsJsonString)(PropertyDetailsModel.desReads) shouldBe JsSuccess(testPropertyDetailsModel)
     }
 
     "read from DES Json with minimum fields" in {
-      Json.fromJson(testMinimumBusinessDetailsJson)(BusinessDetailsModel.desReads) shouldBe JsSuccess(testMinimumBusinessDetailsModel)
+      Json.fromJson(testMinimumPropertyDetailsJson)(PropertyDetailsModel.desReads) shouldBe JsSuccess(testMinimumPropertyDetailsModel)
     }
 
     "write to Json" in {
-      Json.toJson(testBusinessDetailsModel) shouldBe testBusinessDetailsToJson
+      Json.toJson(testPropertyDetailsModel) shouldBe testPropertyDetailsToJson
     }
-
   }
 }
+
