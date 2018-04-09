@@ -18,7 +18,7 @@ package assets
 
 import java.time.LocalDate
 
-import models.reportDeadlines.{IncomeSourceModel, ReportDeadlineModel, ReportDeadlinesModel}
+import models.reportDeadlines.{IncomeSourceModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
 import play.mvc.Http.Status
@@ -125,6 +125,8 @@ object ReportDeadlinesTestConstants {
   val testReportDeadlinesToJson: JsValue = Json.obj(
     "obligations" -> Seq(testIncomeSourceModelToJson)
   )
+
+  val testReportDeadlinesError: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR,"Error Message")
 
   //Connector Responses
   val successResponse = HttpResponse(Status.OK, Some(testReportDeadlinesFromJson))
