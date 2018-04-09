@@ -29,18 +29,10 @@ import scala.concurrent.Future
 @Singleton
 class ReportDeadlinesService @Inject()(val reportDeadlinesConnector: ReportDeadlinesConnector){
 
-  def getReportDeadlines(selfEmpId: String)(implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
+  def getReportDeadlines(incomeSourceId: String)(implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
 
     Logger.debug("[ReportDeadlinesService][getReportDeadlines] - Requesting obligation data from Connector")
-
-    reportDeadlinesConnector.getReportDeadlines(selfEmpId).map {
-      case success: ReportDeadlinesModel =>
-        Logger.debug(s"[ReportDeadlinesService][getReportDeadlines] - Retrieved obligation data:\n\n$success")
-        success
-      case error: ReportDeadlinesErrorModel =>
-        Logger.debug(s"[ReportDeadlinesService][getReportDeadlines] - Received Error model from connector:\n\n$error")
-        error
-    }
+    reportDeadlinesConnector.getReportDeadlines(incomeSourceId)
 
   }
 

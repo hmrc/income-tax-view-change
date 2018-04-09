@@ -29,6 +29,6 @@ object BaseIntegrationTestConstants {
   val testYear = "2018"
   val testCalcType = "it"
 
-  val testSelfEmpId = "aSelfEmpId"
+  val testIncomeSourceId = "XAIT000000123456564"
 
 }

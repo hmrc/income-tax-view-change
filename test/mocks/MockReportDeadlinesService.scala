@@ -37,9 +37,9 @@ trait MockReportDeadlinesService extends UnitSpec with MockitoSugar with BeforeA
     reset(mockReportDeadlinesService)
   }
 
-  def setupMockReportDeadlinesResponse(selfEmpId: String)(response: ReportDeadlinesResponseModel):
+  def setupMockReportDeadlinesResponse(incomeSourceId: String)(response: ReportDeadlinesResponseModel):
   OngoingStubbing[Future[ReportDeadlinesResponseModel]] = when(mockReportDeadlinesService.getReportDeadlines(
-    ArgumentMatchers.eq(selfEmpId))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+    ArgumentMatchers.eq(incomeSourceId))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def mockReportDeadlinesResponse(desResponse: ReportDeadlinesResponseModel):
   OngoingStubbing[Future[ReportDeadlinesResponseModel]] = setupMockReportDeadlinesResponse(mtdRef)(desResponse)

@@ -16,7 +16,7 @@
 
 package helpers.servicemocks
 
-import assets.BaseIntegrationTestConstants.testSelfEmpId
+import assets.BaseIntegrationTestConstants.testIncomeSourceId
 import helpers.WiremockHelper
 import models.reportDeadlines.ReportDeadlinesResponseModel
 import assets.ReportDeadlinesIntegrationTestConstants._
@@ -24,19 +24,19 @@ import play.api.http.Status
 
 object DesReportDeadlinesStub {
 
-  val url: (String) => String = (selfEmpId) => s"""/enterprise/obligation-data/mtdbis/$selfEmpId/ITSA?status=O"""
+  val url: (String) => String = incomeSourceId => s"""/enterprise/obligation-data/mtdbis/$incomeSourceId/ITSA?status=O"""
 
   def stubGetDesReportDeadlines(response: ReportDeadlinesResponseModel): Unit = {
-    val desReportDeadlinesResponse = successResponse(testSelfEmpId).toString
-    WiremockHelper.stubGet(url(testSelfEmpId), Status.OK, desReportDeadlinesResponse)
+    val desReportDeadlinesResponse = successResponse(testIncomeSourceId).toString
+    WiremockHelper.stubGet(url(testIncomeSourceId), Status.OK, desReportDeadlinesResponse)
   }
 
-  def stubGetDesReportDeadlinesError(selfEmpId: String): Unit = {
+  def stubGetDesReportDeadlinesError(incomeSourceId: String): Unit = {
     val errorResponse = failureResponse("500", "ISE")
-    WiremockHelper.stubGet(url(selfEmpId), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
+    WiremockHelper.stubGet(url(incomeSourceId), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
 
-  def verifyGetDesReportDeadlines(selfEmpId: String): Unit =
-    WiremockHelper.verifyGet(url(selfEmpId))
+  def verifyGetDesReportDeadlines(incomeSourceId: String): Unit =
+    WiremockHelper.verifyGet(url(incomeSourceId))
 
 }
