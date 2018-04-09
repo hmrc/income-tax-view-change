@@ -62,6 +62,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getIncomeSources(mtdRef: String): WSResponse = get(s"/income-sources/$mtdRef")
 
+    def getReportDeadlines(incomeSourceId: String): WSResponse = get(s"/income-source/$incomeSourceId/report-deadlines")
+
   }
 
   def isAuthorised(authorised: Boolean): Unit = {

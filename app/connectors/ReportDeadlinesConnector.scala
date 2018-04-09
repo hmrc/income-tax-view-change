@@ -36,7 +36,7 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                                           ) extends RawResponseReads {
 
   val getReportDeadlinesUrl: String => String =
-    nino => s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA"
+    incomeSourceId => s"${appConfig.desUrl}/enterprise/obligation-data/mtdbis/$incomeSourceId/ITSA?status=O"
 
   def getReportDeadlines(nino: String)
                           (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
