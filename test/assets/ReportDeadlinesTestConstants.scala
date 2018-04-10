@@ -18,10 +18,10 @@ package assets
 
 import java.time.LocalDate
 
-import models.reportDeadlines.{IncomeSourceModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
-import play.api.libs.json.{JsObject, JsValue, Json}
-import uk.gov.hmrc.http.HttpResponse
+import models.reportDeadlines.{ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
+import uk.gov.hmrc.http.HttpResponse
 
 
 object ReportDeadlinesTestConstants {
@@ -31,7 +31,8 @@ object ReportDeadlinesTestConstants {
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
-    periodKey = "#001"
+    periodKey = "#001",
+    dateReceived = Some(LocalDate.parse("2018-05-01"))
   )
 
   val testReceivedDeadlineFromJson: JsValue = Json.obj(
@@ -46,14 +47,16 @@ object ReportDeadlinesTestConstants {
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
-    "periodKey" -> "#001"
+    "periodKey" -> "#001",
+    "dateReceived" -> "2018-05-01"
   )
 
   val testDeadline: ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
-    periodKey = "#001"
+    periodKey = "#001",
+    dateReceived = None
   )
 
   val testDeadlineFromJson: JsValue = Json.obj(
@@ -70,60 +73,25 @@ object ReportDeadlinesTestConstants {
     "periodKey" -> "#001"
   )
 
-
-  //IncomeSourceModels
-  val testIncomeSourceModel: IncomeSourceModel = IncomeSourceModel("12345" ,"Biz" ,Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
-
-  val testIncomeSourceModelFromJson: JsValue =
-    Json.obj(
-      "identification" -> Json.obj(
-        "incomeSourceType" -> "ITSB",
-        "referenceNumber" -> "12345",
-        "referenceType" -> "MTDBSA"
-      ),
-      "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
-    )
-
-  val testIncomeSourceModelPropFromJson: JsValue =
-    Json.obj(
-      "identification" -> Json.obj(
-        "incomeSourceType" -> "ITSP",
-        "referenceNumber" -> "12345",
-        "referenceType" -> "MTDBSA"
-      ),
-      "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
-    )
-
-  val testIncomeSourceModelITSAFromJson: JsValue =
-    Json.obj(
-      "identification" -> Json.obj(
-        "incomeSourceType" -> "ITSA",
-        "referenceNumber" -> "12345",
-        "referenceType" -> "MTDBSA"
-      ),
-      "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson, testReceivedDeadlineFromJson, testDeadlineFromJson))
-    )
-
-  val testIncomeSourceModelToJson: JsValue =
-    Json.obj(
-      "incomeSourceId" -> "12345",
-      "propOrBiz" -> "Biz",
-      "obligationDetails" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
-    )
-
-
   //Report Deadlines
   val testReportDeadlines: ReportDeadlinesModel =
-    ReportDeadlinesModel(Seq(testIncomeSourceModel))
+    ReportDeadlinesModel(Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
 
   val testReportDeadlinesFromJson: JsValue = Json.obj(
     "obligations" -> Json.arr(
-      testIncomeSourceModelFromJson
+      Json.obj(
+        "obligationDetails" -> Json.arr(
+          testDeadlineFromJson,
+          testDeadlineFromJson,
+          testReceivedDeadlineFromJson,
+          testDeadlineFromJson
+        )
+      )
     )
   )
 
   val testReportDeadlinesToJson: JsValue = Json.obj(
-    "obligations" -> Seq(testIncomeSourceModelToJson)
+    "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
   )
 
   val testReportDeadlinesError: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR,"Error Message")

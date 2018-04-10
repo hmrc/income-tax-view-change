@@ -24,7 +24,8 @@ import play.api.libs.json.{Json, Reads, _}
 case class ReportDeadlineModel(start: LocalDate,
                                end: LocalDate,
                                due: LocalDate,
-                               periodKey: String)
+                               periodKey: String,
+                               dateReceived: Option[LocalDate])
 
 object ReportDeadlineModel {
 
@@ -32,7 +33,8 @@ object ReportDeadlineModel {
     (__ \ "inboundCorrespondenceFromDate").read[LocalDate] and
       (__ \ "inboundCorrespondenceToDate").read[LocalDate] and
       (__ \ "inboundCorrespondenceDueDate").read[LocalDate] and
-      (__ \ "periodKey").read[String]
+      (__ \ "periodKey").read[String] and
+      (__ \ "inboundCorrespondenceDateReceived").readNullable[LocalDate]
     )(ReportDeadlineModel.apply _)
 
   implicit val format: Format[ReportDeadlineModel] = Json.format[ReportDeadlineModel]
