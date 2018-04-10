@@ -16,7 +16,7 @@
 
 package assets
 
-import models.{LastTaxCalculation, LastTaxCalculationError}
+import models.latestTaxCalculation.{LastTaxCalculation, LastTaxCalculationError}
 import play.mvc.Http.Status
 
 object LastTaxCalcIntegrationTestConstants {

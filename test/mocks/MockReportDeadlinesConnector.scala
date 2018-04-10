@@ -17,8 +17,8 @@
 package mocks
 
 import assets.BaseTestConstants.mtdRef
-import connectors.IncomeSourceDetailsConnector
-import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
+import connectors.ReportDeadlinesConnector
+import models.reportDeadlines.ReportDeadlinesResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
@@ -29,21 +29,20 @@ import uk.gov.hmrc.play.test.UnitSpec
 import scala.concurrent.Future
 
 
-trait MockIncomeSourceDetailsConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockReportDeadlinesConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
 
-  val mockIncomeSourceDetailsConnector: IncomeSourceDetailsConnector = mock[IncomeSourceDetailsConnector]
+  val mockReportDeadlinesConnector: ReportDeadlinesConnector = mock[ReportDeadlinesConnector]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockIncomeSourceDetailsConnector)
+    reset(mockReportDeadlinesConnector)
   }
 
-  def setupMockIncomeSourceDetailsResult(mtdRef: String)(response: IncomeSourceDetailsResponseModel)
-  : OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
-    when(mockIncomeSourceDetailsConnector.getIncomeSourceDetails(
-      ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any()))
-      .thenReturn(Future.successful(response))
+  def setupMockReportDeadlinesResponse(mtdRef: String)(response: ReportDeadlinesResponseModel):
+  OngoingStubbing[Future[ReportDeadlinesResponseModel]] = when(mockReportDeadlinesConnector.getReportDeadlines(
+    ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
-  def mockIncomeSourceDetailsResult(incomeSourceDetailsResponse: IncomeSourceDetailsResponseModel): OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
-    setupMockIncomeSourceDetailsResult(mtdRef)(incomeSourceDetailsResponse)
+  def mockReportDeadlinesResponse(desResponse: ReportDeadlinesResponseModel):
+  OngoingStubbing[Future[ReportDeadlinesResponseModel]] = setupMockReportDeadlinesResponse(mtdRef)(desResponse)
+
 }

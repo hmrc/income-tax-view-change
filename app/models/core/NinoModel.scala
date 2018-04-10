@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
-import java.time.LocalDate
+import play.api.libs.json.{Format, Json}
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
 
-case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
+sealed trait NinoResponse
 
-object AccountingPeriodModel {
+case class NinoModel(nino: String) extends NinoResponse
 
-  val desReads: Reads[AccountingPeriodModel] = (
-    (__ \ "accountingPeriodStartDate").read[LocalDate] and
-      (__ \ "accountingPeriodEndDate").read[LocalDate]
-  )(AccountingPeriodModel.apply _)
+case class NinoErrorModel(status: Int, reason: String) extends NinoResponse
 
-  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
+object NinoModel {
+  implicit val format: Format[NinoModel] = Json.format[NinoModel]
+}
+
+object NinoErrorModel {
+  implicit val format: Format[NinoErrorModel] = Json.format[NinoErrorModel]
 }

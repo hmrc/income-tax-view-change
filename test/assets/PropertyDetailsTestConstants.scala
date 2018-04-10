@@ -19,7 +19,7 @@ package assets
 import assets.AccountingPeriodTestConstants._
 import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
-import models.{PropertiesRentedModel, PropertyDetailsModel}
+import models.incomeSourceDetails.{PropertiesRentedModel, PropertyDetailsModel}
 import play.api.libs.json.Json
 object PropertyDetailsTestConstants {
 

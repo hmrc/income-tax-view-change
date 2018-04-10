@@ -18,7 +18,7 @@ package helpers.servicemocks
 
 import assets.BusinessDetailsIntegrationTestConstants._
 import helpers.WiremockHelper
-import models.IncomeSourceDetailsModel
+import models.incomeSourceDetails.IncomeSourceDetailsModel
 import play.api.http.Status
 
 object DesBusinessDetailsStub {

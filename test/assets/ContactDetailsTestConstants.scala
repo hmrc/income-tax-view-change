@@ -16,7 +16,7 @@
 
 package assets
 
-import models.ContactDetailsModel
+import models.core.ContactDetailsModel
 import play.api.libs.json.Json
 
 object ContactDetailsTestConstants {

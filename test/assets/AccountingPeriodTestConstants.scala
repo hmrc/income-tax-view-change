@@ -18,7 +18,7 @@ package assets
 
 import java.time.LocalDate
 
-import models.AccountingPeriodModel
+import models.core.AccountingPeriodModel
 import play.api.libs.json.Json
 
 object AccountingPeriodTestConstants {

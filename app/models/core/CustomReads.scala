@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package models.core
 
-import assets.AccountingPeriodTestConstants._
-import org.scalatest.Matchers
-import play.api.libs.json._
-import utils.TestSupport
+import play.api.data.validation.ValidationError
+import play.api.libs.json.Reads
 
-class AccountingPeriodModelSpec extends TestSupport with Matchers {
+import scala.util.{Success, Try}
 
-  "The AccountingPeriodModel" should {
+trait CustomReads {
 
-    "read from the DES Json" in {
-      Json.fromJson(testAccountingPeriodJson)(AccountingPeriodModel.desReads) shouldBe JsSuccess(testAccountingPeriodModel)
-    }
-
-    "write to Json" in {
-      Json.toJson(testAccountingPeriodModel) shouldBe testAccountingPeriodToJson
-    }
-
-  }
-
+  val readInt: Reads[Int] = implicitly[Reads[Int]].orElse(implicitly[Reads[String]]
+    .map(x => Try(x.toInt))
+    .collect (ValidationError(Seq("Parsing error"))) {
+      case Success(a) => a
+    })
 }
