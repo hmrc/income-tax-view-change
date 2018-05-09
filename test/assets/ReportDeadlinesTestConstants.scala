@@ -18,7 +18,8 @@ package assets
 
 import java.time.LocalDate
 
-import models.reportDeadlines.{ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import assets.BaseTestConstants._
+import models.reportDeadlines.{ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
@@ -74,12 +75,45 @@ object ReportDeadlinesTestConstants {
   )
 
   //Report Deadlines
-  val testReportDeadlines: ReportDeadlinesModel =
-    ReportDeadlinesModel(Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+  val testReportDeadlines_1: ReportDeadlinesModel =
+    ReportDeadlinesModel(testIncomeSourceID_1, Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+
+  val testReportDeadlines_2: ReportDeadlinesModel =
+    ReportDeadlinesModel(testIncomeSourceID_2, Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+
+  val testReportDeadlines_3: ReportDeadlinesModel =
+    ReportDeadlinesModel(testIncomeSourceID_3, Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+
+  val obligations: ObligationsModel = ObligationsModel(Seq(testReportDeadlines_1, testReportDeadlines_2, testReportDeadlines_3))
 
   val testReportDeadlinesFromJson: JsValue = Json.obj(
     "obligations" -> Json.arr(
       Json.obj(
+        "identification" -> Json.obj(
+          "referenceNumber" -> testReportDeadlines_1
+        ),
+        "obligationDetails" -> Json.arr(
+          testDeadlineFromJson,
+          testDeadlineFromJson,
+          testReceivedDeadlineFromJson,
+          testDeadlineFromJson
+        )
+      ),
+      Json.obj(
+        "identification" -> Json.obj(
+          "referenceNumber" -> testReportDeadlines_2
+        ),
+        "obligationDetails" -> Json.arr(
+          testDeadlineFromJson,
+          testDeadlineFromJson,
+          testReceivedDeadlineFromJson,
+          testDeadlineFromJson
+        )
+      ),
+      Json.obj(
+        "identification" -> Json.obj(
+          "referenceNumber" -> testReportDeadlines_3
+        ),
         "obligationDetails" -> Json.arr(
           testDeadlineFromJson,
           testDeadlineFromJson,

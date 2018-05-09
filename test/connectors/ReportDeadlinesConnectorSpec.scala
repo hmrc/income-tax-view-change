@@ -36,7 +36,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport with MockHttp {
     lazy val expectedHc: HeaderCarrier =
       hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    def mock: (HttpResponse) => Unit =
+    def mock: HttpResponse => Unit =
       setupMockHttpGetWithHeaderCarrier(getReportDeadlinesUrl(testNino), expectedHc)(_)
 
     "return Status (OK) and a JSON body when successful as a ReportDeadlines model" in {

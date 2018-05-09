@@ -16,11 +16,11 @@
 
 package services
 
-import javax.inject.{Inject, Singleton}
-
 import connectors.ReportDeadlinesConnector
-import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesModel, ReportDeadlinesResponseModel}
+import javax.inject.{Inject, Singleton}
+import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesResponseModel}
 import play.api.Logger
+import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -29,11 +29,15 @@ import scala.concurrent.Future
 @Singleton
 class ReportDeadlinesService @Inject()(val reportDeadlinesConnector: ReportDeadlinesConnector){
 
-  def getReportDeadlines(incomeSourceId: String)(implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
+  def getReportDeadlines(incomeSourceId: String, nino: String)(implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
 
     Logger.debug("[ReportDeadlinesService][getReportDeadlines] - Requesting obligation data from Connector")
-    reportDeadlinesConnector.getReportDeadlines(incomeSourceId)
-
+    reportDeadlinesConnector.getReportDeadlines(nino) map {
+      case Right(deadlines) =>
+        deadlines.obligations.find(_.identification == incomeSourceId)
+          .getOrElse(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Could not retrieve Report Deadlines for Income Source ID Provided"))
+      case Left(error) => error
+    }
   }
 
 }

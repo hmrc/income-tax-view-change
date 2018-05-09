@@ -25,12 +25,21 @@ class RoutesSpec extends TestSupport {
   val testNino = "BB123456A"
   val testYear = "2018"
   val testCalcType = "it"
+  val testIncomeSourceID = "XAIS123456"
 
   // Estimated Tax Liability routes
   "The URL for the EstimatedTaxLiabilityController.getEstimateTaxLiability action" should {
     s"be equal to $contextRoute/estimated-tax-liability" in {
       controllers.routes.EstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType).url shouldBe
         s"$contextRoute/estimated-tax-liability/$testNino/$testYear/$testCalcType"
+    }
+  }
+
+  // Report Deadlines routes
+  "The URL for the ReportDeadlinesController.getReportDeadlines action" should {
+    s"be equal to $contextRoute/$testNino/income-sources/$testIncomeSourceID/report-deadlines" in {
+      controllers.routes.ReportDeadlinesController.getReportDeadlines(testIncomeSourceID, testNino).url shouldBe
+        s"$contextRoute/$testNino/income-sources/$testIncomeSourceID/report-deadlines"
     }
   }
 }
