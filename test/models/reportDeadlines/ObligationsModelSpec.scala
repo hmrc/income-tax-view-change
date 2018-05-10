@@ -16,14 +16,25 @@
 
 package models.reportDeadlines
 
-import play.api.libs.json.{Json, Reads, _}
+import assets.ReportDeadlinesTestConstants._
+import org.scalatest.Matchers
+import play.api.libs.json._
+import utils.TestSupport
 
-case class ObligationsModel(obligations: Seq[ReportDeadlinesModel])
+class ObligationsModelSpec extends TestSupport with Matchers {
 
-object ObligationsModel {
+  "The ObligationsModel" should {
 
-  val desReadsApi1330: Reads[ObligationsModel] =
-    (__ \ "obligations").read(Reads.seq(ReportDeadlinesModel.desReadsApi1330)).map(ObligationsModel(_))
+    "read from the DES Json" in {
+      Json.fromJson(testObligationsFromJson)(ObligationsModel.desReadsApi1330).fold(
+        invalid => invalid,
+        valid => valid
+      ) shouldBe testObligations
+    }
 
-  implicit val format: Format[ObligationsModel] = Json.format[ObligationsModel]
+    "write to Json" in {
+      Json.toJson(testObligations) shouldBe testObligationsToJson
+    }
+  }
+
 }

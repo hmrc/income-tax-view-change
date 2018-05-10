@@ -97,6 +97,13 @@ object ReportDeadlinesTestConstants {
       )
     )
 
+  val testReportDeadlinesToJson: JsValue = Json.obj(
+    "identification" -> testIncomeSourceID_1,
+    "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+  )
+
+  val testReportDeadlinesError: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR,"Error Message")
+
 
   val testObligations: ObligationsModel = ObligationsModel(Seq(testReportDeadlines_1, testReportDeadlines_2, testReportDeadlines_3))
 
@@ -138,12 +145,22 @@ object ReportDeadlinesTestConstants {
     )
   )
 
-  val testReportDeadlinesToJson: JsValue = Json.obj(
-    "identification" -> testIncomeSourceID_1,
-    "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+  val testObligationsToJson: JsValue = Json.obj(
+    "obligations" -> Json.arr(
+      Json.obj(
+        "identification" -> testIncomeSourceID_1,
+        "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+      ),
+      Json.obj(
+        "identification" -> testIncomeSourceID_2,
+        "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+      ),
+      Json.obj(
+        "identification" -> testIncomeSourceID_3,
+        "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+      )
+    )
   )
-
-  val testReportDeadlinesError: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR,"Error Message")
 
   //Connector Responses
   val successResponse = HttpResponse(Status.OK, Some(testObligationsFromJson))
