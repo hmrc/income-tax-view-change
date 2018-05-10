@@ -34,8 +34,10 @@ class ReportDeadlinesService @Inject()(val reportDeadlinesConnector: ReportDeadl
     Logger.debug("[ReportDeadlinesService][getReportDeadlines] - Requesting obligation data from Connector")
     reportDeadlinesConnector.getReportDeadlines(nino) map {
       case Right(deadlines) =>
-        deadlines.obligations.find(_.identification == incomeSourceId)
-          .getOrElse(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Could not retrieve Report Deadlines for Income Source ID Provided"))
+        deadlines.obligations.find(_.identification == incomeSourceId) getOrElse {
+          Logger.debug(s"[ReportDeadlinesService][getReportDeadlines] Report Deadlines could not be found for ID: $incomeSourceId")
+          ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Could not retrieve Report Deadlines for Income Source ID Provided")
+        }
       case Left(error) => error
     }
   }
