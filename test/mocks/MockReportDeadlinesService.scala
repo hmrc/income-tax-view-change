@@ -16,7 +16,7 @@
 
 package mocks
 
-import assets.BaseTestConstants.mtdRef
+import assets.BaseTestConstants.{mtdRef, testNino}
 import models.reportDeadlines.ReportDeadlinesResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
@@ -37,12 +37,12 @@ trait MockReportDeadlinesService extends UnitSpec with MockitoSugar with BeforeA
     reset(mockReportDeadlinesService)
   }
 
-  def setupMockReportDeadlinesResponse(incomeSourceId: String)(response: ReportDeadlinesResponseModel):
+  def setupMockReportDeadlinesResponse(incomeSourceId: String, nino: String)(response: ReportDeadlinesResponseModel):
   OngoingStubbing[Future[ReportDeadlinesResponseModel]] = when(mockReportDeadlinesService.getReportDeadlines(
-    ArgumentMatchers.eq(incomeSourceId))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+    ArgumentMatchers.eq(incomeSourceId), ArgumentMatchers.eq(nino))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def mockReportDeadlinesResponse(desResponse: ReportDeadlinesResponseModel):
-  OngoingStubbing[Future[ReportDeadlinesResponseModel]] = setupMockReportDeadlinesResponse(mtdRef)(desResponse)
+  OngoingStubbing[Future[ReportDeadlinesResponseModel]] = setupMockReportDeadlinesResponse(mtdRef, testNino)(desResponse)
 
 
 }

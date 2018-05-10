@@ -37,9 +37,9 @@ class RoutesSpec extends TestSupport {
 
   // Report Deadlines routes
   "The URL for the ReportDeadlinesController.getReportDeadlines action" should {
-    s"be equal to $contextRoute/$testNino/income-sources/$testIncomeSourceID/report-deadlines" in {
+    s"be equal to $contextRoute/$testNino/income-source/$testIncomeSourceID/report-deadlines" in {
       controllers.routes.ReportDeadlinesController.getReportDeadlines(testIncomeSourceID, testNino).url shouldBe
-        s"$contextRoute/$testNino/income-sources/$testIncomeSourceID/report-deadlines"
+        s"$contextRoute/$testNino/income-source/$testIncomeSourceID/report-deadlines"
     }
   }
 }

@@ -41,24 +41,24 @@ class ReportDeadlinesConnectorSpec extends TestSupport with MockHttp {
 
     "return Status (OK) and a JSON body when successful as a ReportDeadlines model" in {
       mock(successResponse)
-      await(getReportDeadlines(testNino)) shouldBe testReportDeadlines
+      await(getReportDeadlines(testNino)) shouldBe Right(testObligations)
     }
 
     "return ReportDeadlinesError model in case of failure" in {
       mock(badResponse)
-      await(getReportDeadlines(testNino)) shouldBe ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message")
+      await(getReportDeadlines(testNino)) shouldBe Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message"))
     }
 
     "return ReportDeadlinesError model in case of bad JSON" in {
       mock(badJson)
       await(getReportDeadlines(testNino)) shouldBe
-        ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data ")
+        Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data "))
     }
 
     "return ReportDeadlinesError model in case of failed future" in {
       setupMockHttpGetFailed(getReportDeadlinesUrl(testNino))
       await(getReportDeadlines(testNino)) shouldBe
-        ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Unexpected failed future")
+        Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Unexpected failed future"))
     }
   }
 

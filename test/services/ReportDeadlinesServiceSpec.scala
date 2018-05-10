@@ -16,12 +16,11 @@
 
 package services
 
+import assets.BaseTestConstants._
 import assets.ReportDeadlinesTestConstants._
 import mocks._
 import models.reportDeadlines.ReportDeadlinesResponseModel
 import utils.TestSupport
-import assets.ReportDeadlinesTestConstants._
-import assets.BaseTestConstants.mtdRef
 
 import scala.concurrent.Future
 
@@ -33,21 +32,20 @@ class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesCon
 
     "getReportDeadlines method is called" when {
 
-      def result: Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(mtdRef)
+      def result: Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(testIncomeSourceID_1, testNino)
 
       "a successful response is returned from the ReportDeadlinesConnector" should {
 
-        "return a correctly formatted ReportDeadlinesModel" in {
-          val resp: ReportDeadlinesResponseModel = testReportDeadlines
-          mockReportDeadlinesResponse(resp)
-          await(result) shouldBe testReportDeadlines
+        "return a correctly formatted ObligationsModel" in {
+          setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
+          await(result) shouldBe testReportDeadlines_1
         }
       }
 
       "an Error Response is returned from the ReportDeadlinesConnector" should {
 
         "return a correctly formatted ReportDeadlinesError model" in {
-          mockReportDeadlinesResponse(testReportDeadlinesError)
+          setupMockReportDeadlinesResponse(testNino)(Left(testReportDeadlinesError))
           await(result) shouldBe testReportDeadlinesError
         }
       }
