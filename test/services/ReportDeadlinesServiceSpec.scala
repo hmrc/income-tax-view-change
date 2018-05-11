@@ -16,12 +16,12 @@
 
 package services
 
+import assets.BaseTestConstants._
 import assets.ReportDeadlinesTestConstants._
 import mocks._
-import models.reportDeadlines.ReportDeadlinesResponseModel
+import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesResponseModel}
+import play.api.http.Status
 import utils.TestSupport
-import assets.ReportDeadlinesTestConstants._
-import assets.BaseTestConstants.mtdRef
 
 import scala.concurrent.Future
 
@@ -33,22 +33,29 @@ class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesCon
 
     "getReportDeadlines method is called" when {
 
-      def result: Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(mtdRef)
+      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(incomeSourceId, testNino)
 
       "a successful response is returned from the ReportDeadlinesConnector" should {
 
-        "return a correctly formatted ReportDeadlinesModel" in {
-          val resp: ReportDeadlinesResponseModel = testReportDeadlines
-          mockReportDeadlinesResponse(resp)
-          await(result) shouldBe testReportDeadlines
+        "return a correctly formatted ObligationsModel" in {
+          setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
+          await(result(testIncomeSourceID_1)) shouldBe testReportDeadlines_1
+        }
+      }
+
+      "a successful response is returned from the ReportDeadlinesConnector, but the IncomeSource does not exist" should {
+        "return a correctly formatted ReportDeadlinesError model" in {
+          setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
+          await(result("ABCD")) shouldBe
+            ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Could not retrieve Report Deadlines for Income Source ID Provided")
         }
       }
 
       "an Error Response is returned from the ReportDeadlinesConnector" should {
 
         "return a correctly formatted ReportDeadlinesError model" in {
-          mockReportDeadlinesResponse(testReportDeadlinesError)
-          await(result) shouldBe testReportDeadlinesError
+          setupMockReportDeadlinesResponse(testNino)(Left(testReportDeadlinesError))
+          await(result(testIncomeSourceID_1)) shouldBe testReportDeadlinesError
         }
       }
     }

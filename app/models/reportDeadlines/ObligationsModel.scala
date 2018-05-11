@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package assets
+package models.reportDeadlines
 
-object BaseTestConstants {
+import play.api.libs.json.{Json, Reads, _}
 
-  val testNino = "BB123456A"
-  val mtdRef = "123456789012345"
-  val testIncomeSourceID_1 = "XAIS000001"
-  val testIncomeSourceID_2 = "XAIS000002"
-  val testIncomeSourceID_3 = "XAIS000003"
+case class ObligationsModel(obligations: Seq[ReportDeadlinesModel])
 
+object ObligationsModel {
+
+  val desReadsApi1330: Reads[ObligationsModel] =
+    (__ \ "obligations").read(Reads.seq(ReportDeadlinesModel.desReadsApi1330)).map(ObligationsModel(_))
+
+  implicit val format: Format[ObligationsModel] = Json.format[ObligationsModel]
 }

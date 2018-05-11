@@ -6,4 +6,4 @@ GET        /nino-lookup/:mtdRef                                       @controlle
 
 GET        /income-sources/:mtdRef                                    @controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
 
-GET        /income-source/:incomeSourceID/report-deadlines            @controllers.ReportDeadlinesController.getReportDeadlines(incomeSourceID)
+GET        /:nino/income-source/:incomeSourceID/report-deadlines      @controllers.ReportDeadlinesController.getReportDeadlines(incomeSourceID, nino)

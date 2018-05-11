@@ -33,9 +33,10 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
                                           val reportDeadlinesService: ReportDeadlinesService
                                            ) extends BaseController{
 
-  def getReportDeadlines(incomeSourceId: String): Action[AnyContent] = authentication.async { implicit request =>
-    Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - Requesting obligations from ReportDeadlinesService for incomeSourceId: $incomeSourceId")
-    reportDeadlinesService.getReportDeadlines(incomeSourceId).map {
+  def getReportDeadlines(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
+    Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - " +
+      s"Requesting obligations from ReportDeadlinesService for incomeSourceId: $incomeSourceId, nino: $nino")
+    reportDeadlinesService.getReportDeadlines(incomeSourceId, nino).map {
       case success: ReportDeadlinesModel =>
         Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - Successful Response: $success")
         Ok(Json.toJson(success))
