@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package assets
+package models.reportDeadlines
 
-object BaseTestConstants {
+import assets.ReportDeadlinesTestConstants._
+import org.scalatest.Matchers
+import play.api.libs.json._
+import utils.TestSupport
 
-  val testNino = "BB123456A"
-  val mtdRef = "123456789012345"
-  val testIncomeSourceID_1 = "XAIS000001"
-  val testIncomeSourceID_2 = "XAIS000002"
-  val testIncomeSourceID_3 = "XAIS000003"
+class ObligationsModelSpec extends TestSupport with Matchers {
+
+  "The ObligationsModel" should {
+
+    "read from the DES Json" in {
+      Json.fromJson(testObligationsFromJson)(ObligationsModel.desReadsApi1330).fold(
+        invalid => invalid,
+        valid => valid
+      ) shouldBe testObligations
+    }
+
+    "write to Json" in {
+      Json.toJson(testObligations) shouldBe testObligationsToJson
+    }
+  }
 
 }

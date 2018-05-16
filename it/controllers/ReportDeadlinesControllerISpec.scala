@@ -32,12 +32,12 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesReportDeadlines(reportDeadlines)
+        DesReportDeadlinesStub.stubGetDesReportDeadlines(testNino)
 
-        When(s"I call GET /income-tax-view-change/income-source/$testIncomeSourceId/report-deadlines")
-        val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId)
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testIncomeSourceId/report-deadlines")
+        val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId, testNino)
 
-        DesReportDeadlinesStub.verifyGetDesReportDeadlines(testIncomeSourceId)
+        DesReportDeadlinesStub.verifyGetDesReportDeadlines(testNino)
 
         Then("a successful response is returned with the correct model")
 
@@ -52,12 +52,12 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         And("I wiremock stub an unsuccessful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesReportDeadlinesError(testIncomeSourceId)
+        DesReportDeadlinesStub.stubGetDesReportDeadlinesError(testNino)
 
-        When(s"I call GET /income-tax-view-change/income-source/$testIncomeSourceId/report-deadlines")
-        val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId)
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testIncomeSourceId/report-deadlines")
+        val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId, testNino)
 
-        DesReportDeadlinesStub.verifyGetDesReportDeadlines(testIncomeSourceId)
+        DesReportDeadlinesStub.verifyGetDesReportDeadlines(testNino)
 
         Then("a unsuccessful response is returned with an error model")
 

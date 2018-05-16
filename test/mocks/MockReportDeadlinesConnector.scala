@@ -16,9 +16,8 @@
 
 package mocks
 
-import assets.BaseTestConstants.mtdRef
 import connectors.ReportDeadlinesConnector
-import models.reportDeadlines.ReportDeadlinesResponseModel
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
@@ -38,11 +37,8 @@ trait MockReportDeadlinesConnector extends UnitSpec with MockitoSugar with Befor
     reset(mockReportDeadlinesConnector)
   }
 
-  def setupMockReportDeadlinesResponse(mtdRef: String)(response: ReportDeadlinesResponseModel):
-  OngoingStubbing[Future[ReportDeadlinesResponseModel]] = when(mockReportDeadlinesConnector.getReportDeadlines(
-    ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
-
-  def mockReportDeadlinesResponse(desResponse: ReportDeadlinesResponseModel):
-  OngoingStubbing[Future[ReportDeadlinesResponseModel]] = setupMockReportDeadlinesResponse(mtdRef)(desResponse)
+  def setupMockReportDeadlinesResponse(nino: String)(response: Either[ReportDeadlinesErrorModel,ObligationsModel]):
+  OngoingStubbing[Future[Either[ReportDeadlinesErrorModel, ObligationsModel]]] = when(mockReportDeadlinesConnector.getReportDeadlines(
+    ArgumentMatchers.eq(nino))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
 }

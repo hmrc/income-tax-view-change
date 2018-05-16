@@ -24,19 +24,19 @@ import play.api.http.Status
 
 object DesReportDeadlinesStub {
 
-  val url: (String) => String = incomeSourceId => s"""/enterprise/obligation-data/mtdbis/$incomeSourceId/ITSA?status=O"""
+  val url: String => String = nino => s"""/enterprise/obligation-data/nino/$nino/ITSA?status=O"""
 
-  def stubGetDesReportDeadlines(response: ReportDeadlinesResponseModel): Unit = {
+  def stubGetDesReportDeadlines(nino: String): Unit = {
     val desReportDeadlinesResponse = successResponse(testIncomeSourceId).toString
-    WiremockHelper.stubGet(url(testIncomeSourceId), Status.OK, desReportDeadlinesResponse)
+    WiremockHelper.stubGet(url(nino), Status.OK, desReportDeadlinesResponse)
   }
 
-  def stubGetDesReportDeadlinesError(incomeSourceId: String): Unit = {
+  def stubGetDesReportDeadlinesError(nino: String): Unit = {
     val errorResponse = failureResponse("500", "ISE")
-    WiremockHelper.stubGet(url(incomeSourceId), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
+    WiremockHelper.stubGet(url(nino), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
 
-  def verifyGetDesReportDeadlines(incomeSourceId: String): Unit =
-    WiremockHelper.verifyGet(url(incomeSourceId))
+  def verifyGetDesReportDeadlines(nino: String): Unit =
+    WiremockHelper.verifyGet(url(nino))
 
 }

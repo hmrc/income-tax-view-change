@@ -29,11 +29,11 @@ class ReportDeadlinesModelSpec extends TestSupport with Matchers {
       Json.fromJson(testReportDeadlinesFromJson)(ReportDeadlinesModel.desReadsApi1330).fold(
         invalid => invalid,
         valid => valid
-      ) shouldBe testReportDeadlines
+      ) shouldBe testReportDeadlines_1
     }
 
     "write to Json" in {
-      Json.toJson(testReportDeadlines) shouldBe testReportDeadlinesToJson
+      Json.toJson(testReportDeadlines_1) shouldBe testReportDeadlinesToJson
     }
   }
 

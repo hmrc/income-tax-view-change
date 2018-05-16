@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.BaseTestConstants.mtdRef
+import assets.BaseTestConstants._
 import assets.ReportDeadlinesTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockAuthorisedUser, MockReportDeadlinesService, MockUnauthorisedUser}
@@ -39,12 +39,12 @@ class ReportDeadlinesControllerSpec extends ControllerBaseSpec with MockReportDe
 
         "return a ReportDeadlinesModel" should {
 
-          mockReportDeadlinesResponse(testReportDeadlines)
-          lazy val result = TestReportDeadlinesController.getReportDeadlines(mtdRef)(FakeRequest())
+          setupMockReportDeadlinesResponse(testIncomeSourceID_1, testNino)(testReportDeadlines_1)
+          lazy val result = TestReportDeadlinesController.getReportDeadlines(testIncomeSourceID_1, testNino)(FakeRequest())
 
           checkStatusOf(result)(Status.OK)
           checkContentTypeOf(result)("application/json")
-          checkJsonBodyOf(result)(testReportDeadlines)
+          checkJsonBodyOf(result)(testReportDeadlines_1)
 
         }
 
@@ -52,8 +52,8 @@ class ReportDeadlinesControllerSpec extends ControllerBaseSpec with MockReportDe
 
       "an invalid response from the ReportDeadlinesService" should {
 
-        mockReportDeadlinesResponse(testReportDeadlinesError)
-        lazy val result = TestReportDeadlinesController.getReportDeadlines(mtdRef)(FakeRequest())
+        setupMockReportDeadlinesResponse(testIncomeSourceID_1, testNino)(testReportDeadlinesError)
+        lazy val result = TestReportDeadlinesController.getReportDeadlines(testIncomeSourceID_1, testNino)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
@@ -69,7 +69,7 @@ class ReportDeadlinesControllerSpec extends ControllerBaseSpec with MockReportDe
         reportDeadlinesService = mockReportDeadlinesService
       )
 
-      lazy val result = TestReportDeadlinesController.getReportDeadlines(mtdRef)(FakeRequest())
+      lazy val result = TestReportDeadlinesController.getReportDeadlines(testIncomeSourceID_1, testNino)(FakeRequest())
 
       checkStatusOf(result)(Status.UNAUTHORIZED)
     }
