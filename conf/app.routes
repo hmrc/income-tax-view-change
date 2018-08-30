@@ -7,3 +7,5 @@ GET        /nino-lookup/:mtdRef                                       @controlle
 GET        /income-sources/:mtdRef                                    @controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
 
 GET        /:nino/income-source/:incomeSourceID/report-deadlines      @controllers.ReportDeadlinesController.getReportDeadlines(incomeSourceID, nino)
+
+GET        /previous-tax-calculation/:nino/:year                      @controllers.PreviousCalculationController.getPreviousCalculation(nino, year)

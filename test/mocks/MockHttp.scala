@@ -18,6 +18,7 @@ package mocks
 
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -35,6 +36,10 @@ trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
     super.beforeEach()
     reset(mockHttpGet)
   }
+
+  def setupMockHttpFutureGet[A](url: String)(response: A): OngoingStubbing[Future[A]] =
+    when(mockHttpGet.GET[A](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(),
+      ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def setupMockHttpGet(url: String)(response: HttpResponse): Unit =
     when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))

@@ -56,6 +56,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
   object IncomeTaxViewChange {
     def get(uri: String): WSResponse = await(buildClient(uri).get())
 
+    def getPreviousCalculation(nino: String, year: String): WSResponse = get(s"/previous-tax-calculation/$nino/$year")
+
     def getEstimatedTaxLiability(nino: String, year: String, calcType: String): WSResponse = get(s"/estimated-tax-liability/$nino/$year/$calcType")
 
     def getNino(mtdRef: String): WSResponse = get(s"/nino-lookup/$mtdRef")
