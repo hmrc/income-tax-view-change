@@ -36,14 +36,13 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
 
   def getPreviousCalculation(nino: String, year: String): Action[AnyContent] =
     authentication.async {
-      { implicit request =>
-        if (isInvalidVrn(nino)) {
+      implicit request =>
+        if (isInvalidNino(nino)) {
           Logger.warn(s"[PreviousCalculationController][getPreviousCalculation] Invalid Nino '$nino' received in request.")
           Future.successful(BadRequest(Json.toJson(InvalidNino)))
         } else {
           getPreviousCalculation(nino, year)
         }
-      }
     }
 
   private def getPreviousCalculation(nino: String, year: String)(implicit hc: HeaderCarrier) = {
@@ -57,8 +56,7 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
     }
   }
 
-  private def isInvalidVrn(nino: String): Boolean = {
-    false
+  private def isInvalidNino(nino: String): Boolean = {
     val desNinoRegex = "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"
     !nino.matches(desNinoRegex)
   }

@@ -18,10 +18,10 @@ package services
 
 import connectors.CalculationConnector
 import javax.inject.{Inject, Singleton}
-import models.PreviousCalculation.{ErrorResponse, PreviousCalculationModel}
+import models.PreviousCalculation.PreviousCalculationModel
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
-
+import connectors.httpParsers.CalculationHttpParser.HttpGetResult
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,12 +29,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class CalculationService @Inject()(val calculationConnector: CalculationConnector) {
 
   def getPreviousCalculation(nino: String, year: String)
-                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, PreviousCalculationModel]] = {
+                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[PreviousCalculationModel]] = {
 
-    Logger.debug(s"[VatReturnsService][getVatReturns] Calling vatReturnsConnector with Nino: $nino\nYear: $year")
+    Logger.debug(s"[CalculationService][getPreviousCalculation] Calling calculationConnector with Nino: $nino\nYear: $year")
     calculationConnector.getPreviousCalculation(nino, year).map {
-      case success@Right(vatReturns) =>
-        Logger.debug(s"[CalculationService][getPreviousCalculation] - Retrieved Previous Calculation Data:\n\n$success")
+      case success@Right(previousCalculationModel) =>
+        Logger.debug(s"[CalculationService][getPreviousCalculation] - Retrieved Previous Calculation Data:\n\n$previousCalculationModel")
         success
       case error@Left(_) =>
         error

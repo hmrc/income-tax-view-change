@@ -17,7 +17,7 @@
 package assets
 
 import models.PreviousCalculation._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.mvc.Http.Status
 
 object PreviousCalculationIntegrationTestConstants {
@@ -28,7 +28,7 @@ object PreviousCalculationIntegrationTestConstants {
 
   val previousCalculationError = Error(Status.INTERNAL_SERVER_ERROR.toString, "ISE")
 
-  def successResponse: JsValue = Json.parse(
+  val successResponse: JsValue = Json.parse(
     """{
      |	"calcOutput": {
      |		"calcName": "IncomeTaxCalculator",
@@ -201,7 +201,7 @@ object PreviousCalculationIntegrationTestConstants {
      | }""".stripMargin)
 
 
-  def failureResponse(code: String, reason: String): JsValue =
+  val failureResponse: (String, String) => JsObject = (code: String, reason: String) =>
     Json.obj(
       "code" -> code,
       "reason" -> reason

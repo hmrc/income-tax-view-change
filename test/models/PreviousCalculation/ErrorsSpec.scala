@@ -16,52 +16,32 @@
 
 package models.PreviousCalculation
 
-import base.SpecBase
+import utils.TestSupport
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
+import assets.PreviousCalculationTestConstants
 
-class ErrorsSpec extends SpecBase {
+class ErrorsSpec extends TestSupport {
 
   "The Error model" should {
 
-    val desErrorModel = Error("CODE","ERROR MESSAGE")
-    val desErrorJson: JsValue = Json.obj("code"->"CODE","reason"->"ERROR MESSAGE")
-
     "Serialize to Json as expected" in {
-      Json.toJson(desErrorModel) shouldBe desErrorJson
+      Json.toJson(PreviousCalculationTestConstants.singleError) shouldBe PreviousCalculationTestConstants.jsonSingleError
     }
 
     "Deserialize to a Error as expected" in {
-      desErrorJson.as[Error] shouldBe desErrorModel
+      PreviousCalculationTestConstants.jsonSingleError.as[Error] shouldBe PreviousCalculationTestConstants.singleError
     }
   }
 
   "The MultiError model" should {
 
-    val desMultiErrorModel = MultiError(failures = Seq(
-      Error("CODE 1","ERROR MESSAGE 1"),
-      Error("CODE 2","ERROR MESSAGE 2")
-    ))
-    val desMultiErrorJson: JsValue =
-      Json.obj("failures" ->
-        Json.arr(
-          Json.obj(
-            "code" -> "CODE 1",
-            "reason"->"ERROR MESSAGE 1"
-          ),
-          Json.obj(
-            "code" -> "CODE 2",
-            "reason"->"ERROR MESSAGE 2"
-          )
-        )
-      )
-
     "Serialize to Json as expected" in {
-      Json.toJson(desMultiErrorModel) shouldBe desMultiErrorJson
+      Json.toJson(PreviousCalculationTestConstants.multiError) shouldBe PreviousCalculationTestConstants.jsonMultipleErrors
     }
 
     "Deserialize to a MultiError as expected" in {
-      desMultiErrorJson.as[MultiError] shouldBe desMultiErrorModel
+      PreviousCalculationTestConstants.jsonMultipleErrors.as[MultiError] shouldBe PreviousCalculationTestConstants.multiError
     }
   }
 
@@ -105,7 +85,7 @@ class ErrorsSpec extends SpecBase {
     }
   }
 
-  "The InvalidVrn object" should {
+  "The InvalidNino object" should {
 
     "Have the error status BAD_REQUEST (400)'" in {
       InvalidNino.code shouldBe "ERROR_NINO_INVALID"

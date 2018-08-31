@@ -16,42 +16,29 @@
 
 package connectors
 
-import base.SpecBase
+import utils.TestSupport
 import connectors.httpParsers.CalculationHttpParser
 import mocks.MockHttp
 import models.PreviousCalculation._
-import play.api.http.Status
+import assets.PreviousCalculationTestConstants
 
 import scala.concurrent.Future
 
-class CalculationConnectorSpec extends SpecBase with MockHttp {
+class CalculationConnectorSpec extends TestSupport with MockHttp {
 
-  val testPreviousCalculation: PreviousCalculationModel =
-    PreviousCalculationModel(
-      CalcOutput(calcID = "1", calcAmount = Some(22.56), calcTimestamp = Some("somedate"), crystallised = Some(true),
-      calcResult = Some(CalcResult(500.68, Some(EoyEstimate(125.63))))))
-
-
-  val successResponse: Either[Nothing, PreviousCalculationModel] = Right(testPreviousCalculation)
-  val badRequestSingleError: Either[ErrorResponse, Nothing] =
-    Left(ErrorResponse(Status.BAD_REQUEST, Error(code = "CODE", reason = "ERROR MESSAGE")))
-  val badRequestMultiError = Left(ErrorResponse(Status.BAD_REQUEST, MultiError(
-    failures = Seq(
-      Error(code = "ERROR CODE 1", reason = "ERROR MESSAGE 1"),
-      Error(code = "ERROR CODE 2", reason = "ERROR MESSAGE 2")
-    )
-  )))
-
-  val testNino: String = "AA000000B"
-  val testYear: String = "2018"
+  val successResponse: Either[Nothing, PreviousCalculationModel] =
+    Right(PreviousCalculationTestConstants.previousCalculationFull)
 
   object TestCalculationConnector extends CalculationConnector(mockHttpGet, mockAppConfig)
 
-  "The VatReturnsConnector" should {
+  "The CalculationConnector" should {
 
     "format the request url correctly for previous-tax-calculation DES requests" in {
-      val actualUrl: String = TestCalculationConnector.getPreviousCalculationUrl(testNino, testYear)
-      val expectedUrl: String = s"${mockAppConfig.desUrl}/income-tax/previous-calculation/$testNino?year=$testYear"
+      lazy val actualUrl: String =
+        TestCalculationConnector.getPreviousCalculationUrl(PreviousCalculationTestConstants.testNino,
+        PreviousCalculationTestConstants.testYear)
+      lazy val expectedUrl: String = s"${mockAppConfig.desUrl}/income-tax/previous-calculation/" +
+        s"${PreviousCalculationTestConstants.testNino}?year=${PreviousCalculationTestConstants.testYear}"
       actualUrl shouldBe expectedUrl
     }
 
@@ -59,11 +46,13 @@ class CalculationConnectorSpec extends SpecBase with MockHttp {
       "calling with a valid nino and year the success response received" should {
 
         "return a PreviousCalculationModel model" in {
-          setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(testNino, testYear))(successResponse)
-          val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] = TestCalculationConnector.getPreviousCalculation(
-            nino = testNino,
-            year = testYear
-          )
+          setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(PreviousCalculationTestConstants.testNino,
+            PreviousCalculationTestConstants.testYear))(successResponse)
+          val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] =
+            TestCalculationConnector.getPreviousCalculation(
+              nino = PreviousCalculationTestConstants.testNino,
+              year = PreviousCalculationTestConstants.testYear
+            )
           await(result) shouldBe successResponse
         }
       }
@@ -72,24 +61,28 @@ class CalculationConnectorSpec extends SpecBase with MockHttp {
     "calling for a user with non-success response received, single error" should {
 
       "return a Error model" in {
-        setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(testNino, testYear))(badRequestSingleError)
-        val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] = TestCalculationConnector.getPreviousCalculation(
-          nino = testNino,
-          year = testYear
-        )
-        await(result) shouldBe badRequestSingleError
+        setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(PreviousCalculationTestConstants.testNino,
+          PreviousCalculationTestConstants.testYear))(PreviousCalculationTestConstants.badRequestSingleError)
+        val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] =
+          TestCalculationConnector.getPreviousCalculation(
+            nino = PreviousCalculationTestConstants.testNino,
+            year = PreviousCalculationTestConstants.testYear
+          )
+        await(result) shouldBe PreviousCalculationTestConstants.badRequestSingleError
       }
     }
 
     "calling for a user with non-success response received, multi error" should {
 
       "return a MultiError model" in {
-        setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(testNino, testYear))(badRequestMultiError)
-        val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] = TestCalculationConnector.getPreviousCalculation(
-          nino = testNino,
-          year = testYear
-        )
-        await(result) shouldBe badRequestMultiError
+        setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(PreviousCalculationTestConstants.testNino,
+          PreviousCalculationTestConstants.testYear))(PreviousCalculationTestConstants.badRequestMultiError)
+        val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] =
+          TestCalculationConnector.getPreviousCalculation(
+            nino = PreviousCalculationTestConstants.testNino,
+            year = PreviousCalculationTestConstants.testYear
+          )
+        await(result) shouldBe PreviousCalculationTestConstants.badRequestMultiError
       }
     }
   }

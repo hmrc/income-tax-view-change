@@ -20,14 +20,10 @@ import play.api.libs.json.{Json, OFormat}
 
 case class EoyEstimate(incomeTaxNicAmount: BigDecimal)
 
-
-
 case class CalcResult(incomeTaxNicYtd: BigDecimal,
                       eoyEstimate: Option[EoyEstimate] = None)
 
-case class PreviousCalculationModel(calcOutput: CalcOutput
-                                   )
-
+case class PreviousCalculationModel(calcOutput: CalcOutput)
 
 case class CalcOutput(calcID: String,
                       calcAmount: Option[BigDecimal] = None,

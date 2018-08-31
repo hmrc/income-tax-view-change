@@ -31,7 +31,7 @@ class PreviousCalculationControllerISpec extends ComponentSpecBase {
 
         isAuthorised(true)
 
-        And("I wiremock stub a successful Get Financial Data response")
+        And("I wiremock stub a successful Get Previous Calculation response")
         DesPreviousCalculationStub.stubGetDesPreviousCalculation(testNino, testYear, previousCalculation)
 
         When(s"I call GET /income-tax-view-change/getPreviousCalculation/$testNino/$testYear")
@@ -66,7 +66,7 @@ class PreviousCalculationControllerISpec extends ComponentSpecBase {
 
         isAuthorised(true)
 
-        And("I wiremock stub a successful Get Financial Data response")
+        And("I wiremock stub a successful Get Previous Calculation response")
         DesPreviousCalculationStub.stubGetPreviousCalculationError(testNino, testYear)
 
         When(s"I call GET /income-tax-view-change/getPreviousCalculation/$testNino/$testYear")
