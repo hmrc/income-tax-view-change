@@ -16,14 +16,10 @@
 
 package utils
 
-import java.time.LocalDate
-
 import config.MicroserviceAppConfig
 import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.http.HeaderNames.REFERER
-import play.api.inject.Injector
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
@@ -34,17 +30,11 @@ import scala.concurrent.ExecutionContext
 trait TestSupport extends UnitSpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfterAll with MaterializerSupport {
   this: Suite =>
 
-  val microserviceAppConfig: MicroserviceAppConfig = app.injector.instanceOf[MicroserviceAppConfig]
-
-  def injector: Injector = app.injector
-
   def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("", "")
 
-  lazy val mockAppConfig: MicroserviceAppConfig = injector.instanceOf[MicroserviceAppConfig]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  implicit lazy val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders(REFERER -> "/dummy/referrer/path")
-  implicit lazy val ec: ExecutionContext = injector.instanceOf[ExecutionContext]
-
-  def stringToDate(date: String): LocalDate = {LocalDate.parse(date)}
+  val microserviceAppConfig: MicroserviceAppConfig = app.injector.instanceOf[MicroserviceAppConfig]
 
 }

@@ -18,30 +18,30 @@ package models.PreviousCalculation
 
 import utils.TestSupport
 import play.api.http.Status
-import play.api.libs.json.{JsValue, Json}
-import assets.PreviousCalculationTestConstants
+import play.api.libs.json.Json
+import assets.PreviousCalculationTestConstants._
 
 class ErrorsSpec extends TestSupport {
 
   "The Error model" should {
 
     "Serialize to Json as expected" in {
-      Json.toJson(PreviousCalculationTestConstants.singleError) shouldBe PreviousCalculationTestConstants.jsonSingleError
+      Json.toJson(singleError) shouldBe jsonSingleError
     }
 
     "Deserialize to a Error as expected" in {
-      PreviousCalculationTestConstants.jsonSingleError.as[Error] shouldBe PreviousCalculationTestConstants.singleError
+      jsonSingleError.as[Error] shouldBe singleError
     }
   }
 
   "The MultiError model" should {
 
     "Serialize to Json as expected" in {
-      Json.toJson(PreviousCalculationTestConstants.multiError) shouldBe PreviousCalculationTestConstants.jsonMultipleErrors
+      Json.toJson(multiError) shouldBe jsonMultipleErrors
     }
 
     "Deserialize to a MultiError as expected" in {
-      PreviousCalculationTestConstants.jsonMultipleErrors.as[MultiError] shouldBe PreviousCalculationTestConstants.multiError
+      jsonMultipleErrors.as[MultiError] shouldBe multiError
     }
   }
 

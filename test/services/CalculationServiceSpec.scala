@@ -18,9 +18,8 @@ package services
 
 import mocks.MockCalculationConnector
 import models.PreviousCalculation._
-import play.api.http.Status
 import utils.TestSupport
-import assets.PreviousCalculationTestConstants
+import assets.PreviousCalculationTestConstants._
 
 class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
 
@@ -29,20 +28,15 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
   "The CalculationService.getPreviousCalculation method" should {
 
     "Return a PreviousCalculationModel when a success response is returned from the Connector" in {
-      val testPreviousCalculation: PreviousCalculationModel =
-        PreviousCalculationModel(
-          CalcOutput(calcID = "1", calcAmount = Some(22.56), calcTimestamp = Some("2008-05-01"), crystallised = Some(true),
-            calcResult = Some(CalcResult(500.68, Some(EoyEstimate(125.63))))))
 
-      val successResponse: Either[Nothing, PreviousCalculationModel] = Right(testPreviousCalculation)
+      val successResponse: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationFull)
 
-
-      setupMockGetPreviousCalculation(PreviousCalculationTestConstants.testNino,
-        PreviousCalculationTestConstants.testYear)(successResponse)
+      setupMockGetPreviousCalculation(testNino,
+        testYear)(successResponse)
 
       val actual: Either[ErrorResponse, PreviousCalculationModel] = await(TestCalculationService.getPreviousCalculation(
-        PreviousCalculationTestConstants.testNino,
-        PreviousCalculationTestConstants.testYear
+        testNino,
+        testYear
       ))
 
       actual shouldBe successResponse
@@ -50,36 +44,26 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
 
     "Return Error when a single error is returned from the Connector" in {
 
-      val singleErrorResponse: Either[ErrorResponse, Nothing] =
-        Left(ErrorResponse(Status.BAD_REQUEST, Error("CODE", "MESSAGE")))
-
-      setupMockGetPreviousCalculation(PreviousCalculationTestConstants.testNino,
-        PreviousCalculationTestConstants.testYear)(singleErrorResponse)
+      setupMockGetPreviousCalculation(testNino, testYear)(badRequestSingleError)
 
       val actual: Either[ErrorResponse, PreviousCalculationModel] = await(TestCalculationService.getPreviousCalculation(
-        PreviousCalculationTestConstants.testNino,
-        PreviousCalculationTestConstants.testYear
+        testNino,
+        testYear
       ))
 
-      actual shouldBe singleErrorResponse
+      actual shouldBe badRequestSingleError
     }
 
     "Return a MultiError when multiple error responses are returned from the Connector" in {
 
-      val multiErrorResponse: Either[ErrorResponse, Nothing] = Left(ErrorResponse(Status.BAD_REQUEST, MultiError(Seq(
-        Error("CODE 1", "MESSAGE 1"),
-        Error("CODE 2", "MESSAGE 2")
-      ))))
-
-      setupMockGetPreviousCalculation(PreviousCalculationTestConstants.testNino,
-        PreviousCalculationTestConstants.testYear)(multiErrorResponse)
+      setupMockGetPreviousCalculation(testNino, testYear)(badRequestMultiError)
 
       val actual: Either[ErrorResponse, PreviousCalculationModel] = await(TestCalculationService.getPreviousCalculation(
-        PreviousCalculationTestConstants.testNino,
-        PreviousCalculationTestConstants.testYear
+        testNino,
+        testYear
       ))
 
-      actual shouldBe multiErrorResponse
+      actual shouldBe badRequestMultiError
     }
   }
 }

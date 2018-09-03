@@ -22,7 +22,7 @@ import models.PreviousCalculation._
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
-import assets.PreviousCalculationTestConstants
+import assets.PreviousCalculationTestConstants._
 
 class CalculationHttpParserSpec extends TestSupport {
 
@@ -31,10 +31,10 @@ class CalculationHttpParserSpec extends TestSupport {
     "the http response status is 200 OK and matches expected Schema when fully populated" should {
 
       val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJson = Some(
-        PreviousCalculationTestConstants.responseJsonFull
+        responseJsonFull
       ))
 
-      val expected: Either[Nothing, PreviousCalculationModel] = Right(PreviousCalculationTestConstants.previousCalculationFull)
+      val expected: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationFull)
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
 
       "return a PreviousCalculationModel instance" in {
@@ -45,10 +45,10 @@ class CalculationHttpParserSpec extends TestSupport {
     "the http response status is 200 OK and matches expected Schema with minimal data" should {
 
       val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJson = Some(
-        PreviousCalculationTestConstants.responseJsonMinimum
+        responseJsonMinimum
       ))
 
-      val expected: Either[Nothing, PreviousCalculationModel] = Right(PreviousCalculationTestConstants.previousCalculationMinimum)
+      val expected: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationMinimum)
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
 
       "return a PreviousCalculationModel instance" in {
@@ -59,10 +59,10 @@ class CalculationHttpParserSpec extends TestSupport {
     "the http response status is 200 OK and matches expected Schema with no eoyData data" should {
 
       val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJson = Some(
-        PreviousCalculationTestConstants.responseJsonNoEoy
+        responseJsonNoEoy
       ))
 
-      val expected: Either[Nothing, PreviousCalculationModel] = Right(PreviousCalculationTestConstants.testPreviousCalculationNoEoy)
+      val expected: Either[Nothing, PreviousCalculationModel] = Right(testPreviousCalculationNoEoy)
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
 
       "return a PreviousCalculationModel instance" in {
@@ -86,27 +86,27 @@ class CalculationHttpParserSpec extends TestSupport {
     "the http response status is 400 BAD_REQUEST (single error)" should {
 
       val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST,
-        responseJson = Some(PreviousCalculationTestConstants.jsonSingleError)
+        responseJson = Some(jsonSingleError)
       )
 
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] =
         PreviousCalculationReads.read("", "", httpResponse)
 
       "return a Error instance" in {
-        result shouldEqual PreviousCalculationTestConstants.badRequestSingleError
+        result shouldEqual badRequestSingleError
       }
     }
 
     "the http response status is 400 BAD_REQUEST (multiple errors)" should {
 
       val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST,
-        responseJson = Some(PreviousCalculationTestConstants.jsonMultipleErrors)
+        responseJson = Some(jsonMultipleErrors)
       )
 
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
 
       "return a MultiError" in {
-        result shouldEqual PreviousCalculationTestConstants.badRequestMultiError
+        result shouldEqual badRequestMultiError
       }
 
     }
@@ -142,12 +142,12 @@ class CalculationHttpParserSpec extends TestSupport {
     "the http response status is 500 Internal Server Error" should {
 
       val httpResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR,
-        responseJson = Some(PreviousCalculationTestConstants.jsonSingleError)
+        responseJson = Some(jsonSingleError)
       )
 
       val expected: Either[ErrorResponse, Nothing] = Left(ErrorResponse(
         Status.INTERNAL_SERVER_ERROR,
-        PreviousCalculationTestConstants.singleError
+        singleError
       ))
 
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)

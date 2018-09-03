@@ -22,11 +22,11 @@ import models.PreviousCalculation._
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import assets.PreviousCalculationTestConstants
+import assets.PreviousCalculationTestConstants._
 
 class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalculationService {
 
-  val successResponse: Either[Nothing, PreviousCalculationModel] = Right(PreviousCalculationTestConstants.previousCalculationFull)
+  val successResponse: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationFull)
 
   "The GET PreviousCalculationController.getPreviousCalculation method" when {
 
@@ -41,43 +41,43 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
 
         "for a successful response from the CalculationService," should {
 
-          lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(PreviousCalculationTestConstants.testNino,
-            PreviousCalculationTestConstants.testYear)(fakeRequest))
+          lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(testNino,
+            testYear)(fakeRequest))
 
           "return a status of 200 (OK)" in {
-            setupMockGetPreviousCalculation(PreviousCalculationTestConstants.testNino,
-              PreviousCalculationTestConstants.testYear)(successResponse)
+            setupMockGetPreviousCalculation(testNino,
+              testYear)(successResponse)
             status(result) shouldBe Status.OK
           }
 
           "return a json body with the transformed des return data" in {
-            jsonBodyOf(result) shouldBe PreviousCalculationTestConstants.responseJsonFull
+            jsonBodyOf(result) shouldBe responseJsonFull
           }
         }
 
         "for a bad request with single error from the CalculationService," should {
 
-          lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(PreviousCalculationTestConstants.testNino,
-            PreviousCalculationTestConstants.testYear)(fakeRequest))
+          lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(testNino,
+            testYear)(fakeRequest))
 
           "return a status of 400 (BAD_REQUEST)" in {
-            setupMockGetPreviousCalculation(PreviousCalculationTestConstants.testNino,
-              PreviousCalculationTestConstants.testYear)(PreviousCalculationTestConstants.badRequestSingleError)
+            setupMockGetPreviousCalculation(testNino,
+              testYear)(badRequestSingleError)
 
             status(result) shouldBe Status.BAD_REQUEST
           }
 
           "return a json body with the single error message" in {
 
-            jsonBodyOf(result) shouldBe Json.toJson(PreviousCalculationTestConstants.singleError)
+            jsonBodyOf(result) shouldBe Json.toJson(singleError)
           }
         }
 
         "for an invalid nino " should {
 
           lazy val result: Result =
-            await(PreviousCalculationController.getPreviousCalculation(PreviousCalculationTestConstants.badNino,
-              PreviousCalculationTestConstants.testYear)(fakeRequest))
+            await(PreviousCalculationController.getPreviousCalculation(badNino,
+              testYear)(fakeRequest))
           "return a status of 400 (BAD_REQUEST)" in {
             status(result) shouldBe Status.BAD_REQUEST
           }
@@ -90,17 +90,17 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
         "for a bad request with multiple errors from the CalculationService," should {
 
           lazy val result: Result =
-            await(PreviousCalculationController.getPreviousCalculation(PreviousCalculationTestConstants.testNino,
-              PreviousCalculationTestConstants.testYear)(fakeRequest))
+            await(PreviousCalculationController.getPreviousCalculation(testNino,
+              testYear)(fakeRequest))
 
           "return a status of 400 (BAD_REQUEST)" in {
-            setupMockGetPreviousCalculation(PreviousCalculationTestConstants.testNino,
-              PreviousCalculationTestConstants.testYear)(PreviousCalculationTestConstants.badRequestMultiError)
+            setupMockGetPreviousCalculation(testNino,
+              testYear)(badRequestMultiError)
             status(result) shouldBe Status.BAD_REQUEST
           }
 
           "return a json body with the multiple error messages" in {
-            jsonBodyOf(result) shouldBe Json.toJson(PreviousCalculationTestConstants.multiError)
+            jsonBodyOf(result) shouldBe Json.toJson(multiError)
           }
         }
 
@@ -108,18 +108,18 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
 
       "for a bad request with single error from the CalculationService," should {
         lazy val result: Result =
-          await(PreviousCalculationController.getPreviousCalculation(PreviousCalculationTestConstants.testNino,
-            PreviousCalculationTestConstants.testYear)(fakeRequest))
+          await(PreviousCalculationController.getPreviousCalculation(testNino,
+            testYear)(fakeRequest))
         "return a status of 400 (BAD_REQUEST)" in {
-          setupMockGetPreviousCalculation(PreviousCalculationTestConstants.testNino,
-            PreviousCalculationTestConstants.testYear)(PreviousCalculationTestConstants.badRequestSingleError)
+          setupMockGetPreviousCalculation(testNino,
+            testYear)(badRequestSingleError)
 
           status(result) shouldBe Status.BAD_REQUEST
         }
 
         "return a json body with the single error message" in {
 
-          jsonBodyOf(result) shouldBe Json.toJson(PreviousCalculationTestConstants.singleError)
+          jsonBodyOf(result) shouldBe Json.toJson(singleError)
         }
       }
     }
@@ -131,8 +131,8 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
         calculationService = mockCalculationService
       )
 
-      lazy val result = PreviousCalculationController.getPreviousCalculation(PreviousCalculationTestConstants.testNino,
-        PreviousCalculationTestConstants.testYear)(fakeRequest)
+      lazy val result = PreviousCalculationController.getPreviousCalculation(testNino,
+        testYear)(fakeRequest)
 
       checkStatusOf(result)(Status.UNAUTHORIZED)
     }
