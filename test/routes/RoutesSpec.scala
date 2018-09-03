@@ -42,4 +42,12 @@ class RoutesSpec extends TestSupport {
         s"$contextRoute/$testNino/income-source/$testIncomeSourceID/report-deadlines"
     }
   }
+
+  // Previous Calculation routes
+  "The URL for the PreviousCalculationController.getPreviousCalculation action" should {
+    s"be equal to $contextRoute/previous-tax-calculation/$testNino/$testYear" in {
+      controllers.routes.PreviousCalculationController.getPreviousCalculation(testNino, testYear).url shouldBe
+        s"$contextRoute/previous-tax-calculation/$testNino/$testYear"
+    }
+  }
 }
