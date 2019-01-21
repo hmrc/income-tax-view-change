@@ -14,7 +14,8 @@ val compile: Seq[ModuleID] = Seq(
   ws,
   "uk.gov.hmrc" %% "bootstrap-play-25" % "3.13.0",
   "uk.gov.hmrc" %% "auth-client" % "2.17.0-play-25",
-  "uk.gov.hmrc" %% "domain" % "5.2.0"
+  "uk.gov.hmrc" %% "domain" % "5.2.0",
+  "uk.gov.hmrc" %% "logback-json-logger" % "4.0.0"
 )
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
