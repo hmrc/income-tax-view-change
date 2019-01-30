@@ -34,6 +34,9 @@ class AuthenticationPredicate @Inject()(val authorisedFunctions: AuthorisedFunct
       authorisedFunctions.authorised() {
         action(request)
       } recover {
+        case ex =>
+          Logger.debug(s"[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response ${ex.getMessage}")
+          Unauthorized
         case _ =>
           Logger.debug("[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response")
           Unauthorized
