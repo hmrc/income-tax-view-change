@@ -58,7 +58,7 @@ class FinancialDataConnectorSpec extends TestSupport with MockHttp {
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getLastEstimatedTaxCalculationUrl(testNino, testYear, testCalcType))
       await(getLastEstimatedTaxCalculation(testNino, testYear, testCalcType)) shouldBe
-        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
+        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }
 }

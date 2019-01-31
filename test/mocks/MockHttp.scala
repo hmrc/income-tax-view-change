@@ -45,7 +45,7 @@ trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
     when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def setupMockHttpGetFailed(url: String): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.failed(new Exception("Error")))
+    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.failed(new Exception("error")))
 
   def setupMockHttpGetWithHeaderCarrier(url: String, hc: HeaderCarrier)(response: HttpResponse): Unit =
     when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.eq(hc), ArgumentMatchers.any())).thenReturn(Future.successful(response))

@@ -57,7 +57,7 @@ class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp {
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getIncomeSourceDetailsUrl(mtdRef))
       await(getIncomeSourceDetails(mtdRef)) shouldBe
-        IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
+        IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }
 }

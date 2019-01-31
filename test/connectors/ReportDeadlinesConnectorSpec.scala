@@ -58,7 +58,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport with MockHttp {
     "return ReportDeadlinesError model in case of failed future" in {
       setupMockHttpGetFailed(getReportDeadlinesUrl(testNino))
       await(getReportDeadlines(testNino)) shouldBe
-        Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Unexpected failed future"))
+        Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Unexpected failed future, error"))
     }
   }
 
