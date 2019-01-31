@@ -50,8 +50,13 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
     calculationService.getPreviousCalculation(nino, year).map {
       case _@Right(previousCalculation) => Ok(Json.toJson(previousCalculation))
       case _@Left(error) => error.error match {
-        case singleError: Error => Status(error.status)(Json.toJson(singleError))
-        case multiError: MultiError => Status(error.status)(Json.toJson(multiError))
+        case singleError: Error =>
+          Logger.error(s"[PreviousCalculationController][getPreviousCalculation] returned a single error ${singleError.reason}")
+          Status(error.status)(Json.toJson(singleError))
+        case multiError: MultiError =>
+          multiError.failures.foreach(singleError =>
+            Logger.error(s"[PreviousCalculationController][getPreviousCalculation] returned multiple errors ${singleError.reason}"))
+          Status(error.status)(Json.toJson(multiError))
       }
     }
   }
