@@ -47,7 +47,7 @@ class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesCon
         "return a correctly formatted ReportDeadlinesError model" in {
           setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
           await(result("ABCD")) shouldBe
-            ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Could not retrieve Report Deadlines for Income Source ID Provided")
+            ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source ID Provided")
         }
       }
 
