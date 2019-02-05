@@ -38,7 +38,7 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getNino(mtdRef).map {
       case error: NinoErrorModel =>
-        Logger.debug(s"[IncomeSourceDetailsController][getNino] - Error Response: $error")
+        Logger.error(s"[IncomeSourceDetailsController][getNino] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: NinoModel =>
         Logger.debug(s"[IncomeSourceDetailsController][getNino] - Successful Response: $success")
@@ -49,7 +49,7 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
   def getIncomeSourceDetails(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getIncomeSourceDetails(mtdRef).map {
       case error: IncomeSourceDetailsError =>
-        Logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Error Response: $error")
+        Logger.error(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: IncomeSourceDetailsModel =>
         Logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Successful Response: $success")

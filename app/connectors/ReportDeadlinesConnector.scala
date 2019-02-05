@@ -64,10 +64,10 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
         }
     } recover {
       case ex =>
-        Logger.warn(s"[ReportDeadlinesConnector][getReportDeadlines] - Unexpected failed future, ${ex.getMessage}")
+        Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Unexpected failed future, ${ex.getMessage}")
         Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}"))
       case _ =>
-        Logger.warn(s"[ReportDeadlinesConnector][getReportDeadlines] - Unexpected failed future")
+        Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Unexpected failed future")
         Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future"))
     }
   }

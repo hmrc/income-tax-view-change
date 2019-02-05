@@ -43,7 +43,7 @@ class CalculationConnector @Inject()(val http: HttpClient, val appConfig: Micros
     http.GET(url)(PreviousCalculationReads, desHC, ec).map {
       case previousCalculation@Right(_) => previousCalculation
       case error@Left(message) =>
-        Logger.warn("[CalculationConnector][getPreviousCalculation] DES Error Received. Message: " + message)
+        Logger.error("[CalculationConnector][getPreviousCalculation] DES Error Received. Message: " + message)
         error
     }
   }

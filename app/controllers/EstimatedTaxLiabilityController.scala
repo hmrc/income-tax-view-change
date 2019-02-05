@@ -40,7 +40,7 @@ class EstimatedTaxLiabilityController @Inject()(val authentication: Authenticati
         Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Successful Response: $success")
         Ok(Json.toJson(success))
       case error: LastTaxCalculationError =>
-        Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Error Response: $error")
+        Logger.error(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
     }
   }

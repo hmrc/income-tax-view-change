@@ -41,7 +41,7 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
         Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - Successful Response: $success")
         Ok(Json.toJson(success))
       case error: ReportDeadlinesErrorModel =>
-        Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - Error Response: $error")
+        Logger.error(s"[ReportDeadlinesController][getReportDeadlines] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
     }
   }

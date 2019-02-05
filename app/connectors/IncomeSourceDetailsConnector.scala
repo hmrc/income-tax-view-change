@@ -66,10 +66,10 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
         }
     } recover {
       case ex =>
-        Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Unexpected failed future, ${ex.getMessage}")
+        Logger.error(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Unexpected failed future, ${ex.getMessage}")
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
       case _ =>
-        Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Unexpected failed future")
+        Logger.error(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Unexpected failed future")
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
 
     }
