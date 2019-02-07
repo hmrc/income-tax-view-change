@@ -61,8 +61,8 @@ class FinancialDataConnector @Inject()(val http: HttpClient,
               valid => valid
             )
           case _ =>
-            Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response status: [${response.status}] returned from Latest Calc call")
+            Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response status: [${response.status}] returned from Latest Calc call")
             LastTaxCalculationError(response.status, response.body)
         }
     } recover {

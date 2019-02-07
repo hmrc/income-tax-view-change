@@ -60,8 +60,8 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
               valid => valid
             )
           case _ =>
-            Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Logger.warn(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Response status: [${response.status}] returned from Des Business Details call")
+            Logger.error(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Logger.error(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Response status: [${response.status}] returned from Des Business Details call")
             IncomeSourceDetailsError(response.status, response.body)
         }
     } recover {
