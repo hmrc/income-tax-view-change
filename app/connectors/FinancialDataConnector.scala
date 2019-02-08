@@ -61,16 +61,16 @@ class FinancialDataConnector @Inject()(val http: HttpClient,
               valid => valid
             )
           case _ =>
-            Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response status: [${response.status}] returned from Latest Calc call")
+            Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
+            Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response status: [${response.status}] returned from Latest Calc call")
             LastTaxCalculationError(response.status, response.body)
         }
     } recover {
       case ex =>
-        Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future, ${ex.getMessage}")
+        Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future, ${ex.getMessage}")
         LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
       case _ =>
-        Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future")
+        Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future")
         LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
     }
   }

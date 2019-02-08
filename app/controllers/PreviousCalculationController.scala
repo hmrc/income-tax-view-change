@@ -38,7 +38,7 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
     authentication.async {
       implicit request =>
         if (isInvalidNino(nino)) {
-          Logger.warn(s"[PreviousCalculationController][getPreviousCalculation] Invalid Nino '$nino' received in request.")
+          Logger.error(s"[PreviousCalculationController][getPreviousCalculation] Invalid Nino '$nino' received in request.")
           Future.successful(BadRequest(Json.toJson(InvalidNino)))
         } else {
           getPreviousCalculation(nino, year)
