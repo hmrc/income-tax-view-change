@@ -31,8 +31,9 @@ import scala.concurrent.Future
 
 @Singleton
 class PreviousCalculationController @Inject()(val authentication: AuthenticationPredicate,
-                                              val calculationService: CalculationService
-                                             ) extends BaseController {
+                                              val calculationService: CalculationService,
+                                              cc: ControllerComponents
+                                             ) extends BaseController(cc) {
 
   def getPreviousCalculation(nino: String, year: String): Action[AnyContent] =
     authentication.async {

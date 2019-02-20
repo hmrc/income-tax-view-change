@@ -7,12 +7,13 @@ import play.core.PlayVersion
 import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import uk.gov.hmrc.SbtArtifactory
+import play.core.PlayVersion
 
 val appName = "income-tax-view-change"
 
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-play-25" % "4.7.0",
+  "uk.gov.hmrc" %% "bootstrap-play-26" % "0.34.0",
   "uk.gov.hmrc" %% "auth-client" % "2.18.0-play-25",
   "uk.gov.hmrc" %% "domain" % "5.3.0",
   "uk.gov.hmrc" %% "logback-json-logger" % "4.0.0"
@@ -20,8 +21,8 @@ val compile: Seq[ModuleID] = Seq(
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
   "uk.gov.hmrc" %% "hmrctest" % "3.4.0-play-25" % scope,
-  "org.scalatest" %% "scalatest" % "3.0.0" % scope,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % scope,
+  "org.scalatest" %% "scalatest" % "3.0.5" % scope,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1" % scope,
   "org.pegdown" % "pegdown" % "1.6.0" % scope,
   "org.jsoup" % "jsoup" % "1.10.2" % scope,
   "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
@@ -65,8 +66,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     libraryDependencies ++= appDependencies,
     retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    routesGenerator := InjectedRoutesGenerator
+    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)

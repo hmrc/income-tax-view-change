@@ -30,8 +30,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class EstimatedTaxLiabilityController @Inject()(val authentication: AuthenticationPredicate,
-                                                val estimatedTaxLiabilityService: EstimatedTaxLiabilityService
-                                      ) extends BaseController {
+                                                val estimatedTaxLiabilityService: EstimatedTaxLiabilityService,
+                                                cc: ControllerComponents
+
+                                               ) extends BaseController(cc) {
 
   def getEstimatedTaxLiability(nino: String, year: String, calcType: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[EstimatedTaxLiabilityController][getEstimatedTaxLiability] - Requesting Estimate from EstimatedTaxLiabilityService for NINO: $nino")

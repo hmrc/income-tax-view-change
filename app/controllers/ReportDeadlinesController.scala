@@ -22,7 +22,7 @@ import controllers.predicates.AuthenticationPredicate
 import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.ReportDeadlinesService
 import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
@@ -30,8 +30,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class ReportDeadlinesController @Inject()(val authentication: AuthenticationPredicate,
-                                          val reportDeadlinesService: ReportDeadlinesService
-                                           ) extends BaseController{
+                                          val reportDeadlinesService: ReportDeadlinesService,
+                                          cc: ControllerComponents
+
+                                         ) extends BaseController(cc) {
 
   def getReportDeadlines(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - " +
