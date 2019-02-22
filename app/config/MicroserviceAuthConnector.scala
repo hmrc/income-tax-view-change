@@ -29,8 +29,7 @@ class MicroserviceAuthConnector @Inject()( val environment: Environment,
                                            val conf: Configuration,
                                            val WSHttp: HttpClient,
                                            ServicesConfig: ServicesConfig) extends PlayAuthConnector{
-  override protected def runModeConfiguration: Configuration = conf
-  override protected def mode: Mode = environment.mode
+  protected def runModeConfiguration: Configuration = conf
   lazy val serviceUrl = ServicesConfig.baseUrl("auth")
   lazy val http = WSHttp
 }

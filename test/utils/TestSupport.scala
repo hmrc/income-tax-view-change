@@ -24,7 +24,6 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
-
 import scala.concurrent.ExecutionContext
 
 trait TestSupport extends UnitSpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfterAll with MaterializerSupport {

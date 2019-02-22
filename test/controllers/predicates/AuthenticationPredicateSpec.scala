@@ -19,29 +19,29 @@ package controllers.predicates
 import controllers.ControllerBaseSpec
 import mocks.{MockAuthorisedUser, MockUnauthorisedUser}
 import play.api.http.Status
-import play.api.mvc.Result
+import play.api.mvc.{ControllerComponents, Result}
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
+import play.api.test.Helpers.stubControllerComponents
 
 import scala.concurrent.Future
-
 
 class AuthenticationPredicateSpec extends ControllerBaseSpec {
 
   "The AuthenticationPredicate.authenticated method" when {
-
+    lazy val mockCC = stubControllerComponents()
     def result(authenticationPredicate: AuthenticationPredicate): Future[Result] = authenticationPredicate.async {
       implicit request =>
         Future.successful(Ok)
     }.apply(FakeRequest())
 
     "called with an Unauthenticated user (No Bearer Token in Header)" should {
-      object TestAuthenticationPredicate extends AuthenticationPredicate(MockUnauthorisedUser)
+      object TestAuthenticationPredicate extends AuthenticationPredicate(MockUnauthorisedUser, mockCC)
       checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
     }
 
     "called with an authenticated user (Some Bearer Token in Header)" should {
-      object TestAuthenticationPredicate extends AuthenticationPredicate(MockAuthorisedUser)
+      object TestAuthenticationPredicate extends AuthenticationPredicate(MockAuthorisedUser, mockCC)
       checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
     }
   }
