@@ -22,7 +22,7 @@ val compile: Seq[ModuleID] = Seq(
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
   "uk.gov.hmrc" %% "hmrctest" % "3.5.0-play-26" % scope,
   "org.scalatest" %% "scalatest" % "3.0.5" % scope,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % scope,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.0" % scope,
   "uk.gov.hmrc" %% "bootstrap-play-26" % "0.36.0" % scope,
   "org.pegdown" % "pegdown" % "1.6.0" % scope,
   "org.jsoup" % "jsoup" % "1.11.3" % scope,
