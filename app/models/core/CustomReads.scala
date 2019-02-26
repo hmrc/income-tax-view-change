@@ -15,9 +15,7 @@
  */
 
 package models.core
-
-import play.api.data.validation.ValidationError
-import play.api.libs.json.Reads
+import play.api.libs.json._
 
 import scala.util.{Success, Try}
 
@@ -25,7 +23,7 @@ trait CustomReads {
 
   val readInt: Reads[Int] = implicitly[Reads[Int]].orElse(implicitly[Reads[String]]
     .map(x => Try(x.toInt))
-    .collect (ValidationError(Seq("Parsing error"))) {
+    .collect (JsonValidationError(Seq("Parsing error"))) {
       case Success(a) => a
     })
 }

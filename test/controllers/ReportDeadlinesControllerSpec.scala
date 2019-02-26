@@ -22,17 +22,18 @@ import controllers.predicates.AuthenticationPredicate
 import mocks.{MockAuthorisedUser, MockReportDeadlinesService, MockUnauthorisedUser}
 import play.api.http.Status
 import play.api.test.FakeRequest
+import play.api.test.Helpers.stubControllerComponents
 
 
 class ReportDeadlinesControllerSpec extends ControllerBaseSpec with MockReportDeadlinesService {
 
   "The ReportDeadlinesController" when {
-
+    lazy val mockCC = stubControllerComponents()
     "called with an Authenticated user" when {
 
       object TestReportDeadlinesController extends ReportDeadlinesController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser),
-        reportDeadlinesService = mockReportDeadlinesService
+        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        reportDeadlinesService = mockReportDeadlinesService, mockCC
       )
 
       "A valid ReportDeadlinesModel is returned from the ReportDeadlinesService" should {
@@ -65,8 +66,8 @@ class ReportDeadlinesControllerSpec extends ControllerBaseSpec with MockReportDe
     "called with an Unauthenticated user" should {
 
       object TestReportDeadlinesController extends ReportDeadlinesController(
-        authentication = new AuthenticationPredicate(MockUnauthorisedUser),
-        reportDeadlinesService = mockReportDeadlinesService
+        authentication = new AuthenticationPredicate(MockUnauthorisedUser, mockCC),
+        reportDeadlinesService = mockReportDeadlinesService, mockCC
       )
 
       lazy val result = TestReportDeadlinesController.getReportDeadlines(testIncomeSourceID_1, testNino)(FakeRequest())

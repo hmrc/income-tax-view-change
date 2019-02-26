@@ -32,8 +32,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class IncomeSourceDetailsController @Inject()(val authentication: AuthenticationPredicate,
-                                     val incomeSourceDetailsService: IncomeSourceDetailsService
-                                      ) extends BaseController {
+                                              val incomeSourceDetailsService: IncomeSourceDetailsService,
+                                              cc: ControllerComponents
+
+                                             ) extends BaseController(cc) {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getNino(mtdRef).map {

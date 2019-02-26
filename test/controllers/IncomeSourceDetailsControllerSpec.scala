@@ -22,17 +22,17 @@ import controllers.predicates.AuthenticationPredicate
 import mocks.{MockAuthorisedUser, MockIncomeSourceDetailsService, MockUnauthorisedUser}
 import play.api.http.Status
 import play.api.test.FakeRequest
-
+import play.api.test.Helpers.stubControllerComponents
 
 class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockIncomeSourceDetailsService {
 
   "The IncomeSourceDetailsController" when {
-
+    lazy val mockCC = stubControllerComponents()
     "getNino called with an Authenticated user" when {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser),
-        incomeSourceDetailsService = mockIncomeSourceDetailsService
+        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       "a valid response from the IncomeSourceDetailsService" should {
@@ -59,8 +59,8 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     "getIncomeSourceDetails called with an Authenticated user" when {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser),
-        incomeSourceDetailsService = mockIncomeSourceDetailsService
+        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       "a valid response from the IncomeSourceDetailsService" should {
@@ -87,8 +87,8 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     "called with an Unauthenticated user" should {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(MockUnauthorisedUser),
-        incomeSourceDetailsService = mockIncomeSourceDetailsService
+        authentication = new AuthenticationPredicate(MockUnauthorisedUser, mockCC),
+        incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())

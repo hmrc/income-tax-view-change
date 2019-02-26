@@ -18,15 +18,13 @@ package config
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.Mode.Mode
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class MicroserviceAppConfig @Inject()(val environment: Environment, val conf: Configuration) extends ServicesConfig {
+class MicroserviceAppConfig @Inject()(val environment: Environment, val conf: Configuration, servicesConfig: ServicesConfig) {
 
-  override protected def runModeConfiguration: Configuration = conf
-  override protected def mode: Mode = environment.mode
+  protected def runModeConfiguration: Configuration = conf
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
   val desEnvironment: String = loadConfig("microservice.services.des.environment")

@@ -22,17 +22,20 @@ import controllers.predicates.AuthenticationPredicate
 import mocks.{MockAuthorisedUser, MockEstimatedTaxLiabilityService, MockUnauthorisedUser}
 import play.api.http.Status
 import play.api.test.FakeRequest
+import uk.gov.hmrc.play.bootstrap
+import play.api.test.Helpers.stubControllerComponents
 
 
 class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEstimatedTaxLiabilityService {
 
-  "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
 
+  "The EstimatedTaxLiabilityController.getEstimatedTaxLiability action" when {
+    lazy val mockCC = stubControllerComponents()
     "called with an Authenticated user" when {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser),
-        estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
+        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        estimatedTaxLiabilityService = mockEstimateTaxLiabilityService, mockCC
       )
 
       "a valid response from the Estimated Tax Liability Service" should {
@@ -59,8 +62,8 @@ class EstimatedTaxLiabilityControllerSpec extends ControllerBaseSpec with MockEs
     "called with an Unauthenticated user" should {
 
       object TestEstimatedTaxLiabilityController extends EstimatedTaxLiabilityController(
-        authentication = new AuthenticationPredicate(MockUnauthorisedUser),
-        estimatedTaxLiabilityService = mockEstimateTaxLiabilityService
+        authentication = new AuthenticationPredicate(MockUnauthorisedUser, mockCC),
+        estimatedTaxLiabilityService = mockEstimateTaxLiabilityService, mockCC
       )
 
       lazy val result = TestEstimatedTaxLiabilityController.getEstimatedTaxLiability(testNino, testYear, testCalcType)(FakeRequest())

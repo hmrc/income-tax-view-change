@@ -23,18 +23,19 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import assets.PreviousCalculationTestConstants._
+import play.api.test.Helpers.stubControllerComponents
 
 class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalculationService {
 
   val successResponse: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationFull)
 
   "The GET PreviousCalculationController.getPreviousCalculation method" when {
-
+    lazy val mockCC = stubControllerComponents()
     "called by an authenticated user" which {
 
       object PreviousCalculationController extends PreviousCalculationController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser),
-        mockCalculationService
+        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        mockCalculationService, mockCC
       )
 
       "is requesting previous calculations details" should {
@@ -127,8 +128,8 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
     "called with an Unauthenticated user" should {
 
       object PreviousCalculationController extends PreviousCalculationController(
-        authentication = new AuthenticationPredicate(MockUnauthorisedUser),
-        calculationService = mockCalculationService
+        authentication = new AuthenticationPredicate(MockUnauthorisedUser, mockCC),
+        calculationService = mockCalculationService, mockCC
       )
 
       lazy val result = PreviousCalculationController.getPreviousCalculation(testNino,
