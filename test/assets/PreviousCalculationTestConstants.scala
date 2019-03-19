@@ -45,7 +45,7 @@ object PreviousCalculationTestConstants {
       |      },
       |      "incomeTax": {
       |        "totalAllowancesAndReliefs": 1000,
-      |        "payAndPensionsProfit": {
+      |        "payPensionsProfit": {
       |          "band": [
       |            {
       |              "income": 20000,
@@ -128,7 +128,7 @@ object PreviousCalculationTestConstants {
       |        "giftAid": {
       |          "paymentsMade": 150,
       |          "rate": 0,
-      |          "taxableIncome": 0
+      |          "taxableAmount": 0
       |        }
       |      },
       |      "taxableIncome": {
@@ -216,9 +216,9 @@ object PreviousCalculationTestConstants {
       |            "giftAid" : {
       |              "paymentsMade" : 150,
       |              "rate" : 0,
-      |              "taxableIncome" : 0
+      |              "taxableAmount" : 0
       |            },
-      |            "payAndPensionsProfit" : {
+      |            "payPensionsProfit" : {
       |              "band" : [{
       |                "name" : "BRT",
       |                "rate" : 20.0,
@@ -486,7 +486,7 @@ object PreviousCalculationTestConstants {
             giftAid = Some(GiftAidModel(
               paymentsMade = 150,
               rate = 0,
-              taxableIncome = 0
+              taxableAmount = 0
             ))
           )),
           taxableIncome = Some(TaxableIncomeModel(

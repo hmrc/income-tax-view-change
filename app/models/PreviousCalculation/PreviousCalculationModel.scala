@@ -55,7 +55,7 @@ case class IncomeTaxModel(totalAllowancesAndReliefs: Option[BigDecimal],
 object IncomeTaxModel {
   implicit val reads: Reads[IncomeTaxModel] = (
     (__ \ "totalAllowancesAndReliefs").readNullable[BigDecimal] and
-      (__ \ "payAndPensionsProfit" \ "band").readNullable[List[BandModel]].orElse(Reads.pure(None)) and
+      (__ \ "payPensionsProfit" \ "band").readNullable[List[BandModel]].orElse(Reads.pure(None)) and
       (__ \ "dividends").readNullable[DividendsModel] and
       (__ \ "savingsAndGains").readNullable[SavingsAndGainsModel] and
       (__ \ "giftAid").readNullable[GiftAidModel]
@@ -63,7 +63,7 @@ object IncomeTaxModel {
 
   implicit val writes: Writes[IncomeTaxModel] = (
     (__ \ "totalAllowancesAndReliefs").writeNullable[BigDecimal] and
-      (__ \ "payAndPensionsProfit" \ "band").writeNullable[List[BandModel]] and
+      (__ \ "payPensionsProfit" \ "band").writeNullable[List[BandModel]] and
       (__ \ "dividends").writeNullable[DividendsModel] and
       (__ \ "savingsAndGains").writeNullable[SavingsAndGainsModel] and
       (__ \ "giftAid").writeNullable[GiftAidModel]
@@ -96,7 +96,7 @@ object DividendsModel {
 
 case class GiftAidModel (paymentsMade: BigDecimal,
                          rate: BigDecimal,
-                         taxableIncome: BigDecimal)
+                         taxableAmount: BigDecimal)
 
 object GiftAidModel {
   implicit val formats: OFormat[GiftAidModel] = Json.format[GiftAidModel]
