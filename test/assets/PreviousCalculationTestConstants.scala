@@ -492,10 +492,10 @@ object PreviousCalculationTestConstants {
           taxableIncome = Some(TaxableIncomeModel(
             totalIncomeAllowancesUsed = Some(12005.00),
             incomeReceived = Some(IncomeReceivedModel(
-              selfEmploymentIncome = 200000.00,
-              ukPropertyIncome = 10000.00,
-              bbsiIncome = 2000.00,
-              ukDividendIncome = 11000.00
+              selfEmploymentIncome = Some(200000.00),
+              ukPropertyIncome = Some(10000.00),
+              bbsiIncome = Some(2000.00),
+              ukDividendIncome = Some(11000.00)
             ))
           )),
           nic = Some(NicModel(Some(10000), Some(14000)))

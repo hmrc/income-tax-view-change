@@ -70,10 +70,10 @@ object IncomeTaxModel {
     ) (unlift(IncomeTaxModel.unapply))
 }
 
-case class IncomeReceivedModel(selfEmploymentIncome: BigDecimal,
-                               ukPropertyIncome: BigDecimal,
-                               bbsiIncome: BigDecimal,
-                               ukDividendIncome: BigDecimal
+case class IncomeReceivedModel(selfEmploymentIncome: Option[BigDecimal],
+                               ukPropertyIncome: Option[BigDecimal],
+                               bbsiIncome: Option[BigDecimal],
+                               ukDividendIncome: Option[BigDecimal]
                               )
 
 object IncomeReceivedModel {
