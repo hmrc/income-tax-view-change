@@ -24,7 +24,18 @@ object PreviousCalculationIntegrationTestConstants {
 
   val previousCalculation: PreviousCalculationModel = PreviousCalculationModel(
     CalcOutput(calcID = "12345678", calcAmount = Some(22.56), calcTimestamp = Some("4498-07-06T21:42:24.294Z"), crystallised = Some(true),
-      calcResult = Some(CalcResult(500.68, Some(EoyEstimate(125.63))))))
+      calcResult = Some(CalcResult(
+        incomeTaxNicYtd = 500.68,
+        eoyEstimate = Some(EoyEstimate(125.63)),
+        nationalRegime = Some("UK"),
+        totalTaxableIncome = Some(1000.25),
+        annualAllowances = Some(AnnualAllowancesModel(Some(99999999))),
+        incomeTax = Some(IncomeTaxModel(Some(1000.25), Some(List(BandModel(1000.25, 99.99, 1000.25, "ZRT"))),
+          Some(DividendsModel(1000.25, Seq(BandModel(1000.25,99.99,1000.25,"HRT")))),
+          Some(SavingsAndGainsModel(1000.25,List(BandModel(1000.25,99.99,1000.25,"BRT")))), None)),
+        taxableIncome = Some(TaxableIncomeModel(None, Some(IncomeReceivedModel(Some(1000.25), Some(1000.25), Some(1000.25), Some(1000.25))))),
+        nic = Some(NicModel(Some(1000.25), Some(1000.25)))
+      ))))
 
   val previousCalculationError = Error(Status.INTERNAL_SERVER_ERROR.toString, "ISE")
 

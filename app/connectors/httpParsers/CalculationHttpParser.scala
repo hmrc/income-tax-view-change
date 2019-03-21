@@ -31,6 +31,7 @@ object CalculationHttpParser extends ResponseHttpParsers {
             invalid => {
               Logger.warn("[PreviousCalculationReads][read] Json Error Parsing Successful DES Response")
               Logger.debug(s"[PreviousCalculationReads][read] DES Response: ${response.json}\nJson Errors: $invalid")
+              Logger.error(s"[PreviousCalculationReads][read] ${response.body} returned from DES")
 
               Left(UnexpectedJsonFormat)
             },

@@ -52,7 +52,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
           }
 
           "return a json body with the transformed des return data" in {
-            jsonBodyOf(result) shouldBe responseJsonFull
+            jsonBodyOf(result) shouldBe responseJsonFullWithoutExtra
           }
         }
 
