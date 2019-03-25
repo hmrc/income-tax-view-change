@@ -28,12 +28,31 @@ import uk.gov.hmrc.http.HttpResponse
 object ReportDeadlinesTestConstants {
 
   //Report Deadline
-  val testReceivedDeadline: ReportDeadlineModel = ReportDeadlineModel(
+  val testReceivedDeadlineQuarterly: ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
-    dateReceived = Some(LocalDate.parse("2018-05-01"))
+    dateReceived = Some(LocalDate.parse("2018-05-01")),
+    obligationType = "Quarterly"
+  )
+
+  val testReceivedDeadlineEOPS: ReportDeadlineModel = ReportDeadlineModel(
+    start = LocalDate.parse("2017-06-01"),
+    end = LocalDate.parse("2018-05-31"),
+    due = LocalDate.parse("2018-06-01"),
+    periodKey = "EOPS",
+    dateReceived = Some(LocalDate.parse("2018-05-01")),
+    obligationType = "EOPS"
+  )
+
+  val testReceivedDeadlineCrystallised: ReportDeadlineModel = ReportDeadlineModel(
+    start = LocalDate.parse("2017-06-01"),
+    end = LocalDate.parse("2018-05-31"),
+    due = LocalDate.parse("2018-06-01"),
+    periodKey = "#001",
+    dateReceived = Some(LocalDate.parse("2018-05-01")),
+    obligationType = "Crystallised"
   )
 
   val testReceivedDeadlineFromJson: JsValue = Json.obj(
@@ -44,12 +63,21 @@ object ReportDeadlinesTestConstants {
     "inboundCorrespondenceDateReceived" -> "2018-05-01"
   )
 
+  val testReceivedEOPSDeadlineFromJson: JsValue = Json.obj(
+    "inboundCorrespondenceFromDate" -> "2017-06-01",
+    "inboundCorrespondenceToDate" -> "2018-05-31",
+    "inboundCorrespondenceDueDate" -> "2018-06-01",
+    "periodKey" -> "EOPS",
+    "inboundCorrespondenceDateReceived" -> "2018-05-01"
+  )
+
   val testReceivedDeadlineToJson: JsValue = Json.obj(
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
     "periodKey" -> "#001",
-    "dateReceived" -> "2018-05-01"
+    "dateReceived" -> "2018-05-01",
+    "obligationType" -> "Quarterly"
   )
 
   val testDeadline: ReportDeadlineModel = ReportDeadlineModel(
@@ -57,7 +85,8 @@ object ReportDeadlinesTestConstants {
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
-    dateReceived = None
+    dateReceived = None,
+    obligationType = "Quarterly"
   )
 
   val testDeadlineFromJson: JsValue = Json.obj(
@@ -71,22 +100,24 @@ object ReportDeadlinesTestConstants {
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
-    "periodKey" -> "#001"
+    "periodKey" -> "#001",
+    "obligationType" -> "Quarterly"
   )
 
   //Report Deadlines
   val testReportDeadlines_1: ReportDeadlinesModel =
-    ReportDeadlinesModel(testIncomeSourceID_1, Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+    ReportDeadlinesModel(testIncomeSourceID_1, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
 
   val testReportDeadlines_2: ReportDeadlinesModel =
-    ReportDeadlinesModel(testIncomeSourceID_2, Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+    ReportDeadlinesModel(testIncomeSourceID_2, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
 
   val testReportDeadlines_3: ReportDeadlinesModel =
-    ReportDeadlinesModel(testIncomeSourceID_3, Seq(testDeadline, testDeadline, testReceivedDeadline, testDeadline))
+    ReportDeadlinesModel(testIncomeSourceID_3, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
 
   val testReportDeadlinesFromJson: JsValue =
     Json.obj(
       "identification" -> Json.obj(
+        "incomeSourceType" -> "ITSB",
         "referenceNumber" -> testIncomeSourceID_1
       ),
       "obligationDetails" -> Json.arr(
@@ -111,6 +142,7 @@ object ReportDeadlinesTestConstants {
     "obligations" -> Json.arr(
       Json.obj(
         "identification" -> Json.obj(
+          "incomeSourceType" -> "ITSB",
           "referenceNumber" -> testIncomeSourceID_1
         ),
         "obligationDetails" -> Json.arr(
@@ -122,6 +154,7 @@ object ReportDeadlinesTestConstants {
       ),
       Json.obj(
         "identification" -> Json.obj(
+          "incomeSourceType" -> "ITSB",
           "referenceNumber" -> testIncomeSourceID_2
         ),
         "obligationDetails" -> Json.arr(
@@ -133,6 +166,7 @@ object ReportDeadlinesTestConstants {
       ),
       Json.obj(
         "identification" -> Json.obj(
+          "incomeSourceType" -> "ITSB",
           "referenceNumber" -> testIncomeSourceID_3
         ),
         "obligationDetails" -> Json.arr(

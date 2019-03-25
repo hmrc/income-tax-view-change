@@ -27,19 +27,27 @@ class ReportDeadlineModelSpec extends TestSupport with Matchers {
 
     "a Deadline is Received" should {
 
-      "read from the DES Json" in {
-        Json.fromJson(testReceivedDeadlineFromJson)(ReportDeadlineModel.desReadsApi1330) shouldBe JsSuccess(testReceivedDeadline)
+      "read from the json with an incomeSourceType of ITSA" in {
+        Json.fromJson(testReceivedDeadlineFromJson)(ReportDeadlineModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised)
+      }
+
+      "read from the json with an incomeSourceType that is not ITSA and periodKey is EOPS" in {
+        Json.fromJson(testReceivedEOPSDeadlineFromJson)(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineEOPS)
+      }
+
+      "read from the json with an incomeSourceType that is not ITSA and periodKey is not EOPS" in {
+        Json.fromJson(testReceivedDeadlineFromJson)(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineQuarterly)
       }
 
       "write to Json" in {
-        Json.toJson(testReceivedDeadline) shouldBe testReceivedDeadlineToJson
+        Json.toJson(testReceivedDeadlineQuarterly) shouldBe testReceivedDeadlineToJson
       }
     }
 
     "a Deadline is Not Received" should {
 
       "read from the DES Json" in {
-        Json.fromJson(testDeadlineFromJson)(ReportDeadlineModel.desReadsApi1330) shouldBe JsSuccess(testDeadline)
+        Json.fromJson(testDeadlineFromJson)(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testDeadline)
       }
 
       "write to Json" in {

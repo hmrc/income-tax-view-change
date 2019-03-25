@@ -69,9 +69,6 @@ class FinancialDataConnector @Inject()(val http: HttpClient,
       case ex =>
         Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future, ${ex.getMessage}")
         LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
-      case _ =>
-        Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Unexpected failed future")
-        LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future")
     }
   }
 }

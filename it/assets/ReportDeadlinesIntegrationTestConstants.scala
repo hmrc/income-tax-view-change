@@ -31,7 +31,8 @@ object ReportDeadlinesIntegrationTestConstants {
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
-    dateReceived = None
+    dateReceived = None,
+    obligationType = "Quarterly"
   )
 
   val testDeadlineFromJson: JsValue = Json.obj(

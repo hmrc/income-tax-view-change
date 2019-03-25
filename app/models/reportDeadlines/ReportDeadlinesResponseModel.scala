@@ -28,8 +28,15 @@ case class ReportDeadlinesErrorModel(status: Int, reason: String) extends Report
 object ReportDeadlinesModel {
 
   val desReadsApi1330: Reads[ReportDeadlinesModel] = (
+
     (__ \\ "identification" \\ "referenceNumber").read[String] and
-    (__ \\ "obligationDetails").read(Reads.seq(ReportDeadlineModel.desReadsApi1330))
+      (__ \\ "identification" \\ "incomeSourceType").read[String].flatMap { incomeSourceType =>
+        (__ \\ "obligationDetails").read(
+          Reads.seq(
+            ReportDeadlineModel.desReadsApi(incomeSourceType)
+          )
+        )
+      }
   )(ReportDeadlinesModel.apply _)
 
   implicit val format: Format[ReportDeadlinesModel] = Json.format[ReportDeadlinesModel]
