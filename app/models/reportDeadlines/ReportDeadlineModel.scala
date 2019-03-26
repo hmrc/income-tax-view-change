@@ -21,20 +21,30 @@ import java.time.LocalDate
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
-case class ReportDeadlineModel(start: LocalDate,
-                               end: LocalDate,
-                               due: LocalDate,
-                               periodKey: String,
-                               dateReceived: Option[LocalDate])
+case class ReportDeadlineModel(
+                                start: LocalDate,
+                                end: LocalDate,
+                                due: LocalDate,
+                                periodKey: String,
+                                dateReceived: Option[LocalDate],
+                                obligationType: String
+                              )
 
 object ReportDeadlineModel {
 
-  val desReadsApi1330: Reads[ReportDeadlineModel] = (
+  def desReadsApi(incomeSourceType: String): Reads[ReportDeadlineModel] = (
     (__ \ "inboundCorrespondenceFromDate").read[LocalDate] and
       (__ \ "inboundCorrespondenceToDate").read[LocalDate] and
       (__ \ "inboundCorrespondenceDueDate").read[LocalDate] and
       (__ \ "periodKey").read[String] and
-      (__ \ "inboundCorrespondenceDateReceived").readNullable[LocalDate]
+      (__ \ "inboundCorrespondenceDateReceived").readNullable[LocalDate] and
+      (incomeSourceType match {
+        case "ITSA" => Reads.pure("Crystallised")
+        case _ => (__ \ "periodKey").read[String].map {
+          case "EOPS" => "EOPS"
+          case _ => "Quarterly"
+        }
+      })
     )(ReportDeadlineModel.apply _)
 
   implicit val format: Format[ReportDeadlineModel] = Json.format[ReportDeadlineModel]

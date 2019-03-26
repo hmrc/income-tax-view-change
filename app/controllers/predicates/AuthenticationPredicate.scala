@@ -38,9 +38,6 @@ class AuthenticationPredicate @Inject()(val authorisedFunctions: AuthorisedFunct
         case ex =>
           Logger.error(s"[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response, ${ex.getMessage}")
           Unauthorized
-        case _ =>
-          Logger.error("[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response")
-          Unauthorized
       }
     }
 }
