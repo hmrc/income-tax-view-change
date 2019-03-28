@@ -44,7 +44,7 @@ object ReportDeadlinesIntegrationTestConstants {
 
   //ReportDeadlinesModels
   val reportDeadlines = ReportDeadlinesModel(testIncomeSourceId, Seq(testReportDeadline, testReportDeadline))
-
+  val reportDeadlinesNino = ReportDeadlinesModel(testNino, Seq(testReportDeadline, testReportDeadline))
   val reportDeadlinesError = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "ISE")
 
   def successResponse(incomeSourceId: String): JsValue = {

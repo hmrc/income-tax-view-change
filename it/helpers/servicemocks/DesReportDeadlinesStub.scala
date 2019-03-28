@@ -26,8 +26,8 @@ object DesReportDeadlinesStub {
 
   val url: String => String = nino => s"""/enterprise/obligation-data/nino/$nino/ITSA?status=O"""
 
-  def stubGetDesReportDeadlines(nino: String): Unit = {
-    val desReportDeadlinesResponse = successResponse(testIncomeSourceId).toString
+  def stubGetDesReportDeadlines(nino: String, incomeSource: String): Unit = {
+    val desReportDeadlinesResponse = successResponse(incomeSource).toString
     WiremockHelper.stubGet(url(nino), Status.OK, desReportDeadlinesResponse)
   }
 

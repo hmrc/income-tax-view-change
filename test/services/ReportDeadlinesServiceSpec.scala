@@ -33,7 +33,7 @@ class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesCon
 
     "getReportDeadlines method is called with a income source id" when {
 
-      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(Some(incomeSourceId), testNino)
+      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(incomeSourceId, testNino)
 
       "a successful response is returned from the ReportDeadlinesConnector" should {
 
@@ -65,7 +65,7 @@ class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesCon
 
     "getReportDeadlines method is called with no income source id" when {
 
-      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(None, testNino)
+      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(testNino, testNino)
 
       "a successful response is returned from the ReportDeadlinesConnector" should {
 
