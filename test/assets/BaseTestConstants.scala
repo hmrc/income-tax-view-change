@@ -23,5 +23,6 @@ object BaseTestConstants {
   val testIncomeSourceID_1 = "XAIS000001"
   val testIncomeSourceID_2 = "XAIS000002"
   val testIncomeSourceID_3 = "XAIS000003"
+  val testIncomeSourceID_4 = testNino
 
 }

@@ -19,7 +19,7 @@ package services
 import assets.BaseTestConstants._
 import assets.ReportDeadlinesTestConstants._
 import mocks._
-import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesResponseModel}
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesModel, ReportDeadlinesResponseModel}
 import play.api.http.Status
 import utils.TestSupport
 
@@ -31,9 +31,9 @@ class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesCon
 
   "The ReportDeadlinesService" when {
 
-    "getReportDeadlines method is called" when {
+    "getReportDeadlines method is called with a income source id" when {
 
-      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(incomeSourceId, testNino)
+      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(Some(incomeSourceId), testNino)
 
       "a successful response is returned from the ReportDeadlinesConnector" should {
 
@@ -48,6 +48,38 @@ class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesCon
           setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
           await(result("ABCD")) shouldBe
             ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source ID Provided")
+        }
+      }
+
+      "an Error Response is returned from the ReportDeadlinesConnector" should {
+
+        "return a correctly formatted ReportDeadlinesError model" in {
+          setupMockReportDeadlinesResponse(testNino)(Left(testReportDeadlinesError))
+          await(result(testIncomeSourceID_1)) shouldBe testReportDeadlinesError
+        }
+      }
+    }
+  }
+
+  "The ReportDeadlinesService" when {
+
+    "getReportDeadlines method is called with no income source id" when {
+
+      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(None, testNino)
+
+      "a successful response is returned from the ReportDeadlinesConnector" should {
+
+        "return a correctly formatted ObligationsModel" in {
+          setupMockReportDeadlinesResponse(testNino)(Right(ObligationsModel(List(testReportDeadlines_4))))
+          await(result(testIncomeSourceID_4)) shouldBe testReportDeadlines_4
+        }
+      }
+
+      "a successful response is returned from the ReportDeadlinesConnector, but the IncomeSource does not exist" should {
+        "return a correctly formatted ReportDeadlinesError model" in {
+          setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
+          await(result("ABCD")) shouldBe
+            ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source Nino Provided")
         }
       }
 
