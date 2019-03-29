@@ -27,12 +27,12 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
   "Calling the ReportDeadlinesController" when {
     "authorised with a valid request" should {
-      "return a valid ReportDeadlinesModel" in {
+      "return a valid ReportDeadlinesModel with an income source id" in {
 
         isAuthorised(true)
 
         And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesReportDeadlines(testNino)
+        DesReportDeadlinesStub.stubGetDesReportDeadlines(testNino, testIncomeSourceId)
 
         When(s"I call GET /income-tax-view-change/$testNino/income-source/$testIncomeSourceId/report-deadlines")
         val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId, testNino)
@@ -46,7 +46,30 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
           jsonBodyAs[ReportDeadlinesModel](reportDeadlines)
         )
       }
+
+      "return a valid ReportDeadlinesModel with no income source id" in {
+
+        isAuthorised(true)
+
+        And("I wiremock stub a successful Get Report Deadlines response")
+        DesReportDeadlinesStub.stubGetDesReportDeadlines(testNino, testNino)
+
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testNino/report-deadlines")
+        val res = IncomeTaxViewChange.getReportDeadlines(testNino, testNino)
+
+        DesReportDeadlinesStub.verifyGetDesReportDeadlines(testNino)
+
+        Then("a successful response is returned with the correct model")
+
+        res should have(
+          httpStatus(OK),
+          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesNino)
+        )
+      }
     }
+
+
+
     "authorised with a invalid request" should {
       "return a ReportDeadlinesErrorModel" in {
         isAuthorised(true)

@@ -89,6 +89,16 @@ object ReportDeadlinesTestConstants {
     obligationType = "Quarterly"
   )
 
+  val testCrystallised: ReportDeadlineModel = ReportDeadlineModel(
+    start = LocalDate.parse("2017-01-01"),
+    end = LocalDate.parse("2018-01-31"),
+    due = LocalDate.parse("2018-06-01"),
+    periodKey = "#001",
+    dateReceived = None,
+    obligationType = "Crystallised"
+  )
+
+
   val testDeadlineFromJson: JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
@@ -113,6 +123,9 @@ object ReportDeadlinesTestConstants {
 
   val testReportDeadlines_3: ReportDeadlinesModel =
     ReportDeadlinesModel(testIncomeSourceID_3, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
+
+  val testReportDeadlines_4: ReportDeadlinesModel =
+    ReportDeadlinesModel(testIncomeSourceID_4, Seq(testCrystallised))
 
   val testReportDeadlinesFromJson: JsValue =
     Json.obj(
