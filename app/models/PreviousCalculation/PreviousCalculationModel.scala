@@ -47,7 +47,7 @@ object TaxableIncomeModel {
 }
 
 case class IncomeTaxModel(totalAllowancesAndReliefs: Option[BigDecimal],
-                          payAndPensionsProfitBands: Option[List[BandModel]],
+                          payAndPensionsProfit: Option[PayPensionsProfitModel],
                           dividends: Option[DividendsModel],
                           savingsAndGains: Option[SavingsAndGainsModel],
                           giftAid: Option[GiftAidModel])
@@ -55,7 +55,7 @@ case class IncomeTaxModel(totalAllowancesAndReliefs: Option[BigDecimal],
 object IncomeTaxModel {
   implicit val reads: Reads[IncomeTaxModel] = (
     (__ \ "totalAllowancesAndReliefs").readNullable[BigDecimal] and
-      (__ \ "payPensionsProfit" \ "band").readNullable[List[BandModel]].orElse(Reads.pure(None)) and
+      (__ \ "payPensionsProfit").readNullable[PayPensionsProfitModel] and
       (__ \ "dividends").readNullable[DividendsModel] and
       (__ \ "savingsAndGains").readNullable[SavingsAndGainsModel] and
       (__ \ "giftAid").readNullable[GiftAidModel]
@@ -63,7 +63,7 @@ object IncomeTaxModel {
 
   implicit val writes: Writes[IncomeTaxModel] = (
     (__ \ "totalAllowancesAndReliefs").writeNullable[BigDecimal] and
-      (__ \ "payPensionsProfit" \ "band").writeNullable[List[BandModel]] and
+      (__ \ "payPensionsProfit").writeNullable[PayPensionsProfitModel] and
       (__ \ "dividends").writeNullable[DividendsModel] and
       (__ \ "savingsAndGains").writeNullable[SavingsAndGainsModel] and
       (__ \ "giftAid").writeNullable[GiftAidModel]
@@ -81,6 +81,7 @@ object IncomeReceivedModel {
 }
 
 case class SavingsAndGainsModel(totalAmount: BigDecimal,
+                                taxableIncome: BigDecimal,
                                 band: Seq[BandModel])
 
 object SavingsAndGainsModel {
@@ -88,10 +89,19 @@ object SavingsAndGainsModel {
 }
 
 case class DividendsModel(totalAmount: BigDecimal,
+                          taxableIncome: BigDecimal,
                           band: Seq[BandModel])
 
 object DividendsModel {
   implicit val formats: OFormat[DividendsModel] = Json.format[DividendsModel]
+}
+
+case class PayPensionsProfitModel(totalAmount: BigDecimal,
+                          taxableIncome: BigDecimal,
+                          band: Seq[BandModel])
+
+object PayPensionsProfitModel {
+  implicit val formats: OFormat[PayPensionsProfitModel] = Json.format[PayPensionsProfitModel]
 }
 
 case class GiftAidModel (paymentsMade: BigDecimal,
