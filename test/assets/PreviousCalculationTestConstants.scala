@@ -46,6 +46,8 @@ object PreviousCalculationTestConstants {
       |      "incomeTax": {
       |        "totalAllowancesAndReliefs": 1000,
       |        "payPensionsProfit": {
+      |          "totalAmount": 66500,
+      |          "taxableIncome": 170000,
       |          "band": [
       |            {
       |              "income": 20000,
@@ -68,7 +70,8 @@ object PreviousCalculationTestConstants {
       |          ]
       |        },
       |        "dividends": {
-      |          "totalAmount": 5000,
+      |          "totalAmount": 1968,
+      |          "taxableIncome": 5000,
       |          "band": [
       |            {
       |              "income": 1000,
@@ -91,7 +94,8 @@ object PreviousCalculationTestConstants {
       |          ]
       |        },
       |        "savingsAndGains": {
-      |          "totalAmount": 0,
+      |          "totalAmount": 815.55,
+      |          "taxableIncome": 1979,
       |          "band": [
       |            {
       |              "income": 1,
@@ -219,6 +223,8 @@ object PreviousCalculationTestConstants {
       |              "taxableAmount" : 0
       |            },
       |            "payPensionsProfit" : {
+      |              "totalAmount" : 66500.00,
+      |              "taxableIncome" : 170000.00,
       |              "band" : [{
       |                "name" : "BRT",
       |                "rate" : 20.0,
@@ -237,8 +243,8 @@ object PreviousCalculationTestConstants {
       |              }
       |              ]},
       |            "savingsAndGains" : {
-      |              "totalAmount" : 0,
-      |              "taxableIncome" : 60207080823.340004,
+      |              "totalAmount" : 815.55,
+      |              "taxableIncome" : 1979.00,
       |              "band" : [
       |                {
       |                  "name" : "SSR",
@@ -284,7 +290,8 @@ object PreviousCalculationTestConstants {
       |              "personalAllowanceUsed" : 15487995938.37
       |            },
       |            "dividends" : {
-      |              "totalAmount" : 5000,
+      |              "totalAmount" : 1968.00,
+      |              "taxableIncome" : 5000.00,
       |              "band" : [
       |                {
       |                  "name" : "basic-band",
@@ -422,13 +429,17 @@ object PreviousCalculationTestConstants {
           )),
           incomeTax = Some(IncomeTaxModel(
             totalAllowancesAndReliefs = Some(1000),
-            payAndPensionsProfitBands = Some(List(
-              BandModel(20000.00, 20.0, 4000.00, "BRT"),
-              BandModel(100000.00, 40.0, 40000.00, "HRT"),
-              BandModel(50000.00, 45.0, 22500.00, "ART")
-            )),
+            payAndPensionsProfit = Some(PayPensionsProfitModel(
+              totalAmount = 66500,
+              taxableIncome = 170000,
+              List(
+                BandModel(20000.00, 20.0, 4000.00, "BRT"),
+                BandModel(100000.00, 40.0, 40000.00, "HRT"),
+                BandModel(50000.00, 45.0, 22500.00, "ART")
+            ))),
             dividends = Some(DividendsModel(
-              totalAmount = 5000.0,
+              totalAmount = 1968,
+              taxableIncome = 5000,
               Seq(
                 BandModel(
                   1000.0,
@@ -451,7 +462,8 @@ object PreviousCalculationTestConstants {
               )
             )),
             savingsAndGains = Some(SavingsAndGainsModel(
-              0,
+              totalAmount = 815.55,
+              taxableIncome = 1979,
               Seq(BandModel(
                 income = 1.00,
                 rate = 0.0,
