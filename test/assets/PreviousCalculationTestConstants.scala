@@ -137,6 +137,9 @@ object PreviousCalculationTestConstants {
       |      },
       |      "taxableIncome": {
       |        "totalIncomeAllowancesUsed": 12005,
+      |        "allowancesAndDeductions": {
+      |          "giftOfInvestmentsAndPropertyToCharity": 1000.25
+      |        },
       |        "incomeReceived": {
       |          "selfEmploymentIncome": 200000,
       |          "ukPropertyIncome": 10000,
@@ -313,6 +316,9 @@ object PreviousCalculationTestConstants {
       |                }]}
       |          },
       |          "taxableIncome" : {
+      |            "allowancesAndDeductions": {
+      |               "giftOfInvestmentsAndPropertyToCharity": 1000.25
+      |            },
       |            "totalIncomeAllowancesUsed" : 12005,
       |            "incomeReceived" : {
       |              "employmentIncome" : 100,
@@ -508,7 +514,8 @@ object PreviousCalculationTestConstants {
               ukPropertyIncome = Some(10000.00),
               bbsiIncome = Some(2000.00),
               ukDividendIncome = Some(11000.00)
-            ))
+            )),
+            giftOfInvestmentsAndPropertyToCharity = Some(1000.25)
           )),
           nic = Some(NicModel(Some(10000), Some(14000)))
         ))))

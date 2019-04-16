@@ -34,7 +34,7 @@ object PreviousCalculationIntegrationTestConstants {
           Some(PayPensionsProfitModel(1000.25, 1000.25, List(BandModel(1000.25, 99.99, 1000.25, "ZRT")))),
           Some(DividendsModel(1000.25, 1000.25, Seq(BandModel(1000.25,99.99,1000.25,"HRT")))),
           Some(SavingsAndGainsModel(1000.25, 1000.25, List(BandModel(1000.25,99.99,1000.25,"BRT")))), None)),
-        taxableIncome = Some(TaxableIncomeModel(None, Some(IncomeReceivedModel(Some(1000.25), Some(1000.25), Some(1000.25), Some(1000.25))))),
+        taxableIncome = Some(TaxableIncomeModel(None, Some(IncomeReceivedModel(Some(1000.25), Some(1000.25), Some(1000.25), Some(1000.25))), Some(1000.25))),
         nic = Some(NicModel(Some(1000.25), Some(1000.25)))
       ))))
 
