@@ -32,18 +32,30 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ReportDeadlinesController @Inject()(val authentication: AuthenticationPredicate,
                                           val reportDeadlinesService: ReportDeadlinesService,
                                           cc: ControllerComponents
-
                                          ) extends BaseController(cc) {
 
-  def getReportDeadlines(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
-    Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - " +
+  def getOpenObligations(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
+    Logger.debug(s"[ReportDeadlinesController][getOpenObligations] - " +
       s"Requesting obligations from ReportDeadlinesService for incomeSourceId: $incomeSourceId, nino: $nino")
-    reportDeadlinesService.getReportDeadlines(incomeSourceId, nino).map {
+    reportDeadlinesService.getReportDeadlines(incomeSourceId, nino, openObligations = true).map {
       case success: ReportDeadlinesModel =>
-        Logger.debug(s"[ReportDeadlinesController][getReportDeadlines] - Successful Response: $success")
+        Logger.debug(s"[ReportDeadlinesController][getOpenObligations] - Successful Response: $success")
         Ok(Json.toJson(success))
       case error: ReportDeadlinesErrorModel =>
-        Logger.error(s"[ReportDeadlinesController][getReportDeadlines] - Error Response: $error")
+        Logger.error(s"[ReportDeadlinesController][getOpenObligations] - Error Response: $error")
+        Status(error.status)(Json.toJson(error))
+    }
+  }
+
+  def getFulfilledObligations(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
+    Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - " +
+      s"Requesting obligations from ReportDeadlinesService for incomeSourceId: $incomeSourceId, nino: $nino")
+    reportDeadlinesService.getReportDeadlines(incomeSourceId, nino, openObligations = false).map {
+      case success: ReportDeadlinesModel =>
+        Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - Successful Response: $success")
+        Ok(Json.toJson(success))
+      case error: ReportDeadlinesErrorModel =>
+        Logger.error(s"[ReportDeadlinesController][getFulfilledObligations] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
     }
   }

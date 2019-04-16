@@ -24,19 +24,35 @@ import play.api.http.Status
 
 object DesReportDeadlinesStub {
 
-  val url: String => String = nino => s"""/enterprise/obligation-data/nino/$nino/ITSA?status=O"""
+  def url(nino: String, openObligations: Boolean = true): String = {
+    val status: String = if(openObligations) "O" else "F"
+    s"/enterprise/obligation-data/nino/$nino/ITSA?status=$status"
+  }
 
-  def stubGetDesReportDeadlines(nino: String, incomeSource: String): Unit = {
+  def stubGetDesOpenReportDeadlines(nino: String, incomeSource: String): Unit = {
     val desReportDeadlinesResponse = successResponse(incomeSource).toString
     WiremockHelper.stubGet(url(nino), Status.OK, desReportDeadlinesResponse)
   }
 
-  def stubGetDesReportDeadlinesError(nino: String): Unit = {
+  def stubGetDesOpenReportDeadlinesError(nino: String): Unit = {
     val errorResponse = failureResponse("500", "ISE")
     WiremockHelper.stubGet(url(nino), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
 
-  def verifyGetDesReportDeadlines(nino: String): Unit =
+  def verifyGetOpenDesReportDeadlines(nino: String): Unit =
     WiremockHelper.verifyGet(url(nino))
+
+  def stubGetDesFulfilledReportDeadlines(nino: String, incomeSource: String): Unit = {
+    val desReportDeadlinesResponse = successResponse(incomeSource).toString
+    WiremockHelper.stubGet(url(nino, openObligations = false), Status.OK, desReportDeadlinesResponse)
+  }
+
+  def stubGetDesFulfilledReportDeadlinesError(nino: String): Unit = {
+    val errorResponse = failureResponse("500", "ISE")
+    WiremockHelper.stubGet(url(nino, openObligations = false), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
+  }
+
+  def verifyGetFulfilledDesReportDeadlines(nino: String): Unit =
+    WiremockHelper.verifyGet(url(nino, openObligations = false))
 
 }

@@ -29,16 +29,17 @@ import scala.concurrent.Future
 @Singleton
 class ReportDeadlinesService @Inject()(val reportDeadlinesConnector: ReportDeadlinesConnector){
 
-  def getReportDeadlines(incomeSourceId: String, nino: String)(implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
-
+  def getReportDeadlines(incomeSourceId: String, nino: String, openObligations: Boolean)
+                        (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
     Logger.debug("[ReportDeadlinesService][getReportDeadlines] - Requesting obligation data from Connector")
-    reportDeadlinesConnector.getReportDeadlines(nino) map {
-      case Right(deadlines) if (incomeSourceId != nino)=>
+
+    reportDeadlinesConnector.getReportDeadlines(nino, openObligations) map {
+      case Right(deadlines) if incomeSourceId != nino=>
         deadlines.obligations.find(_.identification == incomeSourceId) getOrElse {
-          Logger.error(s"[ReportDeadlinesService][getReportDeadlines] Report Deadlines could not be found for ID: ${incomeSourceId}")
+          Logger.error(s"[ReportDeadlinesService][getReportDeadlines] Report Deadlines could not be found for ID: $incomeSourceId")
           ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source ID Provided")
         }
-      case Right(deadlines) if (incomeSourceId == nino)=>
+      case Right(deadlines) if incomeSourceId == nino =>
         deadlines.obligations.find(_.identification == nino) getOrElse {
           Logger.error(s"[ReportDeadlinesService][getReportDeadlines] Crystallised Report Deadlines could not be found for ID")
           ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source Nino Provided")

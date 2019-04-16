@@ -35,11 +35,19 @@ class RoutesSpec extends TestSupport {
     }
   }
 
-  // Report Deadlines routes
-  "The URL for the ReportDeadlinesController.getReportDeadlines action" should {
+  // Open Report Deadlines routes
+  "The URL for the ReportDeadlinesController.getOpenObligations action" should {
     s"be equal to $contextRoute/$testNino/income-source/$testIncomeSourceID/report-deadlines" in {
-      controllers.routes.ReportDeadlinesController.getReportDeadlines(testIncomeSourceID, testNino).url shouldBe
+      controllers.routes.ReportDeadlinesController.getOpenObligations(testIncomeSourceID, testNino).url shouldBe
         s"$contextRoute/$testNino/income-source/$testIncomeSourceID/report-deadlines"
+    }
+  }
+
+  // Fulfilled Report Deadlines routes
+  "The URL for the ReportDeadlinesController.getFulfilledObligations action" should {
+    s"be equal to $contextRoute/$testNino/income-source/$testIncomeSourceID/report-deadlines" in {
+      controllers.routes.ReportDeadlinesController.getFulfilledObligations(testIncomeSourceID, testNino).url shouldBe
+        s"$contextRoute/$testNino/income-source/$testIncomeSourceID/fulfilled-report-deadlines"
     }
   }
 

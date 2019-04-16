@@ -34,12 +34,14 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                                          val appConfig: MicroserviceAppConfig
                                         ) extends RawResponseReads {
 
-  private[connectors] val getReportDeadlinesUrl: String => String =
-    nino => s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=O"
+  private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
+    val status: String = if(openObligations) "O" else "F"
+    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status"
+  }
 
-  def getReportDeadlines(nino: String)(implicit headerCarrier: HeaderCarrier): Future[Either[ReportDeadlinesErrorModel, ObligationsModel]] = {
-
-    val url = getReportDeadlinesUrl(nino)
+  def getReportDeadlines(nino: String, openObligations: Boolean)
+                        (implicit headerCarrier: HeaderCarrier): Future[Either[ReportDeadlinesErrorModel, ObligationsModel]] = {
+    val url = getReportDeadlinesUrl(nino, openObligations)
     val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
