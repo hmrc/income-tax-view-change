@@ -29,7 +29,7 @@ object PreviousCalculationIntegrationTestConstants {
         eoyEstimate = Some(EoyEstimate(125.63)),
         nationalRegime = Some("UK"),
         totalTaxableIncome = Some(1000.25),
-        annualAllowances = Some(AnnualAllowancesModel(Some(99999999))),
+        annualAllowances = Some(AnnualAllowancesModel(Some(99999999),Some(99999999))),
         incomeTax = Some(IncomeTaxModel(Some(1000.25),
           Some(PayPensionsProfitModel(1000.25, 1000.25, List(BandModel(1000.25, 99.99, 1000.25, "ZRT")))),
           Some(DividendsModel(1000.25, 1000.25, Seq(BandModel(1000.25,99.99,1000.25,"HRT")))),
@@ -204,6 +204,7 @@ object PreviousCalculationIntegrationTestConstants {
      |			},
      |			"annualAllowances": {
      |				"personalAllowance": 99999999,
+     |        "giftAidExtender": 99999999,
      |				"reducedPersonalAllowanceThreshold": 99999999,
      |				"reducedPersonalisedAllowance": 99999999
      |			}
