@@ -33,7 +33,8 @@ case class CalcResult(incomeTaxNicYtd: BigDecimal,
 
 case class PreviousCalculationModel(calcOutput: CalcOutput)
 
-case class AnnualAllowancesModel(personalAllowance: Option[BigDecimal] = None)
+case class AnnualAllowancesModel(personalAllowance: Option[BigDecimal] = None,
+                                 giftAidExtender: Option[BigDecimal] = None)
 
 object AnnualAllowancesModel {
   implicit val formats: OFormat[AnnualAllowancesModel] = Json.format[AnnualAllowancesModel]
