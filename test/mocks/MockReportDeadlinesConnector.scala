@@ -39,6 +39,6 @@ trait MockReportDeadlinesConnector extends UnitSpec with MockitoSugar with Befor
 
   def setupMockReportDeadlinesResponse(nino: String)(response: Either[ReportDeadlinesErrorModel,ObligationsModel]):
   OngoingStubbing[Future[Either[ReportDeadlinesErrorModel, ObligationsModel]]] = when(mockReportDeadlinesConnector.getReportDeadlines(
-    ArgumentMatchers.eq(nino))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+    ArgumentMatchers.eq(nino), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
 }

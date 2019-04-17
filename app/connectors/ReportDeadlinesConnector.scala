@@ -37,9 +37,12 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
   private[connectors] val getReportDeadlinesUrl: String => String =
     nino => s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=O"
 
-  def getReportDeadlines(nino: String)(implicit headerCarrier: HeaderCarrier): Future[Either[ReportDeadlinesErrorModel, ObligationsModel]] = {
+  private[connectors] val getFulfilledReportDeadlinesUrl: String => String =
+    nino => s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=F"
 
-    val url = getReportDeadlinesUrl(nino)
+  def getReportDeadlines(nino: String, open: Boolean = true)(implicit headerCarrier: HeaderCarrier): Future[Either[ReportDeadlinesErrorModel, ObligationsModel]] = {
+
+    val url = if(open) getReportDeadlinesUrl(nino) else getFulfilledReportDeadlinesUrl(nino)
     val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
