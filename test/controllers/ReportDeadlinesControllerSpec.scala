@@ -19,62 +19,93 @@ package controllers
 import assets.BaseTestConstants._
 import assets.ReportDeadlinesTestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockAuthorisedUser, MockReportDeadlinesService, MockUnauthorisedUser}
+import mocks.{MockAuthorisedFunctions, MockAuthorisedUser, MockUnauthorisedUser}
+import org.mockito.ArgumentMatchers.{any, eq => matches}
+import org.mockito.Mockito.when
 import play.api.http.Status
+import play.api.libs.json.Json
+import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
+import services.ReportDeadlinesService
+import utils.TestSupport
+
+import scala.concurrent.Future
 
 
-class ReportDeadlinesControllerSpec extends ControllerBaseSpec with MockReportDeadlinesService {
+class ReportDeadlinesControllerSpec extends TestSupport {
 
-  "The ReportDeadlinesController" when {
-    lazy val mockCC = stubControllerComponents()
-    "called with an Authenticated user" when {
+  class Setup(authorised: Boolean = true) {
+    val cc: ControllerComponents = stubControllerComponents()
+    val reportDeadlinesService: ReportDeadlinesService = mock[ReportDeadlinesService]
+    val user: MockAuthorisedFunctions = if(authorised) MockAuthorisedUser else MockUnauthorisedUser
+    val authenticationPredicate: AuthenticationPredicate = new AuthenticationPredicate(user, cc)
 
-      object TestReportDeadlinesController extends ReportDeadlinesController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
-        reportDeadlinesService = mockReportDeadlinesService, mockCC
-      )
+    val controller = new ReportDeadlinesController(
+      authenticationPredicate,
+      reportDeadlinesService,
+      cc
+    )
+  }
 
-      "A valid ReportDeadlinesModel is returned from the ReportDeadlinesService" should {
+  "getOpenObligations" should {
+    s"return ${Status.OK} with valid report deadlines" in new Setup {
+      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(true))(any()))
+        .thenReturn(Future.successful(testReportDeadlines_1))
 
-        "return a ReportDeadlinesModel" should {
+      val result: Result = await(controller.getOpenObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
 
-          setupMockReportDeadlinesResponse(testIncomeSourceID_1, testNino)(testReportDeadlines_1)
-          lazy val result = TestReportDeadlinesController.getReportDeadlines(testIncomeSourceID_1, testNino)(FakeRequest())
-
-          checkStatusOf(result)(Status.OK)
-          checkContentTypeOf(result)("application/json")
-          checkJsonBodyOf(result)(testReportDeadlines_1)
-
-        }
-
-      }
-
-      "an invalid response from the ReportDeadlinesService" should {
-
-        setupMockReportDeadlinesResponse(testIncomeSourceID_1, testNino)(testReportDeadlinesError)
-        lazy val result = TestReportDeadlinesController.getReportDeadlines(testIncomeSourceID_1, testNino)(FakeRequest())
-
-        checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testReportDeadlinesError)
-      }
-
+      status(result) shouldBe Status.OK
+      result.body.contentType shouldBe Some("application/json")
+      jsonBodyOf(result) shouldBe Json.toJson(testReportDeadlines_1)
     }
 
-    "called with an Unauthenticated user" should {
+    "return the status of the error model when the service returns one" in new Setup {
+      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(true))(any()))
+        .thenReturn(Future.successful(testReportDeadlinesError))
 
-      object TestReportDeadlinesController extends ReportDeadlinesController(
-        authentication = new AuthenticationPredicate(MockUnauthorisedUser, mockCC),
-        reportDeadlinesService = mockReportDeadlinesService, mockCC
-      )
+      val result: Result = await(controller.getOpenObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
 
-      lazy val result = TestReportDeadlinesController.getReportDeadlines(testIncomeSourceID_1, testNino)(FakeRequest())
-
-      checkStatusOf(result)(Status.UNAUTHORIZED)
+      status(result) shouldBe testReportDeadlinesError.status
+      result.body.contentType shouldBe Some("application/json")
+      jsonBodyOf(result) shouldBe Json.toJson(testReportDeadlinesError)
     }
 
+    s"return ${Status.UNAUTHORIZED} when called by an unauthorised user" in new Setup(authorised = false) {
+      val result: Result = await(controller.getOpenObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+
+      status(result) shouldBe Status.UNAUTHORIZED
+    }
+  }
+
+  "getFulfilledObligations" should {
+    s"return ${Status.OK} with valid report deadlines" in new Setup {
+      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(false))(any()))
+        .thenReturn(Future.successful(testReportDeadlines_1))
+
+      val result: Result = await(controller.getFulfilledObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+
+      status(result) shouldBe Status.OK
+      result.body.contentType shouldBe Some("application/json")
+      jsonBodyOf(result) shouldBe Json.toJson(testReportDeadlines_1)
+    }
+
+    "return the status of the error model when the service returns one" in new Setup {
+      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(false))(any()))
+        .thenReturn(Future.successful(testReportDeadlinesError))
+
+      val result: Result = await(controller.getFulfilledObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+
+      status(result) shouldBe testReportDeadlinesError.status
+      result.body.contentType shouldBe Some("application/json")
+      jsonBodyOf(result) shouldBe Json.toJson(testReportDeadlinesError)
+    }
+
+    s"return ${Status.UNAUTHORIZED} when called by an unauthorised user" in new Setup(authorised = false) {
+      val result: Result = await(controller.getFulfilledObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+
+      status(result) shouldBe Status.UNAUTHORIZED
+    }
   }
 
 }

@@ -18,77 +18,68 @@ package services
 
 import assets.BaseTestConstants._
 import assets.ReportDeadlinesTestConstants._
-import mocks._
-import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesModel, ReportDeadlinesResponseModel}
-import play.api.http.Status
+import connectors.ReportDeadlinesConnector
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesResponseModel}
+import org.mockito.ArgumentMatchers.{any, eq => matches}
+import org.mockito.Mockito.when
 import utils.TestSupport
 
 import scala.concurrent.Future
 
-class ReportDeadlinesServiceSpec extends TestSupport with MockReportDeadlinesConnector {
+class ReportDeadlinesServiceSpec extends TestSupport {
 
-  object TestReportDeadlinesService extends ReportDeadlinesService(mockReportDeadlinesConnector)
-
-  "The ReportDeadlinesService" when {
-
-    "getReportDeadlines method is called with a income source id" when {
-
-      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(incomeSourceId, testNino)
-
-      "a successful response is returned from the ReportDeadlinesConnector" should {
-
-        "return a correctly formatted ObligationsModel" in {
-          setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
-          await(result(testIncomeSourceID_1)) shouldBe testReportDeadlines_1
-        }
-      }
-
-      "a successful response is returned from the ReportDeadlinesConnector, but the IncomeSource does not exist" should {
-        "return a correctly formatted ReportDeadlinesError model" in {
-          setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
-          await(result("ABCD")) shouldBe
-            ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source ID Provided")
-        }
-      }
-
-      "an Error Response is returned from the ReportDeadlinesConnector" should {
-
-        "return a correctly formatted ReportDeadlinesError model" in {
-          setupMockReportDeadlinesResponse(testNino)(Left(testReportDeadlinesError))
-          await(result(testIncomeSourceID_1)) shouldBe testReportDeadlinesError
-        }
-      }
-    }
+  trait Setup {
+    val reportDeadlinesConnector: ReportDeadlinesConnector = mock[ReportDeadlinesConnector]
+    val service: ReportDeadlinesService = new ReportDeadlinesService(reportDeadlinesConnector)
   }
 
-  "The ReportDeadlinesService" when {
+  "getReportDeadlines" should {
+    "return obligations retrieved from the connector" when {
+      "they match the income source id" in new Setup {
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+          .thenReturn(Future.successful(Right(testObligations)))
 
-    "getReportDeadlines method is called with no income source id" when {
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_1, testNino, openObligations = true))
 
-      def result(incomeSourceId: String): Future[ReportDeadlinesResponseModel] = TestReportDeadlinesService.getReportDeadlines(testNino, testNino)
-
-      "a successful response is returned from the ReportDeadlinesConnector" should {
-
-        "return a correctly formatted ObligationsModel" in {
-          setupMockReportDeadlinesResponse(testNino)(Right(ObligationsModel(List(testReportDeadlines_4))))
-          await(result(testIncomeSourceID_4)) shouldBe testReportDeadlines_4
-        }
+        result shouldBe testReportDeadlines_1
       }
 
-      "a successful response is returned from the ReportDeadlinesConnector, but the IncomeSource does not exist" should {
-        "return a correctly formatted ReportDeadlinesError model" in {
-          setupMockReportDeadlinesResponse(testNino)(Right(testObligations))
-          await(result("ABCD")) shouldBe
-            ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source Nino Provided")
-        }
+      "they match the nino" in new Setup {
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+          .thenReturn(Future.successful(Right(ObligationsModel(Seq(testReportDeadlines_4)))))
+
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_4, testNino, openObligations = true))
+
+        result shouldBe testReportDeadlines_4
+      }
+    }
+
+    "return an error model" when {
+      "the obligations returned from the connector don't include obligations from the income source id provided" in new Setup {
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+          .thenReturn(Future.successful(Right(testObligations)))
+
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines("idNotInObligations", testNino, openObligations = true))
+
+        result shouldBe testReportDeadlinesNoContentIncome
       }
 
-      "an Error Response is returned from the ReportDeadlinesConnector" should {
+      "the obligations returned from the connector don't include obligations from the nino provided" in new Setup {
+        when(reportDeadlinesConnector.getReportDeadlines(matches("notfoundnino"), matches(true))(any()))
+          .thenReturn(Future.successful(Right(testObligations)))
 
-        "return a correctly formatted ReportDeadlinesError model" in {
-          setupMockReportDeadlinesResponse(testNino)(Left(testReportDeadlinesError))
-          await(result(testIncomeSourceID_1)) shouldBe testReportDeadlinesError
-        }
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines("notfoundnino", "notfoundnino", openObligations = true))
+
+        result shouldBe testReportDeadlinesNoContentNino
+      }
+
+      "the connector returned back an error model" in new Setup {
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+          .thenReturn(Future.successful(Left(testReportDeadlinesError)))
+
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_1, testNino, openObligations = true))
+
+        result shouldBe testReportDeadlinesError
       }
     }
   }

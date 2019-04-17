@@ -66,6 +66,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getReportDeadlines(incomeSourceId: String, nino: String): WSResponse = get(s"/$nino/income-source/$incomeSourceId/report-deadlines")
 
+    def getFulfilledReportDeadlines(incomeSourceId: String, nino: String): WSResponse = get(s"/$nino/income-source/$incomeSourceId/fulfilled-report-deadlines")
+
   }
 
   def isAuthorised(authorised: Boolean): Unit = {

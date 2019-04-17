@@ -33,16 +33,15 @@ import scala.concurrent.Future
 class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                                          val appConfig: MicroserviceAppConfig
                                         ) extends RawResponseReads {
+  
+  private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
+    val status: String = if(openObligations) "O" else "F"
+    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status"
+  }
 
-  private[connectors] val getReportDeadlinesUrl: String => String =
-    nino => s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=O"
-
-  private[connectors] val getFulfilledReportDeadlinesUrl: String => String =
-    nino => s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=F"
-
-  def getReportDeadlines(nino: String, open: Boolean = true)(implicit headerCarrier: HeaderCarrier): Future[Either[ReportDeadlinesErrorModel, ObligationsModel]] = {
-
-    val url = if(open) getReportDeadlinesUrl(nino) else getFulfilledReportDeadlinesUrl(nino)
+  def getReportDeadlines(nino: String, openObligations: Boolean)
+                        (implicit headerCarrier: HeaderCarrier): Future[Either[ReportDeadlinesErrorModel, ObligationsModel]] = {
+    val url = getReportDeadlinesUrl(nino, openObligations)
     val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 

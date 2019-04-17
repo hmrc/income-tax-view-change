@@ -16,56 +16,82 @@
 
 package connectors
 
-import mocks.MockHttp
 import assets.BaseTestConstants.testNino
 import assets.ReportDeadlinesTestConstants._
-import models.reportDeadlines.ReportDeadlinesErrorModel
-import play.mvc.Http.Status
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
+import play.api.http.Status._
 import uk.gov.hmrc.http.logging.Authorization
-import utils.TestSupport
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import utils.TestSupport
+import org.mockito.ArgumentMatchers.{any, eq => matches}
+import org.mockito.Mockito.when
+import play.api.http.Status
 
-class ReportDeadlinesConnectorSpec extends TestSupport with MockHttp {
+import scala.concurrent.Future
 
-  object TestReportDeadlinesConnector extends ReportDeadlinesConnector(mockHttpGet, microserviceAppConfig)
+class ReportDeadlinesConnectorSpec extends TestSupport {
 
-  "ReportDeadlinesConnector.getReportDeadlines" should {
+  trait Setup {
+    val httpClient: HttpClient = mock[HttpClient]
 
-    import TestReportDeadlinesConnector._
+    val headerCarrier: HeaderCarrier = hc.copy(
+      authorization = Some(Authorization(s"Bearer ${microserviceAppConfig.desToken}"))
+    ).withExtraHeaders("Environment" -> microserviceAppConfig.desEnvironment)
 
-    lazy val expectedHc: HeaderCarrier =
-      hc.copy(authorization =Some(Authorization(s"Bearer ${appConfig.desToken}"))).withExtraHeaders("Environment" -> appConfig.desEnvironment)
+    val connector: ReportDeadlinesConnector = new ReportDeadlinesConnector(
+      httpClient,
+      microserviceAppConfig
+    )
+  }
 
-    def mock(response: HttpResponse, open: Boolean = true): Unit = {
-      if (open) setupMockHttpGetWithHeaderCarrier(getReportDeadlinesUrl(testNino), expectedHc)(response)
-      else setupMockHttpGetWithHeaderCarrier(getFulfilledReportDeadlinesUrl(testNino), expectedHc)(response)
+  "getReportDeadlines" should {
+    s"return a report deadlines model when the endpoint returns Status: $OK" when {
+      "called for open obligations" in new Setup {
+        when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.successful(successResponse))
+
+        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
+
+        result shouldBe Right(testObligations)
+      }
+      "called for fulfilled obligations" in new Setup {
+        when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = false)))(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.successful(successResponse))
+
+        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = false))
+
+        result shouldBe Right(testObligations)
+      }
     }
 
-    "return Status (OK) and a JSON body when successful as a ReportDeadlines model" in {
-      mock(successResponse)
-      await(getReportDeadlines(testNino)) shouldBe Right(testObligations)
-    }
+    "return a report deadlines error model" when {
+      s"the connector does not receive a Status:$OK response" in new Setup {
+        when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.successful(badResponse))
 
-    "return Status (OK) and a JSON body when successful and calling fulfilled obligations" in {
-      mock(successResponse, open = false)
-      await(getReportDeadlines(testNino, open = false)) shouldBe Right(testObligations)
-    }
+        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
 
-    "return ReportDeadlinesError model in case of failure" in {
-      mock(badResponse)
-      await(getReportDeadlines(testNino)) shouldBe Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message"))
-    }
+        result shouldBe Left(testReportDeadlinesError)
+      }
+      "the json recieved can not be parsed into an obligations model" in new Setup {
+        when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.successful(badJson))
 
-    "return ReportDeadlinesError model in case of bad JSON" in {
-      mock(badJson)
-      await(getReportDeadlines(testNino)) shouldBe
-        Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data "))
-    }
+        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
 
-    "return ReportDeadlinesError model in case of failed future" in {
-      setupMockHttpGetFailed(getReportDeadlinesUrl(testNino))
-      await(getReportDeadlines(testNino)) shouldBe
-        Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Unexpected failed future, error"))
+        result shouldBe Left(testReportDeadlinesErrorJson)
+      }
+      "the http call failed and returned a future failed" in new Setup {
+        val exceptionMessage: String = "Exception message"
+
+        when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.failed(new Exception(exceptionMessage)))
+
+        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
+
+        result shouldBe Left(testReportDeadlinesErrorFutureFailed(exceptionMessage))
+      }
     }
   }
 
