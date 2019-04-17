@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                                          val appConfig: MicroserviceAppConfig
                                         ) extends RawResponseReads {
-
+  
   private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
     val status: String = if(openObligations) "O" else "F"
     s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status"
