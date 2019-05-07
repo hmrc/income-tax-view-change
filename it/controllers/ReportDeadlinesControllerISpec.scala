@@ -51,10 +51,10 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlines(testNino, testNino)
+        DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlines(testNino, testMtditid)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testNino/fulfilled-report-deadlines")
-        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testNino, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/fulfilled-report-deadlines")
+        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testMtditid, testNino)
 
         DesReportDeadlinesStub.verifyGetFulfilledDesReportDeadlines(testNino)
 
@@ -62,7 +62,7 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         res should have(
           httpStatus(OK),
-          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesNino)
+          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesMtdId)
         )
       }
 
@@ -71,10 +71,10 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesOpenReportDeadlines(testNino, testNino)
+        DesReportDeadlinesStub.stubGetDesOpenReportDeadlines(testNino, testMtditid)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testNino/report-deadlines")
-        val res = IncomeTaxViewChange.getReportDeadlines(testNino, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
+        val res = IncomeTaxViewChange.getReportDeadlines(testMtditid, testNino)
 
         DesReportDeadlinesStub.verifyGetOpenDesReportDeadlines(testNino)
 
@@ -82,7 +82,7 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         res should have(
           httpStatus(OK),
-          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesNino)
+          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesMtdId)
         )
       }
 
@@ -91,10 +91,10 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlines(testNino, testNino)
+        DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlines(testNino, testMtditid)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testNino/report-deadlines")
-        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testNino, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
+        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testMtditid, testNino)
 
         DesReportDeadlinesStub.verifyGetFulfilledDesReportDeadlines(testNino)
 
@@ -102,7 +102,7 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         res should have(
           httpStatus(OK),
-          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesNino)
+          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesMtdId)
         )
       }
     }
