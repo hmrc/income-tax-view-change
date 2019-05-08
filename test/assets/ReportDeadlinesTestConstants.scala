@@ -152,7 +152,7 @@ object ReportDeadlinesTestConstants {
     ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, $exceptionMessage")
   }
   val testReportDeadlinesNoContentIncome: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.NO_CONTENT,"Could not retrieve Report Deadlines for Income Source ID Provided")
-  val testReportDeadlinesNoContentNino: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.NO_CONTENT,"Could not retrieve Report Deadlines for Income Source Nino Provided")
+  val testReportDeadlinesNoContentMtdId: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.NO_CONTENT,"Could not retrieve Report Deadlines for mtdId Provided")
 
   val testObligations: ObligationsModel = ObligationsModel(Seq(testReportDeadlines_1, testReportDeadlines_2, testReportDeadlines_3))
 

@@ -36,19 +36,19 @@ class ReportDeadlinesServiceSpec extends TestSupport {
   "getReportDeadlines" should {
     "return obligations retrieved from the connector" when {
       "they match the income source id" in new Setup {
-        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testMtdId), matches(true))(any()))
           .thenReturn(Future.successful(Right(testObligations)))
 
-        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_1, testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_1, testMtdId, openObligations = true))
 
         result shouldBe testReportDeadlines_1
       }
 
-      "they match the nino" in new Setup {
-        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+      "they match the mtdid" in new Setup {
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testMtdId), matches(true))(any()))
           .thenReturn(Future.successful(Right(ObligationsModel(Seq(testReportDeadlines_4)))))
 
-        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_4, testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_4, testMtdId, openObligations = true))
 
         result shouldBe testReportDeadlines_4
       }
@@ -56,10 +56,10 @@ class ReportDeadlinesServiceSpec extends TestSupport {
 
     "return an error model" when {
       "the obligations returned from the connector don't include obligations from the income source id provided" in new Setup {
-        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testMtdId), matches(true))(any()))
           .thenReturn(Future.successful(Right(testObligations)))
 
-        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines("idNotInObligations", testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines("idNotInObligations", testMtdId, openObligations = true))
 
         result shouldBe testReportDeadlinesNoContentIncome
       }
@@ -70,14 +70,14 @@ class ReportDeadlinesServiceSpec extends TestSupport {
 
         val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines("notfoundnino", "notfoundnino", openObligations = true))
 
-        result shouldBe testReportDeadlinesNoContentNino
+        result shouldBe testReportDeadlinesNoContentMtdId
       }
 
       "the connector returned back an error model" in new Setup {
-        when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
+        when(reportDeadlinesConnector.getReportDeadlines(matches(testMtdId), matches(true))(any()))
           .thenReturn(Future.successful(Left(testReportDeadlinesError)))
 
-        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_1, testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(service.getReportDeadlines(testIncomeSourceID_1, testMtdId, openObligations = true))
 
         result shouldBe testReportDeadlinesError
       }
