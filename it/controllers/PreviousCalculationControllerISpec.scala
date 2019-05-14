@@ -77,8 +77,7 @@ class PreviousCalculationControllerISpec extends ComponentSpecBase {
         Then("a successful response is returned with the correct data")
 
         res should have(
-          httpStatus(INTERNAL_SERVER_ERROR),
-          jsonBodyAs[Error](previousCalculationError)
+          httpStatus(INTERNAL_SERVER_ERROR)
         )
       }
     }

@@ -18,7 +18,7 @@ package connectors.httpParsers
 
 import utils.TestSupport
 import connectors.httpParsers.CalculationHttpParser.PreviousCalculationReads
-import models.PreviousCalculation._
+import models.PreviousCalculation.{UnexpectedResponse, _}
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
@@ -145,10 +145,7 @@ class CalculationHttpParserSpec extends TestSupport {
         responseJson = Some(jsonSingleError)
       )
 
-      val expected: Either[ErrorResponse, Nothing] = Left(ErrorResponse(
-        Status.INTERNAL_SERVER_ERROR,
-        singleError
-      ))
+      val expected: Either[UnexpectedResponse.type, Nothing] = Left(UnexpectedResponse)
 
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
 

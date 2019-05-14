@@ -29,20 +29,20 @@ object CalculationHttpParser extends ResponseHttpParsers {
         case OK =>
           response.json.validate[PreviousCalculationModel].fold(
             invalid => {
-              Logger.warn("[PreviousCalculationReads][read] Json Error Parsing Successful DES Response")
-              Logger.debug(s"[PreviousCalculationReads][read] DES Response: ${response.json}\nJson Errors: $invalid")
-              Logger.error(s"[PreviousCalculationReads][read] ${response.body} returned from DES")
-
+              Logger.error(s"[PreviousCalculationReads][read] could not parse to PreviousCalculationModel. Invalid: $invalid")
               Left(UnexpectedJsonFormat)
             },
-            valid => Right(valid)
+            valid => {
+              Logger.info(s"[PreviousCalculationReads][read] successfully parsed response to PreviousCalculationModel")
+              Right(valid)
+            }
           )
-        case status if status >= 400 && status < 600 =>
-          Logger.debug(s"[PreviousCalculationReads][read] $status returned from DES")
+        case status if status >= 400 && status < 500 =>
+          Logger.warn(s"[PreviousCalculationReads][read] $status returned from DES with body: ${response.body}")
           handleErrorResponse(response)
 
-        case _ =>
-          Logger.debug(s"[PreviousCalculationReads][read] Unexpected Response")
+        case status =>
+          Logger.error(s"[PreviousCalculationReads][read] Unexpected Response with status: $status")
           Left(UnexpectedResponse)
       }
     }
