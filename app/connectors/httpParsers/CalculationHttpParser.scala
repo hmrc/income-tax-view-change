@@ -27,7 +27,6 @@ object CalculationHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): HttpGetResult[PreviousCalculationModel] = {
       response.status match {
         case OK =>
-          Logger.error(s"[PreviousCalculationReads][read] could not parse to PreviousCalculationModel. I")
           response.json.validate[PreviousCalculationModel].fold(
             invalid => {
               Logger.error(s"[PreviousCalculationReads][read] could not parse to PreviousCalculationModel. Invalid: $invalid")
