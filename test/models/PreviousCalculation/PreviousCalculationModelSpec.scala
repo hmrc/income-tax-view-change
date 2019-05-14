@@ -17,7 +17,7 @@
 package models.PreviousCalculation
 
 import org.scalatest.Matchers
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, JsSuccess, Json}
 import utils.TestSupport
 
 class PreviousCalculationModelSpec extends TestSupport with Matchers {
@@ -141,6 +141,44 @@ class PreviousCalculationModelSpec extends TestSupport with Matchers {
       }
     }
 
+  }
+
+  "NicModel" should {
+
+    val nicJsonFull = Json.obj(
+      "class2" -> Json.obj("amount" -> 100.00),
+      "class4" -> Json.obj("totalAmount" -> 200.00)
+    )
+
+    val nicModelFull = NicModel(Some(100.00), Some(200.00))
+
+    val nicJsonNoAmounts = Json.obj(
+      "class2" -> Json.obj(),
+      "class4" -> Json.obj()
+    )
+
+    val nicJsonEmpty = Json.obj()
+
+    val nicModelEmpty = NicModel(None, None)
+
+    "read from json successfully" when {
+      "the json is full" in {
+        Json.fromJson[NicModel](nicJsonFull) shouldBe JsSuccess(nicModelFull)
+      }
+      "the json is empty" in {
+        Json.fromJson[NicModel](nicJsonEmpty) shouldBe JsSuccess(nicModelEmpty)
+      }
+      "the class2 and class4 objects are there but are empty" in {
+        Json.fromJson[NicModel](nicJsonNoAmounts) shouldBe JsSuccess(nicModelEmpty)
+      }
+    }
+
+    "write to json successfully with a full model" in {
+      Json.toJson(nicModelFull) shouldBe nicJsonFull
+    }
+    "write to json successfully with an empty model" in {
+      Json.toJson(nicModelEmpty) shouldBe nicJsonEmpty
+    }
   }
 
 }
