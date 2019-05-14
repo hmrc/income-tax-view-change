@@ -150,8 +150,8 @@ case class NicModel(class2: Option[BigDecimal],
 
 object NicModel {
   implicit val reads: Reads[NicModel] = (
-    (__ \ "class2" \ "amount").readNullable[BigDecimal] and
-      (__ \ "class4" \ "totalAmount").readNullable[BigDecimal]
+    (__ \ "class2" \ "amount").readNullable[BigDecimal].orElse(Reads.pure(None)) and
+      (__ \ "class4" \ "totalAmount").readNullable[BigDecimal].orElse(Reads.pure(None))
     ) (NicModel.apply _)
   implicit val writes: Writes[NicModel] = (
     (__ \ "class2" \ "amount").writeNullable[BigDecimal] and
