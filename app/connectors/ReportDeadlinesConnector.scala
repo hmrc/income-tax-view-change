@@ -53,15 +53,16 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
             Logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
             response.json.validate[ObligationsModel](ObligationsModel.desReadsApi1330).fold(
               invalid => {
-                Logger.warn(s"[ReportDeadlinesConnector][getReportDeadlines] - Json ValidationError. Parsing Report Deadlines Data")
-                Logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Json valiation error: $invalid")
+                Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Json valiation error: $invalid")
                 Left(ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data "))
               },
-              valid => Right(valid)
+              valid => {
+                Logger.info(s"[ReportDeadlinesConnector][getReportDeadlines] successfully parsed response to ObligationsModel")
+                Right(valid)
+              }
             )
           case _ =>
             Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Response status: [${response.status}] returned from Report Deadlines call")
             Left(ReportDeadlinesErrorModel(response.status, response.body))
         }
     } recover {

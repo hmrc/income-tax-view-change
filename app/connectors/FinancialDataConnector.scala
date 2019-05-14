@@ -54,15 +54,16 @@ class FinancialDataConnector @Inject()(val http: HttpClient,
             Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
             response.json.validate[LastTaxCalculation].fold(
               invalid => {
-                Logger.warn(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Json ValidationError. Parsing Financial Data")
-                Logger.debug(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response possibly returned `None` for calcAmount: ${response.body}")
+                Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Json ValidationError Invalid: $invalid")
                 LastTaxCalculationError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Financial Data ")
               },
-              valid => valid
+              valid =>{
+                Logger.info(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] successfully parsed response to LastTaxCalculation")
+                valid
+              }
             )
           case _ =>
             Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - RESPONSE status: ${response.status}, body: ${response.body}")
-            Logger.error(s"[FinancialDataConnector][getLastEstimatedTaxCalculation] - Response status: [${response.status}] returned from Latest Calc call")
             LastTaxCalculationError(response.status, response.body)
         }
     } recover {
