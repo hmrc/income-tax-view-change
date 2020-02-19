@@ -58,8 +58,6 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getPreviousCalculation(nino: String, year: String): WSResponse = get(s"/previous-tax-calculation/$nino/$year")
 
-    def getEstimatedTaxLiability(nino: String, year: String, calcType: String): WSResponse = get(s"/estimated-tax-liability/$nino/$year/$calcType")
-
     def getNino(mtdRef: String): WSResponse = get(s"/nino-lookup/$mtdRef")
 
     def getIncomeSources(mtdRef: String): WSResponse = get(s"/income-sources/$mtdRef")
