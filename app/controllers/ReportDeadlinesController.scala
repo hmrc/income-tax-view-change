@@ -16,15 +16,14 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import controllers.predicates.AuthenticationPredicate
+import javax.inject.{Inject, Singleton}
 import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.ReportDeadlinesService
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -32,7 +31,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ReportDeadlinesController @Inject()(val authentication: AuthenticationPredicate,
                                           val reportDeadlinesService: ReportDeadlinesService,
                                           cc: ControllerComponents
-                                         ) extends BaseController(cc) {
+                                         ) extends BackendController(cc) {
 
   def getOpenObligations(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[ReportDeadlinesController][getOpenObligations] - " +

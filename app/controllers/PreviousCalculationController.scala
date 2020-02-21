@@ -16,15 +16,15 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
 import controllers.predicates.AuthenticationPredicate
+import javax.inject.{Inject, Singleton}
 import models.PreviousCalculation._
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class PreviousCalculationController @Inject()(val authentication: AuthenticationPredicate,
                                               val calculationService: CalculationService,
                                               cc: ControllerComponents
-                                             ) extends BaseController(cc) {
+                                             ) extends BackendController(cc) {
 
   def getPreviousCalculation(nino: String, year: String): Action[AnyContent] =
     authentication.async {
