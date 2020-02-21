@@ -16,10 +16,11 @@
 
 package controllers.predicates
 
+import config.MicroserviceAuthConnector
 import controllers.ControllerBaseSpec
-import mocks.{MockAuthorisedUser, MockUnauthorisedUser}
+import mocks.{MockAuthorisedUser, MockUnauthorisedUser, MockAuthorisedFunctions}
 import play.api.http.Status
-import play.api.mvc.{ControllerComponents, Result}
+import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
@@ -29,19 +30,22 @@ import scala.concurrent.Future
 class AuthenticationPredicateSpec extends ControllerBaseSpec {
 
   "The AuthenticationPredicate.authenticated method" when {
+
     lazy val mockCC = stubControllerComponents()
+    val authConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
+
     def result(authenticationPredicate: AuthenticationPredicate): Future[Result] = authenticationPredicate.async {
       implicit request =>
         Future.successful(Ok)
     }.apply(FakeRequest())
 
     "called with an Unauthenticated user (No Bearer Token in Header)" should {
-      object TestAuthenticationPredicate extends AuthenticationPredicate(MockUnauthorisedUser, mockCC)
-      checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
+      object TestUnauthenticationPredicate extends AuthenticationPredicate(authConnector, mockCC)
+      checkStatusOf(result(TestUnauthenticationPredicate))(Status.UNAUTHORIZED)
     }
 
     "called with an authenticated user (Some Bearer Token in Header)" should {
-      object TestAuthenticationPredicate extends AuthenticationPredicate(MockAuthorisedUser, mockCC)
+      object TestAuthenticationPredicate extends AuthenticationPredicate(authConnector, mockCC)
       checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
     }
   }
