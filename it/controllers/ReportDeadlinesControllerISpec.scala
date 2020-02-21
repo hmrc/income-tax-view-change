@@ -150,7 +150,7 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         isAuthorised(false)
 
-        When(s"I call GET /income-tax-view-change/estimated-tax-liability/$testNino/$testYear")
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
         val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId, testNino)
 
         res should have(
@@ -163,7 +163,7 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         isAuthorised(false)
 
-        When(s"I call GET /income-tax-view-change/estimated-tax-liability/$testNino/$testYear")
+        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
         val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testIncomeSourceId, testNino)
 
         res should have(
