@@ -16,8 +16,8 @@
 
 package controllers.predicates
 
+import config.MicroserviceAuthConnector
 import javax.inject.{Inject, Singleton}
-
 import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthorisedFunctions
@@ -27,12 +27,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class AuthenticationPredicate @Inject()(val authorisedFunctions: AuthorisedFunctions, cc: ControllerComponents
-                                       ) extends BaseController(cc) {
+class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConnector, cc: ControllerComponents
+                                       ) extends BaseController(cc) with AuthorisedFunctions {
 
   def async(action: Request[AnyContent] => Future[Result]): Action[AnyContent] =
     Action.async { implicit request =>
-      authorisedFunctions.authorised() {
+      authorised() {
         action(request)
       } recover {
         case ex =>

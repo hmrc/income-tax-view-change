@@ -28,6 +28,7 @@ trait MockAuthorisedFunctions extends AuthorisedFunctions with MockitoSugar {
   override val authConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 }
 
+
 object MockAuthorisedUser extends MockAuthorisedFunctions {
   override def authorised(): AuthorisedFunction = new AuthorisedFunction(EmptyPredicate) {
     override def apply[A](body: => Future[A])(implicit hc: HeaderCarrier, executionContext: ExecutionContext): Future[A] = body
