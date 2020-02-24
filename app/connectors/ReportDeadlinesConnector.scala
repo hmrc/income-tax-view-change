@@ -16,23 +16,22 @@
 
 package connectors
 
-import javax.inject.{Inject, Singleton}
 import config.MicroserviceAppConfig
-import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesModel, ReportDeadlinesResponseModel}
+import javax.inject.{Inject, Singleton}
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                                          val appConfig: MicroserviceAppConfig
-                                        ) extends RawResponseReads {
+                                        ) (implicit ec: ExecutionContext)extends RawResponseReads {
   
   private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
     val status: String = if(openObligations) "O" else "F"

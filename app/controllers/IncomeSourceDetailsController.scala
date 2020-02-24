@@ -16,17 +16,15 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import controllers.predicates.AuthenticationPredicate
-import models._
+import javax.inject.{Inject, Singleton}
 import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.IncomeSourceDetailsService
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -34,8 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class IncomeSourceDetailsController @Inject()(val authentication: AuthenticationPredicate,
                                               val incomeSourceDetailsService: IncomeSourceDetailsService,
                                               cc: ControllerComponents
-
-                                             ) extends BaseController(cc) {
+                                             ) extends BackendController(cc) {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getNino(mtdRef).map {
