@@ -19,25 +19,29 @@ package controllers
 import assets.BaseTestConstants.mtdRef
 import assets.IncomeSourceDetailsTestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockAuthorisedUser, MockIncomeSourceDetailsService, MockUnauthorisedUser}
+import mocks.{MockIncomeSourceDetailsService, MockMicroserviceAuthConnector}
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
+import uk.gov.hmrc.auth.core.MissingBearerToken
 
-class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockIncomeSourceDetailsService {
+import scala.concurrent.Future
+
+class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockIncomeSourceDetailsService with MockMicroserviceAuthConnector {
 
   "The IncomeSourceDetailsController" when {
     lazy val mockCC = stubControllerComponents()
     "getNino called with an Authenticated user" when {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       "a valid response from the IncomeSourceDetailsService" should {
 
         mockNinoResponse(testNinoModel)
+        mockAuth(Future.successful())
         lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -48,6 +52,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockNinoResponse(testNinoError)
+        mockAuth(Future.successful())
         lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
@@ -59,13 +64,14 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     "getIncomeSourceDetails called with an Authenticated user" when {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       "a valid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
+        mockAuth(Future.successful())
         lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -76,6 +82,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
+        mockAuth(Future.successful())
         lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
@@ -87,10 +94,11 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     "called with an Unauthenticated user" should {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(MockUnauthorisedUser, mockCC),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
+      mockAuth(Future.failed(new MissingBearerToken))
       lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
       checkStatusOf(result)(Status.UNAUTHORIZED)

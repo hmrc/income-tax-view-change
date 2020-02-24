@@ -16,16 +16,19 @@
 
 package controllers
 
+import assets.PreviousCalculationTestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockAuthorisedUser, MockCalculationService, MockUnauthorisedUser}
+import mocks.{MockCalculationService, MockMicroserviceAuthConnector}
 import models.PreviousCalculation._
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import assets.PreviousCalculationTestConstants._
 import play.api.test.Helpers.stubControllerComponents
+import uk.gov.hmrc.auth.core.MissingBearerToken
 
-class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalculationService {
+import scala.concurrent.Future
+
+class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalculationService with MockMicroserviceAuthConnector {
 
   val successResponse: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationFull)
 
@@ -34,18 +37,19 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
     "called by an authenticated user" which {
 
       object PreviousCalculationController extends PreviousCalculationController(
-        authentication = new AuthenticationPredicate(MockAuthorisedUser, mockCC),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         mockCalculationService, mockCC
       )
 
       "is requesting previous calculations details" should {
 
         "for a successful response from the CalculationService," should {
-
           lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(testNino,
             testYear)(fakeRequest))
 
+
           "return a status of 200 (OK)" in {
+            mockAuth(Future.successful())
             setupMockGetPreviousCalculation(testNino,
               testYear)(successResponse)
             status(result) shouldBe Status.OK
@@ -57,11 +61,12 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
         }
 
         "for a bad request with single error from the CalculationService," should {
-
           lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(testNino,
             testYear)(fakeRequest))
 
+
           "return a status of 400 (BAD_REQUEST)" in {
+            mockAuth(Future.successful())
             setupMockGetPreviousCalculation(testNino,
               testYear)(badRequestSingleError)
 
@@ -75,11 +80,12 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
         }
 
         "for an invalid nino " should {
-
           lazy val result: Result =
             await(PreviousCalculationController.getPreviousCalculation(badNino,
               testYear)(fakeRequest))
+
           "return a status of 400 (BAD_REQUEST)" in {
+            mockAuth(Future.successful())
             status(result) shouldBe Status.BAD_REQUEST
           }
 
@@ -89,12 +95,13 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
         }
 
         "for a bad request with multiple errors from the CalculationService," should {
-
           lazy val result: Result =
             await(PreviousCalculationController.getPreviousCalculation(testNino,
               testYear)(fakeRequest))
 
+
           "return a status of 400 (BAD_REQUEST)" in {
+            mockAuth(Future.successful())
             setupMockGetPreviousCalculation(testNino,
               testYear)(badRequestMultiError)
             status(result) shouldBe Status.BAD_REQUEST
@@ -111,7 +118,9 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
         lazy val result: Result =
           await(PreviousCalculationController.getPreviousCalculation(testNino,
             testYear)(fakeRequest))
+
         "return a status of 400 (BAD_REQUEST)" in {
+          mockAuth(Future.successful())
           setupMockGetPreviousCalculation(testNino,
             testYear)(badRequestSingleError)
 
@@ -128,12 +137,13 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
     "called with an Unauthenticated user" should {
 
       object PreviousCalculationController extends PreviousCalculationController(
-        authentication = new AuthenticationPredicate(MockUnauthorisedUser, mockCC),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         calculationService = mockCalculationService, mockCC
       )
-
+      mockAuth(Future.failed(new MissingBearerToken))
       lazy val result = PreviousCalculationController.getPreviousCalculation(testNino,
         testYear)(fakeRequest)
+
 
       checkStatusOf(result)(Status.UNAUTHORIZED)
     }

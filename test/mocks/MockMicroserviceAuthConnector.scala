@@ -17,13 +17,10 @@
 package mocks
 
 import config.MicroserviceAuthConnector
-import connectors.httpParsers.CalculationHttpParser.HttpGetResult
-import models.PreviousCalculation.PreviousCalculationModel
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
@@ -32,15 +29,8 @@ trait MockMicroserviceAuthConnector extends UnitSpec with MockitoSugar with Befo
 
   val mockMicroserviceAuthConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    reset(mockMicroserviceAuthConnector)
+  def mockAuth(response: Future[Unit]): Future[Nothing] = {
+    doReturn(response, Nil:_*).when(mockMicroserviceAuthConnector)
+      .authorise(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())
   }
-
-  def mockAuthenticationPredicateResponse(mockMicroserviceAuthConnector: MicroserviceAuthConnector, cc: ControllerComponents)
-                            (response: HttpGetResult[PreviousCalculationModel]): OngoingStubbing[Future[HttpGetResult[PreviousCalculationModel]]] =
-    when(
-      mockMicroserviceAuthConnector(
-        )
-    ).thenReturn(Future.successful(response))
 }

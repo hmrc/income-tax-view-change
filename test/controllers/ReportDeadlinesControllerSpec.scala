@@ -19,7 +19,7 @@ package controllers
 import assets.BaseTestConstants._
 import assets.ReportDeadlinesTestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockAuthorisedFunctions, MockAuthorisedUser, MockUnauthorisedUser}
+import mocks.MockMicroserviceAuthConnector
 import org.mockito.ArgumentMatchers.{any, eq => matches}
 import org.mockito.Mockito.when
 import play.api.http.Status
@@ -28,18 +28,18 @@ import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
 import services.ReportDeadlinesService
+import uk.gov.hmrc.auth.core.MissingBearerToken
 import utils.TestSupport
 
 import scala.concurrent.Future
 
 
-class ReportDeadlinesControllerSpec extends TestSupport {
+class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAuthConnector {
 
   class Setup(authorised: Boolean = true) {
     val cc: ControllerComponents = stubControllerComponents()
     val reportDeadlinesService: ReportDeadlinesService = mock[ReportDeadlinesService]
-    val user: MockAuthorisedFunctions = if(authorised) MockAuthorisedUser else MockUnauthorisedUser
-    val authenticationPredicate: AuthenticationPredicate = new AuthenticationPredicate(user, cc)
+    val authenticationPredicate: AuthenticationPredicate = new AuthenticationPredicate(mockMicroserviceAuthConnector, cc)
 
     val controller = new ReportDeadlinesController(
       authenticationPredicate,
@@ -50,6 +50,7 @@ class ReportDeadlinesControllerSpec extends TestSupport {
 
   "getOpenObligations" should {
     s"return ${Status.OK} with valid report deadlines" in new Setup {
+      mockAuth(Future.successful())
       when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(true))(any()))
         .thenReturn(Future.successful(testReportDeadlines_1))
 
@@ -61,6 +62,7 @@ class ReportDeadlinesControllerSpec extends TestSupport {
     }
 
     "return the status of the error model when the service returns one" in new Setup {
+      mockAuth(Future.successful())
       when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(true))(any()))
         .thenReturn(Future.successful(testReportDeadlinesError))
 
@@ -72,6 +74,7 @@ class ReportDeadlinesControllerSpec extends TestSupport {
     }
 
     s"return ${Status.UNAUTHORIZED} when called by an unauthorised user" in new Setup(authorised = false) {
+      mockAuth(Future.failed(new MissingBearerToken))
       val result: Result = await(controller.getOpenObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
 
       status(result) shouldBe Status.UNAUTHORIZED
@@ -80,6 +83,7 @@ class ReportDeadlinesControllerSpec extends TestSupport {
 
   "getFulfilledObligations" should {
     s"return ${Status.OK} with valid report deadlines" in new Setup {
+      mockAuth(Future.successful())
       when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(false))(any()))
         .thenReturn(Future.successful(testReportDeadlines_1))
 
@@ -91,6 +95,7 @@ class ReportDeadlinesControllerSpec extends TestSupport {
     }
 
     "return the status of the error model when the service returns one" in new Setup {
+      mockAuth(Future.successful())
       when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(false))(any()))
         .thenReturn(Future.successful(testReportDeadlinesError))
 
@@ -102,6 +107,7 @@ class ReportDeadlinesControllerSpec extends TestSupport {
     }
 
     s"return ${Status.UNAUTHORIZED} when called by an unauthorised user" in new Setup(authorised = false) {
+      mockAuth(Future.failed(new MissingBearerToken))
       val result: Result = await(controller.getFulfilledObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
 
       status(result) shouldBe Status.UNAUTHORIZED
