@@ -16,17 +16,20 @@
 
 package helpers.servicemocks
 
-import assets.BaseIntegrationTestConstants.testIncomeSourceId
-import helpers.WiremockHelper
-import models.reportDeadlines.ReportDeadlinesResponseModel
+import java.time.LocalDate
+
 import assets.ReportDeadlinesIntegrationTestConstants._
+import helpers.WiremockHelper
 import play.api.http.Status
 
 object DesReportDeadlinesStub {
 
   def url(nino: String, openObligations: Boolean = true): String = {
-    val status: String = if(openObligations) "O" else "F"
-    s"/enterprise/obligation-data/nino/$nino/ITSA?status=$status"
+    val status: String = if (openObligations) "O" else "F"
+    val toDate: LocalDate = LocalDate.now()
+    val fromDate: LocalDate = toDate.minusDays(365)
+    val dateParameters: String = if (openObligations) "" else s"&from=$fromDate&to=$toDate"
+    s"/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
   }
 
   def stubGetDesOpenReportDeadlines(nino: String, incomeSource: String): Unit = {

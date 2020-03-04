@@ -16,6 +16,8 @@
 
 package connectors
 
+import java.time.LocalDate
+
 import assets.BaseTestConstants.testNino
 import assets.ReportDeadlinesTestConstants._
 import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
@@ -43,6 +45,23 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
       httpClient,
       microserviceAppConfig
     )
+  }
+
+  "getReportDeadlinesUrl" should {
+
+    "return a valid URL" when {
+
+      "called for open obligations" in new Setup {
+        connector.getReportDeadlinesUrl(testNino, openObligations = true) shouldBe
+          s"http://localhost:9084/enterprise/obligation-data/nino/$testNino/ITSA?status=O"
+      }
+
+      "called for fulfilled obligations" in new Setup {
+        val date: LocalDate = LocalDate.now()
+        connector.getReportDeadlinesUrl(testNino, openObligations = false) shouldBe
+          s"http://localhost:9084/enterprise/obligation-data/nino/$testNino/ITSA?status=F&from=${date.minusDays(365)}&to=$date"
+      }
+    }
   }
 
   "getReportDeadlines" should {

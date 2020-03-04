@@ -16,6 +16,8 @@
 
 package connectors
 
+import java.time.LocalDate
+
 import config.MicroserviceAppConfig
 import javax.inject.{Inject, Singleton}
 import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
@@ -35,7 +37,10 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
   
   private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
     val status: String = if(openObligations) "O" else "F"
-    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status"
+    val toDate: LocalDate = LocalDate.now()
+    val fromDate: LocalDate = toDate.minusDays(365)
+    val dateParameters: String = if (openObligations) "" else s"&from=$fromDate&to=$toDate"
+    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
   }
 
   def getReportDeadlines(nino: String, openObligations: Boolean)
