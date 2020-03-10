@@ -17,15 +17,12 @@
 package config
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class MicroserviceAppConfig @Inject()(val environment: Environment, val conf: Configuration, servicesConfig: ServicesConfig) {
+class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
 
-  protected def runModeConfiguration: Configuration = conf
-  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+  private def loadConfig(key: String) = servicesConfig.getString(key)
 
   val desEnvironment: String = loadConfig("microservice.services.des.environment")
   val desToken: String = loadConfig("microservice.services.des.authorization-token")
