@@ -33,24 +33,22 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                                          val appConfig: MicroserviceAppConfig
-                                        ) (implicit ec: ExecutionContext)extends RawResponseReads {
+                                        ) (implicit ec: ExecutionContext)extends RawResponseReads with DesConnector {
   
   private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
     val status: String = if(openObligations) "O" else "F"
     val toDate: LocalDate = LocalDate.now()
     val fromDate: LocalDate = toDate.minusDays(365)
     val dateParameters: String = if (openObligations) "" else s"&from=$fromDate&to=$toDate"
-    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
+    s"$desUrl/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
   }
 
   def getReportDeadlines(nino: String, openObligations: Boolean)
                         (implicit headerCarrier: HeaderCarrier): Future[Either[ReportDeadlinesErrorModel, ObligationsModel]] = {
     val url = getReportDeadlinesUrl(nino, openObligations)
-    val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    Logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $desHC")
-    http.GET[HttpResponse](url)(httpReads, desHC, implicitly) map {
+    Logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $headerCarrier")
+    desGet[HttpResponse](url) map {
       response =>
         response.status match {
           case OK =>

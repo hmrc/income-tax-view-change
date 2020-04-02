@@ -28,18 +28,16 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) {
+class CalculationConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) extends DesConnector {
 
   private[connectors] def getPreviousCalculationUrl(nino: String, year: String) : String =
-    s"${appConfig.desUrl}/income-tax/previous-calculation/$nino?year=$year"
+    s"$desUrl/income-tax/previous-calculation/$nino?year=$year"
 
   def getPreviousCalculation(nino: String, year: String)
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[PreviousCalculationModel]] = {
     val url = getPreviousCalculationUrl(nino, year)
-    val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    Logger.debug(s"[CalculationConnector][getPreviousCalculation] - Calling GET $url \nHeaders: $desHC")
-    http.GET(url)(PreviousCalculationReads, desHC, ec)
+    Logger.debug(s"[CalculationConnector][getPreviousCalculation] - Calling GET $url \nHeaders: $headerCarrier")
+    desGet(url)
   }
 }

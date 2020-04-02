@@ -31,19 +31,17 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
                                     val appConfig: MicroserviceAppConfig
-                                   )(implicit ec: ExecutionContext) extends RawResponseReads {
+                                   )(implicit ec: ExecutionContext) extends RawResponseReads with DesConnector {
 
   val getIncomeSourceDetailsUrl: String => String =
-    mtdRef => s"${appConfig.desUrl}/registration/business-details/mtdbsa/$mtdRef"
+    mtdRef => s"$desUrl/registration/business-details/mtdbsa/$mtdRef"
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = getIncomeSourceDetailsUrl(mtdRef)
-    val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Calling GET $url \n\nHeaders: $desHC")
-    http.GET[HttpResponse](url)(httpReads, desHC, implicitly) map {
+    Logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Calling GET $url \n\nHeaders: $headerCarrier")
+    desGet[HttpResponse](url) map {
       response =>
         response.status match {
           case OK =>
