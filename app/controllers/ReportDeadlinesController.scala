@@ -18,7 +18,7 @@ package controllers
 
 import controllers.predicates.AuthenticationPredicate
 import javax.inject.{Inject, Singleton}
-import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -33,11 +33,11 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
                                           cc: ControllerComponents
                                          ) extends BackendController(cc) {
 
-  def getOpenObligations(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
+  def getOpenObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[ReportDeadlinesController][getOpenObligations] - " +
-      s"Requesting obligations from ReportDeadlinesService for incomeSourceId: $incomeSourceId, nino: $nino")
-    reportDeadlinesService.getReportDeadlines(incomeSourceId, nino, openObligations = true).map {
-      case success: ReportDeadlinesModel =>
+      s"Requesting obligations from ReportDeadlinesService for nino: $nino")
+    reportDeadlinesService.getReportDeadlines(nino, openObligations = true).map {
+      case success: ObligationsModel =>
         Logger.debug(s"[ReportDeadlinesController][getOpenObligations] - Successful Response: $success")
         Ok(Json.toJson(success))
       case error: ReportDeadlinesErrorModel =>
@@ -46,11 +46,11 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
     }
   }
 
-  def getFulfilledObligations(incomeSourceId: String, nino: String): Action[AnyContent] = authentication.async { implicit request =>
+  def getFulfilledObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - " +
-      s"Requesting obligations from ReportDeadlinesService for incomeSourceId: $incomeSourceId, nino: $nino")
-    reportDeadlinesService.getReportDeadlines(incomeSourceId, nino, openObligations = false).map {
-      case success: ReportDeadlinesModel =>
+      s"Requesting obligations from ReportDeadlinesService for nino: $nino")
+    reportDeadlinesService.getReportDeadlines(nino, openObligations = false).map {
+      case success: ObligationsModel =>
         Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - Successful Response: $success")
         Ok(Json.toJson(success))
       case error: ReportDeadlinesErrorModel =>

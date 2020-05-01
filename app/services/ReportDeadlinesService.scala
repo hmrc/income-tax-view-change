@@ -29,21 +29,12 @@ import scala.concurrent.Future
 @Singleton
 class ReportDeadlinesService @Inject()(val reportDeadlinesConnector: ReportDeadlinesConnector){
 
-  def getReportDeadlines(incomeSourceId: String, mtdId: String, openObligations: Boolean)
+  def getReportDeadlines(nino: String, openObligations: Boolean)
                         (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
     Logger.debug("[ReportDeadlinesService][getReportDeadlines] - Requesting obligation data from Connector")
 
-    reportDeadlinesConnector.getReportDeadlines(mtdId, openObligations) map {
-      case Right(deadlines) if incomeSourceId != mtdId=>
-        deadlines.obligations.find(_.identification == incomeSourceId) getOrElse {
-          Logger.error(s"[ReportDeadlinesService][getReportDeadlines] Report Deadlines could not be found for ID: $incomeSourceId")
-          ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for Income Source ID Provided")
-        }
-      case Right(deadlines) if incomeSourceId == mtdId =>
-        deadlines.obligations.find(_.identification == mtdId) getOrElse {
-          Logger.error(s"[ReportDeadlinesService][getReportDeadlines] Crystallised Report Deadlines could not be found for ID")
-          ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve Report Deadlines for mtdId Provided")
-        }
+    reportDeadlinesConnector.getReportDeadlines(nino, openObligations) map {
+      case Right(deadlines) => deadlines
       case Left(error) => error
     }
   }

@@ -93,7 +93,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
 
         result shouldBe Left(testReportDeadlinesError)
       }
-      "the json recieved can not be parsed into an obligations model" in new Setup {
+      "the json received can not be parsed into an obligations model" in new Setup {
         when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
           .thenReturn(Future.successful(badJson))
 

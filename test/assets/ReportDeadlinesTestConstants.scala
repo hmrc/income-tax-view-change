@@ -24,7 +24,6 @@ import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 
-
 object ReportDeadlinesTestConstants {
 
   //Report Deadline
@@ -98,7 +97,6 @@ object ReportDeadlinesTestConstants {
     obligationType = "Crystallised"
   )
 
-
   val testDeadlineFromJson: JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
@@ -116,22 +114,22 @@ object ReportDeadlinesTestConstants {
 
   //Report Deadlines
   val testReportDeadlines_1: ReportDeadlinesModel =
-    ReportDeadlinesModel(testIncomeSourceID_1, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
+    ReportDeadlinesModel(testNino, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
 
   val testReportDeadlines_2: ReportDeadlinesModel =
-    ReportDeadlinesModel(testIncomeSourceID_2, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
+    ReportDeadlinesModel(testNino, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
 
   val testReportDeadlines_3: ReportDeadlinesModel =
-    ReportDeadlinesModel(testIncomeSourceID_3, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
+    ReportDeadlinesModel(testNino, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
 
   val testReportDeadlines_4: ReportDeadlinesModel =
-    ReportDeadlinesModel(testIncomeSourceID_4, Seq(testCrystallised))
+    ReportDeadlinesModel(testNino, Seq(testCrystallised))
 
   val testReportDeadlinesFromJson: JsValue =
     Json.obj(
       "identification" -> Json.obj(
         "incomeSourceType" -> "ITSB",
-        "referenceNumber" -> testIncomeSourceID_1
+        "referenceNumber" -> testNino
       ),
       "obligationDetails" -> Json.arr(
         testDeadlineFromJson,
@@ -142,17 +140,21 @@ object ReportDeadlinesTestConstants {
     )
 
   val testReportDeadlinesToJson: JsValue = Json.obj(
-    "identification" -> testIncomeSourceID_1,
+    "identification" -> testNino,
     "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
   )
 
-  val testReportDeadlinesError: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR,"Error Message")
-  val testReportDeadlinesErrorJson: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data ")
-  def testReportDeadlinesErrorFutureFailed(exceptionMessage: String): ReportDeadlinesErrorModel = {
+  val testReportDeadlinesError: ReportDeadlinesErrorModel =
+    ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message")
+
+  val testReportDeadlinesErrorJson: ReportDeadlinesErrorModel =
+    ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
+
+  def testReportDeadlinesErrorFutureFailed(exceptionMessage: String): ReportDeadlinesErrorModel =
     ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, $exceptionMessage")
-  }
-  val testReportDeadlinesNoContentIncome: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.NO_CONTENT,"Could not retrieve Report Deadlines for Income Source ID Provided")
-  val testReportDeadlinesNoContentMtdId: ReportDeadlinesErrorModel = ReportDeadlinesErrorModel(Status.NO_CONTENT,"Could not retrieve Report Deadlines for mtdId Provided")
+
+  val testReportDeadlinesNoContentNino: ReportDeadlinesErrorModel =
+    ReportDeadlinesErrorModel(Status.NO_CONTENT,"Could not retrieve report deadlines for nino provided")
 
   val testObligations: ObligationsModel = ObligationsModel(Seq(testReportDeadlines_1, testReportDeadlines_2, testReportDeadlines_3))
 
@@ -161,7 +163,7 @@ object ReportDeadlinesTestConstants {
       Json.obj(
         "identification" -> Json.obj(
           "incomeSourceType" -> "ITSB",
-          "referenceNumber" -> testIncomeSourceID_1
+          "referenceNumber" -> testNino
         ),
         "obligationDetails" -> Json.arr(
           testDeadlineFromJson,
@@ -173,7 +175,7 @@ object ReportDeadlinesTestConstants {
       Json.obj(
         "identification" -> Json.obj(
           "incomeSourceType" -> "ITSB",
-          "referenceNumber" -> testIncomeSourceID_2
+          "referenceNumber" -> testNino
         ),
         "obligationDetails" -> Json.arr(
           testDeadlineFromJson,
@@ -185,7 +187,7 @@ object ReportDeadlinesTestConstants {
       Json.obj(
         "identification" -> Json.obj(
           "incomeSourceType" -> "ITSB",
-          "referenceNumber" -> testIncomeSourceID_3
+          "referenceNumber" -> testNino
         ),
         "obligationDetails" -> Json.arr(
           testDeadlineFromJson,
@@ -200,15 +202,15 @@ object ReportDeadlinesTestConstants {
   val testObligationsToJson: JsValue = Json.obj(
     "obligations" -> Json.arr(
       Json.obj(
-        "identification" -> testIncomeSourceID_1,
+        "identification" -> testNino,
         "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
       ),
       Json.obj(
-        "identification" -> testIncomeSourceID_2,
+        "identification" -> testNino,
         "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
       ),
       Json.obj(
-        "identification" -> testIncomeSourceID_3,
+        "identification" -> testNino,
         "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
       )
     )
