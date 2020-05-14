@@ -20,22 +20,22 @@ import assets.BaseIntegrationTestConstants._
 import assets.ReportDeadlinesIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesReportDeadlinesStub
-import models.reportDeadlines.{ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import play.api.http.Status._
 
 class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
   "Calling the ReportDeadlinesController" when {
     "authorised with a valid request" should {
-      "return a valid ReportDeadlinesModel with an income source id for open obligations" in {
+      "return a valid ObligationsModel for open obligations" in {
 
         isAuthorised(true)
 
         And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesOpenReportDeadlines(testNino, testIncomeSourceId)
+        DesReportDeadlinesStub.stubGetDesOpenReportDeadlines(testNino)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testIncomeSourceId/report-deadlines")
-        val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/report-deadlines")
+        val res = IncomeTaxViewChange.getReportDeadlines(testNino)
 
         DesReportDeadlinesStub.verifyGetOpenDesReportDeadlines(testNino)
 
@@ -43,18 +43,19 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         res should have(
           httpStatus(OK),
-          jsonBodyAs[ReportDeadlinesModel](reportDeadlines)
+          jsonBodyAs[ObligationsModel](obligationsModel)
         )
       }
 
-      "return a valid ReportDeadlinesModel with an income source id for fulfilled obligations" in {
+      "return a valid ObligationsModel for fulfilled obligations" in {
+
         isAuthorised(true)
 
         And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlines(testNino, testMtditid)
+        DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlines(testNino)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/fulfilled-report-deadlines")
-        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testMtditid, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/report-deadlines")
+        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testNino)
 
         DesReportDeadlinesStub.verifyGetFulfilledDesReportDeadlines(testNino)
 
@@ -62,52 +63,10 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         res should have(
           httpStatus(OK),
-          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesMtdId)
-        )
-      }
-
-      "return a valid ReportDeadlinesModel with no income source id for open obligations" in {
-
-        isAuthorised(true)
-
-        And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesOpenReportDeadlines(testNino, testMtditid)
-
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
-        val res = IncomeTaxViewChange.getReportDeadlines(testMtditid, testNino)
-
-        DesReportDeadlinesStub.verifyGetOpenDesReportDeadlines(testNino)
-
-        Then("a successful response is returned with the correct model")
-
-        res should have(
-          httpStatus(OK),
-          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesMtdId)
-        )
-      }
-
-      "return a valid ReportDeadlinesModel with no income source id for fulfilled obligations" in {
-
-        isAuthorised(true)
-
-        And("I wiremock stub a successful Get Report Deadlines response")
-        DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlines(testNino, testMtditid)
-
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
-        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testMtditid, testNino)
-
-        DesReportDeadlinesStub.verifyGetFulfilledDesReportDeadlines(testNino)
-
-        Then("a successful response is returned with the correct model")
-
-        res should have(
-          httpStatus(OK),
-          jsonBodyAs[ReportDeadlinesModel](reportDeadlinesMtdId)
+          jsonBodyAs[ObligationsModel](obligationsModel)
         )
       }
     }
-
-
 
     "authorised with a invalid request" should {
       "return a ReportDeadlinesErrorModel for open obligations" in {
@@ -116,8 +75,8 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
         And("I wiremock stub an unsuccessful Get Report Deadlines response")
         DesReportDeadlinesStub.stubGetDesOpenReportDeadlinesError(testNino)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testIncomeSourceId/report-deadlines")
-        val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/report-deadlines")
+        val res = IncomeTaxViewChange.getReportDeadlines(testNino)
 
         DesReportDeadlinesStub.verifyGetOpenDesReportDeadlines(testNino)
 
@@ -133,8 +92,8 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
         And("I wiremock stub an unsuccessful Get Report Deadlines response")
         DesReportDeadlinesStub.stubGetDesFulfilledReportDeadlinesError(testNino)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testIncomeSourceId/report-deadlines")
-        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testIncomeSourceId, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/report-deadlines")
+        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testNino)
 
         DesReportDeadlinesStub.verifyGetFulfilledDesReportDeadlines(testNino)
 
@@ -150,8 +109,8 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         isAuthorised(false)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
-        val res = IncomeTaxViewChange.getReportDeadlines(testIncomeSourceId, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/report-deadlines")
+        val res = IncomeTaxViewChange.getReportDeadlines(testNino)
 
         res should have(
           httpStatus(UNAUTHORIZED),
@@ -163,8 +122,8 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
         isAuthorised(false)
 
-        When(s"I call GET /income-tax-view-change/$testNino/income-source/$testMtditid/report-deadlines")
-        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testIncomeSourceId, testNino)
+        When(s"I call GET /income-tax-view-change/$testNino/report-deadlines")
+        val res = IncomeTaxViewChange.getFulfilledReportDeadlines(testNino)
 
         res should have(
           httpStatus(UNAUTHORIZED),

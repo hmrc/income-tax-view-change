@@ -51,22 +51,22 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
   "getOpenObligations" should {
     s"return ${Status.OK} with valid report deadlines" in new Setup {
       mockAuth(Future.successful())
-      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(true))(any()))
-        .thenReturn(Future.successful(testReportDeadlines_1))
+      when(reportDeadlinesService.getReportDeadlines(matches(testNino), matches(true))(any()))
+        .thenReturn(Future.successful(testObligations))
 
-      val result: Result = await(controller.getOpenObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+      val result: Result = await(controller.getOpenObligations(testNino)(FakeRequest()))
 
       status(result) shouldBe Status.OK
       result.body.contentType shouldBe Some("application/json")
-      jsonBodyOf(result) shouldBe Json.toJson(testReportDeadlines_1)
+      jsonBodyOf(result) shouldBe Json.toJson(testObligations)
     }
 
     "return the status of the error model when the service returns one" in new Setup {
       mockAuth(Future.successful())
-      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(true))(any()))
+      when(reportDeadlinesService.getReportDeadlines(matches(testNino), matches(true))(any()))
         .thenReturn(Future.successful(testReportDeadlinesError))
 
-      val result: Result = await(controller.getOpenObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+      val result: Result = await(controller.getOpenObligations(testNino)(FakeRequest()))
 
       status(result) shouldBe testReportDeadlinesError.status
       result.body.contentType shouldBe Some("application/json")
@@ -75,7 +75,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
 
     s"return ${Status.UNAUTHORIZED} when called by an unauthorised user" in new Setup(authorised = false) {
       mockAuth(Future.failed(new MissingBearerToken))
-      val result: Result = await(controller.getOpenObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+      val result: Result = await(controller.getOpenObligations(testNino)(FakeRequest()))
 
       status(result) shouldBe Status.UNAUTHORIZED
     }
@@ -84,22 +84,22 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
   "getFulfilledObligations" should {
     s"return ${Status.OK} with valid report deadlines" in new Setup {
       mockAuth(Future.successful())
-      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(false))(any()))
-        .thenReturn(Future.successful(testReportDeadlines_1))
+      when(reportDeadlinesService.getReportDeadlines(matches(testNino), matches(false))(any()))
+        .thenReturn(Future.successful(testObligations))
 
-      val result: Result = await(controller.getFulfilledObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+      val result: Result = await(controller.getFulfilledObligations(testNino)(FakeRequest()))
 
       status(result) shouldBe Status.OK
       result.body.contentType shouldBe Some("application/json")
-      jsonBodyOf(result) shouldBe Json.toJson(testReportDeadlines_1)
+      jsonBodyOf(result) shouldBe Json.toJson(testObligations)
     }
 
     "return the status of the error model when the service returns one" in new Setup {
       mockAuth(Future.successful())
-      when(reportDeadlinesService.getReportDeadlines(matches(testIncomeSourceID_1), matches(testNino), matches(false))(any()))
+      when(reportDeadlinesService.getReportDeadlines(matches(testNino), matches(false))(any()))
         .thenReturn(Future.successful(testReportDeadlinesError))
 
-      val result: Result = await(controller.getFulfilledObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+      val result: Result = await(controller.getFulfilledObligations(testNino)(FakeRequest()))
 
       status(result) shouldBe testReportDeadlinesError.status
       result.body.contentType shouldBe Some("application/json")
@@ -108,7 +108,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
 
     s"return ${Status.UNAUTHORIZED} when called by an unauthorised user" in new Setup(authorised = false) {
       mockAuth(Future.failed(new MissingBearerToken))
-      val result: Result = await(controller.getFulfilledObligations(testIncomeSourceID_1, testNino)(FakeRequest()))
+      val result: Result = await(controller.getFulfilledObligations(testNino)(FakeRequest()))
 
       status(result) shouldBe Status.UNAUTHORIZED
     }

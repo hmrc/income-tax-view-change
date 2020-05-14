@@ -20,7 +20,6 @@ object BaseIntegrationTestConstants {
 
   val testMtditidEnrolmentKey = "HMRC-MTD-IT"
   val testMtditidEnrolmentIdentifier = "MTDITID"
-  val testMtditid = "XAITSA123456"
 
   val testNinoEnrolmentKey = "HMRC-NI"
   val testNinoEnrolmentIdentifier = "NINO"
@@ -28,7 +27,5 @@ object BaseIntegrationTestConstants {
   val testMtdRef = "123456789012345"
   val testYear = "2018"
   val testCalcType = "it"
-
-  val testIncomeSourceId = "XAIT000000123456564"
 
 }

@@ -18,7 +18,7 @@ package assets
 
 import java.time.LocalDate
 
-import models.reportDeadlines.{ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import models.reportDeadlines.{ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import BaseIntegrationTestConstants._
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
@@ -43,11 +43,13 @@ object ReportDeadlinesIntegrationTestConstants {
   )
 
   //ReportDeadlinesModels
-  val reportDeadlines = ReportDeadlinesModel(testIncomeSourceId, Seq(testReportDeadline, testReportDeadline))
-  val reportDeadlinesMtdId = ReportDeadlinesModel(testMtditid, Seq(testReportDeadline, testReportDeadline))
+  val reportDeadlinesNino = ReportDeadlinesModel(testNino, Seq(testReportDeadline, testReportDeadline))
+  def reportDeadlinesId(id: String): ReportDeadlinesModel = ReportDeadlinesModel(id, Seq(testReportDeadline, testReportDeadline))
+
+  val obligationsModel = ObligationsModel(Seq(reportDeadlinesId("XAIS009998898"), reportDeadlinesNino, reportDeadlinesId("XAIS0000067890")))
   val reportDeadlinesError = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "ISE")
 
-  def successResponse(incomeSourceId: String): JsValue = {
+  def successResponse(nino: String): JsValue = {
     Json.obj(
       "obligations" -> Json.arr(
         Json.obj(
@@ -61,7 +63,7 @@ object ReportDeadlinesIntegrationTestConstants {
         Json.obj(
           "identification" -> Json.obj(
             "incomeSourceType" -> "ITSB",
-            "referenceNumber" -> incomeSourceId,
+            "referenceNumber" -> nino,
             "referenceType" -> "MTDBIS"
           ),
           "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson))

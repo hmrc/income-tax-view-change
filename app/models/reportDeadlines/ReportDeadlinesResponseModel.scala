@@ -16,32 +16,23 @@
 
 package models.reportDeadlines
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, _}
 
 sealed trait ReportDeadlinesResponseModel
 
-case class ReportDeadlinesModel(identification: String, obligations: Seq[ReportDeadlineModel]) extends ReportDeadlinesResponseModel
+case class ObligationsModel(obligations: Seq[ReportDeadlinesModel]) extends ReportDeadlinesResponseModel
 
 case class ReportDeadlinesErrorModel(status: Int, reason: String) extends ReportDeadlinesResponseModel
 
-object ReportDeadlinesModel {
-
-  val desReadsApi1330: Reads[ReportDeadlinesModel] = (
-
-    (__ \\ "identification" \\ "referenceNumber").read[String] and
-      (__ \\ "identification" \\ "incomeSourceType").read[String].flatMap { incomeSourceType =>
-        (__ \\ "obligationDetails").read(
-          Reads.seq(
-            ReportDeadlineModel.desReadsApi(incomeSourceType)
-          )
-        )
-      }
-  )(ReportDeadlinesModel.apply _)
-
-  implicit val format: Format[ReportDeadlinesModel] = Json.format[ReportDeadlinesModel]
-}
 
 object ReportDeadlinesErrorModel {
   implicit val format: Format[ReportDeadlinesErrorModel] = Json.format[ReportDeadlinesErrorModel]
+}
+
+object ObligationsModel {
+
+  val desReadsApi1330: Reads[ObligationsModel] =
+    (__ \ "obligations").read(Reads.seq(ReportDeadlinesModel.desReadsApi1330)).map(ObligationsModel(_))
+
+  implicit val format: Format[ObligationsModel] = Json.format[ObligationsModel]
 }

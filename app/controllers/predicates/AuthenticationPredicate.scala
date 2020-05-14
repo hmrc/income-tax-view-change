@@ -20,7 +20,7 @@ import config.MicroserviceAuthConnector
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AuthorisedFunctions
+import uk.gov.hmrc.auth.core.{AuthorisationException, AuthorisedFunctions}
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,7 +35,7 @@ class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConne
       authorised() {
         action(request)
       } recover {
-        case ex =>
+        case ex: AuthorisationException =>
           Logger.error(s"[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response, ${ex.getMessage}")
           Unauthorized
       }
