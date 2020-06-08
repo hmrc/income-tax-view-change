@@ -37,6 +37,16 @@ trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
     reset(mockHttpGet)
   }
 
+  def mockDesGet[A, B](url: String, queryParameters: Seq[(String, String)], headerCarrier: HeaderCarrier)(response: Either[A, B]): Unit = {
+    when(mockHttpGet.GET[Either[A, B]](
+      ArgumentMatchers.eq(url),
+      ArgumentMatchers.eq(queryParameters)
+    )(ArgumentMatchers.any(),
+      ArgumentMatchers.eq(headerCarrier),
+      ArgumentMatchers.any())
+    ).thenReturn(Future.successful(response))
+  }
+
   def setupMockHttpFutureGet[A](url: String)(response: A): OngoingStubbing[Future[A]] =
     when(mockHttpGet.GET[A](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(),
       ArgumentMatchers.any())).thenReturn(Future.successful(response))
