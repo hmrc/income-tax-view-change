@@ -19,7 +19,7 @@ package helpers
 import org.jsoup.Jsoup
 import org.scalatest._
 import org.scalatest.matchers._
-import play.api.libs.json.Reads
+import play.api.libs.json.{JsValue, Reads}
 import play.api.libs.ws.WSResponse
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -49,6 +49,15 @@ trait CustomMatchers extends UnitSpec with GivenWhenThen {
         )
       }
     }
+
+  def jsonBodyMatching(expectedJson: JsValue): HavePropertyMatcher[WSResponse, JsValue] = HavePropertyMatcher { response =>
+    HavePropertyMatchResult(
+      response.json == expectedJson,
+      "jsonBodyMatching",
+      expectedJson,
+      response.json
+    )
+  }
 
   def emptyBody: HavePropertyMatcher[WSResponse, String] =
     new HavePropertyMatcher[WSResponse, String] {

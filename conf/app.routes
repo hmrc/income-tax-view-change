@@ -1,10 +1,12 @@
 # microservice specific routes
 
-GET        /nino-lookup/:mtdRef                         controllers.IncomeSourceDetailsController.getNino(mtdRef)
+GET        /nino-lookup/:mtdRef                                          controllers.IncomeSourceDetailsController.getNino(mtdRef)
 
-GET        /income-sources/:mtdRef                      controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
+GET        /income-sources/:mtdRef                                       controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
 
-GET        /:nino/report-deadlines                      controllers.ReportDeadlinesController.getOpenObligations(nino)
-GET        /:nino/fulfilled-report-deadlines            controllers.ReportDeadlinesController.getFulfilledObligations(nino)
+GET        /:nino/report-deadlines                                       controllers.ReportDeadlinesController.getOpenObligations(nino)
+GET        /:nino/fulfilled-report-deadlines                             controllers.ReportDeadlinesController.getFulfilledObligations(nino)
 
-GET        /previous-tax-calculation/:nino/:year        controllers.PreviousCalculationController.getPreviousCalculation(nino, year)
+GET        /previous-tax-calculation/:nino/:year                         controllers.PreviousCalculationController.getPreviousCalculation(nino, year)
+
+GET        /:nino/payment-allocations/:paymentLot/:paymentLotItem        controllers.PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)

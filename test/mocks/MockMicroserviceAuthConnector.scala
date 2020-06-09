@@ -29,7 +29,7 @@ trait MockMicroserviceAuthConnector extends UnitSpec with MockitoSugar with Befo
 
   val mockMicroserviceAuthConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 
-  def mockAuth(response: Future[Unit]): Future[Nothing] = {
+  def mockAuth(response: Future[Unit] = Future.successful()): Future[Nothing] = {
     doReturn(response, Nil:_*).when(mockMicroserviceAuthConnector)
       .authorise(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())
   }
