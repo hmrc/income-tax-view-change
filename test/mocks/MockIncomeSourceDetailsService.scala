@@ -40,16 +40,16 @@ trait MockIncomeSourceDetailsService extends UnitSpec with MockitoSugar with Bef
   }
 
   def setupMockIncomeSourceDetailsResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
-    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockIncomeSourceDetailsService.getIncomeSourceDetails(
-        ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockIncomeSourceDetailsService.getIncomeSourceDetails(
+    ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def setupMockNinoResponse(mtdRef: String)(response: NinoResponse):
-    OngoingStubbing[Future[NinoResponse]] = when(mockIncomeSourceDetailsService.getNino(
-        ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+  OngoingStubbing[Future[NinoResponse]] = when(mockIncomeSourceDetailsService.getNino(
+    ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def mockIncomeSourceDetailsResponse(desResponse: IncomeSourceDetailsResponseModel):
-    OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockIncomeSourceDetailsResponse(mtdRef)(desResponse)
+  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockIncomeSourceDetailsResponse(mtdRef)(desResponse)
 
   def mockNinoResponse(desResponse: NinoResponse):
-    OngoingStubbing[Future[NinoResponse]] = setupMockNinoResponse(mtdRef)(desResponse)
+  OngoingStubbing[Future[NinoResponse]] = setupMockNinoResponse(mtdRef)(desResponse)
 }

@@ -57,13 +57,13 @@ object BusinessDetailsTestConstants {
 
   val testBusinessDetailsJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriodStartDate"->"2017-06-01",
-    "accountingPeriodEndDate"->"2018-05-31",
-    "tradingName"->"Test Business",
+    "accountingPeriodStartDate" -> "2017-06-01",
+    "accountingPeriodEndDate" -> "2018-05-31",
+    "tradingName" -> "Test Business",
     "businessAddressDetails" -> testAddressJson,
     "businessContactDetails" -> testContactDetailsJson,
-    "tradingStartDate"->"2017-01-01",
-    "cashOrAccruals"->"cash",
+    "tradingStartDate" -> "2017-01-01",
+    "cashOrAccruals" -> "cash",
     "seasonal" -> true,
     "cessationDate" -> "2017-06-01",
     "cessationReason" -> "Dummy reason",
@@ -72,12 +72,12 @@ object BusinessDetailsTestConstants {
 
   val testBusinessDetailsToJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriod"-> testAccountingPeriodToJson,
-    "tradingName"->"Test Business",
+    "accountingPeriod" -> testAccountingPeriodToJson,
+    "tradingName" -> "Test Business",
     "address" -> testAddressToJson,
     "contactDetails" -> testContactDetailsJson,
-    "tradingStartDate"->"2017-01-01",
-    "cashOrAccruals"->"cash",
+    "tradingStartDate" -> "2017-01-01",
+    "cashOrAccruals" -> "cash",
     "seasonal" -> true,
     "cessation" -> testCessationToJson,
     "paperless" -> true
@@ -85,13 +85,13 @@ object BusinessDetailsTestConstants {
 
   val testMinimumBusinessDetailsJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriodStartDate"->"2017-06-01",
-    "accountingPeriodEndDate"->"2018-05-31"
+    "accountingPeriodStartDate" -> "2017-06-01",
+    "accountingPeriodEndDate" -> "2018-05-31"
   )
 
   val testMinimumBusinessDetailsToJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriod"-> testAccountingPeriodToJson
+    "accountingPeriod" -> testAccountingPeriodToJson
   )
 
 }

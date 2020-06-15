@@ -25,7 +25,6 @@ case class PaymentAllocations(amount: Option[BigDecimal],
                               transactionDate: Option[String],
                               allocations: Seq[AllocationDetail])
 
-
 object PaymentAllocations {
 
   implicit val reads: Reads[PaymentAllocations] = (

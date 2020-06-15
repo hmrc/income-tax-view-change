@@ -10,3 +10,5 @@ GET        /:nino/fulfilled-report-deadlines                             control
 GET        /previous-tax-calculation/:nino/:year                         controllers.PreviousCalculationController.getPreviousCalculation(nino, year)
 
 GET        /:nino/payment-allocations/:paymentLot/:paymentLotItem        controllers.PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)
+
+GET        /:nino/financial-details/charges/from/:from/to/:to            controllers.FinancialDetailChargesController.getChargeDetails(nino, from, to)
