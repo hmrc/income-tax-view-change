@@ -175,7 +175,7 @@ object FinancialDataTestConstants {
 
 
   val testChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(validChargesJson))
-  val testEmptyChargeHttpResponse: HttpResponse = HttpResponse(200, Some(Json.toJson("")))
+  val testEmptyChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(Json.toJson("")))
 
   val charges1: Charge = Charge(
     taxYear = Some("2018"),
