@@ -61,8 +61,8 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   }
 
   "listCharges" should {
-    "return a successful list of charges" when {
-      s"$OK is returned from the connector call with a correct non-empty json charge list" in {
+    "return a list of charges" when {
+      s"$OK is received from ETMP with charges " in {
 
         mockDesGet(
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
@@ -74,7 +74,10 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
 
         result shouldBe Right(ChargesResponse(List(charges1, charges2)))
       }
-      s"$OK is returned from the connector call with a correct non-empty json" in {
+    }
+
+    "return OK without a list of charges" when {
+      s"$OK is received from ETMP with no charges" in {
         mockDesGet(
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
@@ -83,9 +86,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
 
         val result = await(TestFinancialDetailsConnector.listCharges(testNino, testFrom, testTo))
 
-        result.map(
-          res => res shouldBe Right(FinancialDataTestConstants.testEmptyChargeHttpResponse)
-        )
+        result shouldBe Right(FinancialDataTestConstants.testEmptyChargeHttpResponse)
 
       }
     }
