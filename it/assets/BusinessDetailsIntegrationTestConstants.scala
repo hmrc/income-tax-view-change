@@ -48,7 +48,8 @@ object BusinessDetailsIntegrationTestConstants {
       cashOrAccruals = Some("cash"),
       seasonal = Some(true),
       cessation = None,
-      paperless = Some(true)
+      paperless = Some(true),
+      incomeSourceStartDate = Some(LocalDate.of(2016, 1, 1))
     )
   )
 
@@ -82,7 +83,8 @@ object BusinessDetailsIntegrationTestConstants {
           "tradingStartDate" -> "2017-01-01",
           "cashOrAccruals" -> "cash",
           "seasonal" -> true,
-          "paperLess" -> true
+          "paperLess" -> true,
+          "incomeSourceStartDate" -> "2016-01-01"
         )
       )
     )
