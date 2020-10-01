@@ -23,11 +23,11 @@ import assets.AddressDetailsTestConstants._
 import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
 import models.incomeSourceDetails.BusinessDetailsModel
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 
 object BusinessDetailsTestConstants {
 
-  val testBusinessDetailsModel =
+  val testBusinessDetailsModel: BusinessDetailsModel =
     BusinessDetailsModel(
       incomeSourceId = "111111111111111",
       accountingPeriod = testAccountingPeriodModel,
@@ -38,11 +38,12 @@ object BusinessDetailsTestConstants {
       cashOrAccruals = Some("cash"),
       seasonal = Some(true),
       cessation = Some(testCessationModel),
-      paperless = Some(true)
+      paperless = Some(true),
+      incomeSourceStartDate = Some(LocalDate.of(2016, 1, 1))
     )
 
 
-  val testMinimumBusinessDetailsModel = BusinessDetailsModel(
+  val testMinimumBusinessDetailsModel: BusinessDetailsModel = BusinessDetailsModel(
     incomeSourceId = "111111111111111",
     accountingPeriod = testAccountingPeriodModel,
     tradingName = None,
@@ -52,10 +53,11 @@ object BusinessDetailsTestConstants {
     cashOrAccruals = None,
     seasonal = None,
     cessation = None,
-    paperless = None
+    paperless = None,
+    incomeSourceStartDate = None
   )
 
-  val testBusinessDetailsJson = Json.obj(
+  val testBusinessDetailsJson: JsObject = Json.obj(
     "incomeSourceId" -> "111111111111111",
     "accountingPeriodStartDate" -> "2017-06-01",
     "accountingPeriodEndDate" -> "2018-05-31",
@@ -67,10 +69,11 @@ object BusinessDetailsTestConstants {
     "seasonal" -> true,
     "cessationDate" -> "2017-06-01",
     "cessationReason" -> "Dummy reason",
-    "paperLess" -> true
+    "paperLess" -> true,
+    "incomeSourceStartDate" -> "2016-01-01"
   )
 
-  val testBusinessDetailsToJson = Json.obj(
+  val testBusinessDetailsToJson: JsObject = Json.obj(
     "incomeSourceId" -> "111111111111111",
     "accountingPeriod" -> testAccountingPeriodToJson,
     "tradingName" -> "Test Business",
@@ -80,10 +83,11 @@ object BusinessDetailsTestConstants {
     "cashOrAccruals" -> "cash",
     "seasonal" -> true,
     "cessation" -> testCessationToJson,
-    "paperless" -> true
+    "paperless" -> true,
+    "incomeSourceStartDate" -> "2016-01-01"
   )
 
-  val testMinimumBusinessDetailsJson = Json.obj(
+  val testMinimumBusinessDetailsJson: JsObject = Json.obj(
     "incomeSourceId" -> "111111111111111",
     "accountingPeriodStartDate" -> "2017-06-01",
     "accountingPeriodEndDate" -> "2018-05-31"

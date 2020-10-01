@@ -27,7 +27,8 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 contactDetails: Option[ContactDetailsModel],
                                 propertiesRented: Option[PropertiesRentedModel],
                                 cessation: Option[CessationModel],
-                                paperless: Option[Boolean])
+                                paperless: Option[Boolean],
+                                incomeSourceStartDate: Option[LocalDate])
 
 object PropertyDetailsModel extends CustomReads {
 
@@ -41,25 +42,28 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "numPropRented").readNullable[Int](readInt) and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
-      (__ \ "paperLess").readNullable[Boolean]
-    )(PropertyDetailsModel.applyWithFields _)
+      (__ \ "paperLess").readNullable[Boolean] and
+      (__ \ "incomeSourceStartDate").readNullable[LocalDate]
+    ) (PropertyDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
-                 accountingPeriod: AccountingPeriodModel,
-                 email: Option[String],
-                 uk: Option[Int],
-                 eea: Option[Int],
-                 nonEea: Option[Int],
-                 total: Option[Int],
-                 cessationDate: Option[LocalDate],
-                 cessationReason: Option[String],
-                 paperless: Option[Boolean]): PropertyDetailsModel = PropertyDetailsModel(
+                      accountingPeriod: AccountingPeriodModel,
+                      email: Option[String],
+                      uk: Option[Int],
+                      eea: Option[Int],
+                      nonEea: Option[Int],
+                      total: Option[Int],
+                      cessationDate: Option[LocalDate],
+                      cessationReason: Option[String],
+                      paperless: Option[Boolean],
+                      incomeSourceStartDate: Option[LocalDate]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,
     ContactDetailsModel.propertyContactDetails(email),
-    PropertiesRentedModel.propertiesRented(uk,eea,nonEea,total),
+    PropertiesRentedModel.propertiesRented(uk, eea, nonEea, total),
     CessationModel.cessation(cessationDate, cessationReason),
-    paperless
+    paperless,
+    incomeSourceStartDate
   )
 
   implicit val format: Format[PropertyDetailsModel] = Json.format[PropertyDetailsModel]

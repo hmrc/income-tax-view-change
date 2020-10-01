@@ -31,7 +31,8 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 cashOrAccruals: Option[String],
                                 seasonal: Option[Boolean],
                                 cessation: Option[CessationModel],
-                                paperless: Option[Boolean])
+                                paperless: Option[Boolean],
+                                incomeSourceStartDate: Option[LocalDate])
 
 
 object BusinessDetailsModel {
@@ -47,20 +48,22 @@ object BusinessDetailsModel {
       (__ \ "seasonal").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
-      (__ \ "paperLess").readNullable[Boolean]
-    )(BusinessDetailsModel.applyWithFields _)
+      (__ \ "paperLess").readNullable[Boolean] and
+      (__ \ "incomeSourceStartDate").readNullable[LocalDate]
+    ) (BusinessDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
-                    accountingPeriodModel: AccountingPeriodModel,
-                    tradingName: Option[String],
-                    address: Option[AddressModel],
-                    contactDetails: Option[ContactDetailsModel],
-                    tradingStartDate: Option[LocalDate],
-                    cashOrAccruals: Option[String],
-                    seasonal: Option[Boolean],
-                    cessationDate: Option[LocalDate],
-                    cessationReason: Option[String],
-                    paperless: Option[Boolean]): BusinessDetailsModel =
+                      accountingPeriodModel: AccountingPeriodModel,
+                      tradingName: Option[String],
+                      address: Option[AddressModel],
+                      contactDetails: Option[ContactDetailsModel],
+                      tradingStartDate: Option[LocalDate],
+                      cashOrAccruals: Option[String],
+                      seasonal: Option[Boolean],
+                      cessationDate: Option[LocalDate],
+                      cessationReason: Option[String],
+                      paperless: Option[Boolean],
+                      incomeSourceStartDate: Option[LocalDate]): BusinessDetailsModel =
     BusinessDetailsModel(
       incomeSourceId,
       accountingPeriodModel,
@@ -71,7 +74,8 @@ object BusinessDetailsModel {
       cashOrAccruals,
       seasonal,
       CessationModel.cessation(cessationDate, cessationReason),
-      paperless
+      paperless,
+      incomeSourceStartDate
     )
 
   implicit val format: Format[BusinessDetailsModel] = Json.format[BusinessDetailsModel]
