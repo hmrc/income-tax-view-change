@@ -28,7 +28,7 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 propertiesRented: Option[PropertiesRentedModel],
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean],
-                                incomeSourceStartDate: Option[LocalDate])
+                                firstAccountingPeriodEndDate: Option[LocalDate])
 
 object PropertyDetailsModel extends CustomReads {
 
@@ -43,7 +43,7 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
       (__ \ "paperLess").readNullable[Boolean] and
-      (__ \ "incomeSourceStartDate").readNullable[LocalDate]
+      (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate]
     ) (PropertyDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
@@ -56,14 +56,14 @@ object PropertyDetailsModel extends CustomReads {
                       cessationDate: Option[LocalDate],
                       cessationReason: Option[String],
                       paperless: Option[Boolean],
-                      incomeSourceStartDate: Option[LocalDate]): PropertyDetailsModel = PropertyDetailsModel(
+                      firstAccountingPeriodEndDate: Option[LocalDate]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,
     ContactDetailsModel.propertyContactDetails(email),
     PropertiesRentedModel.propertiesRented(uk, eea, nonEea, total),
     CessationModel.cessation(cessationDate, cessationReason),
     paperless,
-    incomeSourceStartDate
+    firstAccountingPeriodEndDate
   )
 
   implicit val format: Format[PropertyDetailsModel] = Json.format[PropertyDetailsModel]

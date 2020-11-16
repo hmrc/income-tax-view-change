@@ -32,7 +32,7 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 seasonal: Option[Boolean],
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean],
-                                incomeSourceStartDate: Option[LocalDate])
+                                firstAccountingPeriodEndDate: Option[LocalDate])
 
 
 object BusinessDetailsModel {
@@ -49,7 +49,7 @@ object BusinessDetailsModel {
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
       (__ \ "paperLess").readNullable[Boolean] and
-      (__ \ "incomeSourceStartDate").readNullable[LocalDate]
+      (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate]
     ) (BusinessDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
@@ -63,7 +63,7 @@ object BusinessDetailsModel {
                       cessationDate: Option[LocalDate],
                       cessationReason: Option[String],
                       paperless: Option[Boolean],
-                      incomeSourceStartDate: Option[LocalDate]): BusinessDetailsModel =
+                      firstAccountingPeriodEndDate: Option[LocalDate]): BusinessDetailsModel =
     BusinessDetailsModel(
       incomeSourceId,
       accountingPeriodModel,
@@ -75,7 +75,7 @@ object BusinessDetailsModel {
       seasonal,
       CessationModel.cessation(cessationDate, cessationReason),
       paperless,
-      incomeSourceStartDate
+      firstAccountingPeriodEndDate
     )
 
   implicit val format: Format[BusinessDetailsModel] = Json.format[BusinessDetailsModel]
