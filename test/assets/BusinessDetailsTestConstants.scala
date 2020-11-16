@@ -39,7 +39,7 @@ object BusinessDetailsTestConstants {
       seasonal = Some(true),
       cessation = Some(testCessationModel),
       paperless = Some(true),
-      incomeSourceStartDate = Some(LocalDate.of(2016, 1, 1))
+      firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1))
     )
 
 
@@ -54,7 +54,7 @@ object BusinessDetailsTestConstants {
     seasonal = None,
     cessation = None,
     paperless = None,
-    incomeSourceStartDate = None
+    firstAccountingPeriodEndDate = None
   )
 
   val testBusinessDetailsJson: JsObject = Json.obj(
@@ -70,7 +70,7 @@ object BusinessDetailsTestConstants {
     "cessationDate" -> "2017-06-01",
     "cessationReason" -> "Dummy reason",
     "paperLess" -> true,
-    "incomeSourceStartDate" -> "2016-01-01"
+    "firstAccountingPeriodEndDate" -> "2016-01-01"
   )
 
   val testBusinessDetailsToJson: JsObject = Json.obj(
@@ -84,7 +84,7 @@ object BusinessDetailsTestConstants {
     "seasonal" -> true,
     "cessation" -> testCessationToJson,
     "paperless" -> true,
-    "incomeSourceStartDate" -> "2016-01-01"
+    "firstAccountingPeriodEndDate" -> "2016-01-01"
   )
 
   val testMinimumBusinessDetailsJson: JsObject = Json.obj(
