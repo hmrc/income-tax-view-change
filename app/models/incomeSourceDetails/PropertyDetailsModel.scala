@@ -32,7 +32,7 @@ case class PropertyDetailsModel(incomeSourceId: String,
 
 object PropertyDetailsModel extends CustomReads {
 
-  val desReads: Reads[PropertyDetailsModel] = (
+  implicit val desReads: Reads[PropertyDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
       __.read(AccountingPeriodModel.desReads) and
       (__ \ "emailAddress").readNullable[String] and
@@ -66,6 +66,6 @@ object PropertyDetailsModel extends CustomReads {
     firstAccountingPeriodEndDate
   )
 
-  implicit val format: Format[PropertyDetailsModel] = Json.format[PropertyDetailsModel]
+  implicit val writes: OWrites[PropertyDetailsModel] = Json.writes[PropertyDetailsModel]
 
 }

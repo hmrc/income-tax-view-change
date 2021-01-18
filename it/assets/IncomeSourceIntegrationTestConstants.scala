@@ -17,7 +17,7 @@
 package assets
 
 import assets.BaseIntegrationTestConstants.testNino
-import assets.BusinessDetailsIntegrationTestConstants.testBusinessModel
+import assets.BusinessDetailsIntegrationTestConstants.{testBusinessModel, testPropertyDetailsModel}
 import assets.NinoIntegrationTestConstants.ninoErrorJson
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import play.mvc.Http.Status
@@ -28,7 +28,7 @@ object IncomeSourceIntegrationTestConstants {
     IncomeSourceDetailsModel(
       nino = testNino,
       businesses = testBusinessModel,
-      property = None
+      property = Some(testPropertyDetailsModel)
     )
 
   val incomeSourceDetailsError: IncomeSourceDetailsError = IncomeSourceDetailsError(500,ninoErrorJson.toString())

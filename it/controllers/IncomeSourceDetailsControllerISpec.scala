@@ -17,6 +17,7 @@
 package controllers
 
 import assets.BaseIntegrationTestConstants._
+import assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
 import assets.IncomeSourceIntegrationTestConstants._
 import assets.NinoIntegrationTestConstants._
 import helpers.ComponentSpecBase
@@ -34,7 +35,7 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
-          And("I wiremock stub a successful getIncomeSOurceDetails response")
+          And("I wiremock stub a successful getIncomeSourceDetails response")
           DesBusinessDetailsStub.stubGetDesBusinessDetails(testMtdRef, incomeSourceDetailsSuccess)
 
           When(s"I call GET income-tax-view-change/nino-lookup/$testMtdRef")
@@ -106,7 +107,7 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
 
           res should have(
             httpStatus(OK),
-            jsonBodyAs[IncomeSourceDetailsModel](incomeSourceDetailsSuccess)
+						jsonBodyMatching(jsonSuccessOutput())
           )
         }
       }

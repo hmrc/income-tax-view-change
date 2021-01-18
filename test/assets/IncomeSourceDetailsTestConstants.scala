@@ -45,7 +45,7 @@ object IncomeSourceDetailsTestConstants {
     "nino" -> testNino,
     "mtdbsa" -> mtdRef,
     "businessData" -> Json.arr(testBusinessDetailsJson,testMinimumBusinessDetailsJson),
-    "propertyData" -> testPropertyDetailsJson
+    "propertyData" -> Json.arr(testPropertyDetailsJson)
   )
 
   val testIncomeSourceDetailsToJson = Json.obj(

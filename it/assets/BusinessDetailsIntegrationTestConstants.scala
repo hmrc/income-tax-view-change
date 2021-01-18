@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import assets.BaseIntegrationTestConstants.testMtdRef
 import models.core.{AccountingPeriodModel, AddressModel, ContactDetailsModel}
-import models.incomeSourceDetails.BusinessDetailsModel
+import models.incomeSourceDetails.{BusinessDetailsModel, PropertyDetailsModel}
 import play.api.libs.json.{JsValue, Json}
 
 object BusinessDetailsIntegrationTestConstants {
@@ -53,13 +53,25 @@ object BusinessDetailsIntegrationTestConstants {
     )
   )
 
+	val testPropertyDetailsModel = PropertyDetailsModel(
+		incomeSourceId = "2222222222",
+		accountingPeriod = AccountingPeriodModel(
+			start = LocalDate.parse("2017-06-01"),
+			end = LocalDate.parse("2018-05-31")),
+		None,
+		None,
+		None,
+		Some(true),
+		Some(LocalDate.parse("2017-06-01"))
+	)
+
   def successResponse(nino: String): JsValue = {
 
     Json.obj(
       "safeId" -> "XAIT12345678908",
       "nino" -> nino,
       "mtdbsa" -> testMtdRef,
-      "propertyIncome" -> false,
+      "propertyIncome" -> true,
       "businessData" -> Json.arr(
         Json.obj(
           "incomeSourceId" -> "111111111111111",
@@ -86,7 +98,16 @@ object BusinessDetailsIntegrationTestConstants {
           "paperLess" -> true,
           "firstAccountingPeriodEndDate" -> "2016-01-01"
         )
-      )
+      ),
+			"propertyData" -> Json.arr(
+				Json.obj(
+					"incomeSourceId" ->"2222222222",
+					"accountingPeriodStartDate" -> "2017-06-01",
+					"accountingPeriodEndDate" -> "2018-05-31",
+					"paperLess" ->true,
+					"firstAccountingPeriodEndDate" ->"2017-06-01"
+				)
+			)
     )
 
   }
@@ -96,5 +117,49 @@ object BusinessDetailsIntegrationTestConstants {
       "code" -> code,
       "reason" -> reason
     )
+
+	def jsonSuccessOutput(): JsValue = {
+		Json.parse(
+			"""
+				|{
+				|	"nino":"BB123456A",
+				|	"businesses":[{
+				|		"incomeSourceId":"111111111111111",
+				|  	"accountingPeriod":{
+				|   	"start":"2017-06-01",
+				|    	"end":"2018-05-31"
+				|   },
+				|   "tradingName":"Test Business",
+				|   "address":{
+				|   	"addressLine1":"Test Lane",
+				|    	"addressLine2":"Test Unit",
+				|     "addressLine3":"Test Town",
+				|     "addressLine4":"Test City",
+				|     "postCode":"TE5 7TE","countryCode":"GB"
+				|   },
+				|   "contactDetails":{
+				|   	"phoneNumber":"01332752856",
+				|    	"mobileNumber":"07782565326",
+				|     "faxNumber":"01332754256",
+				|     "emailAddress":"stephen@manncorpone.co.uk"
+				|   },
+				|   "tradingStartDate":"2017-01-01",
+				|   "cashOrAccruals":"cash",
+				|   "seasonal":true,
+				|   "paperless":true,
+				|   "firstAccountingPeriodEndDate":"2016-01-01"
+				| }],
+				| "property":{
+				| 	"incomeSourceId":"2222222222",
+				|  	"accountingPeriod":{
+				|  		"start":"2017-06-01",
+				|   	"end":"2018-05-31"
+				| 	},
+				| 	"paperless":true,
+				| 	"firstAccountingPeriodEndDate":"2017-06-01"
+				|	}
+				|}
+|""".stripMargin)
+	}
 
 }
