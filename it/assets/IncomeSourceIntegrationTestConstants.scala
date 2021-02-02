@@ -16,7 +16,7 @@
 
 package assets
 
-import assets.BaseIntegrationTestConstants.testNino
+import assets.BaseIntegrationTestConstants.{testMtdbsa, testNino}
 import assets.BusinessDetailsIntegrationTestConstants.{testBusinessModel, testPropertyDetailsModel}
 import assets.NinoIntegrationTestConstants.ninoErrorJson
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
@@ -27,11 +27,12 @@ object IncomeSourceIntegrationTestConstants {
   val incomeSourceDetailsSuccess: IncomeSourceDetailsModel =
     IncomeSourceDetailsModel(
       nino = testNino,
+      mtdbsa = testMtdbsa,
       businesses = testBusinessModel,
       property = Some(testPropertyDetailsModel)
     )
 
-  val incomeSourceDetailsError: IncomeSourceDetailsError = IncomeSourceDetailsError(500,ninoErrorJson.toString())
+  val incomeSourceDetailsError: IncomeSourceDetailsError = IncomeSourceDetailsError(500, ninoErrorJson.toString())
 
   val ninoLookupError = IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Error Message")
 

@@ -19,7 +19,6 @@ package assets
 import assets.BaseTestConstants._
 import assets.BusinessDetailsTestConstants._
 import assets.PropertyDetailsTestConstants._
-import models._
 import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import play.api.libs.json.Json
@@ -30,12 +29,14 @@ object IncomeSourceDetailsTestConstants {
 
   val testIncomeSourceDetailsModel = IncomeSourceDetailsModel(
     nino = testNino,
-    businesses = List(testBusinessDetailsModel,testMinimumBusinessDetailsModel),
+    mtdbsa = testMtdId,
+    businesses = List(testBusinessDetailsModel, testMinimumBusinessDetailsModel),
     property = Some(testPropertyDetailsModel)
   )
 
   val testMinimumIncomeSourceDetailsModel = IncomeSourceDetailsModel(
     nino = testNino,
+    mtdbsa = testMtdId,
     businesses = List(),
     property = None
   )
@@ -43,13 +44,14 @@ object IncomeSourceDetailsTestConstants {
   val testIncomeSourceDetailsJson = Json.obj(
     "safeId" -> "XAIT12345678908",
     "nino" -> testNino,
-    "mtdbsa" -> mtdRef,
-    "businessData" -> Json.arr(testBusinessDetailsJson,testMinimumBusinessDetailsJson),
+    "mtdbsa" -> testMtdId,
+    "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
     "propertyData" -> Json.arr(testPropertyDetailsJson)
   )
 
   val testIncomeSourceDetailsToJson = Json.obj(
     "nino" -> testNino,
+    "mtdbsa" -> testMtdId,
     "businesses" -> Json.arr(
       testBusinessDetailsToJson,
       testMinimumBusinessDetailsToJson),
@@ -57,7 +59,8 @@ object IncomeSourceDetailsTestConstants {
   )
 
   val testMinimumIncomeSourceDetailsJson = Json.obj(
-    "nino" -> testNino
+    "nino" -> testNino,
+            "mtdbsa" -> testMtdId
   )
 
 

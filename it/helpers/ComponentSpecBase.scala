@@ -74,6 +74,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getIncomeSources(mtdRef: String): WSResponse = get(s"/income-sources/$mtdRef")
 
+    def getBusinessDetails(nino: String): WSResponse = get(s"/get-business-details/nino/$nino")
+
     def getReportDeadlines(nino: String): WSResponse = get(s"/$nino/report-deadlines")
 
     def getFulfilledReportDeadlines(nino: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines")

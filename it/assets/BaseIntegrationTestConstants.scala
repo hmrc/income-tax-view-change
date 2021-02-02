@@ -24,6 +24,7 @@ object BaseIntegrationTestConstants {
   val testNinoEnrolmentKey = "HMRC-NI"
   val testNinoEnrolmentIdentifier = "NINO"
   val testNino = "BB123456A"
+  val testMtdbsa = "XIAT0000000000A"
   val testMtdRef = "123456789012345"
   val testYear = "2018"
   val testCalcType = "it"
