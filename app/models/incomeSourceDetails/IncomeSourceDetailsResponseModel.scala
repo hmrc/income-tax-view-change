@@ -22,6 +22,7 @@ import play.api.libs.json.{Json, Reads, _}
 sealed trait IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsModel(nino: String,
+                                    mtdbsa: String,
                                     businesses: List[BusinessDetailsModel],
                                     property: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
 
@@ -30,6 +31,7 @@ case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeS
 object IncomeSourceDetailsModel {
 
   def applyWithFields(nino: String,
+                      mtdbsa: String,
            businessData: Option[List[BusinessDetailsModel]],
            propertyData: Option[PropertyDetailsModel]): IncomeSourceDetailsModel = {
     val businessDetails = businessData match {
@@ -38,6 +40,7 @@ object IncomeSourceDetailsModel {
     }
     IncomeSourceDetailsModel(
       nino,
+      mtdbsa,
       businessDetails,
       propertyData
     )
@@ -45,6 +48,7 @@ object IncomeSourceDetailsModel {
 
   val desReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "nino").read[String] and
+    (__ \ "mtdbsa").read[String] and
       (__ \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
       (__ \ "propertyData").readNullable[List[PropertyDetailsModel]].map(_.map(_.head))
     )(IncomeSourceDetailsModel.applyWithFields _)

@@ -123,6 +123,7 @@ object BusinessDetailsIntegrationTestConstants {
 			"""
 				|{
 				|	"nino":"BB123456A",
+				|	"mtdbsa":"123456789012345",
 				|	"businesses":[{
 				|		"incomeSourceId":"111111111111111",
 				|  	"accountingPeriod":{

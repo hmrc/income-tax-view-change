@@ -2,6 +2,8 @@
 
 GET        /nino-lookup/:mtdRef                                          controllers.IncomeSourceDetailsController.getNino(mtdRef)
 
+GET        /get-business-details/nino/:nino                              controllers.GetBusinessDetailsController.getBusinessDetails(nino)
+
 GET        /income-sources/:mtdRef                                       controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
 
 GET        /:nino/report-deadlines                                       controllers.ReportDeadlinesController.getOpenObligations(nino)
