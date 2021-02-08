@@ -24,6 +24,7 @@ case class SubItem(subItemId: Option[String],
                    clearingDate: Option[String],
                    clearingReason: Option[String],
                    outgoingPaymentMethod: Option[String],
+                   paymentReference: Option[String] = None,
                    paymentAmount: Option[BigDecimal],
                    dueDate: Option[String],
                    paymentMethod: Option[String],
@@ -31,7 +32,7 @@ case class SubItem(subItemId: Option[String],
 
 object SubItem {
 
-  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None)
+  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
 
@@ -41,6 +42,7 @@ object SubItem {
     clearingDate <- (JsPath \ "clearingDate").readNullable[String]
     clearingReason <- (JsPath \ "clearingReason").readNullable[String]
     outgoingPaymentMethod <- (JsPath \ "outgoingPaymentMethod").readNullable[String]
+    paymentReference <- (JsPath \ "paymentReference").readNullable[String]
     paymentAmount <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
     dueDate <- (JsPath \ "dueDate").readNullable[String]
     paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
@@ -57,6 +59,7 @@ object SubItem {
       clearingDate,
       clearingReason,
       outgoingPaymentMethod,
+      paymentReference,
       paymentAmount,
       dueDate,
       paymentMethod,
