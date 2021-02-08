@@ -22,7 +22,7 @@ import play.api.libs.json.{JsObject, JsPath, JsSuccess, Json}
 
 class SubItemSpec extends WordSpec with Matchers {
 
-  val subItemEmpty: SubItem = SubItem(None, None, None, None, None, None, None, None, None)
+  val subItemEmpty: SubItem = SubItem(None, None, None, None, None, None, None, None, None,None)
 
   val subItemEmptyJson: JsObject = Json.obj(
   )

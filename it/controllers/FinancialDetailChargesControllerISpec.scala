@@ -36,6 +36,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
     transactionDate = Some("transactionDate"),
     `type` = Some("type"),
     totalAmount = Some(BigDecimal("1000.00")),
+    originalAmount=Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("500.00")),
     items = Some(Seq(
       SubItem(
@@ -44,6 +45,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         clearingDate = Some("clearingDate"),
         clearingReason = Some("clearingReason"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod"),
+        paymentReference= Some("paymentReference"),
         paymentAmount = Some(BigDecimal("2000.00")),
         dueDate = Some("dueDate"),
         paymentMethod = Some("paymentMethod"),
@@ -57,6 +59,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
     transactionDate = Some("transactionDate2"),
     `type` = Some("type2"),
     totalAmount = Some(BigDecimal("2000.00")),
+    originalAmount=Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("200.00")),
     items = Some(Seq(
       SubItem(
@@ -65,6 +68,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         clearingDate = Some("clearingDate2"),
         clearingReason = Some("clearingReason2"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod2"),
+        paymentReference= Some("paymentReference2"),
         paymentAmount = Some(BigDecimal("3000.00")),
         dueDate = Some("dueDate2"),
         paymentMethod = Some("paymentMethod2"),
@@ -79,7 +83,9 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "documentId" -> "transactionId",
         "documentDate" -> "transactionDate",
         "documentDescription" -> "type",
+        "originalAmount" -> 1000.00,
         "totalAmount" -> 1000.00,
+        "originalAmount" -> 500.00,
         "documentOutstandingAmount" -> 500.00,
         "items" -> Json.arr(
           Json.obj(
@@ -88,6 +94,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
             "clearingDate" -> "clearingDate",
             "clearingReason" -> "clearingReason",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod",
+            "paymentReference" -> "paymentReference",
             "paymentAmount" -> 2000.00,
             "dueDate" -> "dueDate",
             "paymentMethod" -> "paymentMethod",
@@ -102,6 +109,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "documentDate" -> "transactionDate2",
         "documentDescription" -> "type2",
         "totalAmount" -> 2000.00,
+        "originalAmount" -> 500.00,
         "documentOutstandingAmount" -> 200.00,
         "items" -> Json.arr(
           Json.obj(
@@ -110,6 +118,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
             "clearingDate" -> "clearingDate2",
             "clearingReason" -> "clearingReason2",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod2",
+            "paymentReference" ->"paymentReference2",
             "paymentAmount" -> 3000.00,
             "dueDate" -> "dueDate2",
             "paymentMethod" -> "paymentMethod2",
