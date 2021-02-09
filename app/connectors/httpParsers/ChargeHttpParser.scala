@@ -25,7 +25,8 @@ object ChargeHttpParser extends ResponseHttpParsers {
 
   sealed trait ChargeResponseError
 
-  case object UnexpectedChargeResponse extends ChargeResponseError
+  case object UnexpectedChargeErrorResponse extends ChargeResponseError
+  case class UnexpectedChargeResponse(code: Int, response: String) extends ChargeResponseError
 
   type ChargeResponse = Either[ChargeResponseError, ChargesResponse]
 
@@ -37,10 +38,10 @@ object ChargeHttpParser extends ResponseHttpParsers {
           Right(response.json.as[ChargesResponse])
         case status if status >= 400 && status < 500 =>
           Logger.error(s"[ChargeReads][read] $status returned from DES with body: ${response.body}")
-          Left(UnexpectedChargeResponse)
+          Left(UnexpectedChargeResponse(status, response.body))
         case status =>
           Logger.error(s"[ChargeReads][read] Unexpected Response with status: $status")
-          Left(UnexpectedChargeResponse)
+          Left(UnexpectedChargeErrorResponse)
       }
     }
   }

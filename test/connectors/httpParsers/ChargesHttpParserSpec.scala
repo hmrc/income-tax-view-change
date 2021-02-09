@@ -17,7 +17,7 @@
 package connectors.httpParsers
 
 import assets.FinancialDataTestConstants.{charges1, charges2, validChargesJson}
-import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse, UnexpectedChargeResponse}
+import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse
@@ -42,10 +42,10 @@ class ChargesHttpParserSpec extends TestSupport {
     s"return $UnexpectedChargeResponse" when {
       "a 4xx status is returned" in {
         val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = BAD_REQUEST
+          responseStatus = BAD_REQUEST, responseString = Some("Bad request")
         )
 
-        val expectedResult: ChargeResponse = Left(UnexpectedChargeResponse)
+        val expectedResult: ChargeResponse = Left(UnexpectedChargeResponse(BAD_REQUEST, "Bad request"))
         val actualResult: ChargeResponse = ChargeReads.read("", "", httpResponse)
 
         actualResult shouldBe expectedResult
@@ -55,7 +55,7 @@ class ChargesHttpParserSpec extends TestSupport {
           responseStatus = INTERNAL_SERVER_ERROR
         )
 
-        val expectedResult: ChargeResponse = Left(UnexpectedChargeResponse)
+        val expectedResult: ChargeResponse = Left(UnexpectedChargeErrorResponse)
         val actualResult: ChargeResponse = ChargeReads.read("", "", httpResponse)
 
         actualResult shouldBe expectedResult

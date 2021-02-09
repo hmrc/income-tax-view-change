@@ -149,13 +149,32 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
       }
     }
 
+    s"return $NOT_FOUND" when {
+      "an unexpected status with NOT_FOUND was returned when retrieving charge details" in {
+
+        isAuthorised(true)
+
+        val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+        stubGetChargeDetails(testNino, from, to)(
+          status = NOT_FOUND, response = errorJson
+        )
+
+        val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
+
+        res should have(
+          httpStatus(NOT_FOUND),
+          bodyMatching(errorJson.toString())
+        )
+      }
+    }
+
     s"return $INTERNAL_SERVER_ERROR" when {
       "an unexpected status was returned when retrieving charge details" in {
 
         isAuthorised(true)
 
         stubGetChargeDetails(testNino, from, to)(
-          status = BAD_REQUEST
+          status = SERVICE_UNAVAILABLE
         )
 
         val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)

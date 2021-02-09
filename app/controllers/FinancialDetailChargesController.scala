@@ -17,12 +17,13 @@
 package controllers
 
 import connectors.FinancialDetailsConnector
+import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -39,7 +40,10 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
         to = to
       ) map {
         case Right(chargeDetails) => Ok(Json.toJson(chargeDetails))
-        case Left(_) => InternalServerError("Failed to retrieve charge details")
+        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
+        case Left(_) => {
+          InternalServerError("Failed to retrieve charge details")
+        }
       }
     }
   }
