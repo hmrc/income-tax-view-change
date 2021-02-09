@@ -18,11 +18,12 @@ package connectors
 
 import assets.FinancialDataTestConstants
 import assets.FinancialDataTestConstants.{charges1, charges2}
-import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeResponse}
+import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import mocks.MockHttp
 import models.financialDetails.Charge
 import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status.OK
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TestSupport
 
@@ -92,16 +93,28 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     }
 
     s"return an error" when {
+      "when no data found is returned" in {
+        val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+        mockDesGet[ChargeResponseError, Charge](
+          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
+          queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
+          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+        )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
+
+        val result = await(TestFinancialDetailsConnector.listCharges(testNino, testFrom, testTo))
+
+        result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
+      }
       "something went wrong" in {
         mockDesGet[ChargeResponseError, Charge](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
-        )(Left(UnexpectedChargeResponse))
+        )(Left(UnexpectedChargeErrorResponse))
 
         val result = await(TestFinancialDetailsConnector.listCharges(testNino, testFrom, testTo))
 
-        result shouldBe Left(UnexpectedChargeResponse)
+        result shouldBe Left(UnexpectedChargeErrorResponse)
       }
     }
   }

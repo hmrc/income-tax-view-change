@@ -11,7 +11,7 @@ val appName = "income-tax-view-change"
 
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-play-26" % "1.5.0",
+  "uk.gov.hmrc" %% "bootstrap-play-26" % "1.7.0",
   "uk.gov.hmrc" %% "auth-client" % "2.35.0-play-26",
   "uk.gov.hmrc" %% "domain" % "5.6.0-play-26",
   "uk.gov.hmrc" %% "logback-json-logger" % "4.6.0"

@@ -59,6 +59,15 @@ trait CustomMatchers extends UnitSpec with GivenWhenThen {
     )
   }
 
+  def bodyMatching(expectedResponse: String): HavePropertyMatcher[WSResponse, String] = HavePropertyMatcher { response =>
+    HavePropertyMatchResult(
+      response.body == expectedResponse,
+      "responseMatching",
+      expectedResponse,
+      response.body
+    )
+  }
+
   def emptyBody: HavePropertyMatcher[WSResponse, String] =
     new HavePropertyMatcher[WSResponse, String] {
       def apply(response: WSResponse) = {

@@ -52,11 +52,22 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         jsonBodyOf(result) shouldBe validChargesJsonAfterWrites
       }
     }
+    s"return $NOT_FOUND" when {
+      "the connector returns an NOT_FOUND error" in {
+        mockAuth()
+        val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
+        mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
 
+        val result = await(FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest()))
+
+        status(result) shouldBe NOT_FOUND
+        bodyOf(result) shouldBe errorJson
+      }
+    }
     s"return $INTERNAL_SERVER_ERROR" when {
       "the connector returns an error" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse))
+        mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
         val result = await(FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest()))
 
