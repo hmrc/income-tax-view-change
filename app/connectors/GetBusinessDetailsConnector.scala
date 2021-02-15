@@ -34,7 +34,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
                                    )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   val getBusinessDetailsUrl: String => String =
-    nino => s"${appConfig.desUrl}/registration/get-business-details/nino/$nino"
+    nino => s"${appConfig.desUrl}/registration/business-details/nino/$nino"
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 

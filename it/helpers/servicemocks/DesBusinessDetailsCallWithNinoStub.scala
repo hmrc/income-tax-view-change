@@ -23,7 +23,7 @@ import play.api.http.Status
 
 object DesBusinessDetailsCallWithNinoStub {
 
-  val url: (String) => String = (nino) => s"""/registration/get-business-details/nino/$nino"""
+  val url: (String) => String = (nino) => s"""/registration/business-details/nino/$nino"""
 
   def stubGetDesBusinessDetails(nino:String, response: IncomeSourceDetailsModel): Unit = {
     val desBusinessDetailsResponse = successResponse(response.nino).toString
