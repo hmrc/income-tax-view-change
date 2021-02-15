@@ -17,65 +17,9 @@
 package models.paymentAllocations
 
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class PaymentAllocationsSpec extends WordSpec with Matchers {
-
-  val allocationDetail: AllocationDetail = AllocationDetail(
-    transactionId = Some("transactionId"),
-    from = Some("from"),
-    to = Some("to"),
-    `type` = Some("type"),
-    amount = Some(1000.00),
-    clearedAmount = Some(500.00)
-  )
-
-  val paymentAllocationsFull: PaymentAllocations = PaymentAllocations(
-    amount = Some(500.00),
-    method = Some("method"),
-    transactionDate = Some("transactionDate"),
-    allocations = Seq(allocationDetail)
-  )
-
-  val paymentAllocationsReadJsonFull: JsObject = Json.obj(
-    "paymentDetails" -> Json.obj(
-      "paymentAmount" -> 500.00,
-      "paymentMethod" -> "method",
-      "valueDate" -> "transactionDate",
-      "sapClearingDocsDetails" -> Json.arr(
-        Json.obj(
-          "sapDocNumber" -> "transactionId",
-          "taxPeriodStartDate" -> "from",
-          "taxPeriodEndDate" -> "to",
-          "chargeType" -> "type",
-          "amount" -> 1000.00,
-          "clearedAmount" -> 500.00
-        )
-      )
-    )
-  )
-
-  val paymentAllocationsWriteJsonFull: JsObject = Json.obj(
-    "amount" -> 500.00,
-    "method" -> "method",
-    "transactionDate" -> "transactionDate",
-    "allocations" -> Json.arr(
-      Json.obj(
-        "transactionId" -> "transactionId",
-        "from" -> "from",
-        "to" -> "to",
-        "type" -> "type",
-        "amount" -> 1000.00,
-        "clearedAmount" -> 500.00
-      )
-    )
-  )
-
-  val paymentAllocationsEmpty: PaymentAllocations = PaymentAllocations(None, None, None, Seq.empty[AllocationDetail])
-
-  val paymentAllocationsEmptyJson: JsObject = Json.obj(
-    "allocations" -> Json.arr()
-  )
 
   "PaymentAllocations" should {
     "read from json" when {
@@ -83,7 +27,7 @@ class PaymentAllocationsSpec extends WordSpec with Matchers {
         Json.fromJson[PaymentAllocations](paymentAllocationsReadJsonFull) shouldBe JsSuccess(paymentAllocationsFull)
       }
       "the json is empty" in {
-        Json.fromJson[PaymentAllocations](Json.obj()) shouldBe JsSuccess(paymentAllocationsEmpty)
+        Json.fromJson[PaymentAllocations](paymentAllocationsReadJsonMinimum) shouldBe JsSuccess(paymentAllocationsMinimum)
       }
     }
     "write to json" when {
@@ -91,7 +35,7 @@ class PaymentAllocationsSpec extends WordSpec with Matchers {
         Json.toJson(paymentAllocationsFull) shouldBe paymentAllocationsWriteJsonFull
       }
       "the model is empty" in {
-        Json.toJson(paymentAllocationsEmpty) shouldBe paymentAllocationsEmptyJson
+        Json.toJson(paymentAllocationsMinimum) shouldBe paymentAllocationsWriteJsonMinimum
       }
     }
   }

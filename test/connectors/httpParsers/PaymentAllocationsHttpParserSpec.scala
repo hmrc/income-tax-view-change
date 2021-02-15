@@ -28,6 +28,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
   val paymentAllocations: PaymentAllocations = PaymentAllocations(
     amount = Some(1000.00),
     method = Some("method"),
+    reference = Some("reference"),
     transactionDate = Some("transactionDate"),
     allocations = Seq(
       AllocationDetail(
@@ -42,18 +43,58 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
   )
 
   val paymentAllocationsJson: JsObject = Json.obj(
-    "paymentDetails" -> Json.obj(
-      "paymentAmount" -> 1000.00,
-      "paymentMethod" -> "method",
-      "valueDate" -> "transactionDate",
-      "sapClearingDocsDetails" -> Json.arr(
-        Json.obj(
-          "sapDocNumber" -> "transactionId",
-          "taxPeriodStartDate" -> "from",
-          "taxPeriodEndDate" -> "to",
-          "chargeType" -> "type",
-          "amount" -> 1500.00,
-          "clearedAmount" -> 500.00
+    "paymentDetails" -> Json.arr(
+      Json.obj(
+        "paymentAmount" -> 1000.00,
+        "paymentMethod" -> "method",
+        "paymentReference" -> "reference",
+        "valueDate" -> "transactionDate",
+        "sapClearingDocsDetails" -> Json.arr(
+          Json.obj(
+            "sapDocNumber" -> "transactionId",
+            "taxPeriodStartDate" -> "from",
+            "taxPeriodEndDate" -> "to",
+            "chargeType" -> "type",
+            "amount" -> 1500.00,
+            "clearedAmount" -> 500.00
+          )
+        )
+      )
+    )
+  )
+
+  val multiplePaymentAllocationJson: JsObject = Json.obj(
+    "paymentDetails" -> Json.arr(
+      Json.obj(
+        "paymentAmount" -> 1000.00,
+        "paymentMethod" -> "method",
+        "paymentReference" -> "reference",
+        "valueDate" -> "transactionDate",
+        "sapClearingDocsDetails" -> Json.arr(
+          Json.obj(
+            "sapDocNumber" -> "transactionId",
+            "taxPeriodStartDate" -> "from",
+            "taxPeriodEndDate" -> "to",
+            "chargeType" -> "type",
+            "amount" -> 1500.00,
+            "clearedAmount" -> 500.00
+          )
+        )
+      ),
+      Json.obj(
+        "paymentAmount" -> 1000.00,
+        "paymentMethod" -> "method",
+        "paymentReference" -> "reference2",
+        "valueDate" -> "transactionDate",
+        "sapClearingDocsDetails" -> Json.arr(
+          Json.obj(
+            "sapDocNumber" -> "transactionId",
+            "taxPeriodStartDate" -> "from",
+            "taxPeriodEndDate" -> "to",
+            "chargeType" -> "type",
+            "amount" -> 1500.00,
+            "clearedAmount" -> 500.00
+          )
         )
       )
     )
@@ -61,7 +102,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
 
   "PaymentAllocationsHttpParser" should {
     "return a payment allocations" when {
-      s"$OK is returned with valid json" in {
+      s"$OK is returned with valid json and a single payment allocations" in {
         val httpResponse: HttpResponse = HttpResponse(
           responseStatus = OK,
           responseJson = Some(paymentAllocationsJson)
@@ -72,8 +113,32 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
 
         actualResult shouldBe expectedResult
       }
+      s"$OK is returned with valid json and multiple payment allocations" in {
+        val httpResponse: HttpResponse = HttpResponse(
+          responseStatus = OK,
+          responseJson = Some(multiplePaymentAllocationJson)
+        )
+
+        val expectedResponse: PaymentAllocationsResponse = Right(paymentAllocations)
+        val actualResult: PaymentAllocationsResponse = PaymentAllocationsReads.read("", "", httpResponse)
+
+        actualResult shouldBe expectedResponse
+      }
     }
     s"return $UnexpectedResponse" when {
+      "no payment details are returned in the json" in {
+        val httpResponse: HttpResponse = HttpResponse(
+          responseStatus = OK,
+          responseJson = Some(Json.obj(
+            "paymentDetails" -> Json.arr()
+          ))
+        )
+
+        val expectedResult: PaymentAllocationsResponse = Left(UnexpectedResponse)
+        val actualResult: PaymentAllocationsResponse = PaymentAllocationsReads.read("", "", httpResponse)
+
+        actualResult shouldBe expectedResult
+      }
       "a 4xx status is returned" in {
         val httpResponse: HttpResponse = HttpResponse(
           responseStatus = BAD_REQUEST

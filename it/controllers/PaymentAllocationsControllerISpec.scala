@@ -33,6 +33,7 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
     amount = Some(1000.00),
     method = Some("method"),
     transactionDate = Some("transactionDate"),
+    reference = Some("reference"),
     allocations = Seq(
       AllocationDetail(
         transactionId = Some("transactionId"),
@@ -46,18 +47,21 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
   )
 
   val paymentAllocationsJson: JsObject = Json.obj(
-    "paymentDetails" -> Json.obj(
-      "paymentAmount" -> 1000.00,
-      "paymentMethod" -> "method",
-      "valueDate" -> "transactionDate",
-      "sapClearingDocsDetails" -> Json.arr(
-        Json.obj(
-          "sapDocNumber" -> "transactionId",
-          "taxPeriodStartDate" -> "from",
-          "taxPeriodEndDate" -> "to",
-          "chargeType" -> "type",
-          "amount" -> 1500.00,
-          "clearedAmount" -> 500.00
+    "paymentDetails" -> Json.arr(
+      Json.obj(
+        "paymentAmount" -> 1000.00,
+        "paymentMethod" -> "method",
+        "valueDate" -> "transactionDate",
+        "paymentReference" -> "reference",
+        "sapClearingDocsDetails" -> Json.arr(
+          Json.obj(
+            "sapDocNumber" -> "transactionId",
+            "taxPeriodStartDate" -> "from",
+            "taxPeriodEndDate" -> "to",
+            "chargeType" -> "type",
+            "amount" -> 1500.00,
+            "clearedAmount" -> 500.00
+          )
         )
       )
     )

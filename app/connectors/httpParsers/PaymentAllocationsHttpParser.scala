@@ -16,9 +16,10 @@
 
 package connectors.httpParsers
 
-import models.paymentAllocations.PaymentAllocations
+import models.paymentAllocations.{PaymentAllocations, PaymentDetails}
 import play.api.Logger
 import play.api.http.Status.OK
+import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object PaymentAllocationsHttpParser extends ResponseHttpParsers {
@@ -34,7 +35,15 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
       response.status match {
         case OK =>
           Logger.info(s"[PaymentAllocationsReads][read] successfully parsed response to PaymentAllocations")
-          Right(response.json.as[PaymentAllocations])
+          response.json.validate[PaymentDetails] match {
+            case JsSuccess(result, _) => result.paymentDetails.headOption match {
+              case Some(paymentAllocations) => Right(paymentAllocations)
+              case None => Left(UnexpectedResponse)
+            }
+            case JsError(errors) =>
+              Logger.error(s"[PaymentAllocationsReads][read] Json validation error. Reasons: ${errors}")
+              Left(UnexpectedResponse)
+          }
         case status if status >= 400 && status < 500 =>
           Logger.error(s"[PaymentAllocationsReads][read] $status returned from DES with body: ${response.body}")
           Left(UnexpectedResponse)

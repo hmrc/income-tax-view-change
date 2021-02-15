@@ -19,7 +19,7 @@ package connectors
 import assets.PreviousCalculationTestConstants._
 import connectors.httpParsers.PaymentAllocationsHttpParser.{PaymentAllocationsError, UnexpectedResponse}
 import mocks.MockHttp
-import models.paymentAllocations.{AllocationDetail, PaymentAllocations}
+import models.paymentAllocations.{PaymentAllocations, paymentAllocationsFull}
 import play.api.http.Status._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TestSupport
@@ -31,22 +31,6 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
   val testPaymentLot: String = "testPaymentLot"
   val testPaymentLotItem: String = "testPaymentLotItem"
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
-
-  val paymentAllocations: PaymentAllocations = PaymentAllocations(
-    amount = Some(1000.00),
-    method = Some("method"),
-    transactionDate = Some("transactionDate"),
-    allocations = Seq(
-      AllocationDetail(
-        transactionId = Some("transactionId"),
-        from = Some("from"),
-        to = Some("to"),
-        `type` = Some("type"),
-        amount = Some(1500.00),
-        clearedAmount = Some(500.00)
-      )
-    )
-  )
 
   "paymentAllocationsUrl" should {
     "return the correct url" in {
@@ -79,11 +63,11 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
           queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
           headerCarrier = TestPaymentAllocationsConnector.desHeaderCarrier
-        )(Right(paymentAllocations))
+        )(Right(paymentAllocationsFull))
 
         val result = await(TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem))
 
-        result shouldBe Right(paymentAllocations)
+        result shouldBe Right(paymentAllocationsFull)
       }
     }
 
