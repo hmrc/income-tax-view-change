@@ -18,21 +18,22 @@ package models.paymentAllocations
 
 import models.{readNullable, readNullableSeq}
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, OWrites, Reads, __}
+import play.api.libs.json._
 
 case class PaymentAllocations(amount: Option[BigDecimal],
                               method: Option[String],
+                              reference: Option[String],
                               transactionDate: Option[String],
                               allocations: Seq[AllocationDetail])
 
 object PaymentAllocations {
 
   implicit val reads: Reads[PaymentAllocations] = (
-    readNullable[BigDecimal](__ \ "paymentDetails" \\ "paymentAmount") and
-      readNullable[String](__ \ "paymentDetails" \\ "paymentMethod") and
-      readNullable[String](__ \ "paymentDetails" \\ "valueDate") and
-      readNullableSeq[AllocationDetail](__ \ "paymentDetails" \\ "sapClearingDocsDetails")
-        .map(_.filterNot(_ == AllocationDetail.emptyAllocation))
+    readNullable[BigDecimal](__ \ "paymentAmount") and
+      readNullable[String](__ \ "paymentMethod") and
+      readNullable[String](__ \ "paymentReference") and
+      readNullable[String](__ \ "valueDate") and
+      readNullableSeq[AllocationDetail](__ \ "sapClearingDocsDetails")
     ) (PaymentAllocations.apply _)
 
   implicit val writes: OWrites[PaymentAllocations] = Json.writes[PaymentAllocations]

@@ -17,25 +17,25 @@
 package models.paymentAllocations
 
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.{JsObject, JsSuccess, Json}
 
-class AllocationDetailSpec extends WordSpec with Matchers {
+class PaymentDetailsSpec extends WordSpec with Matchers {
 
-  "AllocationDetail" should {
+  "PaymentDetails" should {
     "read from json" when {
       "the json is complete" in {
-        Json.fromJson[AllocationDetail](allocationDetailReadJsonFull) shouldBe JsSuccess(allocationDetailFull)
+        Json.fromJson[PaymentDetails](paymentDetailsReadJsonFull) shouldBe JsSuccess(paymentDetailsFull)
       }
       "the json is empty" in {
-        Json.fromJson[AllocationDetail](allocationDetailJsonMinimum) shouldBe JsSuccess(allocationDetailMinimum)
+        Json.fromJson[PaymentDetails](paymentDetailsJsonMinimum) shouldBe JsSuccess(paymentDetailsMinimum)
       }
     }
     "write to json" when {
       "the model is complete" in {
-        Json.toJson(allocationDetailFull) shouldBe allocationDetailWriteJsonFull
+        Json.toJson(paymentDetailsFull) shouldBe paymentDetailsWriteJsonFull
       }
       "the model is empty" in {
-        Json.toJson(allocationDetailMinimum) shouldBe allocationDetailJsonMinimum
+        Json.toJson(paymentDetailsMinimum) shouldBe paymentDetailsJsonMinimum
       }
     }
   }

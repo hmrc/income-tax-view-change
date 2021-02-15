@@ -19,7 +19,7 @@ package controllers
 import connectors.httpParsers.PaymentAllocationsHttpParser.UnexpectedResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockPaymentAllocationsConnector}
-import models.paymentAllocations.{AllocationDetail, PaymentAllocations}
+import models.paymentAllocations.{AllocationDetail, PaymentAllocations, paymentAllocationsFull, paymentAllocationsWriteJsonFull}
 import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
@@ -44,34 +44,16 @@ class PaymentAllocationsControllerSpec extends ControllerBaseSpec with MockPayme
   val paymentLot: String = "paymentLot"
   val paymentLotItem: String = "paymentLotItem"
 
-  val paymentAllocations: PaymentAllocations = PaymentAllocations(
-    amount = Some(1000.00),
-    method = Some("method"),
-    transactionDate = Some("transactionDate"),
-    allocations = Seq(
-      AllocationDetail(
-        transactionId = Some("transactionId"),
-        from = Some("from"),
-        to = Some("to"),
-        `type` = Some("type"),
-        amount = Some(1500.00),
-        clearedAmount = Some(500.00)
-      )
-    )
-  )
-
-  val paymentAllocationsJson: JsObject = Json.toJsObject(paymentAllocations)
-
   "getPaymentAllocations" should {
     s"return $OK with the retrieved payment allocations" when {
       "the connector returns the payment allocations" in {
         mockAuth()
-        mockGetPaymentAllocations(nino, paymentLot, paymentLotItem)(Right(paymentAllocations))
+        mockGetPaymentAllocations(nino, paymentLot, paymentLotItem)(Right(paymentAllocationsFull))
 
         val result = await(PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)(FakeRequest()))
 
         status(result) shouldBe OK
-        jsonBodyOf(result) shouldBe paymentAllocationsJson
+        jsonBodyOf(result) shouldBe paymentAllocationsWriteJsonFull
       }
     }
     s"return $INTERNAL_SERVER_ERROR" when {
