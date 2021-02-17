@@ -18,13 +18,12 @@ package assets
 
 
 import models.financialDetails.{Charge, SubItem}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
 
 object FinancialDataTestConstants {
 
-
-  val validChargeJson = Json.parse(
+  val validChargeJson: JsValue = Json.parse(
     """
       |{
       |     "taxYear": "2018",
@@ -52,7 +51,7 @@ object FinancialDataTestConstants {
       |""".stripMargin)
 
 
-  val validChargesJson = Json.parse(
+  val validChargesJson: JsValue = Json.parse(
     """
       |{
       | "financialDetails": [
@@ -107,7 +106,7 @@ object FinancialDataTestConstants {
       |""".stripMargin)
 
 
-  val validChargeJsonAfterWrites = Json.parse(
+  val validChargeJsonAfterWrites: JsValue = Json.parse(
     """
       |{
       |     "taxYear": "2018",
@@ -127,13 +126,15 @@ object FinancialDataTestConstants {
       |       "paymentAmount": 2000.00,
       |       "dueDate": "dueDate",
       |       "paymentMethod": "paymentMethod",
+      |       "paymentLot": "paymentLot",
+      |       "paymentLotItem": "paymentLotItem",
       |       "paymentId": "paymentLot-paymentLotItem"
       |       }
       |     ]
       |}
       |""".stripMargin)
 
-  val validChargesJsonAfterWrites = Json.parse(
+  val validChargesJsonAfterWrites: JsValue = Json.parse(
     """
       |{
       | "financialDetails": [
@@ -155,6 +156,8 @@ object FinancialDataTestConstants {
       |       "paymentAmount": 2000.00,
       |       "dueDate": "dueDate",
       |       "paymentMethod": "paymentMethod",
+      |       "paymentLot": "paymentLot",
+      |       "paymentLotItem": "paymentLotItem",
       |       "paymentId": "paymentLot-paymentLotItem"
       |       }
       |     ]
@@ -177,6 +180,8 @@ object FinancialDataTestConstants {
       |       "paymentAmount": 3000.00,
       |       "dueDate": "dueDate2",
       |       "paymentMethod": "paymentMethod2",
+      |       "paymentLot": "paymentLot2",
+      |       "paymentLotItem": "paymentLotItem2",
       |       "paymentId": "paymentLot2-paymentLotItem2"
       |       }
       |     ]
@@ -204,10 +209,12 @@ object FinancialDataTestConstants {
         clearingDate = Some("clearingDate"),
         clearingReason = Some("clearingReason"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod"),
-        paymentReference= Some("paymentReference"),
+        paymentReference = Some("paymentReference"),
         paymentAmount = Some(BigDecimal("2000.00")),
         dueDate = Some("dueDate"),
         paymentMethod = Some("paymentMethod"),
+        paymentLot = Some("paymentLot"),
+        paymentLotItem = Some("paymentLotItem"),
         paymentId = Some("paymentLot-paymentLotItem")
       )))
   )
@@ -226,15 +233,17 @@ object FinancialDataTestConstants {
         clearingDate = Some("clearingDate2"),
         clearingReason = Some("clearingReason2"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod2"),
-        paymentReference= Some("paymentReference2"),
+        paymentReference = Some("paymentReference2"),
         paymentAmount = Some(BigDecimal("3000.00")),
         dueDate = Some("dueDate2"),
         paymentMethod = Some("paymentMethod2"),
+        paymentLot = Some("paymentLot2"),
+        paymentLotItem = Some("paymentLotItem2"),
         paymentId = Some("paymentLot2-paymentLotItem2")
       )))
   )
 
-  val validSubItemJson = Json.parse(
+  val validSubItemJson: JsValue = Json.parse(
     """
       |{
       |       "subItem": "1",
@@ -258,14 +267,16 @@ object FinancialDataTestConstants {
     clearingDate = Some("clearingDate"),
     clearingReason = Some("clearingReason"),
     outgoingPaymentMethod = Some("outgoingPaymentMethod"),
-    paymentReference= Some("paymentReference"),
+    paymentReference = Some("paymentReference"),
     paymentAmount = Some(BigDecimal("2000.00")),
     dueDate = Some("dueDate"),
     paymentMethod = Some("paymentMethod"),
+    paymentLot = Some("paymentLot"),
+    paymentLotItem = Some("paymentLotItem"),
     paymentId = Some("paymentLot-paymentLotItem")
   )
 
-  val validSubItemJsonAfterWrites = Json.parse(
+  val validSubItemJsonAfterWrites: JsValue = Json.parse(
     """
       |{
       |       "subItemId": "1",
@@ -277,6 +288,8 @@ object FinancialDataTestConstants {
       |       "paymentAmount": 2000.00,
       |       "dueDate": "dueDate",
       |       "paymentMethod": "paymentMethod",
+      |       "paymentLot": "paymentLot",
+      |       "paymentLotItem": "paymentLotItem",
       |       "paymentId": "paymentLot-paymentLotItem"
       |}
       |""".stripMargin)

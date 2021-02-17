@@ -49,6 +49,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         paymentAmount = Some(BigDecimal("2000.00")),
         dueDate = Some("dueDate"),
         paymentMethod = Some("paymentMethod"),
+        paymentLot = Some("paymentLot"),
+        paymentLotItem = Some("paymentLotItem"),
         paymentId = Some("paymentLot-paymentLotItem")
       )))
   )
@@ -72,6 +74,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         paymentAmount = Some(BigDecimal("3000.00")),
         dueDate = Some("dueDate2"),
         paymentMethod = Some("paymentMethod2"),
+        paymentLot = Some("paymentLot2"),
+        paymentLotItem = Some("paymentLotItem2"),
         paymentId = Some("paymentLot2-paymentLotItem2")
       )))
   )

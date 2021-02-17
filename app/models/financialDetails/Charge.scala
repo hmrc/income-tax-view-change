@@ -27,7 +27,23 @@ case class Charge(taxYear: Option[String],
                   originalAmount: Option[BigDecimal],
                   outstandingAmount: Option[BigDecimal],
                   items: Option[Seq[SubItem]]
-                 )
+                 ) {
+
+  val payments: Seq[Payment] = items match {
+    case Some(subItems) => subItems.map { subItem =>
+      Payment(
+        reference = subItem.paymentReference,
+        amount = subItem.paymentAmount,
+        method = subItem.paymentMethod,
+        lot = subItem.paymentLot,
+        lotItem = subItem.paymentLotItem,
+        date = subItem.clearingDate
+      )
+    }.filter(_.reference.isDefined)
+    case None => Seq.empty[Payment]
+  }
+
+}
 
 object Charge {
 
