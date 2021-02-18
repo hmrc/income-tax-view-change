@@ -190,6 +190,28 @@ object FinancialDataTestConstants {
       |}
       |""".stripMargin)
 
+  val validPaymentsJsonAfterWrites: JsValue = Json.parse(
+    """
+      |[
+      | {
+      |   "reference": "paymentReference",
+      |   "amount": 2000.00,
+      |   "method": "paymentMethod",
+      |   "lot": "paymentLot",
+      |   "lotItem": "paymentLotItem",
+      |   "date": "clearingDate"
+      | },
+      | {
+      |   "reference": "paymentReference2",
+      |   "amount": 3000.00,
+      |   "method": "paymentMethod2",
+      |   "lot": "paymentLot2",
+      |   "lotItem": "paymentLotItem2",
+      |   "date": "clearingDate2"
+      | }
+      |]
+      |""".stripMargin)
+
 
   val testChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(validChargesJson))
   val testEmptyChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(Json.toJson("")))

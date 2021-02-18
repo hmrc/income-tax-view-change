@@ -14,3 +14,5 @@ GET        /previous-tax-calculation/:nino/:year                         control
 GET        /:nino/payment-allocations/:paymentLot/:paymentLotItem        controllers.PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)
 
 GET        /:nino/financial-details/charges/from/:from/to/:to            controllers.FinancialDetailChargesController.getChargeDetails(nino, from, to)
+
+GET        /:nino/financial-details/payments/from/:from/to/:to           controllers.FinancialDetailPaymentsController.getPaymentDetails(nino, from, to)
