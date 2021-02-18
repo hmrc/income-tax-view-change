@@ -28,11 +28,13 @@ case class SubItem(subItemId: Option[String],
                    paymentAmount: Option[BigDecimal],
                    dueDate: Option[String],
                    paymentMethod: Option[String],
+                   paymentLot: Option[String],
+                   paymentLotItem: Option[String],
                    paymentId: Option[String])
 
 object SubItem {
 
-  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None)
+  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
 
@@ -63,6 +65,8 @@ object SubItem {
       paymentAmount,
       dueDate,
       paymentMethod,
+      paymentLot,
+      paymentLotItem,
       id
     )
   }

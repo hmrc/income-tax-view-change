@@ -16,31 +16,48 @@
 
 package models.financialDetails
 
-import assets.FinancialDataTestConstants._
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsObject, JsSuccess, Json}
 
-class ChargeSpec extends WordSpec with Matchers {
+class PaymentSpec extends WordSpec with Matchers {
 
-  val chargeEmpty: Charge = Charge(None, None, None, None, None, None, None, None)
+  val paymentEmpty: Payment = Payment(None, None, None, None, None, None)
 
-  val chargeEmptyJson: JsObject = Json.obj()
+  val paymentEmptyJson: JsObject = Json.obj()
+
+  val paymentFull: Payment = Payment(
+    reference = Some("reference"),
+    amount = Some(100.00),
+    method = Some("method"),
+    lot = Some("lot"),
+    lotItem = Some("lotItem"),
+    date = Some("date")
+  )
+
+  val paymentFullJson: JsObject = Json.obj(
+    "reference" -> "reference",
+    "amount" -> 100.00,
+    "method" -> "method",
+    "lot" -> "lot",
+    "lotItem" -> "lotItem",
+    "date" -> "date"
+  )
 
   "Charge" should {
     "read from json" when {
       "the json is complete" in {
-        Json.fromJson[Charge](validChargeJson) shouldBe JsSuccess(charges1)
+        Json.fromJson[Payment](paymentFullJson) shouldBe JsSuccess(paymentFull)
       }
       "the json is empty" in {
-        Json.fromJson[Charge](Json.obj()) shouldBe JsSuccess(chargeEmpty)
+        Json.fromJson[Payment](paymentEmptyJson) shouldBe JsSuccess(paymentEmpty)
       }
     }
     "write to json" when {
       "the model is complete" in {
-        Json.toJson(charges1) shouldBe validChargeJsonAfterWrites
+        Json.toJson(paymentFull) shouldBe paymentFullJson
       }
       "the model is empty" in {
-        Json.toJson(chargeEmpty) shouldBe chargeEmptyJson
+        Json.toJson(paymentEmpty) shouldBe paymentEmptyJson
       }
     }
   }
