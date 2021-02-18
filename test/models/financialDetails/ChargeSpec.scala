@@ -23,7 +23,7 @@ import play.api.libs.json.{JsObject, JsSuccess, Json}
 
 class ChargeSpec extends WordSpec with Matchers {
 
-  val chargeEmpty: Charge = Charge(None, None, None, None, None, None, None, None)
+  val chargeEmpty: Charge = Charge(None, None, None, None, None, None, None, None, None)
 
   val chargeEmptyJson: JsObject = Json.obj(
   )

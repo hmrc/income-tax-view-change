@@ -33,6 +33,7 @@ object FinancialDataTestConstants {
       |     "documentDescription": "type",
       |     "totalAmount": 1000.00,
       |     "originalAmount": 500.00,
+      |     "clearedAmount": 500.00,
       |     "documentOutstandingAmount": 500.00,
       |     "items": [{
       |       "subItem": "1",
@@ -63,6 +64,7 @@ object FinancialDataTestConstants {
       |     "documentDescription": "type",
       |     "totalAmount": 1000.00,
       |     "originalAmount": 500.00,
+      |     "clearedAmount": 500.00,
       |     "documentOutstandingAmount": 500.00,
       |     "items": [{
       |       "subItem": "1",
@@ -86,6 +88,7 @@ object FinancialDataTestConstants {
       |     "documentDescription": "type2",
       |     "totalAmount": 2000.00,
       |     "originalAmount": 500.00,
+      |     "clearedAmount": 500.00,
       |     "documentOutstandingAmount": 200.00,
       |     "items": [{
       |       "subItem": "2",
@@ -117,6 +120,7 @@ object FinancialDataTestConstants {
       |     "totalAmount": 1000.00,
       |     "originalAmount": 500.00,
       |     "outstandingAmount": 500.00,
+      |     "clearedAmount": 500.00,
       |     "items": [{
       |       "subItemId": "1",
       |       "amount": 100.00,
@@ -145,6 +149,7 @@ object FinancialDataTestConstants {
       |     "totalAmount": 1000.00,
       |     "originalAmount": 500.00,
       |     "outstandingAmount": 500.00,
+      |     "clearedAmount": 500.00,
       |     "items": [{
       |       "subItemId": "1",
       |       "amount": 100.00,
@@ -167,6 +172,7 @@ object FinancialDataTestConstants {
       |     "totalAmount": 2000.00,
       |     "originalAmount": 500.00,
       |     "outstandingAmount": 200.00,
+      |     "clearedAmount": 500.00,
       |     "items": [{
       |       "subItemId": "2",
       |       "amount": 200.00,
@@ -197,6 +203,7 @@ object FinancialDataTestConstants {
     totalAmount = Some(BigDecimal("1000.00")),
     originalAmount = Some(BigDecimal(500.00)),
     outstandingAmount = Some(BigDecimal("500.00")),
+    clearedAmount = Some(BigDecimal(500.00)),
     items = Some(Seq(
       SubItem(
         subItemId = Some("1"),
@@ -219,6 +226,7 @@ object FinancialDataTestConstants {
     totalAmount = Some(BigDecimal("2000.00")),
     originalAmount = Some(BigDecimal(500.00)),
     outstandingAmount = Some(BigDecimal("200.00")),
+    clearedAmount = Some(BigDecimal(500.00)),
     items = Some(Seq(
       SubItem(
         subItemId = Some("2"),
