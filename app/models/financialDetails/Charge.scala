@@ -26,6 +26,7 @@ case class Charge(taxYear: Option[String],
                   totalAmount: Option[BigDecimal],
                   originalAmount: Option[BigDecimal],
                   outstandingAmount: Option[BigDecimal],
+                  clearedAmount: Option[BigDecimal],
                   items: Option[Seq[SubItem]]
                  ) {
 
@@ -55,6 +56,7 @@ object Charge {
       (JsPath \ "totalAmount").readNullable[BigDecimal] and
       (JsPath \ "originalAmount").readNullable[BigDecimal] and
       (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal] and
+      (JsPath \ "clearedAmount").readNullable[BigDecimal] and
       (JsPath \ "items").readNullable[Seq[SubItem]]
     ) (Charge.apply _)
 
