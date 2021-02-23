@@ -28,6 +28,7 @@ object IncomeSourceIntegrationTestConstants {
     IncomeSourceDetailsModel(
       nino = testNino,
       mtdbsa = testMtdbsa,
+      yearOfMigration = Some("2019"),
       businesses = testBusinessModel,
       property = Some(testPropertyDetailsModel)
     )

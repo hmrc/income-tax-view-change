@@ -23,6 +23,7 @@ sealed trait IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsModel(nino: String,
                                     mtdbsa: String,
+                                    yearOfMigration: Option[String],
                                     businesses: List[BusinessDetailsModel],
                                     property: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
 
@@ -32,8 +33,9 @@ object IncomeSourceDetailsModel {
 
   def applyWithFields(nino: String,
                       mtdbsa: String,
-           businessData: Option[List[BusinessDetailsModel]],
-           propertyData: Option[PropertyDetailsModel]): IncomeSourceDetailsModel = {
+                      yearOfMigration: Option[String],
+                      businessData: Option[List[BusinessDetailsModel]],
+                      propertyData: Option[PropertyDetailsModel]): IncomeSourceDetailsModel = {
     val businessDetails = businessData match {
       case Some(data) => data
       case None => List()
@@ -41,6 +43,7 @@ object IncomeSourceDetailsModel {
     IncomeSourceDetailsModel(
       nino,
       mtdbsa,
+      yearOfMigration,
       businessDetails,
       propertyData
     )
@@ -48,10 +51,11 @@ object IncomeSourceDetailsModel {
 
   val desReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "nino").read[String] and
-    (__ \ "mtdbsa").read[String] and
+      (__ \ "mtdbsa").read[String] and
+      (__ \ "yearOfMigration").readNullable[String] and
       (__ \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
       (__ \ "propertyData").readNullable[List[PropertyDetailsModel]].map(_.map(_.head))
-    )(IncomeSourceDetailsModel.applyWithFields _)
+    ) (IncomeSourceDetailsModel.applyWithFields _)
 
   implicit val format: Format[IncomeSourceDetailsModel] = Json.format[IncomeSourceDetailsModel]
 
