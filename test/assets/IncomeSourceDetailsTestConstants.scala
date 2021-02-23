@@ -30,6 +30,7 @@ object IncomeSourceDetailsTestConstants {
   val testIncomeSourceDetailsModel = IncomeSourceDetailsModel(
     nino = testNino,
     mtdbsa = testMtdId,
+    yearOfMigration = Some("2019"),
     businesses = List(testBusinessDetailsModel, testMinimumBusinessDetailsModel),
     property = Some(testPropertyDetailsModel)
   )
@@ -37,6 +38,7 @@ object IncomeSourceDetailsTestConstants {
   val testMinimumIncomeSourceDetailsModel = IncomeSourceDetailsModel(
     nino = testNino,
     mtdbsa = testMtdId,
+    yearOfMigration = None,
     businesses = List(),
     property = None
   )
@@ -45,6 +47,7 @@ object IncomeSourceDetailsTestConstants {
     "safeId" -> "XAIT12345678908",
     "nino" -> testNino,
     "mtdbsa" -> testMtdId,
+    "yearOfMigration" -> "2019",
     "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
     "propertyData" -> Json.arr(testPropertyDetailsJson)
   )
@@ -52,6 +55,7 @@ object IncomeSourceDetailsTestConstants {
   val testIncomeSourceDetailsToJson = Json.obj(
     "nino" -> testNino,
     "mtdbsa" -> testMtdId,
+    "yearOfMigration" -> "2019",
     "businesses" -> Json.arr(
       testBusinessDetailsToJson,
       testMinimumBusinessDetailsToJson),
@@ -60,7 +64,7 @@ object IncomeSourceDetailsTestConstants {
 
   val testMinimumIncomeSourceDetailsJson = Json.obj(
     "nino" -> testNino,
-            "mtdbsa" -> testMtdId
+    "mtdbsa" -> testMtdId
   )
 
 
