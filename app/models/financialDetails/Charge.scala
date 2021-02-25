@@ -19,14 +19,15 @@ package models.financialDetails
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class Charge(taxYear: Option[String],
-                  transactionId: Option[String],
+case class Charge(taxYear: String,
+                  transactionId: String,
                   transactionDate: Option[String],
                   `type`: Option[String],
                   totalAmount: Option[BigDecimal],
                   originalAmount: Option[BigDecimal],
                   outstandingAmount: Option[BigDecimal],
                   clearedAmount: Option[BigDecimal],
+									chargeType: Option[String],
                   items: Option[Seq[SubItem]]
                  ) {
 
@@ -49,14 +50,15 @@ case class Charge(taxYear: Option[String],
 object Charge {
 
   implicit val reads: Reads[Charge] = (
-    (JsPath \ "taxYear").readNullable[String] and
-      (JsPath \ "documentId").readNullable[String] and
+    (JsPath \ "taxYear").read[String] and
+      (JsPath \ "documentId").read[String] and
       (JsPath \ "documentDate").readNullable[String] and
       (JsPath \ "documentDescription").readNullable[String] and
       (JsPath \ "totalAmount").readNullable[BigDecimal] and
       (JsPath \ "originalAmount").readNullable[BigDecimal] and
       (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal] and
       (JsPath \ "clearedAmount").readNullable[BigDecimal] and
+      (JsPath \ "chargeType").readNullable[String] and
       (JsPath \ "items").readNullable[Seq[SubItem]]
     ) (Charge.apply _)
 

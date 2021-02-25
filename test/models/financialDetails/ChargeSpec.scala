@@ -22,17 +22,18 @@ import play.api.libs.json.{JsObject, JsSuccess, Json}
 
 class ChargeSpec extends WordSpec with Matchers {
 
-  val chargeEmpty: Charge = Charge(None, None, None, None, None, None, None, None, None)
+  val chargeEmpty: Charge = Charge("2019", "id", None, None, None, None, None, None, None, None)
 
-  val chargeEmptyJson: JsObject = Json.obj()
+  val chargeEmptyJsonInput: JsObject = Json.obj("taxYear" -> "2019", "documentId" -> "id")
+  val chargeEmptyJsonOutput: JsObject = Json.obj("taxYear" -> "2019", "transactionId" -> "id")
 
   "Charge" should {
     "read from json" when {
       "the json is complete" in {
         Json.fromJson[Charge](validChargeJson) shouldBe JsSuccess(charges1)
       }
-      "the json is empty" in {
-        Json.fromJson[Charge](Json.obj()) shouldBe JsSuccess(chargeEmpty)
+      "the json is minimal" in {
+        Json.fromJson[Charge](chargeEmptyJsonInput) shouldBe JsSuccess(chargeEmpty)
       }
     }
     "write to json" when {
@@ -40,7 +41,7 @@ class ChargeSpec extends WordSpec with Matchers {
         Json.toJson(charges1) shouldBe validChargeJsonAfterWrites
       }
       "the model is empty" in {
-        Json.toJson(chargeEmpty) shouldBe chargeEmptyJson
+        Json.toJson(chargeEmpty) shouldBe chargeEmptyJsonOutput
       }
     }
   }
