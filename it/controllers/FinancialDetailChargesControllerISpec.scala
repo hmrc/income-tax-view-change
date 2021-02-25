@@ -31,14 +31,15 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
   val to: String = "to"
 
   val charges1: Charge = Charge(
-    taxYear = Some("2018"),
-    transactionId = Some("transactionId"),
+    taxYear = "2018",
+    transactionId = "transactionId",
     transactionDate = Some("transactionDate"),
     `type` = Some("type"),
     totalAmount = Some(BigDecimal("1000.00")),
     originalAmount=Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("500.00")),
     clearedAmount = Some(BigDecimal("500.00")),
+		chargeType = Some("POA1"),
     items = Some(Seq(
       SubItem(
         subItemId = Some("1"),
@@ -57,14 +58,15 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
   )
 
   val charges2: Charge = Charge(
-    taxYear = Some("2019"),
-    transactionId = Some("transactionId2"),
+    taxYear = "2019",
+    transactionId = "transactionId2",
     transactionDate = Some("transactionDate2"),
     `type` = Some("type2"),
     totalAmount = Some(BigDecimal("2000.00")),
     originalAmount=Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("200.00")),
     clearedAmount = Some(BigDecimal("500.00")),
+		chargeType = Some("POA1"),
     items = Some(Seq(
       SubItem(
         subItemId = Some("2"),
@@ -94,6 +96,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "originalAmount" -> 500.00,
         "documentOutstandingAmount" -> 500.00,
         "clearedAmount" -> 500.00,
+				"chargeType" -> "POA1",
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "1",
@@ -119,6 +122,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "originalAmount" -> 500.00,
         "documentOutstandingAmount" -> 200.00,
         "clearedAmount" -> 500.00,
+				"chargeType" -> "POA1",
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "2",
