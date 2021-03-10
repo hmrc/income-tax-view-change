@@ -29,7 +29,7 @@ class OutStandingChargesHttpParserSpec  extends TestSupport  {
       s"$OK is returned with valid json" in {
         val httpResponse: HttpResponse = HttpResponse(
           responseStatus = OK,
-          responseJson = Some(validMultipleOutStandingChargeResponseJson)
+          responseJson = Some(validMultipleOutStandingChargeDesResponseJson)
         )
 
         val expectedResult: OutStandingChargeResponse = Right(OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo)))

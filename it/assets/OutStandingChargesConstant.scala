@@ -31,7 +31,7 @@ object OutStandingChargesConstant {
       |""".stripMargin)
 
   val outStandingChargeModelOne = OutStandingCharge("LATE", "2021-01-31", 123456789012345.67, 1234)
-  val outStandingChargeModelTwo = OutStandingCharge("ACI", "2021-01-31", -123456789012345.67, 1234)
+  val outStandingChargeModelTwo = OutStandingCharge("ACI", "2021-01-31", 12.67, 1234)
 
 
   val validSingleOutStandingChargeResponseJson: JsValue = Json.parse(
@@ -60,7 +60,7 @@ object OutStandingChargesConstant {
       |       {
       |         "chargeName": "ACI",
       |         "relevantDueDate": "2021-01-31",
-      |         "chargeAmount": -123456789012345.67,
+      |         "chargeAmount": 12.67,
       |         "tieBreaker": 1234
       |       }
       |  ]
@@ -69,4 +69,21 @@ object OutStandingChargesConstant {
 
   val SingleOutStandingChargeResponseModel = OutstandingChargesSuccessResponse(List(outStandingChargeModelOne))
   val MultipleOutStandingChargeResponseModel = OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo))
+
+  val validMultipleOutStandingChargeDesResponseJson: JsValue = Json.parse(
+    """
+      |[{
+      |     "chargeName": "LATE",
+      |     "relevantDueDate": "2021-01-31",
+      |     "chargeAmount": 123456789012345.67,
+      |     "tieBreaker": 1234
+      |   },
+      |   {
+      |     "chargeName": "ACI",
+      |     "relevantDueDate": "2021-01-31",
+      |     "chargeAmount": 12.67,
+      |     "tieBreaker": 1234
+      |}]
+      |""".stripMargin)
+
 }

@@ -34,7 +34,7 @@ class OutStandingChargesController @Inject()(authentication: AuthenticationPredi
                                              connector: OutStandingChargesConnector)
                                             (implicit ec: ExecutionContext) extends BackendController(cc) {
 
-  def listOutStandingCharges(idType: String, idNumber: Int, taxYearEndDate: String): Action[AnyContent] =
+  def listOutStandingCharges(idType: String, idNumber: Long, taxYearEndDate: String): Action[AnyContent] =
     authentication.async { implicit request =>
       connector.listOutStandingCharges(
         idType = idType,
