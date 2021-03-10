@@ -35,7 +35,7 @@ trait MockOutStandingChargesConnector extends UnitSpec with MockitoSugar with Be
     reset(mockOutStandingChargesConnector)
   }
 
-  def mockListOutStandingCharges(idType: String, idNumber: Int, taxYearEndDate: String)
+  def mockListOutStandingCharges(idType: String, idNumber: Long, taxYearEndDate: String)
                      (response: OutStandingChargeResponse): Unit = {
     when(mockOutStandingChargesConnector.listOutStandingCharges(
       idType = ArgumentMatchers.eq(idType),

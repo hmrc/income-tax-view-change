@@ -18,7 +18,7 @@ package models.outStandingCharges
 
 import play.api.libs.json.{Json, OFormat}
 
-case class OutstandingChargesSuccessResponse(items: List[OutStandingCharge])
+case class OutstandingChargesSuccessResponse(outstandingCharges: List[OutStandingCharge])
 
 object OutstandingChargesSuccessResponse {
   implicit val format: OFormat[OutstandingChargesSuccessResponse] = Json.format[OutstandingChargesSuccessResponse]

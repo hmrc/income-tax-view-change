@@ -23,7 +23,7 @@ class OutStandingChargesControllerISpec extends ComponentSpecBase {
 
         stubGetOutStandingChargeDetails(idType, idNumber, taxYearEndDate)(
           status = OK,
-          response = validMultipleOutStandingChargeResponseJson)
+          response = validMultipleOutStandingChargeDesResponseJson)
 
         val res: WSResponse = IncomeTaxViewChange.getOutStandingChargeDetails("utr", idNumber, taxYearEndDate)
 

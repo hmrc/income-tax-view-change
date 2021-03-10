@@ -37,10 +37,10 @@ class OutStandingChargesConnector @Inject()(val http: HttpClient,
       .withExtraHeaders("Environment" -> appConfig.desEnvironment)
   }
 
-  def listOutStandingChargesUrl(idType: String, idNumber: Int, taxYearEndDate: String): String =
+  def listOutStandingChargesUrl(idType: String, idNumber: Long, taxYearEndDate: String): String =
     s"${appConfig.desUrl}/income-tax/charges/outstanding/$idType/$idNumber/$taxYearEndDate"
 
-  def listOutStandingCharges(idType: String, idNumber: Int, taxYearEndDate: String)
+  def listOutStandingCharges(idType: String, idNumber: Long, taxYearEndDate: String)
                             (implicit headerCarrier: HeaderCarrier): Future[OutStandingChargeResponse] = {
 
     http.GET(
