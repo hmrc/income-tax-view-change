@@ -20,15 +20,14 @@ import java.time.LocalDate
 
 import assets.BaseTestConstants.testNino
 import assets.ReportDeadlinesTestConstants._
-import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
+import models.reportDeadlines.ReportDeadlinesResponseModel
+import org.mockito.ArgumentMatchers.{any, eq => matches}
+import org.mockito.Mockito.when
 import play.api.http.Status._
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import utils.TestSupport
-import org.mockito.ArgumentMatchers.{any, eq => matches}
-import org.mockito.Mockito.when
-import play.api.http.Status
 
 import scala.concurrent.Future
 
@@ -70,17 +69,17 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
         when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
           .thenReturn(Future.successful(successResponse))
 
-        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
 
-        result shouldBe Right(testObligations)
+        result shouldBe testObligations
       }
       "called for fulfilled obligations" in new Setup {
         when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = false)))(any(), matches(headerCarrier), any()))
           .thenReturn(Future.successful(successResponse))
 
-        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = false))
+        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = false))
 
-        result shouldBe Right(testObligations)
+        result shouldBe testObligations
       }
     }
 
@@ -89,17 +88,17 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
         when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
           .thenReturn(Future.successful(badResponse))
 
-        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
 
-        result shouldBe Left(testReportDeadlinesError)
+        result shouldBe testReportDeadlinesError
       }
       "the json received can not be parsed into an obligations model" in new Setup {
         when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
           .thenReturn(Future.successful(badJson))
 
-        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
 
-        result shouldBe Left(testReportDeadlinesErrorJson)
+        result shouldBe testReportDeadlinesErrorJson
       }
       "the http call failed and returned a future failed" in new Setup {
         val exceptionMessage: String = "Exception message"
@@ -107,9 +106,56 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
         when(httpClient.GET[HttpResponse](matches(connector.getReportDeadlinesUrl(testNino, openObligations = true)))(any(), matches(headerCarrier), any()))
           .thenReturn(Future.failed(new Exception(exceptionMessage)))
 
-        val result: Either[ReportDeadlinesErrorModel, ObligationsModel] = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
 
-        result shouldBe Left(testReportDeadlinesErrorFutureFailed(exceptionMessage))
+        result shouldBe testReportDeadlinesErrorFutureFailed(exceptionMessage)
+      }
+    }
+  }
+
+  "getPreviousObligations" should {
+    "return an obligations model" when {
+      s"$OK is return with valid json" in new Setup {
+        when(httpClient.GET[HttpResponse](
+          url = matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05"))
+        )(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.successful(successResponse))
+
+        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+
+        result shouldBe testObligations
+      }
+    }
+    "return a report deadline error model" when {
+      s"$OK is returned but the json is invalid" in new Setup {
+        when(httpClient.GET[HttpResponse](
+          url = matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05"))
+        )(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.successful(badJson))
+
+        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+
+        result shouldBe testReportDeadlinesErrorJson
+      }
+      s"a status which is not $OK is returned" in new Setup {
+        when(httpClient.GET[HttpResponse](
+          url = matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05"))
+        )(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.successful(badResponse))
+
+        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+
+        result shouldBe testReportDeadlinesError
+      }
+      s"there was a problem making the call" in new Setup {
+        when(httpClient.GET[HttpResponse](
+          url = matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05"))
+        )(any(), matches(headerCarrier), any()))
+          .thenReturn(Future.failed(new Exception("test exception")))
+
+        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+
+        result shouldBe testReportDeadlinesErrorFutureFailed("test exception")
       }
     }
   }

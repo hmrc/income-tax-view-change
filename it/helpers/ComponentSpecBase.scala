@@ -78,6 +78,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getReportDeadlines(nino: String): WSResponse = get(s"/$nino/report-deadlines")
 
+    def getPreviousObligations(nino: String, from: String, to: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines/from/$from/to/$to")
+
     def getFulfilledReportDeadlines(nino: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines")
 
     def getOutStandingChargeDetails(idType: String, idNumber: Int, taxYearEndDate: String): WSResponse = get(s"/out-standing-charges/$idType/$idNumber/$taxYearEndDate")
