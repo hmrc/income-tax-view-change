@@ -40,6 +40,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
     outstandingAmount = Some(BigDecimal("500.00")),
     clearedAmount = Some(BigDecimal("500.00")),
 		chargeType = Some("POA1"),
+		mainType = Some("4920"),
     items = Some(Seq(
       SubItem(
         subItemId = Some("1"),
@@ -67,6 +68,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
     outstandingAmount = Some(BigDecimal("200.00")),
     clearedAmount = Some(BigDecimal("500.00")),
 		chargeType = Some("POA1"),
+    mainType = Some("4920"),
     items = Some(Seq(
       SubItem(
         subItemId = Some("2"),
@@ -97,6 +99,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "documentOutstandingAmount" -> 500.00,
         "clearedAmount" -> 500.00,
 				"chargeType" -> "POA1",
+				"mainType" -> "4920",
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "1",
@@ -123,6 +126,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "documentOutstandingAmount" -> 200.00,
         "clearedAmount" -> 500.00,
 				"chargeType" -> "POA1",
+				"mainType" -> "4920",
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "2",
