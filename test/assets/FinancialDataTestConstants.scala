@@ -35,6 +35,7 @@ object FinancialDataTestConstants {
       |     "clearedAmount": 500.00,
       |     "documentOutstandingAmount": 500.00,
       |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "items": [{
       |       "subItem": "1",
       |       "amount": 100.00,
@@ -67,6 +68,7 @@ object FinancialDataTestConstants {
       |     "clearedAmount": 500.00,
       |     "documentOutstandingAmount": 500.00,
       |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "items": [{
       |       "subItem": "1",
       |       "amount": 100.00,
@@ -92,6 +94,7 @@ object FinancialDataTestConstants {
       |     "clearedAmount": 500.00,
       |     "documentOutstandingAmount": 200.00,
       |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "items": [{
       |       "subItem": "2",
       |       "amount": 200.00,
@@ -124,6 +127,7 @@ object FinancialDataTestConstants {
       |     "outstandingAmount": 500.00,
       |     "clearedAmount": 500.00,
       |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "items": [{
       |       "subItemId": "1",
       |       "amount": 100.00,
@@ -156,6 +160,7 @@ object FinancialDataTestConstants {
       |     "outstandingAmount": 500.00,
       |     "clearedAmount": 500.00,
       |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "items": [{
       |       "subItemId": "1",
       |       "amount": 100.00,
@@ -182,6 +187,7 @@ object FinancialDataTestConstants {
       |     "outstandingAmount": 200.00,
       |     "clearedAmount": 500.00,
       |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "items": [{
       |       "subItemId": "2",
       |       "amount": 200.00,
@@ -238,6 +244,7 @@ object FinancialDataTestConstants {
     outstandingAmount = Some(BigDecimal("500.00")),
     clearedAmount = Some(BigDecimal(500.00)),
 		chargeType = Some("POA1"),
+    mainType = Some("4920"),
     items = Some(Seq(
       SubItem(
         subItemId = Some("1"),
@@ -264,6 +271,7 @@ object FinancialDataTestConstants {
     outstandingAmount = Some(BigDecimal("200.00")),
     clearedAmount = Some(BigDecimal(500.00)),
 		chargeType = Some("POA1"),
+    mainType = Some("4920"),
     items = Some(Seq(
       SubItem(
         subItemId = Some("2"),
