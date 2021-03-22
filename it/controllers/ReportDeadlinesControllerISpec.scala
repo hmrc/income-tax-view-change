@@ -20,10 +20,78 @@ import assets.BaseIntegrationTestConstants._
 import assets.ReportDeadlinesIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesReportDeadlinesStub
-import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
 import play.api.http.Status._
 
 class ReportDeadlinesControllerISpec extends ComponentSpecBase {
+
+  val from: String = "2020-04-06"
+  val to: String = "2021-04-05"
+
+  s"Calling GET ${controllers.routes.ReportDeadlinesController.getPreviousObligations(testNino, from, to)}" when {
+    "the user is authenticated" when {
+      "the request is valid" should {
+        s"return $OK" when {
+          "valid obligations are retrieved" in {
+            isAuthorised(true)
+
+            DesReportDeadlinesStub.stubGetDesPreviousObligations(testNino, from, to)
+
+            val res = IncomeTaxViewChange.getPreviousObligations(testNino, from, to)
+
+            DesReportDeadlinesStub.verifyGetDesPreviousObligations(testNino, from, to)
+
+            res should have(
+              httpStatus(OK),
+              jsonBodyAs[ObligationsModel](obligationsModel)
+            )
+          }
+        }
+        s"return $INTERNAL_SERVER_ERROR" when {
+          "the response retrieved is invalid" in {
+            isAuthorised(true)
+
+            DesReportDeadlinesStub.stubGetDesPreviousObligationsError(testNino, from, to)(OK, "{}")
+
+            val res = IncomeTaxViewChange.getPreviousObligations(testNino, from, to)
+
+            DesReportDeadlinesStub.verifyGetDesPreviousObligations(testNino, from, to)
+
+            res should have(
+              httpStatus(INTERNAL_SERVER_ERROR),
+              jsonBodyAs[ReportDeadlinesErrorModel](ReportDeadlinesErrorModel(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data"))
+            )
+          }
+        }
+        s"return the status retrieved from the call to DES when not $OK" in {
+          isAuthorised(true)
+
+          DesReportDeadlinesStub.stubGetDesPreviousObligationsError(testNino, from, to)(NOT_FOUND, "Error, not found")
+
+          val res = IncomeTaxViewChange.getPreviousObligations(testNino, from, to)
+
+          DesReportDeadlinesStub.verifyGetDesPreviousObligations(testNino, from, to)
+
+          res should have(
+            httpStatus(NOT_FOUND),
+            jsonBodyAs[ReportDeadlinesErrorModel](ReportDeadlinesErrorModel(NOT_FOUND, "Error, not found"))
+          )
+        }
+      }
+    }
+    "the user is not authenticated" should {
+      s"return $UNAUTHORIZED" in {
+        isAuthorised(false)
+
+        val res = IncomeTaxViewChange.getPreviousObligations(testNino, from, to)
+
+        res should have(
+          httpStatus(UNAUTHORIZED),
+          emptyBody
+        )
+      }
+    }
+  }
 
   "Calling the ReportDeadlinesController" when {
     "authorised with a valid request" should {

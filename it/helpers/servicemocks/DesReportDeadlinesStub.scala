@@ -32,6 +32,10 @@ object DesReportDeadlinesStub {
     s"/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
   }
 
+  def previousObligationsUrl(nino: String, from: String, to: String): String = {
+    s"/enterprise/obligation-data/nino/$nino/ITSA?status=F&from=$from&to=$to"
+  }
+
   def stubGetDesOpenReportDeadlines(nino: String): Unit = {
     val desReportDeadlinesResponse = successResponse(nino).toString
     WiremockHelper.stubGet(url(nino), Status.OK, desReportDeadlinesResponse)
@@ -57,5 +61,18 @@ object DesReportDeadlinesStub {
 
   def verifyGetFulfilledDesReportDeadlines(nino: String): Unit =
     WiremockHelper.verifyGet(url(nino, openObligations = false))
+
+  def stubGetDesPreviousObligations(nino: String, from: String, to: String): Unit = {
+    val desReportDeadlinesResponse = successResponse(nino).toString
+    WiremockHelper.stubGet(previousObligationsUrl(nino, from, to), Status.OK, desReportDeadlinesResponse)
+  }
+
+  def stubGetDesPreviousObligationsError(nino: String, from: String, to: String)(status: Int, body: String): Unit = {
+    WiremockHelper.stubGet(previousObligationsUrl(nino, from, to), status, body)
+  }
+
+  def verifyGetDesPreviousObligations(nino: String, from: String, to: String): Unit = {
+    WiremockHelper.verifyGet(previousObligationsUrl(nino, from, to))
+  }
 
 }

@@ -16,27 +16,27 @@
 
 package controllers
 
+import connectors.ReportDeadlinesConnector
 import controllers.predicates.AuthenticationPredicate
 import javax.inject.{Inject, Singleton}
 import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import services.ReportDeadlinesService
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class ReportDeadlinesController @Inject()(val authentication: AuthenticationPredicate,
-                                          val reportDeadlinesService: ReportDeadlinesService,
+                                          val reportDeadlinesConnector: ReportDeadlinesConnector,
                                           cc: ControllerComponents
                                          ) extends BackendController(cc) {
 
   def getOpenObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[ReportDeadlinesController][getOpenObligations] - " +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino")
-    reportDeadlinesService.getReportDeadlines(nino, openObligations = true).map {
+    reportDeadlinesConnector.getReportDeadlines(nino, openObligations = true).map {
       case success: ObligationsModel =>
         Logger.debug(s"[ReportDeadlinesController][getOpenObligations] - Successful Response: $success")
         Ok(Json.toJson(success))
@@ -49,7 +49,20 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
   def getFulfilledObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - " +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino")
-    reportDeadlinesService.getReportDeadlines(nino, openObligations = false).map {
+    reportDeadlinesConnector.getReportDeadlines(nino, openObligations = false).map {
+      case success: ObligationsModel =>
+        Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - Successful Response: $success")
+        Ok(Json.toJson(success))
+      case error: ReportDeadlinesErrorModel =>
+        Logger.error(s"[ReportDeadlinesController][getFulfilledObligations] - Error Response: $error")
+        Status(error.status)(Json.toJson(error))
+    }
+  }
+
+  def getPreviousObligations(nino: String, from: String, to: String): Action[AnyContent] = authentication.async { implicit request =>
+    Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - " +
+      s"Requesting obligations from ReportDeadlinesService for nino: $nino, from: $from, to: $to")
+    reportDeadlinesConnector.getPreviousObligations(nino, from, to).map {
       case success: ObligationsModel =>
         Logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - Successful Response: $success")
         Ok(Json.toJson(success))

@@ -8,6 +8,7 @@ GET        /income-sources/:mtdRef                                       control
 
 GET        /:nino/report-deadlines                                       controllers.ReportDeadlinesController.getOpenObligations(nino)
 GET        /:nino/fulfilled-report-deadlines                             controllers.ReportDeadlinesController.getFulfilledObligations(nino)
+GET        /:nino/fulfilled-report-deadlines/from/:from/to/:to           controllers.ReportDeadlinesController.getPreviousObligations(nino, from, to)
 
 GET        /previous-tax-calculation/:nino/:year                         controllers.PreviousCalculationController.getPreviousCalculation(nino, year)
 
