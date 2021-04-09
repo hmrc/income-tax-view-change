@@ -28,7 +28,8 @@ case class CalcResult(incomeTaxNicYtd: BigDecimal,
                       annualAllowances: Option[AnnualAllowancesModel] = None,
                       incomeTax: Option[IncomeTaxModel] = None,
                       taxableIncome: Option[TaxableIncomeModel] = None,
-                      nic: Option[NicModel] = None
+                      nic: Option[NicModel] = None,
+                      taxDeductedAtSource: Option[TaxDeductedAtSourceModel] = None
                      )
 
 case class PreviousCalculationModel(calcOutput: CalcOutput)
@@ -38,6 +39,31 @@ case class AnnualAllowancesModel(personalAllowance: Option[BigDecimal] = None,
 
 object AnnualAllowancesModel {
   implicit val formats: OFormat[AnnualAllowancesModel] = Json.format[AnnualAllowancesModel]
+}
+
+
+case class TaxDeductedAtSourceModel(payeEmployments: Option[BigDecimal] = None,
+                                    occupationalPensions: Option[BigDecimal] = None,
+                                    stateBenefits: Option[BigDecimal] = None,
+                                    cis: Option[BigDecimal] = None,
+                                    ukLandAndProperty: Option[BigDecimal] = None,
+                                    specialWithholdingTaxOrUkTaxPaid: Option[BigDecimal] = None,
+                                    voidedIsa: Option[BigDecimal] = None,
+                                    savings: Option[BigDecimal] = None
+                                   )
+
+object TaxDeductedAtSourceModel {
+  implicit val reads: Reads[TaxDeductedAtSourceModel] = (
+    (JsPath \ "payeEmployments").readNullable[BigDecimal] and
+      (JsPath \ "occupationalPensions").readNullable[BigDecimal] and
+      (JsPath \ "stateBenefits").readNullable[BigDecimal] and
+      (JsPath \ "cis").readNullable[BigDecimal] and
+      (JsPath \ "ukLandAndProperty").readNullable[BigDecimal] and
+      (JsPath \ "specialWithholdingTaxOrUkTaxPaid").readNullable[BigDecimal] and
+      (JsPath \ "voidedIsa").readNullable[BigDecimal] and
+      (JsPath \ "savings").readNullable[BigDecimal]
+    ) (TaxDeductedAtSourceModel.apply _)
+  implicit val writes: Writes[TaxDeductedAtSourceModel] = Json.writes[TaxDeductedAtSourceModel]
 }
 
 case class TaxableIncomeModel(

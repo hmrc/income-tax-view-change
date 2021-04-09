@@ -154,7 +154,17 @@ object PreviousCalculationTestConstants {
       |        "class4": {
       |          "totalAmount": 14000
       |        }
-      |      }
+      |      },
+      |       "taxDeductedAtSource": {
+      |       "payeEmployments": 100.0,
+      |       "occupationalPensions": 200.0,
+      |       "stateBenefits": 300.0,
+      |       "cis": 400.0,
+      |       "ukLandAndProperty": 500.0,
+      |       "specialWithholdingTaxOrUkTaxPaid": 600.0,
+      |       "voidedIsa": 700.0,
+      |       "savings": 800.0
+      |       }
       |    }
       |  }
       |}
@@ -212,7 +222,17 @@ object PreviousCalculationTestConstants {
       |                }
       |              ]
       |            }
-      |          },
+      |            },
+      |            "taxDeductedAtSource" : {
+      |            "payeEmployments" : 100.0,
+      |            "occupationalPensions" : 200.0,
+      |            "stateBenefits" : 300.0,
+      |            "cis" : 400.0,
+      |            "ukLandAndProperty" : 500.0,
+      |            "specialWithholdingTaxOrUkTaxPaid" : 600.0,
+      |            "voidedIsa" : 700.0,
+      |            "savings" : 800.0
+      |            },
       |          "totalBeforeTaxDeducted" : 100,
       |          "totalTaxDeducted" : 200,
       |          "annualAllowances" : {
@@ -517,7 +537,17 @@ object PreviousCalculationTestConstants {
             )),
             giftOfInvestmentsAndPropertyToCharity = Some(1000.25)
           )),
-          nic = Some(NicModel(Some(10000), Some(14000)))
+          nic = Some(NicModel(Some(10000), Some(14000))),
+            taxDeductedAtSource = Some(TaxDeductedAtSourceModel(
+            payeEmployments = Some(100.0),
+            occupationalPensions = Some(200.0),
+            stateBenefits = Some(300.0),
+            cis = Some(400.0),
+            ukLandAndProperty = Some(500.0),
+            specialWithholdingTaxOrUkTaxPaid = Some(600.0),
+            voidedIsa = Some(700.0),
+            savings = Some(800.0),
+          )),
         ))))
 
   val previousCalculationMinimum: PreviousCalculationModel =

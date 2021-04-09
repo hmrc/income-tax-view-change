@@ -35,7 +35,8 @@ object PreviousCalculationIntegrationTestConstants {
           Some(DividendsModel(1000.25, 1000.25, Seq(BandModel(1000.25,99.99,1000.25,"HRT")))),
           Some(SavingsAndGainsModel(1000.25, 1000.25, List(BandModel(1000.25,99.99,1000.25,"BRT")))), None)),
         taxableIncome = Some(TaxableIncomeModel(None, Some(IncomeReceivedModel(Some(1000.25), Some(1000.25), Some(1000.25), Some(1000.25))), Some(1000.25))),
-        nic = Some(NicModel(Some(1000.25), Some(1000.25)))
+        nic = Some(NicModel(Some(1000.25), Some(1000.25))),
+        taxDeductedAtSource = Some(TaxDeductedAtSourceModel(Some(100.0),Some(200.0),Some(300.0),Some(400.0),Some(500.0),Some(600.0),Some(700.0),Some(800.0)))
       ))))
 
   val previousCalculationError = Error(Status.INTERNAL_SERVER_ERROR.toString, "ISE")
@@ -191,7 +192,17 @@ object PreviousCalculationIntegrationTestConstants {
      |				"nic4": 99999999,
      |				"totalNicAmount": 99999999.99,
      |				"incomeTaxNicAmount": 125.63
-     |			},
+     |			   },
+     |            "taxDeductedAtSource" : {
+     |            "payeEmployments" : 100.0,
+     |            "occupationalPensions" : 200.0,
+     |            "stateBenefits" : 300.0,
+     |            "cis" : 400.0,
+     |            "ukLandAndProperty" : 500.0,
+     |            "specialWithholdingTaxOrUkTaxPaid" : 600.0,
+     |            "voidedIsa" : 700.0,
+     |            "savings" : 800.0
+     |            },
      |			"msgCount": 1.1,
      |			"msg": [{
      |				"type": "abcdefghijklm",
