@@ -46,7 +46,8 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
-      "customerPaymentInformation" -> "true"
+      "customerPaymentInformation" -> "true",
+      "includeStatistical" -> "false"
     )
   }
 

@@ -55,7 +55,8 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         "includeLocks" -> "true",
         "calculateAccruedInterest" -> "true",
         "removePOA" -> "false",
-        "customerPaymentInformation" -> "true"
+        "customerPaymentInformation" -> "true",
+        "includeStatistical" -> "false"
       )
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.queryParameters(
         from = testFrom,
