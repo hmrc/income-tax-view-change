@@ -50,7 +50,12 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     "return the correct formatted query parameters" in {
       val expectedQueryParameters: Seq[(String, String)] = Seq(
         "dateFrom" -> testFrom,
-        "dateTo" -> testTo
+        "dateTo" -> testTo,
+        "onlyOpenItems" -> "false",
+        "includeLocks" -> "true",
+        "calculateAccruedInterest" -> "true",
+        "removePOA" -> "false",
+        "customerPaymentInformation" -> "true"
       )
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.queryParameters(
         from = testFrom,
