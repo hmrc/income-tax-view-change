@@ -41,7 +41,12 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
   private[connectors] def queryParameters(from: String, to: String): Seq[(String, String)] = {
     Seq(
       "dateFrom" -> from,
-      "dateTo" -> to
+      "dateTo" -> to,
+      "onlyOpenItems" -> "false",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "false",
+      "customerPaymentInformation" -> "true"
     )
   }
 
