@@ -18,7 +18,7 @@ package models.outStandingCharges
 import play.api.libs.json.{Json, OFormat}
 
 case class OutStandingCharge(chargeName: String,
-                             relevantDueDate: String,
+                             relevantDueDate: Option[String],
                              chargeAmount: BigDecimal,
                              tieBreaker: Int)
 
