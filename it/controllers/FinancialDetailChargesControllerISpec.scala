@@ -20,9 +20,9 @@ import assets.BaseIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesChargesStub._
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{Charge, SubItem}
+import models.financialDetails.{DocumentDetail, FinancialDetail, SubItem}
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSResponse
 
 class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
@@ -30,17 +30,17 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
   val from: String = "from"
   val to: String = "to"
 
-  val charges1: Charge = Charge(
+  val financialDetail: FinancialDetail = FinancialDetail(
     taxYear = "2018",
     transactionId = "transactionId",
     transactionDate = Some("transactionDate"),
     `type` = Some("type"),
     totalAmount = Some(BigDecimal("1000.00")),
-    originalAmount=Some(BigDecimal("500.00")),
+    originalAmount = Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("500.00")),
     clearedAmount = Some(BigDecimal("500.00")),
-		chargeType = Some("POA1"),
-		mainType = Some("4920"),
+    chargeType = Some("POA1"),
+    mainType = Some("4920"),
     items = Some(Seq(
       SubItem(
         subItemId = Some("1"),
@@ -48,7 +48,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         clearingDate = Some("clearingDate"),
         clearingReason = Some("clearingReason"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod"),
-        paymentReference= Some("paymentReference"),
+        paymentReference = Some("paymentReference"),
         paymentAmount = Some(BigDecimal("2000.00")),
         dueDate = Some("dueDate"),
         paymentMethod = Some("paymentMethod"),
@@ -58,16 +58,16 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
       )))
   )
 
-  val charges2: Charge = Charge(
+  val financialDetail2: FinancialDetail = FinancialDetail(
     taxYear = "2019",
     transactionId = "transactionId2",
     transactionDate = Some("transactionDate2"),
     `type` = Some("type2"),
     totalAmount = Some(BigDecimal("2000.00")),
-    originalAmount=Some(BigDecimal("500.00")),
+    originalAmount = Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("200.00")),
     clearedAmount = Some(BigDecimal("500.00")),
-		chargeType = Some("POA1"),
+    chargeType = Some("POA1"),
     mainType = Some("4920"),
     items = Some(Seq(
       SubItem(
@@ -76,7 +76,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         clearingDate = Some("clearingDate2"),
         clearingReason = Some("clearingReason2"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod2"),
-        paymentReference= Some("paymentReference2"),
+        paymentReference = Some("paymentReference2"),
         paymentAmount = Some(BigDecimal("3000.00")),
         dueDate = Some("dueDate2"),
         paymentMethod = Some("paymentMethod2"),
@@ -86,7 +86,39 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
       )))
   )
 
+  val documentDetail: DocumentDetail = DocumentDetail(
+    taxYear = "2018",
+    transactionId = "id",
+    documentDescription = Some("documentDescription"),
+    originalAmount = Some(300.00),
+    outstandingAmount = Some(200.00)
+  )
+
+  val documentDetail2: DocumentDetail = DocumentDetail(
+    taxYear = "2019",
+    transactionId = "id2",
+    documentDescription = Some("documentDescription2"),
+    originalAmount = Some(100.00),
+    outstandingAmount = Some(50.00)
+  )
+
   val chargeJson: JsObject = Json.obj(
+    "documentDetails" -> Json.arr(
+      Json.obj(
+        "taxYear" -> "2018",
+        "documentId" -> "id",
+        "documentDescription" -> "documentDescription",
+        "totalAmount" -> 300.00,
+        "documentOutstandingAmount" -> 200.00
+      ),
+      Json.obj(
+        "taxYear" -> "2019",
+        "documentId" -> "id2",
+        "documentDescription" -> "documentDescription2",
+        "totalAmount" -> 100.00,
+        "documentOutstandingAmount" -> 50.00
+      )
+    ),
     "financialDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
@@ -98,8 +130,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "originalAmount" -> 500.00,
         "documentOutstandingAmount" -> 500.00,
         "clearedAmount" -> 500.00,
-				"chargeType" -> "POA1",
-				"mainType" -> "4920",
+        "chargeType" -> "POA1",
+        "mainType" -> "4920",
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "1",
@@ -125,8 +157,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         "originalAmount" -> 500.00,
         "documentOutstandingAmount" -> 200.00,
         "clearedAmount" -> 500.00,
-				"chargeType" -> "POA1",
-				"mainType" -> "4920",
+        "chargeType" -> "POA1",
+        "mainType" -> "4920",
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "2",
@@ -134,7 +166,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
             "clearingDate" -> "clearingDate2",
             "clearingReason" -> "clearingReason2",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod2",
-            "paymentReference" ->"paymentReference2",
+            "paymentReference" -> "paymentReference2",
             "paymentAmount" -> 3000.00,
             "dueDate" -> "dueDate2",
             "paymentMethod" -> "paymentMethod2",
@@ -158,9 +190,14 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 
         val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
 
+        val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+          documentDetails = List(documentDetail, documentDetail2),
+          financialDetails = List(financialDetail, financialDetail2)
+        ))
+
         res should have(
           httpStatus(OK),
-          jsonBodyMatching(Json.toJson(ChargesResponse(List(charges1, charges2))))
+          jsonBodyMatching(expectedResponseBody)
         )
       }
     }

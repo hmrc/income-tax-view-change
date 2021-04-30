@@ -16,10 +16,11 @@
 
 package connectors.httpParsers
 
-import assets.FinancialDataTestConstants.{charges1, charges2, validChargesJson}
+import assets.FinancialDataTestConstants.{documentDetail, documentDetail2, financialDetail, financialDetail2, validChargesJson}
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -33,7 +34,10 @@ class ChargesHttpParserSpec extends TestSupport {
           responseJson = Some(validChargesJson)
         )
 
-        val expectedResult: ChargeResponse = Right(ChargesResponse(List(charges1, charges2)))
+        val expectedResult: ChargeResponse = Right(ChargesResponse(
+          documentDetails = List(documentDetail, documentDetail2),
+          financialDetails = List(financialDetail, financialDetail2)
+        ))
         val actualResult: ChargeResponse = ChargeReads.read("", "", httpResponse)
 
         actualResult shouldBe expectedResult
@@ -50,7 +54,20 @@ class ChargesHttpParserSpec extends TestSupport {
 
         actualResult shouldBe expectedResult
       }
-      "any other status is returned" in {
+    }
+    s"return $UnexpectedChargeErrorResponse" when {
+      s"$OK is returned with invalid json" in {
+        val httpResponse: HttpResponse = HttpResponse(
+          responseStatus = OK,
+          responseJson = Some(Json.obj())
+        )
+
+        val expectedResponse: ChargeResponse = Left(UnexpectedChargeErrorResponse)
+        val actualResponse: ChargeResponse = ChargeReads.read("", "", httpResponse)
+
+        actualResponse shouldBe expectedResponse
+      }
+      "a non 200 or 4xx status is returned" in {
         val httpResponse: HttpResponse = HttpResponse(
           responseStatus = INTERNAL_SERVER_ERROR
         )

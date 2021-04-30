@@ -18,11 +18,11 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
-import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class FinancialDetailsConnector @Inject()(val http: HttpClient,
@@ -51,10 +51,8 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
     )
   }
 
-  def listCharges(nino: String, from: String, to: String)(implicit hc: HeaderCarrier,
-                                                          ec: ExecutionContext): Future[ChargeResponse] = {
-
+  def getChargeDetails(nino: String, from: String, to: String)
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
     http.GET(url = financialDetailsUrl(nino), queryParams = queryParameters(from, to))(ChargeReads, desHeaderCarrier, ec)
-
   }
 }

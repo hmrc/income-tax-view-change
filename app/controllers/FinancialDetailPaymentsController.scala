@@ -19,23 +19,22 @@ package controllers
 import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import javax.inject.{Inject, Singleton}
-import models.financialDetails.{Charge, Payment}
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class FinancialDetailPaymentsController @Inject()(authentication: AuthenticationPredicate,
                                                   cc: ControllerComponents,
                                                   financialDetailsConnector: FinancialDetailsConnector)
-                                                 (implicit ec: ExecutionContext) extends BackendController(cc){
+                                                 (implicit ec: ExecutionContext) extends BackendController(cc) {
 
   def getPaymentDetails(nino: String, from: String, to: String): Action[AnyContent] = {
     authentication.async { implicit request =>
-      financialDetailsConnector.listCharges(
+      financialDetailsConnector.getChargeDetails(
         nino = nino,
         from = from,
         to = to

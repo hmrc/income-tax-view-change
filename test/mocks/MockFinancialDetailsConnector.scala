@@ -37,7 +37,7 @@ trait MockFinancialDetailsConnector extends UnitSpec with MockitoSugar with Befo
 
   def mockListCharges(nino: String, from: String, to: String)
                      (response: ChargeResponse): Unit = {
-    when(mockFinancialDetailsConnector.listCharges(
+    when(mockFinancialDetailsConnector.getChargeDetails(
       nino = ArgumentMatchers.eq(nino),
       from = ArgumentMatchers.eq(from),
       to = ArgumentMatchers.eq(to)

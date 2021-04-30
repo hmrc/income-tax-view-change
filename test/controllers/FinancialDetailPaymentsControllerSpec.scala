@@ -16,15 +16,16 @@
 
 package controllers
 
-import assets.FinancialDataTestConstants.{charges1, charges2, validChargesJsonAfterWrites, validPaymentsJsonAfterWrites}
+import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
 import models.financialDetails.responses.ChargesResponse
-import play.api.mvc.ControllerComponents
-import play.api.test.Helpers.stubControllerComponents
 import play.api.http.Status._
+import play.api.libs.json.Json
+import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
+import play.api.test.Helpers.stubControllerComponents
 
 class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with MockFinancialDetailsConnector with MockMicroserviceAuthConnector {
 
@@ -40,16 +41,21 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
   val from: String = "from"
   val to: String = "to"
 
+  val chargesResponse: ChargesResponse = ChargesResponse(
+    documentDetails = List(documentDetail),
+    financialDetails = List(financialDetail)
+  )
+
   "getPaymentDetails" should {
     s"return $OK with the retrieved payment details from the charge details" when {
       "the connector returns the charge details" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Right(ChargesResponse(List(charges1, charges2))))
+        mockListCharges(nino, from, to)(Right(chargesResponse))
 
         val result = await(TestFinancialDetailPaymentsController.getPaymentDetails(nino, from, to)(FakeRequest()))
 
         status(result) shouldBe OK
-        jsonBodyOf(result) shouldBe validPaymentsJsonAfterWrites
+        jsonBodyOf(result) shouldBe Json.toJson(chargesResponse.financialDetails.flatMap(_.payments))
       }
     }
 

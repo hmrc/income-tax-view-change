@@ -34,6 +34,22 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
   )
 
   val chargeJson: JsObject = Json.obj(
+    "documentDetails" -> Json.arr(
+      Json.obj(
+        "taxYear" -> "2018",
+        "documentId" -> "id",
+        "documentDescription" -> "documentDescription",
+        "totalAmount" -> 300.00,
+        "documentOutstandingAmount" -> 200.00
+      ),
+      Json.obj(
+        "taxYear" -> "2019",
+        "documentId" -> "id2",
+        "documentDescription" -> "documentDescription2",
+        "totalAmount" -> 100.00,
+        "documentOutstandingAmount" -> 50.00
+      )
+    ),
     "financialDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
