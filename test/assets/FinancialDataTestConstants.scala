@@ -17,46 +17,33 @@
 package assets
 
 
-import models.financialDetails.{Charge, SubItem}
-import play.api.libs.json.{JsObject, JsValue, Json}
+import models.financialDetails.{DocumentDetail, FinancialDetail, SubItem}
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
 
 object FinancialDataTestConstants {
 
-  val validChargeJson: JsValue = Json.parse(
-    """
-      |{
-      |     "taxYear": "2018",
-      |     "documentId": "transactionId",
-      |     "documentDate": "transactionDate",
-      |     "documentDescription": "type",
-      |     "totalAmount": 1000.00,
-      |     "originalAmount": 500.00,
-      |     "clearedAmount": 500.00,
-      |     "documentOutstandingAmount": 500.00,
-      |     "chargeType": "POA1",
-      |     "mainType": "4920",
-      |     "items": [{
-      |       "subItem": "1",
-      |       "amount": 100.00,
-      |       "clearingDate": "clearingDate",
-      |       "clearingReason": "clearingReason",
-      |       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "paymentReference": "paymentReference",
-      |       "paymentAmount": 2000.00,
-      |       "dueDate": "dueDate",
-      |       "paymentMethod": "paymentMethod",
-      |       "paymentLot": "paymentLot",
-      |       "paymentLotItem": "paymentLotItem"
-      |       }
-      |     ]
-      |}
-      |""".stripMargin)
-
-
   val validChargesJson: JsValue = Json.parse(
     """
       |{
+      | "documentDetails": [
+      |   {
+      |     "taxYear": "2018",
+      |     "documentId": "id",
+      |     "documentDescription": "documentDescription",
+      |     "totalAmount": 300.00,
+      |     "documentOutstandingAmount": 200.00,
+      |     "lastClearedAmount": 100.00
+      |   },
+      |   {
+      |     "taxYear": "2019",
+      |     "documentId": "id2",
+      |     "documentDescription": "documentDescription2",
+      |     "totalAmount": 100.00,
+      |     "documentOutstandingAmount": 50.00,
+      |     "lastClearedAmount": 50.00
+      |   }
+      | ],
       | "financialDetails": [
       |   {
       |     "taxYear": "2018",
@@ -115,7 +102,7 @@ object FinancialDataTestConstants {
       |""".stripMargin)
 
 
-  val validChargeJsonAfterWrites: JsValue = Json.parse(
+  val validFinancialDetailJsonAfterWrites: JsValue = Json.parse(
     """
       |{
       |     "taxYear": "2018",
@@ -145,96 +132,27 @@ object FinancialDataTestConstants {
       |     ]
       |}
       |""".stripMargin)
-
-  val validChargesJsonAfterWrites: JsValue = Json.parse(
-    """
-      |{
-      | "financialDetails": [
-      |   {
-      |     "taxYear": "2018",
-      |     "transactionId": "transactionId",
-      |     "transactionDate": "transactionDate",
-      |     "type": "type",
-      |     "totalAmount": 1000.00,
-      |     "originalAmount": 500.00,
-      |     "outstandingAmount": 500.00,
-      |     "clearedAmount": 500.00,
-      |     "chargeType": "POA1",
-      |     "mainType": "4920",
-      |     "items": [{
-      |       "subItemId": "1",
-      |       "amount": 100.00,
-      |       "clearingDate": "clearingDate",
-      |       "clearingReason": "clearingReason",
-      |       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "paymentReference": "paymentReference",
-      |       "paymentAmount": 2000.00,
-      |       "dueDate": "dueDate",
-      |       "paymentMethod": "paymentMethod",
-      |       "paymentLot": "paymentLot",
-      |       "paymentLotItem": "paymentLotItem",
-      |       "paymentId": "paymentLot-paymentLotItem"
-      |       }
-      |     ]
-      |   },
-      |   {
-      |     "taxYear": "2019",
-      |     "transactionId": "transactionId2",
-      |     "transactionDate": "transactionDate2",
-      |     "type": "type2",
-      |     "totalAmount": 2000.00,
-      |     "originalAmount": 500.00,
-      |     "outstandingAmount": 200.00,
-      |     "clearedAmount": 500.00,
-      |     "chargeType": "POA1",
-      |     "mainType": "4920",
-      |     "items": [{
-      |       "subItemId": "2",
-      |       "amount": 200.00,
-      |       "clearingDate": "clearingDate2",
-      |       "clearingReason": "clearingReason2",
-      |       "outgoingPaymentMethod": "outgoingPaymentMethod2",
-      |       "paymentReference": "paymentReference2",
-      |       "paymentAmount": 3000.00,
-      |       "dueDate": "dueDate2",
-      |       "paymentMethod": "paymentMethod2",
-      |       "paymentLot": "paymentLot2",
-      |       "paymentLotItem": "paymentLotItem2",
-      |       "paymentId": "paymentLot2-paymentLotItem2"
-      |       }
-      |     ]
-      |   }
-      | ]
-      |}
-      |""".stripMargin)
-
-  val validPaymentsJsonAfterWrites: JsValue = Json.parse(
-    """
-      |[
-      | {
-      |   "reference": "paymentReference",
-      |   "amount": 2000.00,
-      |   "method": "paymentMethod",
-      |   "lot": "paymentLot",
-      |   "lotItem": "paymentLotItem",
-      |   "date": "clearingDate"
-      | },
-      | {
-      |   "reference": "paymentReference2",
-      |   "amount": 3000.00,
-      |   "method": "paymentMethod2",
-      |   "lot": "paymentLot2",
-      |   "lotItem": "paymentLotItem2",
-      |   "date": "clearingDate2"
-      | }
-      |]
-      |""".stripMargin)
-
 
   val testChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(validChargesJson))
   val testEmptyChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(Json.toJson("")))
 
-  val charges1: Charge = Charge(
+  val documentDetail: DocumentDetail = DocumentDetail(
+    taxYear = "2018",
+    transactionId = "id",
+    documentDescription = Some("documentDescription"),
+    originalAmount = Some(300.00),
+    outstandingAmount = Some(200.00)
+  )
+
+  val documentDetail2: DocumentDetail = DocumentDetail(
+    taxYear = "2019",
+    transactionId = "id2",
+    documentDescription = Some("documentDescription2"),
+    originalAmount = Some(100.00),
+    outstandingAmount = Some(50.00)
+  )
+
+  val financialDetail: FinancialDetail = FinancialDetail(
     taxYear = "2018",
     transactionId = "transactionId",
     transactionDate = Some("transactionDate"),
@@ -243,7 +161,7 @@ object FinancialDataTestConstants {
     originalAmount = Some(BigDecimal(500.00)),
     outstandingAmount = Some(BigDecimal("500.00")),
     clearedAmount = Some(BigDecimal(500.00)),
-		chargeType = Some("POA1"),
+    chargeType = Some("POA1"),
     mainType = Some("4920"),
     items = Some(Seq(
       SubItem(
@@ -261,7 +179,7 @@ object FinancialDataTestConstants {
         paymentId = Some("paymentLot-paymentLotItem")
       )))
   )
-  val charges2: Charge = Charge(
+  val financialDetail2: FinancialDetail = FinancialDetail(
     taxYear = "2019",
     transactionId = "transactionId2",
     transactionDate = Some("transactionDate2"),
@@ -270,7 +188,7 @@ object FinancialDataTestConstants {
     originalAmount = Some(BigDecimal(500.00)),
     outstandingAmount = Some(BigDecimal("200.00")),
     clearedAmount = Some(BigDecimal(500.00)),
-		chargeType = Some("POA1"),
+    chargeType = Some("POA1"),
     mainType = Some("4920"),
     items = Some(Seq(
       SubItem(

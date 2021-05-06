@@ -19,18 +19,18 @@ package models.financialDetails
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class Charge(taxYear: String,
-                  transactionId: String,
-                  transactionDate: Option[String],
-                  `type`: Option[String],
-                  totalAmount: Option[BigDecimal],
-                  originalAmount: Option[BigDecimal],
-                  outstandingAmount: Option[BigDecimal],
-                  clearedAmount: Option[BigDecimal],
-									chargeType: Option[String],
-                  mainType: Option[String],
-                  items: Option[Seq[SubItem]]
-                 ) {
+case class FinancialDetail(taxYear: String,
+                           transactionId: String,
+                           transactionDate: Option[String],
+                           `type`: Option[String],
+                           totalAmount: Option[BigDecimal],
+                           originalAmount: Option[BigDecimal],
+                           outstandingAmount: Option[BigDecimal],
+                           clearedAmount: Option[BigDecimal],
+                           chargeType: Option[String],
+                           mainType: Option[String],
+                           items: Option[Seq[SubItem]]
+                          ) {
 
   val payments: Seq[Payment] = items match {
     case Some(subItems) => subItems.map { subItem =>
@@ -48,9 +48,9 @@ case class Charge(taxYear: String,
 
 }
 
-object Charge {
+object FinancialDetail {
 
-  implicit val reads: Reads[Charge] = (
+  implicit val reads: Reads[FinancialDetail] = (
     (JsPath \ "taxYear").read[String] and
       (JsPath \ "documentId").read[String] and
       (JsPath \ "documentDate").readNullable[String] and
@@ -62,8 +62,8 @@ object Charge {
       (JsPath \ "chargeType").readNullable[String] and
       (JsPath \ "mainType").readNullable[String] and
       (JsPath \ "items").readNullable[Seq[SubItem]]
-    ) (Charge.apply _)
+    ) (FinancialDetail.apply _)
 
-  implicit val writes: OWrites[Charge] = Json.writes[Charge]
+  implicit val writes: OWrites[FinancialDetail] = Json.writes[FinancialDetail]
 
 }

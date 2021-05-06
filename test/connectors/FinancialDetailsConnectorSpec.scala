@@ -17,11 +17,11 @@
 package connectors
 
 import assets.FinancialDataTestConstants
-import assets.FinancialDataTestConstants.{charges1, charges2}
+import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import mocks.MockHttp
-import models.financialDetails.Charge
 import models.financialDetails.responses.ChargesResponse
+import models.financialDetails.{DocumentDetail, FinancialDetail}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
@@ -67,19 +67,21 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     }
   }
 
-  "listCharges" should {
+  "getChargeDetails" should {
     "return a list of charges" when {
       s"$OK is received from ETMP with charges " in {
+        val documentDetails: List[DocumentDetail] = List(documentDetail)
+        val financialDetails: List[FinancialDetail] = List(financialDetail)
 
         mockDesGet(
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
-        )(Right(ChargesResponse(List(charges1, charges2))))
+        )(Right(ChargesResponse(documentDetails, financialDetails)))
 
-        val result = await(TestFinancialDetailsConnector.listCharges(testNino, testFrom, testTo))
+        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
 
-        result shouldBe Right(ChargesResponse(List(charges1, charges2)))
+        result shouldBe Right(ChargesResponse(documentDetails, financialDetails))
       }
     }
 
@@ -91,7 +93,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
         )(Right(FinancialDataTestConstants.testEmptyChargeHttpResponse))
 
-        val result = await(TestFinancialDetailsConnector.listCharges(testNino, testFrom, testTo))
+        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
 
         result shouldBe Right(FinancialDataTestConstants.testEmptyChargeHttpResponse)
 
@@ -101,24 +103,24 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeResponseError, Charge](
+        mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
-        val result = await(TestFinancialDetailsConnector.listCharges(testNino, testFrom, testTo))
+        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
 
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeResponseError, Charge](
+        mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
         )(Left(UnexpectedChargeErrorResponse))
 
-        val result = await(TestFinancialDetailsConnector.listCharges(testNino, testFrom, testTo))
+        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
 
         result shouldBe Left(UnexpectedChargeErrorResponse)
       }

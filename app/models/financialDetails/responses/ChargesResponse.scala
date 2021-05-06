@@ -16,10 +16,11 @@
 
 package models.financialDetails.responses
 
-import models.financialDetails.Charge
+import models.financialDetails.{DocumentDetail, FinancialDetail}
 import play.api.libs.json.{Json, OFormat}
 
-case class ChargesResponse(financialDetails: List[Charge])
+case class ChargesResponse(documentDetails: List[DocumentDetail],
+                           financialDetails: List[FinancialDetail])
 
 object ChargesResponse {
   implicit val format: OFormat[ChargesResponse] = Json.format[ChargesResponse]

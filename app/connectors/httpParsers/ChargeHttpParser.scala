@@ -19,6 +19,7 @@ package connectors.httpParsers
 import models.financialDetails.responses.ChargesResponse
 import play.api.Logger
 import play.api.http.Status.OK
+import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object ChargeHttpParser extends ResponseHttpParsers {
@@ -35,7 +36,12 @@ object ChargeHttpParser extends ResponseHttpParsers {
       response.status match {
         case OK =>
           Logger.info(s"[ChargeReads][read] successfully parsed response to List[Charge]")
-          Right(response.json.as[ChargesResponse])
+          response.json.validate[ChargesResponse] match {
+            case JsError(_) =>
+              Logger.error(s"[ChargeHttpParser][ChargeReads] - Unable to parse response into ChargesResponse")
+              Left(UnexpectedChargeErrorResponse)
+            case JsSuccess(value, _) => Right(value)
+          }
         case status if status >= 400 && status < 500 =>
           Logger.error(s"[ChargeReads][read] $status returned from DES with body: ${response.body}")
           Left(UnexpectedChargeResponse(status, response.body))

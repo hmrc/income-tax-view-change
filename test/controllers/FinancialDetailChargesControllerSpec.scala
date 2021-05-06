@@ -16,12 +16,13 @@
 
 package controllers
 
-import assets.FinancialDataTestConstants.{charges1, charges2, validChargesJsonAfterWrites}
+import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
 import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
+import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
@@ -40,16 +41,21 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
   val from: String = "from"
   val to: String = "to"
 
+  val chargesResponse: ChargesResponse = ChargesResponse(
+    documentDetails = List(documentDetail),
+    financialDetails = List(financialDetail)
+  )
+
   "getChargeDetails" should {
     s"return $OK with the retrieved charge details" when {
       "the connector returns the charge details" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Right(ChargesResponse(List(charges1, charges2))))
+        mockListCharges(nino, from, to)(Right(chargesResponse))
 
         val result = await(FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest()))
 
         status(result) shouldBe OK
-        jsonBodyOf(result) shouldBe validChargesJsonAfterWrites
+        jsonBodyOf(result) shouldBe Json.toJson(chargesResponse)
       }
     }
     s"return $NOT_FOUND" when {
