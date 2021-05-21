@@ -21,11 +21,19 @@ import play.api.libs.json.{JsValue, Json}
 
 object DesChargesStub {
 
-  private def url(nino: String, from: String, to: String): String = {
+  private def detailsUrl(nino: String, from: String, to: String): String = {
     s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?dateFrom=$from&dateTo=$to&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
+	private def historyUrl(mtdBsa: String, documentId: String): String = {
+		s"/cross-regime/charges/MTDBSA/$mtdBsa/ITSA?docNumber=$documentId"
+	}
+
   def stubGetChargeDetails(nino: String, from: String, to: String)(status: Int, response: JsValue = Json.obj()): Unit = {
-    WiremockHelper.stubGet(url(nino, from, to), status, response.toString)
+    WiremockHelper.stubGet(detailsUrl(nino, from, to), status, response.toString)
   }
+
+	def stubChargeHistory(mtdBsa: String, documentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {
+		WiremockHelper.stubGet(historyUrl(mtdBsa, documentId), status, response.toString())
+	}
 }
