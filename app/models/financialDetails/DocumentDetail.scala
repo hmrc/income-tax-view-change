@@ -20,18 +20,20 @@ import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{Json, Reads, Writes, __}
 
 case class DocumentDetail(taxYear: String,
-                          transactionId: String,
-                          documentDescription: Option[String],
-                          originalAmount: Option[BigDecimal],
-                          outstandingAmount: Option[BigDecimal])
+													transactionId: String,
+													documentDescription: Option[String],
+													originalAmount: Option[BigDecimal],
+													outstandingAmount: Option[BigDecimal],
+													documentDate: String)
 
 object DocumentDetail {
-  implicit val writes: Writes[DocumentDetail] = Json.writes[DocumentDetail]
-  implicit val reads: Reads[DocumentDetail] = (
-    (__ \ "taxYear").read[String] and
-      (__ \ "documentId").read[String] and
-      (__ \ "documentDescription").readNullable[String] and
-      (__ \ "totalAmount").readNullable[BigDecimal] and
-      (__ \ "documentOutstandingAmount").readNullable[BigDecimal]
-    ) (DocumentDetail.apply _)
+	implicit val writes: Writes[DocumentDetail] = Json.writes[DocumentDetail]
+	implicit val reads: Reads[DocumentDetail] = (
+		(__ \ "taxYear").read[String] and
+			(__ \ "documentId").read[String] and
+			(__ \ "documentDescription").readNullable[String] and
+			(__ \ "totalAmount").readNullable[BigDecimal] and
+			(__ \ "documentOutstandingAmount").readNullable[BigDecimal] and
+			(__ \ "documentDate").read[String]
+		) (DocumentDetail.apply _)
 }
