@@ -24,5 +24,4 @@ case class ChargeHistorySuccessResponse(idType: String,
 
 object ChargeHistorySuccessResponse {
   implicit val format: OFormat[ChargeHistorySuccessResponse] = Json.format[ChargeHistorySuccessResponse]
-
 }

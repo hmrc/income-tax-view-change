@@ -16,31 +16,31 @@
 
 package assets
 
-import play.api.libs.json.{JsValue, Json}
 import models.chargeHistoryDetail.{ChargeHistoryDetailModel, ChargeHistorySuccessResponse}
+import play.api.libs.json.{JsValue, Json}
 
 object ChargeHistoryTestConstants {
 
 
-  val testValidChargeHistorySuccessResponseJson: JsValue = Json.parse(
-    """
-      |{
-      |  "idType" : "MTDBSA",
+	val testValidChargeHistorySuccessResponseJson: JsValue = Json.parse(
+		"""
+			|{
+			|  "idType" : "MTDBSA",
 			|	 "idValue" : "XAIT000000000000",
 			|	 "regimeType" : "ITSA",
-      |  "chargeHistoryDetails": [
-      |  	{
-      |  		"taxYear": "2019",
-      |  		"documentId": "123456789",
-      |  		"documentDate": "2020-01-29",
-      |  		"documentDescription": "Balancing Charge",
-      |  		"totalAmount": 12345678912.12,
-      |     "reversalDate": "2020-02-24",
-      |     "reversalReason": "amended return"
-      |   }
-      |  ]
-      |}
-      |""".stripMargin)
+			|  "chargeHistoryDetails": [
+			|  	{
+			|  		"taxYear": "2019",
+			|  		"documentId": "123456789",
+			|  		"documentDate": "2020-01-29",
+			|  		"documentDescription": "Balancing Charge",
+			|  		"totalAmount": 12345678912.12,
+			|     "reversalDate": "2020-02-24",
+			|     "reversalReason": "amended return"
+			|   }
+			|  ]
+			|}
+			|""".stripMargin)
 
 	val testEmptyValidChargeHistorySuccessResponseJson: JsValue = Json.parse(
 		"""
@@ -51,150 +51,147 @@ object ChargeHistoryTestConstants {
 			|}
 			|""".stripMargin)
 
-  val testInValidChargeHistoryModelJson: JsValue = Json.parse(
-    """
-      |   {
-      |  "chargeHistoryDetails": [ {
-      |  "taxYear": "2019",
-      |  "documentId": "123456789",
-      |  "documentDate": "2020-01-29",
-      |  "documentDescription": "Balancing Charge",
-      |  "totalAmount": 12345678912.12,
-      |    "reversalDate": "2020-02-24"
-      |     }
-      |    ]
-      |  }
-      |""".stripMargin)
+	val testInValidChargeHistoryModelJson: JsValue = Json.parse(
+		"""
+			|   {
+			|  "chargeHistoryDetails": [ {
+			|  "taxYear": "2019",
+			|  "documentId": "123456789",
+			|  "documentDate": "2020-01-29",
+			|  "documentDescription": "Balancing Charge",
+			|  "totalAmount": 12345678912.12,
+			|    "reversalDate": "2020-02-24"
+			|     }
+			|    ]
+			|  }
+			|""".stripMargin)
 
 
-  val testValidChargeHistoryModelJson: JsValue = Json.parse(
-    """
-      |{
-      |  "taxYear": "2019",
-      |  "documentId": "123456789",
-      |  "documentDate": "2020-01-29",
-      |  "documentDescription": "Balancing Charge",
-      |  "totalAmount": 12345678912.12,
-      |    "reversalDate": "2020-02-24",
-      |    "reversalReason": "amended return"
-      |     }
-      |
-      |""".stripMargin)
+	val testValidChargeHistoryModelJson: JsValue = Json.parse(
+		"""
+			|{
+			|  "taxYear": "2019",
+			|  "documentId": "123456789",
+			|  "documentDate": "2020-01-29",
+			|  "documentDescription": "Balancing Charge",
+			|  "totalAmount": 12345678912.12,
+			|    "reversalDate": "2020-02-24",
+			|    "reversalReason": "amended return"
+			|     }
+			|
+			|""".stripMargin)
 
-  val testValidMultipleChargeHistoryModelJson: JsValue = Json.parse(
-    """
-      |{
-      |	 "idType" : "MTDBSA",
+	val testValidMultipleChargeHistoryModelJson: JsValue = Json.parse(
+		"""
+			|{
+			|	 "idType" : "MTDBSA",
 			|	 "idValue" : "XAIT000000000000",
 			|	 "regimeType" : "ITSA",
-      |  "chargeHistoryDetails": [ {
-      |			"taxYear": "2019",
-      |			"documentId": "123456789",
-      |			"documentDate": "2020-01-29",
-      |			"documentDescription": "Balancing Charge",
-      |			"totalAmount": 12345678912.12,
-      |			"reversalDate": "2020-02-24",
-      |			"reversalReason": "amended return"
-      |		},
-      |		{
-      |			"taxYear": "2018",
-      |			"documentId": "123456789",
-      |			"documentDate": "2020-01-29",
-      |			"documentDescription": "POA1",
-      |			"totalAmount": 12345678912.12,
-      |			"reversalDate": "2020-02-24",
-      |			"reversalReason": "Customer Request"
-      |		}]
-      |}
-      |""".stripMargin)
+			|  "chargeHistoryDetails": [ {
+			|			"taxYear": "2019",
+			|			"documentId": "123456789",
+			|			"documentDate": "2020-01-29",
+			|			"documentDescription": "Balancing Charge",
+			|			"totalAmount": 12345678912.12,
+			|			"reversalDate": "2020-02-24",
+			|			"reversalReason": "amended return"
+			|		},
+			|		{
+			|			"taxYear": "2018",
+			|			"documentId": "123456789",
+			|			"documentDate": "2020-01-29",
+			|			"documentDescription": "POA1",
+			|			"totalAmount": 12345678912.12,
+			|			"reversalDate": "2020-02-24",
+			|			"reversalReason": "Customer Request"
+			|		}]
+			|}
+			|""".stripMargin)
 
 
-
-
-  val testValidChargeHistoryModel: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
+	val testValidChargeHistoryModel: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
 		idType = "MTDBSA",
 		idValue = "XAIT000000000000",
 		regimeType = "ITSA",
 		chargeHistoryDetails = Some(List(
-    ChargeHistoryDetailModel("  2019 ","123456789", "2020-01-29", "Balancing Charge", 12345678912.12, "2020-02-24", "amended return")
+			ChargeHistoryDetailModel("  2019 ", "123456789", "2020-01-29", "Balancing Charge", 12345678912.12, "2020-02-24", "amended return")
 		)))
 
-  val testValidChargeHistoryModel2: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
+	val testValidChargeHistoryModel2: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
 		idType = "MTDBSA",
 		idValue = "XAIT000000000000",
 		regimeType = "ITSA",
 		chargeHistoryDetails = Some(List(
-			ChargeHistoryDetailModel("  2021 ","123456789", "2020-01-29", "Balancing Charge", 123456789012345.67, "2020-02-24", "amended return")
+			ChargeHistoryDetailModel("  2021 ", "123456789", "2020-01-29", "Balancing Charge", 123456789012345.67, "2020-02-24", "amended return")
 		)))
 
 
+	val singleChargeHistoryDetail: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
+		taxYear = "2019",
+		documentId = "123456789",
+		documentDate = "2020-01-29",
+		documentDescription = "Balancing Charge",
+		totalAmount = 12345678912.12,
+		reversalDate = "2020-02-24",
+		reversalReason = "amended return"
+	)
 
-  val singleChargeHistoryDetail: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
-    taxYear = "2019",
-    documentId = "123456789",
-    documentDate = "2020-01-29",
-    documentDescription = "Balancing Charge",
-    totalAmount = 12345678912.12,
-    reversalDate = "2020-02-24",
-    reversalReason = "amended return"
-  )
+	val singleChargeHistoryDetailTwo: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
+		taxYear = "2018",
+		documentId = "123456789",
+		documentDate = "2020-01-29",
+		documentDescription = "POA1",
+		totalAmount = 12345678912.12,
+		reversalDate = "2020-02-24",
+		reversalReason = "Customer Request"
+	)
 
-  val singleChargeHistoryDetailTwo: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
-    taxYear = "2018",
-    documentId = "123456789",
-    documentDate = "2020-01-29",
-    documentDescription = "POA1",
-    totalAmount = 12345678912.12,
-    reversalDate = "2020-02-24",
-    reversalReason = "Customer Request"
-  )
-
-  val SingleChargeHistoryResponseModel: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
+	val SingleChargeHistoryResponseModel: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
 		idType = "MTDBSA",
 		idValue = "XAIT000000000000",
 		regimeType = "ITSA",
 		chargeHistoryDetails = Some(List(singleChargeHistoryDetail)))
 
-  val MultipleChargeHistoryResponseModel: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
+	val MultipleChargeHistoryResponseModel: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
 		idType = "MTDBSA",
 		idValue = "XAIT000000000000",
 		regimeType = "ITSA",
 		chargeHistoryDetails = Some(List(singleChargeHistoryDetail, singleChargeHistoryDetailTwo)))
 
 
-  val chargeHistoryDetail: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
-    taxYear = "2019",
-    documentId = "123456789",
-    documentDate = "2020-01-29",
-    documentDescription = "Balancing Charge",
-    totalAmount = 12345678912.12,
-    reversalDate = "2020-02-24",
-    reversalReason = "amended return"
-  )
+	val chargeHistoryDetail: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
+		taxYear = "2019",
+		documentId = "123456789",
+		documentDate = "2020-01-29",
+		documentDescription = "Balancing Charge",
+		totalAmount = 12345678912.12,
+		reversalDate = "2020-02-24",
+		reversalReason = "amended return"
+	)
 
 
-  val testValidChargeHistoryDetailsModelJson: JsValue = Json.obj(
-    "chargesHistory" -> Json.arr(
-      Json.obj(
-        "documentId" -> "123456789",
-        "documentDate" -> "2020-01-29",
-        "documentDescription" -> "Balancing Charge",
-        "totalAmount" -> 123456789012345.67,
-        "reversalDate" -> "2020-02-24",
-        "reversalReason" -> "amended return"
-      )))
+	val testValidChargeHistoryDetailsModelJson: JsValue = Json.obj(
+		"chargesHistory" -> Json.arr(
+			Json.obj(
+				"documentId" -> "123456789",
+				"documentDate" -> "2020-01-29",
+				"documentDescription" -> "Balancing Charge",
+				"totalAmount" -> 123456789012345.67,
+				"reversalDate" -> "2020-02-24",
+				"reversalReason" -> "amended return"
+			)))
 
-  val testInvalidChargeHistoryDetailsModelJson: JsValue = Json.obj(
-    "chargeHistoryDetails" -> Json.arr(
-      Json.obj(
-        "taxYear" -> "2019",
-        "documentId" -> "123456789",
-        "documentDate" -> "2020-01-29",
-        "documentDescription" -> "Balancing Charge",
-        "totalAmount" -> 10.33,
-        "reversalDate" -> "2020-02-24"
-      )
-    )
-  )
+	val testInvalidChargeHistoryDetailsModelJson: JsValue = Json.obj(
+		"chargeHistoryDetails" -> Json.arr(
+			Json.obj(
+				"taxYear" -> "2019",
+				"documentId" -> "123456789",
+				"documentDate" -> "2020-01-29",
+				"documentDescription" -> "Balancing Charge",
+				"totalAmount" -> 10.33,
+				"reversalDate" -> "2020-02-24"
+			)
+		)
+	)
 
 }

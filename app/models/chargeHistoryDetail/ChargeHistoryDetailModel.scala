@@ -28,18 +28,4 @@ case class ChargeHistoryDetailModel(taxYear: String,
 
 object ChargeHistoryDetailModel {
   implicit val format: OFormat[ChargeHistoryDetailModel] = Json.format[ChargeHistoryDetailModel]
-
-
-/*
-  implicit val writes: Writes[ChargeHistoryDetailModel] = Json.writes[ChargeHistoryDetailModel]
-  implicit val reads: Reads[ChargeHistoryDetailModel] = (
-    (__ \ "taxYear").read[String] and
-      (__ \ "documentId").read[String] and
-      (__ \ "documentDate").read[String] and
-      (__ \ "documentDescription").read[String] and
-      (__ \ "totalAmount").read[BigDecimal] and
-      (__ \ "reversalDate").read[String] and
-      (__ \ "reversalReason").read[String]
-    ) (ChargeHistoryDetailModel.apply _)*/
-
 }

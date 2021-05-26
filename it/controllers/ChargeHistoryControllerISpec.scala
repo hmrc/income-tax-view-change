@@ -17,7 +17,7 @@
 package controllers
 
 import helpers.ComponentSpecBase
-import helpers.servicemocks.DesChargesStub.{stubChargeHistory, stubGetChargeDetails}
+import helpers.servicemocks.DesChargesStub.stubChargeHistory
 import models.chargeHistoryDetail.{ChargeHistoryDetailModel, ChargeHistorySuccessResponse}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.{JsValue, Json}
@@ -31,22 +31,22 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
 	val chargeHistoryJson: JsValue = {
 		Json.parse(
 			s"""|{
-   			 |	"idType" : "MTDBSA",
-   			 |	"idValue" : "${mtdBsa}",
-   			 |	"regimeType" : "ITSA",
-   			 |	"chargeHistoryDetails" : [{
-				 |		"taxYear" : "2017",
-				 |		"documentId" : "DOCID01",
-				 |		"documentDate" : "07-08-2017",
-				 |		"documentDescription" : "desc",
-				 |		"totalAmount" : 10000.00,
-				 |		"reversalDate" : "09-10-2018",
-				 |		"reversalReason" : "reason"
-				 |	}]
-				 |}""".stripMargin)
+   			 	|	"idType" : "MTDBSA",
+   			 	|	"idValue" : "${mtdBsa}",
+   			 	|	"regimeType" : "ITSA",
+   			 	|	"chargeHistoryDetails" : [{
+					|		"taxYear" : "2017",
+					|		"documentId" : "DOCID01",
+					|		"documentDate" : "07-08-2017",
+					|		"documentDescription" : "desc",
+					|		"totalAmount" : 10000.00,
+					|		"reversalDate" : "09-10-2018",
+					|		"reversalReason" : "reason"
+					|	}]
+					|}""".stripMargin)
 	}
 
-	s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(mtdBsa,documentId)}" should {
+	s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, documentId)}" should {
 		s"return $OK" when {
 			"charge details are successfully retrieved" in {
 

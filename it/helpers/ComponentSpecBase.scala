@@ -25,78 +25,78 @@ import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
 
 trait ComponentSpecBase extends TestSuite with CustomMatchers
-  with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience with Matchers
-  with WiremockHelper with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
+	with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience with Matchers
+	with WiremockHelper with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
 
-  val mockHost = WiremockHelper.wiremockHost
-  val mockPort = WiremockHelper.wiremockPort.toString
-  val mockUrl = s"http://$mockHost:$mockPort"
+	val mockHost = WiremockHelper.wiremockHost
+	val mockPort = WiremockHelper.wiremockPort.toString
+	val mockUrl = s"http://$mockHost:$mockPort"
 
-  def config: Map[String, String] = Map(
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "microservice.services.des.url" -> mockUrl
-  )
+	def config: Map[String, String] = Map(
+		"microservice.services.auth.host" -> mockHost,
+		"microservice.services.auth.port" -> mockPort,
+		"microservice.services.des.url" -> mockUrl
+	)
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .in(Environment.simple(mode = Mode.Dev))
-    .configure(config)
-    .build
+	override implicit lazy val app: Application = new GuiceApplicationBuilder()
+		.in(Environment.simple(mode = Mode.Dev))
+		.configure(config)
+		.build
 
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-    startWiremock()
-  }
+	override def beforeAll(): Unit = {
+		super.beforeAll()
+		startWiremock()
+	}
 
-  override def afterAll(): Unit = {
-    stopWiremock()
-    super.afterAll()
-  }
+	override def afterAll(): Unit = {
+		stopWiremock()
+		super.afterAll()
+	}
 
-  object IncomeTaxViewChange {
-    def get(uri: String): WSResponse = await(buildClient(uri).get())
+	def isAuthorised(authorised: Boolean): Unit = {
+		if (authorised) {
+			Given("I wiremock stub an authorised user response")
+			AuthStub.stubAuthorised()
+		} else {
+			Given("I wiremock stub an unauthorised user response")
+			AuthStub.stubUnauthorised()
+		}
+	}
 
-    def getPaymentAllocations(nino: String, paymentLot: String, paymentLotItem: String): WSResponse = {
-      get(s"/$nino/payment-allocations/$paymentLot/$paymentLotItem")
-    }
+	object IncomeTaxViewChange {
+		def getPaymentAllocations(nino: String, paymentLot: String, paymentLotItem: String): WSResponse = {
+			get(s"/$nino/payment-allocations/$paymentLot/$paymentLotItem")
+		}
 
-    def getChargeDetails(nino: String, from: String, to: String): WSResponse = {
-      get(s"/$nino/financial-details/charges/from/$from/to/$to")
-    }
+		def get(uri: String): WSResponse = await(buildClient(uri).get())
+
+		def getChargeDetails(nino: String, from: String, to: String): WSResponse = {
+			get(s"/$nino/financial-details/charges/from/$from/to/$to")
+		}
 
 		def getChargeHistory(mtdBsa: String, documentId: String): WSResponse = {
 			get(s"/charge-history/$mtdBsa/docId/$documentId")
 		}
 
-    def getPaymentDetails(nino: String, from: String, to: String): WSResponse = {
-      get(s"/$nino/financial-details/payments/from/$from/to/$to")
-    }
+		def getPaymentDetails(nino: String, from: String, to: String): WSResponse = {
+			get(s"/$nino/financial-details/payments/from/$from/to/$to")
+		}
 
-    def getPreviousCalculation(nino: String, year: String): WSResponse = get(s"/previous-tax-calculation/$nino/$year")
+		def getPreviousCalculation(nino: String, year: String): WSResponse = get(s"/previous-tax-calculation/$nino/$year")
 
-    def getNino(mtdRef: String): WSResponse = get(s"/nino-lookup/$mtdRef")
+		def getNino(mtdRef: String): WSResponse = get(s"/nino-lookup/$mtdRef")
 
-    def getIncomeSources(mtdRef: String): WSResponse = get(s"/income-sources/$mtdRef")
+		def getIncomeSources(mtdRef: String): WSResponse = get(s"/income-sources/$mtdRef")
 
-    def getBusinessDetails(nino: String): WSResponse = get(s"/get-business-details/nino/$nino")
+		def getBusinessDetails(nino: String): WSResponse = get(s"/get-business-details/nino/$nino")
 
-    def getReportDeadlines(nino: String): WSResponse = get(s"/$nino/report-deadlines")
+		def getReportDeadlines(nino: String): WSResponse = get(s"/$nino/report-deadlines")
 
-    def getPreviousObligations(nino: String, from: String, to: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines/from/$from/to/$to")
+		def getPreviousObligations(nino: String, from: String, to: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines/from/$from/to/$to")
 
-    def getFulfilledReportDeadlines(nino: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines")
+		def getFulfilledReportDeadlines(nino: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines")
 
-    def getOutStandingChargeDetails(idType: String, idNumber: Int, taxYearEndDate: String): WSResponse = get(s"/out-standing-charges/$idType/$idNumber/$taxYearEndDate")
+		def getOutStandingChargeDetails(idType: String, idNumber: Int, taxYearEndDate: String): WSResponse = get(s"/out-standing-charges/$idType/$idNumber/$taxYearEndDate")
 
-  }
-
-  def isAuthorised(authorised: Boolean): Unit = {
-    if(authorised){
-      Given("I wiremock stub an authorised user response")
-      AuthStub.stubAuthorised()
-    } else {
-      Given("I wiremock stub an unauthorised user response")
-      AuthStub.stubUnauthorised()
-    }
-  }
+	}
 }
