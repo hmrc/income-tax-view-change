@@ -69,6 +69,7 @@ lazy val microservice = Project(appName, file("."))
     addTestReportOption(IntegrationTest, "int-test-reports"),
     parallelExecution in IntegrationTest := false)
   .settings(resolvers ++= Seq(
-    Resolver.bintrayRepo("hmrc", "releases"),
+    MavenRepository("HMRC-open-artefacts-maven2", "https://open.artefacts.tax.service.gov.uk/maven2"),
+      Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
     Resolver.jcenterRepo
   ))
