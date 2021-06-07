@@ -16,8 +16,11 @@ GET        /:nino/payment-allocations/:paymentLot/:paymentLotItem        control
 
 GET        /:nino/financial-details/charges/from/:from/to/:to            controllers.FinancialDetailChargesController.getChargeDetails(nino, from, to)
 
+GET        /:nino/financial-details/charges/documentId/:documentId       controllers.FinancialDetailChargesController.getPaymentAllocationDetails(nino,documentId)
+
 GET        /:nino/financial-details/payments/from/:from/to/:to           controllers.FinancialDetailPaymentsController.getPaymentDetails(nino, from, to)
 
 GET         /out-standing-charges/:idType/:idNumber/:taxYear             controllers.OutStandingChargesController.listOutStandingCharges(idType, idNumber: Long, taxYear)
 
 GET         /charge-history/:mtdBsa/docId/:docNumber 		 			 controllers.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, docNumber)
+

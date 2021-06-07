@@ -40,6 +40,7 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
   val nino: String = "AA000000A"
   val from: String = "from"
   val to: String = "to"
+  val documentId: String = "123456789"
 
   val chargesResponse: ChargesResponse = ChargesResponse(
     documentDetails = List(documentDetail),
@@ -76,6 +77,43 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
         val result = await(FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest()))
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        bodyOf(result) shouldBe "Failed to retrieve charge details"
+      }
+    }
+  }
+
+  "Payment Allocation - documentId" should {
+    s"return $OK with the new retrieved charge details" when {
+      "the new connector method returns the charge details" in {
+        mockAuth()
+        mockNewListCharges(nino, documentId)(Right(chargesResponse))
+
+        val result = await(FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest()))
+
+        status(result) shouldBe OK
+        jsonBodyOf(result) shouldBe Json.toJson(chargesResponse)
+      }
+    }
+    s"return $NOT_FOUND" when {
+      "the connector returns an NOT_FOUND error" in {
+        mockAuth()
+        val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
+        mockNewListCharges(nino, documentId)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
+
+        val result = await(FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest()))
+
+        status(result) shouldBe NOT_FOUND
+        bodyOf(result) shouldBe errorJson
+      }
+    }
+    s"return $INTERNAL_SERVER_ERROR" when {
+      "the connector returns an error" in {
+        mockAuth()
+        mockNewListCharges(nino, documentId)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
+
+        val result = await(FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest()))
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
         bodyOf(result) shouldBe "Failed to retrieve charge details"

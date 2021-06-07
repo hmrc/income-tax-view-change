@@ -29,6 +29,7 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 
 	val from: String = "from"
 	val to: String = "to"
+	val documentId: String = "123456789"
 
 	val financialDetail: FinancialDetail = FinancialDetail(
 		taxYear = "2018",
@@ -235,6 +236,67 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 				)
 
 				val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
+
+				res should have(
+					httpStatus(INTERNAL_SERVER_ERROR)
+				)
+			}
+		}
+	}
+
+	s"GET ${controllers.routes.FinancialDetailChargesController.getPaymentAllocationDetails(testNino,documentId)}" should {
+		s"return $OK" when {
+			"new charge details are successfully retrieved" in {
+
+				isAuthorised(true)
+
+				stubNewGetChargeDetails(testNino, documentId)(
+					status = OK,
+					response = chargeJson)
+
+				val res: WSResponse = IncomeTaxViewChange.getPaymentAllocationDetails(testNino, documentId)
+
+				val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+					documentDetails = List(documentDetail, documentDetail2),
+					financialDetails = List(financialDetail, financialDetail2)
+				))
+
+				res should have(
+					httpStatus(OK),
+					jsonBodyMatching(expectedResponseBody)
+				)
+			}
+		}
+
+		s"return $NOT_FOUND" when {
+			"new an unexpected status with NOT_FOUND was returned when retrieving charge details" in {
+
+				isAuthorised(true)
+
+				val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+				stubNewGetChargeDetails(testNino, documentId)(
+					status = NOT_FOUND, response = errorJson
+				)
+
+				val res: WSResponse = IncomeTaxViewChange.getPaymentAllocationDetails(testNino,documentId)
+
+				res should have(
+					httpStatus(NOT_FOUND),
+					bodyMatching(errorJson.toString())
+				)
+			}
+		}
+
+		s"return $INTERNAL_SERVER_ERROR" when {
+			" newan unexpected status was returned when retrieving charge details" in {
+
+				isAuthorised(true)
+
+				stubNewGetChargeDetails(testNino, documentId)(
+					status = SERVICE_UNAVAILABLE
+				)
+
+				val res: WSResponse = IncomeTaxViewChange.getPaymentAllocationDetails(testNino, documentId)
 
 				res should have(
 					httpStatus(INTERNAL_SERVER_ERROR)

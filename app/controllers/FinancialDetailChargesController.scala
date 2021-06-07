@@ -46,4 +46,18 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
       }
     }
   }
+
+  def getPaymentAllocationDetails(nino: String, documentId: String): Action[AnyContent] = {
+    authentication.async { implicit request =>
+      financialDetailsConnector.getPaymentAllocationDetails(
+        nino = nino,
+        documentId = documentId,
+      ) map {
+        case Right(chargeDetails) => Ok(Json.toJson(chargeDetails))
+        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
+        case Left(_) =>
+          InternalServerError("Failed to retrieve charge details")
+      }
+    }
+  }
 }

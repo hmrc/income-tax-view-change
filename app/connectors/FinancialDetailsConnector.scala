@@ -55,4 +55,26 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
     http.GET(url = financialDetailsUrl(nino), queryParams = queryParameters(from, to))(ChargeReads, desHeaderCarrier, ec)
   }
+
+  private[connectors] def paymentAllocationFinancialDetailsUrl(nino: String): String = {
+    s"${appConfig.desUrl}/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
+  }
+
+  private[connectors] def newQueryParameters(documentId: String): Seq[(String, String)] = {
+    Seq(
+      "documentId" -> documentId,
+      "onlyOpenItems" -> "false",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "false",
+      "customerPaymentInformation" -> "true",
+      "includeStatistical" -> "false"
+    )
+  }
+
+  def getPaymentAllocationDetails(nino: String, documentId: String)
+                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+    http.GET(url = paymentAllocationFinancialDetailsUrl(nino), queryParams = newQueryParameters(documentId))(ChargeReads, desHeaderCarrier, ec)
+  }
+
 }
