@@ -51,7 +51,7 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
     authentication.async { implicit request =>
       financialDetailsConnector.getPaymentAllocationDetails(
         nino = nino,
-        documentId = documentId,
+        documentId = documentId
       ) map {
         case Right(chargeDetails) => Ok(Json.toJson(chargeDetails))
         case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
