@@ -25,8 +25,8 @@ object DesChargesStub {
     s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?dateFrom=$from&dateTo=$to&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
-  private def newDetailsUrl(nino: String, documentId: String): String = {
-    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?documentId=$documentId&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
+  private def newDetailsUrl(nino: String, docNumber: String): String = {
+    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?docNumber=$docNumber&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
 	private def historyUrl(mtdBsa: String, documentId: String): String = {
@@ -37,8 +37,8 @@ object DesChargesStub {
     WiremockHelper.stubGet(detailsUrl(nino, from, to), status, response.toString)
   }
 
-  def stubNewGetChargeDetails(nino: String, documentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {
-    WiremockHelper.stubGet(newDetailsUrl(nino, documentId), status, response.toString)
+  def stubNewGetChargeDetails(nino: String, docNumber: String)(status: Int, response: JsValue = Json.obj()): Unit = {
+    WiremockHelper.stubGet(newDetailsUrl(nino, docNumber), status, response.toString)
   }
 
 	def stubChargeHistory(mtdBsa: String, documentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {

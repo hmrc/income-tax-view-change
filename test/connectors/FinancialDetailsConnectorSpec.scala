@@ -34,7 +34,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   val testNino: String = "testNino"
   val testFrom: String = "testFrom"
   val testTo: String = "testTo"
-  val documentId: String = "123456789"
+  val docNumber: String = "123456789"
 
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
@@ -132,7 +132,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   "newQueryParameters for Payment Allocation - documentId" should {
     "return the correct formatted query parameters" in {
       val expectedQueryParameters: Seq[(String, String)] = Seq(
-        "documentId" -> documentId,
+        "docNumber" -> docNumber,
         "onlyOpenItems" -> "false",
         "includeLocks" -> "true",
         "calculateAccruedInterest" -> "true",
@@ -141,7 +141,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         "includeStatistical" -> "false"
       )
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.newQueryParameters(
-        documentId = documentId
+        docNumber = docNumber
       )
 
       actualQueryParameters shouldBe expectedQueryParameters
@@ -156,11 +156,11 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
 
         mockDesGet(
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
+          queryParameters = TestFinancialDetailsConnector.newQueryParameters(docNumber),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
         )(Right(ChargesResponse(documentDetails, financialDetails)))
 
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
+        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, docNumber))
 
         result shouldBe Right(ChargesResponse(documentDetails, financialDetails))
       }
@@ -170,11 +170,11 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
       s"$OK is received from ETMP with no charges" in {
         mockDesGet(
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
+          queryParameters = TestFinancialDetailsConnector.newQueryParameters(docNumber),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
         )(Right(FinancialDataTestConstants.testEmptyChargeHttpResponse))
 
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
+        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, docNumber))
 
         result shouldBe Right(FinancialDataTestConstants.testEmptyChargeHttpResponse)
 
@@ -186,22 +186,22 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
         mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
+          queryParameters = TestFinancialDetailsConnector.newQueryParameters(docNumber),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
+        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, docNumber))
 
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
         mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
+          queryParameters = TestFinancialDetailsConnector.newQueryParameters(docNumber),
           headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
         )(Left(UnexpectedChargeErrorResponse))
 
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
+        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, docNumber))
 
         result shouldBe Left(UnexpectedChargeErrorResponse)
       }

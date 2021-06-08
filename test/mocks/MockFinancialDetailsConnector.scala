@@ -45,11 +45,11 @@ trait MockFinancialDetailsConnector extends UnitSpec with MockitoSugar with Befo
   }
 
 
-  def mockNewListCharges(nino: String, documentId: String)
+  def mockNewListCharges(nino: String, docNumber: String)
                      (response: ChargeResponse): Unit = {
     when(mockFinancialDetailsConnector.getPaymentAllocationDetails(
       nino = ArgumentMatchers.eq(nino),
-      documentId = ArgumentMatchers.eq(documentId)
+      docNumber = ArgumentMatchers.eq(docNumber)
     )(ArgumentMatchers.any(), ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 }

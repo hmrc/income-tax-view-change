@@ -60,9 +60,9 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
     s"${appConfig.desUrl}/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
   }
 
-  private[connectors] def newQueryParameters(documentId: String): Seq[(String, String)] = {
+  private[connectors] def newQueryParameters(docNumber: String): Seq[(String, String)] = {
     Seq(
-      "documentId" -> documentId,
+      "docNumber" -> docNumber,
       "onlyOpenItems" -> "false",
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",
@@ -72,9 +72,9 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
     )
   }
 
-  def getPaymentAllocationDetails(nino: String, documentId: String)
+  def getPaymentAllocationDetails(nino: String, docNumber: String)
                          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    http.GET(url = paymentAllocationFinancialDetailsUrl(nino), queryParams = newQueryParameters(documentId))(ChargeReads, desHeaderCarrier, ec)
+    http.GET(url = paymentAllocationFinancialDetailsUrl(nino), queryParams = newQueryParameters(docNumber))(ChargeReads, desHeaderCarrier, ec)
   }
 
 }
