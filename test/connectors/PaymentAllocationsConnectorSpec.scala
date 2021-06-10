@@ -62,7 +62,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet(
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
           queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
-          headerCarrier = TestPaymentAllocationsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Right(paymentAllocationsFull))
 
         val result = await(TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem))
@@ -76,7 +76,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[PaymentAllocationsError, PaymentAllocations](
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
           queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
-          headerCarrier = TestPaymentAllocationsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedResponse))
 
         val result = await(TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem))

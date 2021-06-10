@@ -20,7 +20,7 @@ import config.MicroserviceAppConfig
 import connectors.httpParsers.CalculationHttpParser._
 import models.PreviousCalculation.PreviousCalculationModel
 import play.api.Logger
-import uk.gov.hmrc.http.{Authorization, HeaderCarrier}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import javax.inject.{Inject, Singleton}
@@ -35,10 +35,8 @@ class CalculationConnector @Inject()(val http: HttpClient, val appConfig: Micros
   def getPreviousCalculation(nino: String, year: String)
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[PreviousCalculationModel]] = {
     val url = getPreviousCalculationUrl(nino, year)
-    val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    Logger.debug(s"[CalculationConnector][getPreviousCalculation] - Calling GET $url \nHeaders: $desHC")
-    http.GET(url)(PreviousCalculationReads, desHC, ec)
+    Logger.debug(s"[CalculationConnector][getPreviousCalculation] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    http.GET(url = url, headers = appConfig.desAuthHeaders)(PreviousCalculationReads, headerCarrier, ec)
   }
 }

@@ -18,7 +18,7 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHistoryHttpParser.{ChargeHistoryReads, ChargeHistoryResponse}
-import uk.gov.hmrc.http.{Authorization, HeaderCarrier}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import javax.inject.{Inject, Singleton}
@@ -28,12 +28,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
-
-
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier): HeaderCarrier = {
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
-  }
 
   def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String): String =
     s"${appConfig.desUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
@@ -47,7 +41,8 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
   def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
     http.GET(
       url = listChargeHistoryDetailsUrl("MTDBSA", mtdBsa, "ITSA"),
-      queryParams = queryParameters(docNumber)
-    )(ChargeHistoryReads, desHeaderCarrier, ec)
+      queryParams = queryParameters(docNumber),
+      headers = appConfig.desAuthHeaders
+    )(ChargeHistoryReads, headerCarrier, ec)
   }
 }
