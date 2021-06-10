@@ -16,11 +16,14 @@
 
 package connectors
 
-import utils.TestSupport
+import assets.PreviousCalculationTestConstants._
 import connectors.httpParsers.CalculationHttpParser
 import mocks.MockHttp
 import models.PreviousCalculation._
-import assets.PreviousCalculationTestConstants._
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.{contains, matches}
+import org.mockito.Mockito.when
+import utils.TestSupport
 
 import scala.concurrent.Future
 
@@ -45,7 +48,8 @@ class CalculationConnectorSpec extends TestSupport with MockHttp {
       "calling with a valid nino and year the success response received" should {
 
         "return a PreviousCalculationModel model" in {
-          setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(testNino, testYear))(successResponse)
+          when(mockHttpGet.GET[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]](contains(s"""/income-tax/previous-calculation/$testNino?year=$testYear"""),
+            ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(successResponse))
           val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] =
             TestCalculationConnector.getPreviousCalculation(nino = testNino, year = testYear)
           await(result) shouldBe successResponse
@@ -56,8 +60,8 @@ class CalculationConnectorSpec extends TestSupport with MockHttp {
     "calling for a user with non-success response received, single error" should {
 
       "return a Error model" in {
-        setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(testNino,
-          testYear))(badRequestSingleError)
+        when(mockHttpGet.GET[Either[ErrorResponse, Nothing]](contains(s"""/income-tax/previous-calculation/$testNino?year=$testYear"""),
+          ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(badRequestSingleError))
         val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] =
           TestCalculationConnector.getPreviousCalculation(
             nino = testNino,
@@ -70,8 +74,8 @@ class CalculationConnectorSpec extends TestSupport with MockHttp {
     "calling for a user with non-success response received, multi error" should {
 
       "return a MultiError model" in {
-        setupMockHttpFutureGet(TestCalculationConnector.getPreviousCalculationUrl(testNino,
-          testYear))(badRequestMultiError)
+        when(mockHttpGet.GET[Either[ErrorResponse, Nothing]](contains(s"""/income-tax/previous-calculation/$testNino?year=$testYear"""),
+          ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(badRequestMultiError))
         val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] =
           TestCalculationConnector.getPreviousCalculation(
             nino = testNino,

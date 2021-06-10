@@ -17,15 +17,14 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import javax.inject.{Inject, Singleton}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
-import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -39,11 +38,10 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = getBusinessDetailsUrl(nino)
-    val desHC = headerCarrier.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
 
-    Logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - Calling GET $url \n\nHeaders: $desHC")
-    http.GET[HttpResponse](url)(httpReads, desHC, implicitly) map {
+    Logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - " +
+      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    http.GET[HttpResponse](url= url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>

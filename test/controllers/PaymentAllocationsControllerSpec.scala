@@ -19,16 +19,10 @@ package controllers
 import connectors.httpParsers.PaymentAllocationsHttpParser.UnexpectedResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockPaymentAllocationsConnector}
-import models.paymentAllocations.{AllocationDetail, PaymentAllocations, paymentAllocationsFull, paymentAllocationsWriteJsonFull}
-import play.api.http.Status
-import play.api.http.Status._
-import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.{ControllerComponents, Result}
+import models.paymentAllocations.{paymentAllocationsFull, paymentAllocationsWriteJsonFull}
+import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers.stubControllerComponents
-import uk.gov.hmrc.auth.core.MissingBearerToken
-
-import scala.concurrent.Future
+import play.api.test.Helpers.{stubControllerComponents, _}
 
 class PaymentAllocationsControllerSpec extends ControllerBaseSpec with MockPaymentAllocationsConnector with MockMicroserviceAuthConnector {
 
@@ -50,10 +44,10 @@ class PaymentAllocationsControllerSpec extends ControllerBaseSpec with MockPayme
         mockAuth()
         mockGetPaymentAllocations(nino, paymentLot, paymentLotItem)(Right(paymentAllocationsFull))
 
-        val result = await(PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)(FakeRequest()))
+        val result = PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)(FakeRequest())
 
         status(result) shouldBe OK
-        jsonBodyOf(result) shouldBe paymentAllocationsWriteJsonFull
+        contentAsJson(result) shouldBe paymentAllocationsWriteJsonFull
       }
     }
     s"return $INTERNAL_SERVER_ERROR" when {
@@ -61,10 +55,10 @@ class PaymentAllocationsControllerSpec extends ControllerBaseSpec with MockPayme
         mockAuth()
         mockGetPaymentAllocations(nino, paymentLot, paymentLotItem)(Left(UnexpectedResponse))
 
-        val result = await(PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)(FakeRequest()))
+        val result = PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)(FakeRequest())
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        bodyOf(result) shouldBe "Failed to retrieve payment allocations"
+        contentAsString(result) shouldBe "Failed to retrieve payment allocations"
       }
     }
   }

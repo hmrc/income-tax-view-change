@@ -25,6 +25,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.auth.core.MissingBearerToken
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -44,8 +45,8 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
       "is requesting previous calculations details" should {
 
         "for a successful response from the CalculationService," should {
-          lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(testNino,
-            testYear)(fakeRequest))
+          lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino,
+            testYear)(fakeRequest)
 
 
           "return a status of 200 (OK)" in {
@@ -56,13 +57,13 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
           }
 
           "return a json body with the transformed des return data" in {
-            jsonBodyOf(result) shouldBe responseJsonFullWithoutExtra
+            contentAsJson(result) shouldBe responseJsonFullWithoutExtra
           }
         }
 
         "for a bad request with single error from the CalculationService," should {
-          lazy val result: Result = await(PreviousCalculationController.getPreviousCalculation(testNino,
-            testYear)(fakeRequest))
+          lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino,
+            testYear)(fakeRequest)
 
 
           "return a status of 400 (BAD_REQUEST)" in {
@@ -75,14 +76,12 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
 
           "return a json body with the single error message" in {
 
-            jsonBodyOf(result) shouldBe Json.toJson(singleError)
+            contentAsJson(result) shouldBe Json.toJson(singleError)
           }
         }
 
         "for an invalid nino " should {
-          lazy val result: Result =
-            await(PreviousCalculationController.getPreviousCalculation(badNino,
-              testYear)(fakeRequest))
+          lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(badNino, testYear)(fakeRequest)
 
           "return a status of 400 (BAD_REQUEST)" in {
             mockAuth(Future.successful())
@@ -90,14 +89,12 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
           }
 
           "return a json body with the invalid nino error message" in {
-            jsonBodyOf(result) shouldBe Json.toJson(InvalidNino)
+            contentAsJson(result) shouldBe Json.toJson(InvalidNino)
           }
         }
 
         "for a bad request with multiple errors from the CalculationService," should {
-          lazy val result: Result =
-            await(PreviousCalculationController.getPreviousCalculation(testNino,
-              testYear)(fakeRequest))
+          lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino, testYear)(fakeRequest)
 
 
           "return a status of 400 (BAD_REQUEST)" in {
@@ -108,16 +105,14 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
           }
 
           "return a json body with the multiple error messages" in {
-            jsonBodyOf(result) shouldBe Json.toJson(multiError)
+            contentAsJson(result) shouldBe Json.toJson(multiError)
           }
         }
 
       }
 
       "for a bad request with single error from the CalculationService," should {
-        lazy val result: Result =
-          await(PreviousCalculationController.getPreviousCalculation(testNino,
-            testYear)(fakeRequest))
+        lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino, testYear)(fakeRequest)
 
         "return a status of 400 (BAD_REQUEST)" in {
           mockAuth(Future.successful())
@@ -129,7 +124,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
 
         "return a json body with the single error message" in {
 
-          jsonBodyOf(result) shouldBe Json.toJson(singleError)
+          contentAsJson(result) shouldBe Json.toJson(singleError)
         }
       }
     }

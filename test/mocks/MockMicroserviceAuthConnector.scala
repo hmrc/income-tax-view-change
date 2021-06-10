@@ -18,14 +18,13 @@ package mocks
 
 import config.MicroserviceAuthConnector
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito._
+import org.mockito.Mockito.doReturn
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.TestSupport
 
 import scala.concurrent.Future
 
-trait MockMicroserviceAuthConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockMicroserviceAuthConnector extends TestSupport with BeforeAndAfterEach {
 
   val mockMicroserviceAuthConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 

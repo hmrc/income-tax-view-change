@@ -18,21 +18,15 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.PaymentAllocationsHttpParser.{PaymentAllocationsReads, PaymentAllocationsResponse}
-import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PaymentAllocationsConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig)
                                            (implicit ec: ExecutionContext) extends RawResponseReads {
-
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier): HeaderCarrier = {
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
-  }
 
   private[connectors] def paymentAllocationsUrl(nino: String): String = {
     s"${appConfig.desUrl}/cross-regime/payment-allocation/NINO/$nino/ITSA"
@@ -49,8 +43,9 @@ class PaymentAllocationsConnector @Inject()(val http: HttpClient,
                            (implicit hc: HeaderCarrier): Future[PaymentAllocationsResponse] = {
     http.GET(
       url = paymentAllocationsUrl(nino),
-      queryParams = queryParameters(paymentLot, paymentLotItem)
-    )(PaymentAllocationsReads, desHeaderCarrier, ec)
+      queryParams = queryParameters(paymentLot, paymentLotItem),
+      headers = appConfig.desAuthHeaders
+    )(PaymentAllocationsReads, hc, ec)
   }
 
 }

@@ -17,11 +17,12 @@
 package mocks
 
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.matches
+import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import org.scalatestplus.mockito.MockitoSugar
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -37,37 +38,31 @@ trait MockHttp extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
     reset(mockHttpGet)
   }
 
-  def mockDesGet[A, B](url: String, queryParameters: Seq[(String, String)], headerCarrier: HeaderCarrier)(response: Either[A, B]): Unit = {
+  def mockDesGet[A, B](url: String, queryParameters: Seq[(String, String)], headers: Seq[(String, String)])(response: Either[A, B]): Unit = {
     when(mockHttpGet.GET[Either[A, B]](
-      ArgumentMatchers.eq(url),
-      ArgumentMatchers.eq(queryParameters)
+      matches(url),
+      ArgumentMatchers.eq(queryParameters),
+      ArgumentMatchers.eq(headers)
     )(ArgumentMatchers.any(),
-      ArgumentMatchers.eq(headerCarrier),
-      ArgumentMatchers.any())
-    ).thenReturn(Future.successful(response))
-  }
-
-
-  def mockDesGetSecond[A, B](url: String, headerCarrier: HeaderCarrier)(response: Either[A, B]): Unit = {
-    when(mockHttpGet.GET[Either[A, B]](
-      ArgumentMatchers.eq(url),
-    )(ArgumentMatchers.any(),
-      ArgumentMatchers.eq(headerCarrier),
+      ArgumentMatchers.any(),
       ArgumentMatchers.any())
     ).thenReturn(Future.successful(response))
   }
 
 
   def setupMockHttpFutureGet[A](url: String)(response: A): OngoingStubbing[Future[A]] =
-    when(mockHttpGet.GET[A](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(),
-      ArgumentMatchers.any())).thenReturn(Future.successful(response))
+    when(mockHttpGet.GET[A](matches(url), ArgumentMatchers.any(), ArgumentMatchers.any())
+      (ArgumentMatchers.any[HttpReads[A]](), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def setupMockHttpGet(url: String)(response: HttpResponse): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
+    when(mockHttpGet.GET[HttpResponse](matches(url), ArgumentMatchers.any(), ArgumentMatchers.any())
+      (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def setupMockHttpGetFailed(url: String): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.failed(new Exception("error")))
+    when(mockHttpGet.GET[HttpResponse](matches(url), ArgumentMatchers.any(), ArgumentMatchers.any())
+      (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.failed(new Exception("error")))
 
-  def setupMockHttpGetWithHeaderCarrier(url: String, hc: HeaderCarrier)(response: HttpResponse): Unit =
-    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url))(ArgumentMatchers.any(), ArgumentMatchers.eq(hc), ArgumentMatchers.any())).thenReturn(Future.successful(response))
+  def setupMockHttpGetWithHeaderCarrier(url: String, headers: Seq[(String, String)])(response: HttpResponse): Unit =
+    when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.any(), ArgumentMatchers.eq(headers))
+      (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
 }
