@@ -21,10 +21,9 @@ import connectors.httpParsers.OutStandingChargesHttpParser.UnexpectedOutStanding
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockOutStandingChargesConnector}
 import models.outStandingCharges.OutstandingChargesSuccessResponse
-import play.api.http.Status._
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers.stubControllerComponents
+import play.api.test.Helpers.{stubControllerComponents, _}
 
 class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutStandingChargesConnector with MockMicroserviceAuthConnector {
 
@@ -46,10 +45,10 @@ class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutSt
         mockAuth()
         mockListOutStandingCharges(idType, idNumber, taxYearEndDate)(Right(OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo))))
 
-        val result = await(OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYearEndDate)(FakeRequest()))
+        val result = OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYearEndDate)(FakeRequest())
 
         status(result) shouldBe OK
-        jsonBodyOf(result) shouldBe validMultipleOutStandingChargeResponseJson
+        contentAsJson(result) shouldBe validMultipleOutStandingChargeResponseJson
       }
     }
 
@@ -59,10 +58,10 @@ class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutSt
         val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
         mockListOutStandingCharges(idType, idNumber, taxYearEndDate)(Left(UnexpectedOutStandingChargeResponse(NOT_FOUND, errorJson)))
 
-        val result = await(OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYearEndDate)(FakeRequest()))
+        val result = OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYearEndDate)(FakeRequest())
 
         status(result) shouldBe NOT_FOUND
-        bodyOf(result) shouldBe errorJson
+        contentAsString(result) shouldBe errorJson
       }
     }
 
@@ -71,10 +70,10 @@ class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutSt
         mockAuth()
         mockListOutStandingCharges(idType, idNumber, taxYearEndDate)(Left(UnexpectedOutStandingChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
-        val result = await(OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYearEndDate)(FakeRequest()))
+        val result = OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYearEndDate)(FakeRequest())
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        bodyOf(result) shouldBe "Failed to retrieve charges outstanding details"
+        contentAsString(result) shouldBe "Failed to retrieve charges outstanding details"
       }
     }
   }

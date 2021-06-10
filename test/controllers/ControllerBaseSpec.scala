@@ -19,6 +19,7 @@ package controllers
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Result
 import utils.TestSupport
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -33,13 +34,13 @@ class ControllerBaseSpec extends TestSupport {
 
   def checkContentTypeOf(result: Future[Result])(expectedContentType: String): Unit = {
     s"Content Type of result should be $expectedContentType" in {
-      await(result).body.contentType shouldBe Some(expectedContentType)
+      contentType(result) shouldBe Some(expectedContentType)
     }
   }
 
   def checkJsonBodyOf[A](result: Future[Result])(expectedBody: A)(implicit format: Format[A]): Unit = {
     s"return the response body $expectedBody" in {
-      await(jsonBodyOf(result)) shouldBe Json.toJson(expectedBody)
+      contentAsJson(result) shouldBe Json.toJson(expectedBody)
     }
   }
 }

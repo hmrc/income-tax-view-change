@@ -17,7 +17,7 @@
 package mocks
 
 import config.MicroserviceAuthConnector
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.auth.core.authorise.EmptyPredicate
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, MissingBearerToken}
 import uk.gov.hmrc.http.HeaderCarrier

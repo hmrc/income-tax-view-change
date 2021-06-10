@@ -16,13 +16,12 @@
 
 package connectors
 
-import assets.IncomeSourceDetailsTestConstants._
 import assets.BaseTestConstants._
+import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockHttp
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.mvc.Http.Status
-import uk.gov.hmrc.http.logging.Authorization
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpResponse}
 import utils.TestSupport
 
 class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp {

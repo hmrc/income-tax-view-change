@@ -18,8 +18,7 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.Authorization
+import uk.gov.hmrc.http.{Authorization, HeaderCarrier}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import javax.inject.Inject

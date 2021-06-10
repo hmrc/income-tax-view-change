@@ -18,13 +18,12 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.CalculationHttpParser._
-import javax.inject.{Inject, Singleton}
 import models.PreviousCalculation.PreviousCalculationModel
 import play.api.Logger
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.Authorization
+import uk.gov.hmrc.http.{Authorization, HeaderCarrier}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

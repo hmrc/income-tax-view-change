@@ -1,5 +1,4 @@
 import play.core.PlayVersion
-import sbt.Tests.{Group, SubProcess}
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings._
 import uk.gov.hmrc.SbtAutoBuildPlugin
@@ -11,17 +10,14 @@ val appName = "income-tax-view-change"
 
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-play-26" % "1.7.0",
-  "uk.gov.hmrc" %% "auth-client" % "2.35.0-play-26",
+  "uk.gov.hmrc" %% "bootstrap-play-26" % "4.0.0",
   "uk.gov.hmrc" %% "domain" % "5.6.0-play-26",
   "uk.gov.hmrc" %% "logback-json-logger" % "4.6.0"
 )
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
   "uk.gov.hmrc" %% "hmrctest" % "3.9.0-play-26" % scope,
-  "org.scalatest" %% "scalatest" % "3.0.9" % scope,
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
-  "uk.gov.hmrc" %% "bootstrap-play-26" % "0.41.0" % scope,
   "org.pegdown" % "pegdown" % "1.6.0" % scope,
   "org.jsoup" % "jsoup" % "1.11.3" % scope,
   "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,

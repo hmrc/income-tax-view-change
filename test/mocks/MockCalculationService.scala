@@ -16,15 +16,15 @@
 
 package mocks
 
-import models.PreviousCalculation.PreviousCalculationModel
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
-import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import services.CalculationService
-import uk.gov.hmrc.play.test.UnitSpec
 import connectors.httpParsers.CalculationHttpParser.HttpGetResult
+import models.PreviousCalculation.PreviousCalculationModel
+import org.mockito.stubbing.OngoingStubbing
+import org.mockito.ArgumentMatchers
+import org.scalatest.BeforeAndAfterEach
+import services.CalculationService
+import org.mockito.Mockito._
+import org.scalatestplus.mockito.MockitoSugar
+import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 

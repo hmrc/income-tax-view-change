@@ -21,8 +21,7 @@ import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockHttp
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.mvc.Http.Status
-import uk.gov.hmrc.http.logging.Authorization
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpResponse}
 import utils.TestSupport
 
 class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
