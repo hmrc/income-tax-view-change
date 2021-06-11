@@ -19,9 +19,9 @@ package mocks
 import connectors.PaymentAllocationsConnector
 import connectors.httpParsers.PaymentAllocationsHttpParser.PaymentAllocationsResponse
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito._
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future

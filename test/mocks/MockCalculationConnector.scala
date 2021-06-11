@@ -20,10 +20,10 @@ import connectors.CalculationConnector
 import connectors.httpParsers.CalculationHttpParser.HttpGetResult
 import models.PreviousCalculation.PreviousCalculationModel
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito._
+import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future

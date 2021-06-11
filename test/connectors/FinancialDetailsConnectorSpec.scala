@@ -78,7 +78,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet(
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Right(ChargesResponse(documentDetails, financialDetails)))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
@@ -92,7 +92,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet(
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Right(FinancialDataTestConstants.testEmptyChargeHttpResponse))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
@@ -108,7 +108,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
@@ -119,7 +119,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
@@ -157,7 +157,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet(
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Right(ChargesResponse(documentDetails, financialDetails)))
 
         val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
@@ -171,7 +171,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet(
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Right(FinancialDataTestConstants.testEmptyChargeHttpResponse))
 
         val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
@@ -187,7 +187,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
         val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
@@ -198,7 +198,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, FinancialDetail](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
-          headerCarrier = TestFinancialDetailsConnector.desHeaderCarrier
+          headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
         val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))

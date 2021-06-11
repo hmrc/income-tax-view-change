@@ -19,7 +19,6 @@ package connectors
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import javax.inject.Inject
@@ -28,11 +27,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class FinancialDetailsConnector @Inject()(val http: HttpClient,
                                           val appConfig: MicroserviceAppConfig)
                                          (implicit ec: ExecutionContext) extends RawResponseReads {
-
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier): HeaderCarrier = {
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
-  }
 
   private[connectors] def financialDetailsUrl(nino: String): String = {
     s"${appConfig.desUrl}/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
@@ -53,7 +47,7 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
 
   def getChargeDetails(nino: String, from: String, to: String)
                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    http.GET(url = financialDetailsUrl(nino), queryParams = queryParameters(from, to))(ChargeReads, desHeaderCarrier, ec)
+    http.GET(url = financialDetailsUrl(nino), queryParams = queryParameters(from, to), headers = appConfig.desAuthHeaders)(ChargeReads, hc, ec)
   }
 
   private[connectors] def paymentAllocationFinancialDetailsUrl(nino: String): String = {
@@ -74,7 +68,8 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
 
   def getPaymentAllocationDetails(nino: String, documentId: String)
                          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    http.GET(url = paymentAllocationFinancialDetailsUrl(nino), queryParams = newQueryParameters(documentId))(ChargeReads, desHeaderCarrier, ec)
+    http.GET(url = paymentAllocationFinancialDetailsUrl(nino), queryParams = newQueryParameters(documentId),
+      headers = appConfig.desAuthHeaders)(ChargeReads, hc, ec)
   }
 
 }

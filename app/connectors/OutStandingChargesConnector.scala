@@ -17,25 +17,17 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import connectors.httpParsers.OutStandingChargesHttpParser.OutStandingChargesReads
-import connectors.httpParsers.OutStandingChargesHttpParser.OutStandingChargeResponse
-import javax.inject.{Inject, Singleton}
+import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeResponse, OutStandingChargesReads}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class OutStandingChargesConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
-
-
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier): HeaderCarrier = {
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
-  }
 
   def listOutStandingChargesUrl(idType: String, idNumber: Long, taxYearEndDate: String): String =
     s"${appConfig.desUrl}/income-tax/charges/outstanding/$idType/$idNumber/$taxYearEndDate"
@@ -44,8 +36,9 @@ class OutStandingChargesConnector @Inject()(val http: HttpClient,
                             (implicit headerCarrier: HeaderCarrier): Future[OutStandingChargeResponse] = {
 
     http.GET(
-      url = listOutStandingChargesUrl(idType, idNumber, taxYearEndDate)
-    )(OutStandingChargesReads, desHeaderCarrier, ec)
+      url = listOutStandingChargesUrl(idType, idNumber, taxYearEndDate),
+      headers = appConfig.desAuthHeaders
+    )(OutStandingChargesReads, headerCarrier, ec)
   }
 
 }

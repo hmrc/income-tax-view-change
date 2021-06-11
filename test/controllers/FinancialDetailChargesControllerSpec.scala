@@ -21,11 +21,11 @@ import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
 import models.financialDetails.responses.ChargesResponse
-import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers.stubControllerComponents
+import play.api.test.Helpers.{status, stubControllerComponents}
+import play.api.test.Helpers._
 
 class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockFinancialDetailsConnector with MockMicroserviceAuthConnector {
 
@@ -53,10 +53,10 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         mockAuth()
         mockListCharges(nino, from, to)(Right(chargesResponse))
 
-        val result = await(FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest()))
+        val result = FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest())
 
         status(result) shouldBe OK
-        jsonBodyOf(result) shouldBe Json.toJson(chargesResponse)
+        contentAsJson(result) shouldBe Json.toJson(chargesResponse)
       }
     }
     s"return $NOT_FOUND" when {
@@ -65,10 +65,10 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
         mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
 
-        val result = await(FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest()))
+        val result = FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest())
 
         status(result) shouldBe NOT_FOUND
-        bodyOf(result) shouldBe errorJson
+        contentAsString(result) shouldBe errorJson
       }
     }
     s"return $INTERNAL_SERVER_ERROR" when {
@@ -76,10 +76,10 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         mockAuth()
         mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
-        val result = await(FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest()))
+        val result = FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest())
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        bodyOf(result) shouldBe "Failed to retrieve charge details"
+        contentAsString(result) shouldBe "Failed to retrieve charge details"
       }
     }
   }
@@ -90,10 +90,10 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         mockAuth()
         mockNewListCharges(nino, documentId)(Right(chargesResponse))
 
-        val result = await(FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest()))
+        val result = FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest())
 
         status(result) shouldBe OK
-        jsonBodyOf(result) shouldBe Json.toJson(chargesResponse)
+        contentAsJson(result) shouldBe Json.toJson(chargesResponse)
       }
     }
     s"return $NOT_FOUND" when {
@@ -102,10 +102,10 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
         mockNewListCharges(nino, documentId)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
 
-        val result = await(FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest()))
+        val result = FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest())
 
         status(result) shouldBe NOT_FOUND
-        bodyOf(result) shouldBe errorJson
+        contentAsString(result) shouldBe errorJson
       }
     }
     s"return $INTERNAL_SERVER_ERROR" when {
@@ -113,10 +113,10 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
         mockAuth()
         mockNewListCharges(nino, documentId)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
-        val result = await(FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest()))
+        val result = FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest())
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        bodyOf(result) shouldBe "Failed to retrieve charge details"
+        contentAsString(result) shouldBe "Failed to retrieve charge details"
       }
     }
   }
