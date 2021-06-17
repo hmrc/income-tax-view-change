@@ -1,7 +1,7 @@
 
 package controllers
 
-import assets.OutStandingChargesConstant._
+import assets.OutStandingChargesIntegrationTestConstant._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesOutStandingChargesStub._
 import models.outStandingCharges.OutstandingChargesSuccessResponse

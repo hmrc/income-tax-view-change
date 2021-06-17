@@ -17,9 +17,9 @@
 package assets
 
 
+import models.financialDetails.responses.ChargesResponse
 import models.financialDetails.{DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.http.HttpResponse
 
 object FinancialDataTestConstants {
 
@@ -34,7 +34,12 @@ object FinancialDataTestConstants {
 			|     "totalAmount": 300.00,
 			|     "documentOutstandingAmount": 200.00,
 			|     "lastClearedAmount": 100.00,
-			|     "documentDate": "2018-03-29"
+			|     "documentDate": "2018-03-29",
+			|     "interestRate": 2.60,
+			|     "interestFromDate": "2018-08-01",
+			|     "interestEndDate": "2019-01-15",
+			|     "latePaymentInterestAmount": 12.34,
+			|     "interestOutstandingAmount": 31.00
 			|   },
 			|   {
 			|     "taxYear": "2019",
@@ -135,16 +140,18 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-	val testChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(validChargesJson))
-	val testEmptyChargeHttpResponse: HttpResponse = HttpResponse(200, responseJson = Some(Json.toJson("")))
-
 	val documentDetail: DocumentDetail = DocumentDetail(
 		taxYear = "2018",
 		transactionId = "id",
 		documentDescription = Some("documentDescription"),
 		originalAmount = Some(300.00),
 		outstandingAmount = Some(200.00),
-		documentDate = "2018-03-29"
+		documentDate = "2018-03-29",
+		interestRate = Some(2.60),
+		interestFromDate = Some("2018-08-01"),
+		interestEndDate = Some("2019-01-15"),
+		latePaymentInterestAmount = Some(12.34),
+		interestOutstandingAmount = Some(31.00)
 	)
 
 	val documentDetail2: DocumentDetail = DocumentDetail(
@@ -153,7 +160,12 @@ object FinancialDataTestConstants {
 		documentDescription = Some("documentDescription2"),
 		originalAmount = Some(100.00),
 		outstandingAmount = Some(50.00),
-		documentDate = "2018-03-29"
+		documentDate = "2018-03-29",
+		interestRate = None,
+		interestFromDate = None,
+		interestEndDate = None,
+		latePaymentInterestAmount = None,
+		interestOutstandingAmount = None
 	)
 
 	val financialDetail: FinancialDetail = FinancialDetail(
@@ -209,6 +221,11 @@ object FinancialDataTestConstants {
 				paymentLotItem = Some("paymentLotItem2"),
 				paymentId = Some("paymentLot2-paymentLotItem2")
 			)))
+	)
+
+	val testChargesResponse: ChargesResponse = ChargesResponse(
+		documentDetails = List(documentDetail, documentDetail2),
+		financialDetails = List(financialDetail, financialDetail2)
 	)
 
 	val validSubItemJson: JsValue = Json.parse(

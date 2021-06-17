@@ -32,7 +32,7 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
     s"${appConfig.desUrl}/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
   }
 
-  private[connectors] def queryParameters(from: String, to: String): Seq[(String, String)] = {
+  private[connectors] def chargeDetailsQuery(from: String, to: String): Seq[(String, String)] = {
     Seq(
       "dateFrom" -> from,
       "dateTo" -> to,
@@ -47,14 +47,12 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
 
   def getChargeDetails(nino: String, from: String, to: String)
                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    http.GET(url = financialDetailsUrl(nino), queryParams = queryParameters(from, to), headers = appConfig.desAuthHeaders)(ChargeReads, hc, ec)
+    getCharge(url = financialDetailsUrl(nino), queryParameters = chargeDetailsQuery(from, to))
   }
 
-  private[connectors] def paymentAllocationFinancialDetailsUrl(nino: String): String = {
-    s"${appConfig.desUrl}/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
-  }
+  private[connectors] def paymentAllocationFinancialDetailsUrl(nino: String): String = financialDetailsUrl(nino)
 
-  private[connectors] def newQueryParameters(documentId: String): Seq[(String, String)] = {
+  private[connectors] def paymentAllocationQuery(documentId: String): Seq[(String, String)] = {
     Seq(
       "documentId" -> documentId,
       "onlyOpenItems" -> "false",
@@ -67,9 +65,12 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
   }
 
   def getPaymentAllocationDetails(nino: String, documentId: String)
-                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    http.GET(url = paymentAllocationFinancialDetailsUrl(nino), queryParams = newQueryParameters(documentId),
-      headers = appConfig.desAuthHeaders)(ChargeReads, hc, ec)
+                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+    getCharge(url = paymentAllocationFinancialDetailsUrl(nino), queryParameters = paymentAllocationQuery(documentId))
   }
+
+  private[connectors] def getCharge(url: String, queryParameters: Seq[(String, String)])
+                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] =
+    http.GET(url, queryParameters, appConfig.desAuthHeaders)(ChargeReads, hc, ec)
 
 }

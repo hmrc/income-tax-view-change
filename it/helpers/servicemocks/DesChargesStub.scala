@@ -34,7 +34,11 @@ object DesChargesStub {
 	}
 
   def stubGetChargeDetails(nino: String, from: String, to: String)(status: Int, response: JsValue = Json.obj()): Unit = {
-    WiremockHelper.stubGet(detailsUrl(nino, from, to), status, response.toString)
+    stubGetChargeDetails(nino, from, to, status, response.toString)
+  }
+
+  def stubGetChargeDetails(nino: String, from: String, to: String, status: Int, responseBody: String): Unit = {
+    WiremockHelper.stubGet(detailsUrl(nino, from, to), status, responseBody)
   }
 
   def stubNewGetChargeDetails(nino: String, documentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {
