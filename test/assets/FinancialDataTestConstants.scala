@@ -34,7 +34,10 @@ object FinancialDataTestConstants {
 			|     "totalAmount": 300.00,
 			|     "documentOutstandingAmount": 200.00,
 			|     "lastClearedAmount": 100.00,
-			|     "documentDate": "2018-03-29"
+			|     "documentDate": "2018-03-29",
+			|     "latePaymentInterestAmount": 400,
+			|			"interestOutstandingAmount": 500,
+			|			"interestEndDate":"2018-05-29"
 			|   },
 			|   {
 			|     "taxYear": "2019",
@@ -43,7 +46,10 @@ object FinancialDataTestConstants {
 			|     "totalAmount": 100.00,
 			|     "documentOutstandingAmount": 50.00,
 			|     "lastClearedAmount": 50.00,
-			|     "documentDate": "2018-03-29"
+			|     "documentDate": "2018-03-29",
+			|     "latePaymentInterestAmount": 600,
+			|			"interestOutstandingAmount": 700,
+			|			"interestEndDate":"2018-05-29"
 			|   }
 			| ],
 			| "financialDetails": [
@@ -144,7 +150,10 @@ object FinancialDataTestConstants {
 		documentDescription = Some("documentDescription"),
 		originalAmount = Some(300.00),
 		outstandingAmount = Some(200.00),
-		documentDate = "2018-03-29"
+		documentDate = "2018-03-29",
+		latePaymentInterestAmount = Some(400),
+		interestOutstandingAmount = Some(500),
+		interestEndDate = "2018-05-29"
 	)
 
 	val documentDetail2: DocumentDetail = DocumentDetail(
@@ -153,7 +162,10 @@ object FinancialDataTestConstants {
 		documentDescription = Some("documentDescription2"),
 		originalAmount = Some(100.00),
 		outstandingAmount = Some(50.00),
-		documentDate = "2018-03-29"
+		documentDate = "2018-03-29",
+		latePaymentInterestAmount = Some(600),
+		interestOutstandingAmount = Some(700),
+		interestEndDate = "2018-05-29"
 	)
 
 	val financialDetail: FinancialDetail = FinancialDetail(

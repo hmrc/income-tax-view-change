@@ -24,7 +24,11 @@ case class DocumentDetail(taxYear: String,
 													documentDescription: Option[String],
 													originalAmount: Option[BigDecimal],
 													outstandingAmount: Option[BigDecimal],
-													documentDate: String)
+													documentDate: String,
+													latePaymentInterestAmount: Option[BigDecimal],
+													interestOutstandingAmount: Option[BigDecimal],
+													interestEndDate: String
+												 )
 
 object DocumentDetail {
 	implicit val writes: Writes[DocumentDetail] = Json.writes[DocumentDetail]
@@ -34,6 +38,9 @@ object DocumentDetail {
 			(__ \ "documentDescription").readNullable[String] and
 			(__ \ "totalAmount").readNullable[BigDecimal] and
 			(__ \ "documentOutstandingAmount").readNullable[BigDecimal] and
-			(__ \ "documentDate").read[String]
+			(__ \ "documentDate").read[String] and
+			(__ \ "latePaymentInterestAmount").readNullable[BigDecimal] and
+			(__ \ "interestOutstandingAmount").readNullable[BigDecimal] and
+				(__ \ "interestEndDate").read[String]
 		) (DocumentDetail.apply _)
 }
