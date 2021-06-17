@@ -22,10 +22,10 @@ import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
 
 class DocumentDetailSpec extends WordSpec with Matchers {
 
-	val documentDetailMin: DocumentDetail = DocumentDetail("2019", "id", None, None, None, "2018-03-29")
+	val documentDetailMin: DocumentDetail = DocumentDetail("2019", "id", None, None, None, "2018-03-29", None, None, "2018-05-29")
 
-	val documentDetailMinJsonRead: JsObject = Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> "2018-03-29")
-	val documentDetailMinJsonWrite: JsObject = Json.obj("taxYear" -> "2019", "transactionId" -> "id", "documentDate" -> "2018-03-29")
+	val documentDetailMinJsonRead: JsObject = Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> "2018-03-29", "interestEndDate" -> "2018-05-29")
+	val documentDetailMinJsonWrite: JsObject = Json.obj("taxYear" -> "2019", "transactionId" -> "id", "documentDate" -> "2018-03-29", "interestEndDate" -> "2018-05-29")
 
 	val documentDetailFullJsonRead: JsValue = Json.obj(
 		"taxYear" -> "2018",
@@ -33,7 +33,10 @@ class DocumentDetailSpec extends WordSpec with Matchers {
 		"documentDescription" -> "documentDescription",
 		"totalAmount" -> 300.00,
 		"documentOutstandingAmount" -> 200.00,
-		"documentDate" -> "2018-03-29"
+		"documentDate" -> "2018-03-29",
+		"latePaymentInterestAmount" -> 400,
+		"interestOutstandingAmount" -> 500,
+		"interestEndDate" -> "2018-05-29"
 	)
 
 	val documentDetailFullJsonWrite: JsValue = Json.obj(
@@ -42,7 +45,10 @@ class DocumentDetailSpec extends WordSpec with Matchers {
 		"documentDescription" -> "documentDescription",
 		"originalAmount" -> 300.00,
 		"outstandingAmount" -> 200.00,
-		"documentDate" -> "2018-03-29"
+		"documentDate" -> "2018-03-29",
+		"latePaymentInterestAmount" -> 400,
+		"interestOutstandingAmount" -> 500,
+		"interestEndDate" -> "2018-05-29"
 	)
 
 	"FinancialDetail" should {

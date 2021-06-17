@@ -41,7 +41,10 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
         "documentDescription" -> "documentDescription",
         "totalAmount" -> 300.00,
         "documentOutstandingAmount" -> 200.00,
-				"documentDate" -> "2018-03-29"
+				"documentDate" -> "2018-03-29",
+        "LatePaymentInterestAmount" -> 400,
+        "interestOutstandingAmount" -> 500,
+        "interestEndDate" -> "2018-05-29"
       ),
       Json.obj(
         "taxYear" -> "2019",
@@ -49,7 +52,10 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
         "documentDescription" -> "documentDescription2",
         "totalAmount" -> 100.00,
         "documentOutstandingAmount" -> 50.00,
-				"documentDate" -> "2018-03-29"
+				"documentDate" -> "2018-03-29",
+        "LatePaymentInterestAmount" -> 600,
+        "interestOutstandingAmount" -> 700,
+        "interestEndDate" -> "2018-05-29"
       )
     ),
     "financialDetails" -> Json.arr(
