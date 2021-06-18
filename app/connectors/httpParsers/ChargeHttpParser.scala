@@ -35,12 +35,14 @@ object ChargeHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): ChargeResponse = {
       response.status match {
         case OK =>
-          Logger.info(s"[ChargeReads][read] successfully parsed response to List[Charge]")
           response.json.validate[ChargesResponse] match {
             case JsError(_) =>
-              Logger.error(s"[ChargeHttpParser][ChargeReads] - Unable to parse response into ChargesResponse")
+              Logger.error(s"[ChargeReads][read] - Unable to parse response into ChargesResponse")
               Left(UnexpectedChargeErrorResponse)
-            case JsSuccess(value, _) => Right(value)
+
+            case JsSuccess(value, _) =>
+              Logger.info(s"[ChargeReads][read] successfully parsed response into ChargesResponse")
+              Right(value)
           }
         case status if status >= 400 && status < 500 =>
           Logger.error(s"[ChargeReads][read] $status returned from DES with body: ${response.body}")

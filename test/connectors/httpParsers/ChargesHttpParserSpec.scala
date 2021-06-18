@@ -16,11 +16,9 @@
 
 package connectors.httpParsers
 
-import assets.FinancialDataTestConstants.{documentDetail, documentDetail2, financialDetail, financialDetail2, validChargesJson}
+import assets.FinancialDataTestConstants.{testChargesResponse, validChargesJson}
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
-import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
-import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -29,15 +27,8 @@ class ChargesHttpParserSpec extends TestSupport {
   "ChargesHttpParser" should {
     "return a charge" when {
       s"$OK is returned with valid json" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(validChargesJson)
-        )
-
-        val expectedResult: ChargeResponse = Right(ChargesResponse(
-          documentDetails = List(documentDetail, documentDetail2),
-          financialDetails = List(financialDetail, financialDetail2)
-        ))
+        val httpResponse: HttpResponse = HttpResponse(OK, json = validChargesJson, headers = Map.empty)
+        val expectedResult: ChargeResponse = Right(testChargesResponse)
         val actualResult: ChargeResponse = ChargeReads.read("", "", httpResponse)
 
         actualResult shouldBe expectedResult
@@ -45,10 +36,7 @@ class ChargesHttpParserSpec extends TestSupport {
     }
     s"return $UnexpectedChargeResponse" when {
       "a 4xx status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = BAD_REQUEST, responseString = Some("Bad request")
-        )
-
+        val httpResponse: HttpResponse = HttpResponse(BAD_REQUEST, body = "Bad request")
         val expectedResult: ChargeResponse = Left(UnexpectedChargeResponse(BAD_REQUEST, "Bad request"))
         val actualResult: ChargeResponse = ChargeReads.read("", "", httpResponse)
 
@@ -56,11 +44,8 @@ class ChargesHttpParserSpec extends TestSupport {
       }
     }
     s"return $UnexpectedChargeErrorResponse" when {
-      s"$OK is returned with invalid json" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(Json.obj())
-        )
+      s"$OK is returned without mandatory fields in json" in {
+        val httpResponse: HttpResponse = HttpResponse(OK, body = "{}")
 
         val expectedResponse: ChargeResponse = Left(UnexpectedChargeErrorResponse)
         val actualResponse: ChargeResponse = ChargeReads.read("", "", httpResponse)

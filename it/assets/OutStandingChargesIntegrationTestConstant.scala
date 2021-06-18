@@ -19,7 +19,7 @@ package assets
 import models.outStandingCharges.{OutStandingCharge, OutstandingChargesSuccessResponse}
 import play.api.libs.json.{JsValue, Json}
 
-object OutStandingChargesConstant {
+object OutStandingChargesIntegrationTestConstant {
   val validOutStandingChargeJson: JsValue = Json.parse(
     """
       |  {

@@ -93,7 +93,12 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 		documentDescription = Some("documentDescription"),
 		originalAmount = Some(300.00),
 		outstandingAmount = Some(200.00),
-		documentDate = "2018-03-29"
+		documentDate = "2018-03-29",
+		interestRate = Some(2.60),
+		interestFromDate = Some("2018-08-01"),
+		interestEndDate = Some("2019-01-15"),
+		latePaymentInterestAmount = Some(12.34),
+		interestOutstandingAmount = Some(31.00)
 	)
 
 	val documentDetail2: DocumentDetail = DocumentDetail(
@@ -102,7 +107,12 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 		documentDescription = Some("documentDescription2"),
 		originalAmount = Some(100.00),
 		outstandingAmount = Some(50.00),
-		documentDate = "2018-03-29"
+		documentDate = "2018-03-29",
+		interestRate = None,
+		interestFromDate = None,
+		interestEndDate = None,
+		latePaymentInterestAmount = None,
+		interestOutstandingAmount = None
 	)
 
 	val chargeJson: JsObject = Json.obj(
@@ -113,7 +123,12 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 				"documentDescription" -> "documentDescription",
 				"totalAmount" -> 300.00,
 				"documentOutstandingAmount" -> 200.00,
-				"documentDate" -> "2018-03-29"
+				"documentDate" -> "2018-03-29",
+				"interestRate" -> 2.60,
+				"interestFromDate" -> "2018-08-01",
+				"interestEndDate" -> "2019-01-15",
+				"latePaymentInterestAmount" -> 12.34,
+				"interestOutstandingAmount" -> 31.00
 			),
 			Json.obj(
 				"taxYear" -> "2019",
@@ -227,6 +242,19 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 		}
 
 		s"return $INTERNAL_SERVER_ERROR" when {
+      "API responds with status OK but a non-json body" in {
+        isAuthorised(true)
+        stubGetChargeDetails(testNino, from, to,
+          status = OK,
+          responseBody = "")
+
+        val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
+
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
+
 			"an unexpected status was returned when retrieving charge details" in {
 
 				isAuthorised(true)
@@ -288,7 +316,20 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 		}
 
 		s"return $INTERNAL_SERVER_ERROR" when {
-			" newan unexpected status was returned when retrieving charge details" in {
+			"API responds with status OK but a non-json body" in {
+				isAuthorised(true)
+				stubGetChargeDetails(testNino, from, to,
+					status = OK,
+					responseBody = "rubbish")
+
+				val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
+
+				res should have(
+					httpStatus(INTERNAL_SERVER_ERROR)
+				)
+			}
+
+			"an unexpected status was returned when retrieving charge details" in {
 
 				isAuthorised(true)
 

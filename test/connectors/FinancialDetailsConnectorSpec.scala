@@ -16,8 +16,7 @@
 
 package connectors
 
-import assets.FinancialDataTestConstants
-import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
+import assets.FinancialDataTestConstants.{documentDetail, financialDetail, testChargesResponse}
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import mocks.MockHttp
 import models.financialDetails.responses.ChargesResponse
@@ -48,7 +47,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     }
   }
 
-  "queryParameters for charge" should {
+  "chargeDetailsQuery parameters for charge" should {
     "return the correct formatted query parameters" in {
       val expectedQueryParameters: Seq[(String, String)] = Seq(
         "dateFrom" -> testFrom,
@@ -60,7 +59,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         "customerPaymentInformation" -> "true",
         "includeStatistical" -> "false"
       )
-      val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.queryParameters(
+      val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.chargeDetailsQuery(
         from = testFrom,
         to = testTo
       )
@@ -72,42 +71,24 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   "getChargeDetails" should {
     "return a list of charges" when {
       s"$OK is received from ETMP with charges " in {
-        val documentDetails: List[DocumentDetail] = List(documentDetail)
-        val financialDetails: List[FinancialDetail] = List(financialDetail)
-
-        mockDesGet(
+        mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
+          queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
           headers = microserviceAppConfig.desAuthHeaders
-        )(Right(ChargesResponse(documentDetails, financialDetails)))
+        )(Right(testChargesResponse))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
 
-        result shouldBe Right(ChargesResponse(documentDetails, financialDetails))
-      }
-    }
-
-    "return OK without a list of charges" when {
-      s"$OK is received from ETMP with no charges" in {
-        mockDesGet(
-          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
-          headers = microserviceAppConfig.desAuthHeaders
-        )(Right(FinancialDataTestConstants.testEmptyChargeHttpResponse))
-
-        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
-
-        result shouldBe Right(FinancialDataTestConstants.testEmptyChargeHttpResponse)
-
+        result shouldBe Right(testChargesResponse)
       }
     }
 
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeResponseError, FinancialDetail](
+        mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
+          queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
@@ -116,9 +97,9 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeResponseError, FinancialDetail](
+        mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.queryParameters(testFrom, testTo),
+          queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
@@ -129,7 +110,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     }
   }
 
-  "newQueryParameters for Payment Allocation - documentId" should {
+  "paymentAllocationQuery parameters for Payment Allocation - documentId" should {
     "return the correct formatted query parameters" in {
       val expectedQueryParameters: Seq[(String, String)] = Seq(
         "documentId" -> documentId,
@@ -140,7 +121,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         "customerPaymentInformation" -> "true",
         "includeStatistical" -> "false"
       )
-      val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.newQueryParameters(
+      val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.paymentAllocationQuery(
         documentId = documentId
       )
 
@@ -154,9 +135,9 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         val documentDetails: List[DocumentDetail] = List(documentDetail)
         val financialDetails: List[FinancialDetail] = List(financialDetail)
 
-        mockDesGet(
+        mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
+          queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = microserviceAppConfig.desAuthHeaders
         )(Right(ChargesResponse(documentDetails, financialDetails)))
 
@@ -166,27 +147,12 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
       }
     }
 
-    "return OK without a list of charges" when {
-      s"$OK is received from ETMP with no charges" in {
-        mockDesGet(
-          url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
-          headers = microserviceAppConfig.desAuthHeaders
-        )(Right(FinancialDataTestConstants.testEmptyChargeHttpResponse))
-
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
-
-        result shouldBe Right(FinancialDataTestConstants.testEmptyChargeHttpResponse)
-
-      }
-    }
-
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeResponseError, FinancialDetail](
+        mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
+          queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
@@ -195,9 +161,9 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeResponseError, FinancialDetail](
+        mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.newQueryParameters(documentId),
+          queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
