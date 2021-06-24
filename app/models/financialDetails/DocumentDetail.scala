@@ -29,7 +29,9 @@ case class DocumentDetail(taxYear: String,
 													interestFromDate: Option[String],
 													interestEndDate: Option[String],
 													latePaymentInterestAmount: Option[BigDecimal],
-													interestOutstandingAmount: Option[BigDecimal]
+													interestOutstandingAmount: Option[BigDecimal],
+													paymentLotItem: Option[String],
+													paymentLot: Option[String]
 												 )
 
 object DocumentDetail {
@@ -45,6 +47,8 @@ object DocumentDetail {
 			(__ \ "interestFromDate").readNullable[String] and
 			(__ \ "interestEndDate").readNullable[String] and
 			(__ \ "latePaymentInterestAmount").readNullable[BigDecimal] and
-			(__ \ "interestOutstandingAmount").readNullable[BigDecimal]
+			(__ \ "interestOutstandingAmount").readNullable[BigDecimal] and
+			(__ \ "paymentLotItem").readNullable[String] and
+			(__ \ "paymentLot").readNullable[String]
 		) (DocumentDetail.apply _)
 }
