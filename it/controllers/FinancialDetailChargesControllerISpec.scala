@@ -98,7 +98,9 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 		interestFromDate = Some("2018-08-01"),
 		interestEndDate = Some("2019-01-15"),
 		latePaymentInterestAmount = Some(12.34),
-		interestOutstandingAmount = Some(31.00)
+		interestOutstandingAmount = Some(31.00),
+		paymentLotItem = Some("paymentLotItem"),
+		paymentLot = Some("paymentLot")
 	)
 
 	val documentDetail2: DocumentDetail = DocumentDetail(
@@ -112,7 +114,9 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 		interestFromDate = None,
 		interestEndDate = None,
 		latePaymentInterestAmount = None,
-		interestOutstandingAmount = None
+		interestOutstandingAmount = None,
+		paymentLotItem = None,
+		paymentLot = None
 	)
 
 	val chargeJson: JsObject = Json.obj(
@@ -128,7 +132,9 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 				"interestFromDate" -> "2018-08-01",
 				"interestEndDate" -> "2019-01-15",
 				"latePaymentInterestAmount" -> 12.34,
-				"interestOutstandingAmount" -> 31.00
+				"interestOutstandingAmount" -> 31.00,
+				"paymentLotItem" -> "paymentLotItem",
+				"paymentLot" -> "paymentLot"
 			),
 			Json.obj(
 				"taxYear" -> "2019",
