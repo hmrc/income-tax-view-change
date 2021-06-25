@@ -26,7 +26,7 @@ object DesChargesStub {
   }
 
   private def newDetailsUrl(nino: String, documentId: String): String = {
-    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?documentId=$documentId&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
+    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?docNumber=$documentId&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
 	private def historyUrl(mtdBsa: String, documentId: String): String = {

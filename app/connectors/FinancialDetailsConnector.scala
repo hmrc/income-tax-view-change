@@ -54,7 +54,7 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
 
   private[connectors] def paymentAllocationQuery(documentId: String): Seq[(String, String)] = {
     Seq(
-      "documentId" -> documentId,
+      "docNumber" -> documentId,
       "onlyOpenItems" -> "false",
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",

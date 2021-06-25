@@ -113,7 +113,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   "paymentAllocationQuery parameters for Payment Allocation - documentId" should {
     "return the correct formatted query parameters" in {
       val expectedQueryParameters: Seq[(String, String)] = Seq(
-        "documentId" -> documentId,
+        "docNumber" -> documentId,
         "onlyOpenItems" -> "false",
         "includeLocks" -> "true",
         "calculateAccruedInterest" -> "true",
