@@ -21,13 +21,25 @@ import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
 import models.financialDetails.responses.ChargesResponse
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
 import play.api.test.Helpers._
 
 class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with MockFinancialDetailsConnector with MockMicroserviceAuthConnector {
+
+	val paymentJson: JsArray = Json.arr(
+		Json.obj(
+		"reference" -> "paymentReference",
+		"amount" -> 300,
+		"method" -> "paymentMethod",
+		"lot" -> "paymentLot",
+		"lotItem" -> "paymentLotItem",
+		"date" -> "dueDate",
+		"transactionId" -> "id"
+		)
+	)
 
   val controllerComponents: ControllerComponents = stubControllerComponents()
 
@@ -55,7 +67,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
         val result = TestFinancialDetailPaymentsController.getPaymentDetails(nino, from, to)(FakeRequest())
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.toJson(chargesResponse.financialDetails.flatMap(_.payments))
+        contentAsJson(result) shouldBe paymentJson
       }
     }
 

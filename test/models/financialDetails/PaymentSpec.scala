@@ -21,9 +21,9 @@ import play.api.libs.json.{JsObject, JsSuccess, Json}
 
 class PaymentSpec extends WordSpec with Matchers {
 
-  val paymentEmpty: Payment = Payment(None, None, None, None, None, None)
+  val paymentEmpty: Payment = Payment(None, None, None, None, None, None, "DOCID01")
 
-  val paymentEmptyJson: JsObject = Json.obj()
+  val paymentEmptyJson: JsObject = Json.obj("transactionId" -> "DOCID01")
 
   val paymentFull: Payment = Payment(
     reference = Some("reference"),
@@ -31,7 +31,8 @@ class PaymentSpec extends WordSpec with Matchers {
     method = Some("method"),
     lot = Some("lot"),
     lotItem = Some("lotItem"),
-    date = Some("date")
+    date = Some("date"),
+		transactionId = "DOCID01"
   )
 
   val paymentFullJson: JsObject = Json.obj(
@@ -40,18 +41,11 @@ class PaymentSpec extends WordSpec with Matchers {
     "method" -> "method",
     "lot" -> "lot",
     "lotItem" -> "lotItem",
-    "date" -> "date"
+    "date" -> "date",
+		"transactionId" -> "DOCID01"
   )
 
   "Charge" should {
-    "read from json" when {
-      "the json is complete" in {
-        Json.fromJson[Payment](paymentFullJson) shouldBe JsSuccess(paymentFull)
-      }
-      "the json is empty" in {
-        Json.fromJson[Payment](paymentEmptyJson) shouldBe JsSuccess(paymentEmpty)
-      }
-    }
     "write to json" when {
       "the model is complete" in {
         Json.toJson(paymentFull) shouldBe paymentFullJson

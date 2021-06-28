@@ -56,7 +56,7 @@ object FinancialDataTestConstants {
 			| "financialDetails": [
 			|   {
 			|     "taxYear": "2018",
-			|     "documentId": "transactionId",
+			|     "documentId": "id",
 			|     "documentDate": "transactionDate",
 			|     "documentDescription": "type",
 			|     "totalAmount": 1000.00,
@@ -115,7 +115,7 @@ object FinancialDataTestConstants {
 		"""
 			|{
 			|     "taxYear": "2018",
-			|     "transactionId": "transactionId",
+			|     "transactionId": "id",
 			|     "transactionDate": "transactionDate",
 			|     "type": "type",
 			|     "totalAmount": 1000.00,
@@ -176,7 +176,7 @@ object FinancialDataTestConstants {
 
 	val financialDetail: FinancialDetail = FinancialDetail(
 		taxYear = "2018",
-		transactionId = "transactionId",
+		transactionId = "id",
 		transactionDate = Some("transactionDate"),
 		`type` = Some("type"),
 		totalAmount = Some(BigDecimal("1000.00")),
