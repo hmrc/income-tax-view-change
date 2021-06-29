@@ -39,7 +39,7 @@ class FinancialDetailPaymentsController @Inject()(authentication: Authentication
         from = from,
         to = to
       ) map {
-        case Right(chargesResponse) => Ok(Json.toJson(chargesResponse.financialDetails.flatMap(_.payments)))
+        case Right(chargesResponse) => Ok(Json.toJson(chargesResponse.payments))
         case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
         case Left(_) => InternalServerError("Failed to retrieve charge details")
 

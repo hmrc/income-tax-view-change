@@ -17,20 +17,22 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
 
   val payments1: Payment = Payment(
     reference = Some("paymentReference"),
-    amount = Some(BigDecimal("2000.00")),
+    amount = Some(BigDecimal("300.00")),
     method = Some("paymentMethod"),
-    lot = Some("paymentLot"),
-    lotItem = Some("paymentLotItem"),
-    date = Some("clearingDate")
+    lot = Some("lot01"),
+    lotItem = Some("0001"),
+    date = Some("dueDate"),
+		transactionId = "id"
   )
 
   val payments2: Payment = Payment(
     reference = Some("paymentReference2"),
-    amount = Some(BigDecimal("3000.00")),
+    amount = Some(BigDecimal("100.00")),
     method = Some("paymentMethod2"),
-    lot = Some("paymentLot2"),
-    lotItem = Some("paymentLotItem2"),
-    date = Some("clearingDate2")
+    lot = Some("lot02"),
+    lotItem = Some("0001"),
+    date = Some("dueDate2"),
+		transactionId = "id2"
   )
 
   val chargeJson: JsObject = Json.obj(
@@ -41,7 +43,9 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
         "documentDescription" -> "documentDescription",
         "totalAmount" -> 300.00,
         "documentOutstandingAmount" -> 200.00,
-				"documentDate" -> "2018-03-29"
+				"documentDate" -> "2018-03-29",
+				"paymentLot" -> "lot01",
+				"paymentLotItem" -> "0001"
       ),
       Json.obj(
         "taxYear" -> "2019",
@@ -49,13 +53,15 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
         "documentDescription" -> "documentDescription2",
         "totalAmount" -> 100.00,
         "documentOutstandingAmount" -> 50.00,
-				"documentDate" -> "2018-03-29"
+				"documentDate" -> "2018-03-29",
+				"paymentLot" -> "lot02",
+				"paymentLotItem" -> "0001"
       )
     ),
     "financialDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
-        "documentId" -> "transactionId",
+        "documentId" -> "id",
         "documentDate" -> "transactionDate",
         "documentDescription" -> "type",
         "originalAmount" -> 1000.00,
@@ -73,14 +79,14 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
             "paymentAmount" -> 2000.00,
             "dueDate" -> "dueDate",
             "paymentMethod" -> "paymentMethod",
-            "paymentLot" -> "paymentLot",
-            "paymentLotItem" -> "paymentLotItem"
+						"paymentLot" -> "lot01",
+						"paymentLotItem" -> "0001"
           )
         )
       ),
       Json.obj(
         "taxYear" -> "2019",
-        "documentId" -> "transactionId2",
+        "documentId" -> "id2",
         "documentDate" -> "transactionDate2",
         "documentDescription" -> "type2",
         "totalAmount" -> 2000.00,
@@ -97,8 +103,8 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
             "paymentAmount" -> 3000.00,
             "dueDate" -> "dueDate2",
             "paymentMethod" -> "paymentMethod2",
-            "paymentLot" -> "paymentLot2",
-            "paymentLotItem" -> "paymentLotItem2"
+						"paymentLot" -> "lot02",
+						"paymentLotItem" -> "0001"
           )
         )
       )

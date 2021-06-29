@@ -29,7 +29,7 @@ class FinancialDetailSpec extends WordSpec with Matchers {
 
   val financialDetailFullJson: JsValue = Json.obj(
     "taxYear" -> "2018",
-    "documentId" -> "transactionId",
+    "documentId" -> "id",
     "documentDate" -> "transactionDate",
     "documentDescription" -> "type",
     "totalAmount" -> 1000.00,
