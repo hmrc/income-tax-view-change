@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.PaymentAllocationsConnector
+import connectors.httpParsers.PaymentAllocationsHttpParser.NotFoundResponse
 import controllers.predicates.AuthenticationPredicate
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
@@ -39,6 +40,7 @@ class PaymentAllocationsController @Inject()(authentication: AuthenticationPredi
         paymentLotItem = paymentLotItem
       ) map {
         case Right(paymentAllocations) => Ok(Json.toJson(paymentAllocations))
+        case Left(NotFoundResponse) => NotFound("No payment allocations found")
         case Left(_) => InternalServerError("Failed to retrieve payment allocations")
       }
     }

@@ -17,7 +17,7 @@
 package connectors
 
 import assets.PreviousCalculationTestConstants._
-import connectors.httpParsers.PaymentAllocationsHttpParser.{PaymentAllocationsError, UnexpectedResponse}
+import connectors.httpParsers.PaymentAllocationsHttpParser.{NotFoundResponse, PaymentAllocationsError, UnexpectedResponse}
 import mocks.MockHttp
 import models.paymentAllocations.{PaymentAllocations, paymentAllocationsFull}
 import play.api.http.Status._
@@ -70,6 +70,20 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Right(paymentAllocationsFull)
       }
     }
+
+		"return a not found response" when {
+			s"$NOT_FOUND is returned from the connector call" in {
+				mockDesGet(
+					url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
+					queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
+					headers = microserviceAppConfig.desAuthHeaders
+				)(Left(NotFoundResponse))
+
+				val result = await(TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem))
+
+				result shouldBe Left(NotFoundResponse)
+			}
+		}
 
     s"return an error" when {
       "something went wrong" in {
