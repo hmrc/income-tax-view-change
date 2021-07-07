@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.httpParsers.PaymentAllocationsHttpParser.UnexpectedResponse
+import connectors.httpParsers.PaymentAllocationsHttpParser.{NotFoundResponse, UnexpectedResponse}
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockPaymentAllocationsConnector}
 import models.paymentAllocations.{paymentAllocationsFull, paymentAllocationsWriteJsonFull}
@@ -50,6 +50,17 @@ class PaymentAllocationsControllerSpec extends ControllerBaseSpec with MockPayme
         contentAsJson(result) shouldBe paymentAllocationsWriteJsonFull
       }
     }
+		s"return a $NOT_FOUND response" when {
+			"the connector returns a NotFoundResponse" in {
+				mockAuth()
+				mockGetPaymentAllocations(nino, paymentLot, paymentLotItem)(Left(NotFoundResponse))
+
+				val result = PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)(FakeRequest())
+
+				status(result) shouldBe NOT_FOUND
+				contentAsString(result) shouldBe "No payment allocations found"
+			}
+		}
     s"return $INTERNAL_SERVER_ERROR" when {
       "the connector returns an error" in {
         mockAuth()

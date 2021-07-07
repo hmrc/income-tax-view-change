@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import connectors.httpParsers.PaymentAllocationsHttpParser.{PaymentAllocationsReads, PaymentAllocationsResponse, UnexpectedResponse}
+import connectors.httpParsers.PaymentAllocationsHttpParser.{NotFoundResponse, PaymentAllocationsReads, PaymentAllocationsResponse, UnexpectedResponse}
 import models.paymentAllocations.{AllocationDetail, PaymentAllocations}
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
@@ -125,6 +125,15 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResponse
       }
     }
+		"return a Not Found response" when {
+			"the status of the response is 404" in {
+				val httpResponse:HttpResponse = HttpResponse(
+					responseStatus = NOT_FOUND
+				)
+
+				PaymentAllocationsReads.read("", "", httpResponse) shouldBe Left(NotFoundResponse)
+			}
+		}
     s"return $UnexpectedResponse" when {
       "no payment details are returned in the json" in {
         val httpResponse: HttpResponse = HttpResponse(

@@ -18,7 +18,7 @@ package connectors.httpParsers
 
 import models.paymentAllocations.{PaymentAllocations, PaymentDetails}
 import play.api.Logger
-import play.api.http.Status.OK
+import play.api.http.Status.{OK, NOT_FOUND}
 import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
@@ -27,6 +27,8 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
   sealed trait PaymentAllocationsError
 
   case object UnexpectedResponse extends PaymentAllocationsError
+
+	case object NotFoundResponse extends PaymentAllocationsError
 
   type PaymentAllocationsResponse = Either[PaymentAllocationsError, PaymentAllocations]
 
@@ -44,12 +46,15 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
               Logger.error(s"[PaymentAllocationsReads][read] Json validation error. Reasons: ${errors}")
               Left(UnexpectedResponse)
           }
+				case NOT_FOUND =>
+					Logger.info(s"[PaymentAllocationsReads][read] no allocations found for payment")
+					Left(NotFoundResponse)
         case status if status >= 400 && status < 500 =>
-          Logger.error(s"[PaymentAllocationsReads][read] $status returned from DES with body: ${response.body}")
+					Logger.error(s"[PaymentAllocationsReads][read] Unexpected Response with status: $status")
           Left(UnexpectedResponse)
         case status =>
-          Logger.error(s"[PaymentAllocationsReads][read] Unexpected Response with status: $status")
-          Left(UnexpectedResponse)
+					Logger.error(s"[PaymentAllocationsReads][read] $status returned from DES with body: ${response.body}")
+					Left(UnexpectedResponse)
       }
     }
   }
