@@ -35,7 +35,8 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         transactionId = Some("transactionId"),
         from = Some("from"),
         to = Some("to"),
-        `type` = Some("type"),
+        chargeType = Some("type"),
+				mainType = Some("mainType"),
         amount = Some(1500.00),
         clearedAmount = Some(500.00)
       )
@@ -55,6 +56,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
             "taxPeriodStartDate" -> "from",
             "taxPeriodEndDate" -> "to",
             "chargeType" -> "type",
+						"mainType" -> "mainType",
             "amount" -> 1500.00,
             "clearedAmount" -> 500.00
           )
@@ -76,6 +78,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
             "taxPeriodStartDate" -> "from",
             "taxPeriodEndDate" -> "to",
             "chargeType" -> "type",
+						"mainType" -> "mainType",
             "amount" -> 1500.00,
             "clearedAmount" -> 500.00
           )
@@ -92,6 +95,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
             "taxPeriodStartDate" -> "from",
             "taxPeriodEndDate" -> "to",
             "chargeType" -> "type",
+						"mainType" -> "mainType",
             "amount" -> 1500.00,
             "clearedAmount" -> 500.00
           )
