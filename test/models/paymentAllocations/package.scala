@@ -24,7 +24,8 @@ package object paymentAllocations {
     transactionId = Some("transactionId"),
     from = Some("from"),
     to = Some("to"),
-    `type` = Some("type"),
+    chargeType = Some("type"),
+		mainType = Some("mainType"),
     amount = Some(1000.00),
     clearedAmount = Some(500.00)
   )
@@ -36,6 +37,7 @@ package object paymentAllocations {
     "taxPeriodStartDate" -> "from",
     "taxPeriodEndDate" -> "to",
     "chargeType" -> "type",
+		"mainType" -> "mainType",
     "amount" -> 1000.00,
     "clearedAmount" -> 500.00
   )
@@ -44,7 +46,8 @@ package object paymentAllocations {
     "transactionId" -> "transactionId",
     "from" -> "from",
     "to" -> "to",
-    "type" -> "type",
+    "chargeType" -> "type",
+		"mainType" -> "mainType",
     "amount" -> 1000.00,
     "clearedAmount" -> 500.00
   )
