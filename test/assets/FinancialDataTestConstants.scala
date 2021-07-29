@@ -76,7 +76,8 @@ object FinancialDataTestConstants {
 			|       "dueDate": "dueDate",
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
-			|       "paymentLotItem": "paymentLotItem"
+			|       "paymentLotItem": "paymentLotItem",
+			|       "dunningLock": "dunningLock"
 			|       }
 			|     ]
 			|   },
@@ -102,7 +103,8 @@ object FinancialDataTestConstants {
 			|       "dueDate": "dueDate2",
 			|       "paymentMethod": "paymentMethod2",
 			|       "paymentLot": "paymentLot2",
-			|       "paymentLotItem": "paymentLotItem2"
+			|       "paymentLotItem": "paymentLotItem2",
+			|       "dunningLock": "dunningLock"
 			|       }
 			|     ]
 			|   }
@@ -136,7 +138,8 @@ object FinancialDataTestConstants {
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
 			|       "paymentLotItem": "paymentLotItem",
-			|       "paymentId": "paymentLot-paymentLotItem"
+			|       "paymentId": "paymentLot-paymentLotItem",
+			|       "dunningLock": "dunningLock"
 			|       }
 			|     ]
 			|}
@@ -198,7 +201,8 @@ object FinancialDataTestConstants {
 				paymentMethod = Some("paymentMethod"),
 				paymentLot = Some("paymentLot"),
 				paymentLotItem = Some("paymentLotItem"),
-				paymentId = Some("paymentLot-paymentLotItem")
+				paymentId = Some("paymentLot-paymentLotItem"),
+				dunningLock = Some("dunningLock")
 			)))
 	)
 	val financialDetail2: FinancialDetail = FinancialDetail(
@@ -225,7 +229,8 @@ object FinancialDataTestConstants {
 				paymentMethod = Some("paymentMethod2"),
 				paymentLot = Some("paymentLot2"),
 				paymentLotItem = Some("paymentLotItem2"),
-				paymentId = Some("paymentLot2-paymentLotItem2")
+				paymentId = Some("paymentLot2-paymentLotItem2"),
+				dunningLock = Some("dunningLock")
 			)))
 	)
 
@@ -247,7 +252,8 @@ object FinancialDataTestConstants {
 			|       "dueDate": "dueDate",
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
-			|       "paymentLotItem": "paymentLotItem"
+			|       "paymentLotItem": "paymentLotItem",
+			|       "dunningLock": "dunningLock"
 			|}
 			|""".stripMargin)
 
@@ -264,7 +270,8 @@ object FinancialDataTestConstants {
 		paymentMethod = Some("paymentMethod"),
 		paymentLot = Some("paymentLot"),
 		paymentLotItem = Some("paymentLotItem"),
-		paymentId = Some("paymentLot-paymentLotItem")
+		paymentId = Some("paymentLot-paymentLotItem"),
+		dunningLock = Some("dunningLock")
 	)
 
 	val validSubItemJsonAfterWrites: JsValue = Json.parse(
@@ -281,7 +288,8 @@ object FinancialDataTestConstants {
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
 			|       "paymentLotItem": "paymentLotItem",
-			|       "paymentId": "paymentLot-paymentLotItem"
+			|       "paymentId": "paymentLot-paymentLotItem",
+			|       "dunningLock": "dunningLock"
 			|}
 			|""".stripMargin)
 

@@ -30,11 +30,12 @@ case class SubItem(subItemId: Option[String],
                    paymentMethod: Option[String],
                    paymentLot: Option[String],
                    paymentLotItem: Option[String],
-                   paymentId: Option[String])
+                   paymentId: Option[String],
+                   dunningLock: Option[String])
 
 object SubItem {
 
-  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None)
+  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
 
@@ -50,6 +51,7 @@ object SubItem {
     paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
     paymentLot <- (JsPath \ "paymentLot").readNullable[String]
     paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
+    dunningLock <- (JsPath \ "dunningLock").readNullable[String]
   } yield {
     val id: Option[String] = for {
       pl <- paymentLot
@@ -67,7 +69,8 @@ object SubItem {
       paymentMethod,
       paymentLot,
       paymentLotItem,
-      id
+      id,
+      dunningLock
     )
   }
 
