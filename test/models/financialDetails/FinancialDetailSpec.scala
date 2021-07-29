@@ -50,7 +50,8 @@ class FinancialDetailSpec extends WordSpec with Matchers {
         "dueDate" -> "dueDate",
         "paymentMethod" -> "paymentMethod",
         "paymentLot" -> "paymentLot",
-        "paymentLotItem" -> "paymentLotItem"
+        "paymentLotItem" -> "paymentLotItem",
+        "dunningLock" -> "dunningLock"
       )
     )
   )

@@ -55,7 +55,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 				paymentMethod = Some("paymentMethod"),
 				paymentLot = Some("paymentLot"),
 				paymentLotItem = Some("paymentLotItem"),
-				paymentId = Some("paymentLot-paymentLotItem")
+				paymentId = Some("paymentLot-paymentLotItem"),
+				dunningLock = Some("dunningLock")
 			)))
 	)
 
@@ -83,7 +84,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 				paymentMethod = Some("paymentMethod2"),
 				paymentLot = Some("paymentLot2"),
 				paymentLotItem = Some("paymentLotItem2"),
-				paymentId = Some("paymentLot2-paymentLotItem2")
+				paymentId = Some("paymentLot2-paymentLotItem2"),
+				dunningLock = Some("dunningLock2")
 			)))
 	)
 
@@ -170,7 +172,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 						"dueDate" -> "dueDate",
 						"paymentMethod" -> "paymentMethod",
 						"paymentLot" -> "paymentLot",
-						"paymentLotItem" -> "paymentLotItem"
+						"paymentLotItem" -> "paymentLotItem",
+						"dunningLock" -> "dunningLock"
 					)
 				)
 			),
@@ -197,7 +200,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 						"dueDate" -> "dueDate2",
 						"paymentMethod" -> "paymentMethod2",
 						"paymentLot" -> "paymentLot2",
-						"paymentLotItem" -> "paymentLotItem2"
+						"paymentLotItem" -> "paymentLotItem2",
+						"dunningLock" -> "dunningLock2"
 					)
 				)
 			)

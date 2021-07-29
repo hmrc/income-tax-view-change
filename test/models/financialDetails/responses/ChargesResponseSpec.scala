@@ -73,7 +73,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			paymentMethod = Some("method"),
 			paymentLot = paymentLot,
 			paymentLotItem = paymentLotItem,
-			paymentId = Some("paymentId")
+			paymentId = Some("paymentId"),
+			dunningLock = Some("dunningLock")
 		)
 	}
 
