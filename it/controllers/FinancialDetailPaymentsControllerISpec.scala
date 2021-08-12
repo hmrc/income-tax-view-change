@@ -5,12 +5,18 @@ import assets.BaseIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesChargesStub.stubGetChargeDetails
 import models.financialDetails.Payment
-import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSResponse
 
-class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
+class FinancialDetailPaymentsControllerDESISpec extends FinancialDetailPaymentsControllerISpec(enableIF = false)
+
+class FinancialDetailPaymentsControllerIFISpec extends FinancialDetailPaymentsControllerISpec(enableIF = true)
+
+
+abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends ComponentSpecBase {
+
+  override def config: Map[String, String] = super.config + ("microservice.services.if.enabled" -> enableIF.toString)
 
   val from: String = "from"
   val to: String = "to"

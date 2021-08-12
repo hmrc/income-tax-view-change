@@ -23,24 +23,69 @@ import models.financialDetails.responses.ChargesResponse
 import models.financialDetails.{DocumentDetail, FinancialDetail}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.test.FakeRequest
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.TestSupport
 
-class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
+import java.util.UUID
 
-  object TestFinancialDetailsConnector extends FinancialDetailsConnector(mockHttpGet, microserviceAppConfig)
+class FinancialDetailsConnectorDESSpec extends FinancialDetailsConnectorBehavior[FinancialDetailsConnectorDES] {
+  override val TestFinancialDetailsConnector = new FinancialDetailsConnectorDES(mockHttpGet, microserviceAppConfig)
+
+  override val expectedBaseUrl: String = microserviceAppConfig.desUrl
+
+  override val expectedHeaders = Seq(
+    "Environment"   -> "localDESEnvironment",
+    "Authorization" -> "Bearer localDESToken"
+  )
+}
+
+class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[FinancialDetailsConnectorIF] {
+  override val TestFinancialDetailsConnector = new FinancialDetailsConnectorIF(mockHttpGet, microserviceAppConfig)
+
+  override val expectedBaseUrl: String = microserviceAppConfig.ifUrl
+
+  private val requestId = "mdtp-request-id"
+
+  override val expectedHeaders = Seq(
+    "Environment"   -> "localIFEnvironment",
+    "Authorization" -> "Bearer localIFToken",
+    "CorrelationId" -> requestId
+  )
+
+  override implicit val hc: HeaderCarrier =
+    HeaderCarrierConverter.fromRequest(FakeRequest().withHeaders(HeaderNames.xRequestId -> requestId))
+
+  "FinancialDetailsConnectorIF" should {
+    "generate a random UUID for CorrelationId header when there is no X-Request-ID header available in request" in {
+      def correlationIdInHeaders(): Option[UUID] = TestFinancialDetailsConnector.headers(hc = HeaderCarrier())
+          .collectFirst { case ("CorrelationId", value) => UUID.fromString(value) }
+
+      val id1 = correlationIdInHeaders()
+      val id2 = correlationIdInHeaders()
+
+      id1 shouldBe defined
+      id2 shouldBe defined
+      id1 should not be id2
+    }
+  }
+}
+
+abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector] extends TestSupport with MockHttp {
+
+  def TestFinancialDetailsConnector: C
+  def expectedBaseUrl: String
+  def expectedHeaders: Seq[(String, String)]
 
   val testNino: String = "testNino"
   val testFrom: String = "testFrom"
   val testTo: String = "testTo"
   val documentId: String = "123456789"
 
-
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
-
   "financialDetailUrl" should {
     "return the correct url" in {
-      val expectedUrl: String = s"${microserviceAppConfig.desUrl}/enterprise/02.00.00/financial-data/NINO/$testNino/ITSA"
+      val expectedUrl: String = s"$expectedBaseUrl/enterprise/02.00.00/financial-data/NINO/$testNino/ITSA"
       val actualUrl: String = TestFinancialDetailsConnector.financialDetailsUrl(testNino)
 
       actualUrl shouldBe expectedUrl
@@ -74,7 +119,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = expectedHeaders
         )(Right(testChargesResponse))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
@@ -89,7 +134,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = expectedHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
@@ -100,7 +145,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = expectedHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
         val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
@@ -138,7 +183,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = expectedHeaders
         )(Right(ChargesResponse(documentDetails, financialDetails)))
 
         val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
@@ -153,7 +198,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = expectedHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
         val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
@@ -164,7 +209,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = expectedHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
         val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))

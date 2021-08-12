@@ -25,7 +25,14 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSResponse
 
-class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
+class FinancialDetailChargesControllerDESISpec extends FinancialDetailChargesControllerISpec(enableIF = false)
+
+class FinancialDetailChargesControllerIFISpec extends FinancialDetailChargesControllerISpec(enableIF = true)
+
+
+abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends ComponentSpecBase {
+
+	override def config: Map[String, String] = super.config + ("microservice.services.if.enabled" -> enableIF.toString)
 
 	val from: String = "from"
 	val to: String = "to"
