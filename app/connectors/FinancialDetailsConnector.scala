@@ -19,17 +19,42 @@ package connectors
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderNames.xRequestId
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-import javax.inject.Inject
+import java.util.UUID
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-class FinancialDetailsConnector @Inject()(val http: HttpClient,
-                                          val appConfig: MicroserviceAppConfig)
-                                         (implicit ec: ExecutionContext) extends RawResponseReads {
+@Singleton
+class FinancialDetailsConnectorDES @Inject()(val http: HttpClient,
+                                             appConfig: MicroserviceAppConfig) extends FinancialDetailsConnector {
+  override val baseUrl: String = appConfig.desUrl
+
+  override def headers(implicit hc: HeaderCarrier): Seq[(String, String)] = appConfig.desAuthHeaders
+}
+
+@Singleton
+class FinancialDetailsConnectorIF @Inject()(val http: HttpClient,
+                                            appConfig: MicroserviceAppConfig) extends FinancialDetailsConnector {
+  override val baseUrl: String = appConfig.ifUrl
+
+  override def headers(implicit hc: HeaderCarrier): Seq[(String, String)] = {
+    val requestIdHeader: Option[(String, String)] = hc.headers(Seq(xRequestId)).headOption
+    val correlationId: String = requestIdHeader.map(_._2).getOrElse(UUID.randomUUID.toString)
+    appConfig.ifAuthHeaders(correlationId)
+  }
+}
+
+
+trait FinancialDetailsConnector extends RawResponseReads {
+
+  def http: HttpClient
+  def baseUrl: String
+  def headers(implicit hc: HeaderCarrier): Seq[(String, String)]
 
   private[connectors] def financialDetailsUrl(nino: String): String = {
-    s"${appConfig.desUrl}/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
+    s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
   }
 
   private[connectors] def chargeDetailsQuery(from: String, to: String): Seq[(String, String)] = {
@@ -71,6 +96,6 @@ class FinancialDetailsConnector @Inject()(val http: HttpClient,
 
   private[connectors] def getCharge(url: String, queryParameters: Seq[(String, String)])
                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] =
-    http.GET(url, queryParameters, appConfig.desAuthHeaders)(ChargeReads, hc, ec)
+    http.GET(url, queryParameters, headers)(ChargeReads, hc, ec)
 
 }

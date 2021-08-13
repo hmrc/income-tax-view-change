@@ -24,10 +24,10 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
 
   private def loadConfig(key: String) = servicesConfig.getString(key)
 
-  val desEnvironment: String = loadConfig("microservice.services.des.environment")
-  val desToken: String = loadConfig("microservice.services.des.authorization-token")
   val desUrl: String = loadConfig("microservice.services.des.url")
   val desAuthHeaders: Seq[(String, String)] = {
+    val desEnvironment: String = loadConfig("microservice.services.des.environment")
+    val desToken: String = loadConfig("microservice.services.des.authorization-token")
     Seq(
       "Environment"   -> desEnvironment,
       "Authorization" -> s"Bearer $desToken"
@@ -35,10 +35,11 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
   }
 
   val isIfEnabled: Boolean =  servicesConfig.getBoolean("microservice.services.if.enabled")
-  val ifEnvironment: String = loadConfig("microservice.services.if.environment")
-  val ifToken: String = loadConfig("microservice.services.if.authorization-token")
+
   val ifUrl: String = loadConfig("microservice.services.if.url")
   def ifAuthHeaders(correlationId: String): Seq[(String, String)] = {
+    val ifEnvironment: String = loadConfig("microservice.services.if.environment")
+    val ifToken: String = loadConfig("microservice.services.if.authorization-token")
     Seq(
       "Environment"   -> ifEnvironment,
       "Authorization" -> s"Bearer $ifToken",
