@@ -49,6 +49,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 		clearedAmount = Some(BigDecimal("500.00")),
 		chargeType = Some("POA1"),
 		mainType = Some("4920"),
+		accruedInterest = Some(BigDecimal("1000")),
 		items = Some(Seq(
 			SubItem(
 				subItemId = Some("1"),
@@ -56,14 +57,15 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				clearingDate = Some("clearingDate"),
 				clearingReason = Some("clearingReason"),
 				outgoingPaymentMethod = Some("outgoingPaymentMethod"),
+				interestLock  = Some("interestLock"),
+				dunningLock = Some("dunningLock"),
 				paymentReference = Some("paymentReference"),
 				paymentAmount = Some(BigDecimal("2000.00")),
 				dueDate = Some("dueDate"),
 				paymentMethod = Some("paymentMethod"),
 				paymentLot = Some("paymentLot"),
 				paymentLotItem = Some("paymentLotItem"),
-				paymentId = Some("paymentLot-paymentLotItem"),
-				dunningLock = Some("dunningLock")
+				paymentId = Some("paymentLot-paymentLotItem")
 			)))
 	)
 
@@ -78,6 +80,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 		clearedAmount = Some(BigDecimal("500.00")),
 		chargeType = Some("POA1"),
 		mainType = Some("4920"),
+		accruedInterest = Some(BigDecimal("2000")),
 		items = Some(Seq(
 			SubItem(
 				subItemId = Some("2"),
@@ -85,14 +88,15 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				clearingDate = Some("clearingDate2"),
 				clearingReason = Some("clearingReason2"),
 				outgoingPaymentMethod = Some("outgoingPaymentMethod2"),
+				interestLock  =  Some("interestLock2"),
+				dunningLock = Some("dunningLock2"),
 				paymentReference = Some("paymentReference2"),
 				paymentAmount = Some(BigDecimal("3000.00")),
 				dueDate = Some("dueDate2"),
 				paymentMethod = Some("paymentMethod2"),
 				paymentLot = Some("paymentLot2"),
 				paymentLotItem = Some("paymentLotItem2"),
-				paymentId = Some("paymentLot2-paymentLotItem2"),
-				dunningLock = Some("dunningLock2")
+				paymentId = Some("paymentLot2-paymentLotItem2")
 			)))
 	)
 
@@ -167,6 +171,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				"clearedAmount" -> 500.00,
 				"chargeType" -> "POA1",
 				"mainType" -> "4920",
+				"accruedInterest" -> 1000,
 				"items" -> Json.arr(
 					Json.obj(
 						"subItem" -> "1",
@@ -174,13 +179,14 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 						"clearingDate" -> "clearingDate",
 						"clearingReason" -> "clearingReason",
 						"outgoingPaymentMethod" -> "outgoingPaymentMethod",
+						"interestLock" -> "interestLock",
+						"dunningLock" -> "dunningLock",
 						"paymentReference" -> "paymentReference",
 						"paymentAmount" -> 2000.00,
 						"dueDate" -> "dueDate",
 						"paymentMethod" -> "paymentMethod",
 						"paymentLot" -> "paymentLot",
-						"paymentLotItem" -> "paymentLotItem",
-						"dunningLock" -> "dunningLock"
+						"paymentLotItem" -> "paymentLotItem"
 					)
 				)
 			),
@@ -195,6 +201,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				"clearedAmount" -> 500.00,
 				"chargeType" -> "POA1",
 				"mainType" -> "4920",
+				"accruedInterest" -> 2000,
 				"items" -> Json.arr(
 					Json.obj(
 						"subItem" -> "2",
@@ -202,13 +209,14 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 						"clearingDate" -> "clearingDate2",
 						"clearingReason" -> "clearingReason2",
 						"outgoingPaymentMethod" -> "outgoingPaymentMethod2",
+						"interestLock" -> "interestLock2",
+						"dunningLock" -> "dunningLock2",
 						"paymentReference" -> "paymentReference2",
 						"paymentAmount" -> 3000.00,
 						"dueDate" -> "dueDate2",
 						"paymentMethod" -> "paymentMethod2",
 						"paymentLot" -> "paymentLot2",
-						"paymentLotItem" -> "paymentLotItem2",
-						"dunningLock" -> "dunningLock2"
+						"paymentLotItem" -> "paymentLotItem2"
 					)
 				)
 			)

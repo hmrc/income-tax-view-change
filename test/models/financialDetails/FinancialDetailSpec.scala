@@ -22,7 +22,7 @@ import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
 
 class FinancialDetailSpec extends WordSpec with Matchers {
 
-  val financialDetailEmpty: FinancialDetail = FinancialDetail("2019", "id", None, None, None, None, None, None, None, None, None)
+  val financialDetailEmpty: FinancialDetail = FinancialDetail("2019", "id", None, None, None, None, None, None, None, None, None, None)
 
   val financialDetailEmptyJsonRead: JsObject = Json.obj("taxYear" -> "2019", "documentId" -> "id")
   val financialDetailEmptyJsonWrite: JsObject = Json.obj("taxYear" -> "2019", "transactionId" -> "id")
@@ -38,6 +38,7 @@ class FinancialDetailSpec extends WordSpec with Matchers {
     "documentOutstandingAmount" -> 500.00,
     "chargeType" -> "POA1",
     "mainType" -> "4920",
+    "accruedInterest" -> 1000,
     "items" -> Json.arr(
       Json.obj(
         "subItem" -> "1",
@@ -45,13 +46,14 @@ class FinancialDetailSpec extends WordSpec with Matchers {
         "clearingDate" -> "clearingDate",
         "clearingReason" -> "clearingReason",
         "outgoingPaymentMethod" -> "outgoingPaymentMethod",
+        "interestLock" ->  "interestLock",
+        "dunningLock" -> "dunningLock",
         "paymentReference" -> "paymentReference",
         "paymentAmount" -> 2000.00,
         "dueDate" -> "dueDate",
         "paymentMethod" -> "paymentMethod",
         "paymentLot" -> "paymentLot",
-        "paymentLotItem" -> "paymentLotItem",
-        "dunningLock" -> "dunningLock"
+        "paymentLotItem" -> "paymentLotItem"
       )
     )
   )

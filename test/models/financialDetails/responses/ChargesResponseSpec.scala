@@ -53,6 +53,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			clearedAmount = None,
 			chargeType = None,
 			mainType = None,
+			accruedInterest = None,
 			items = items
 		)
 	}
@@ -67,14 +68,15 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			clearingDate = None,
 			clearingReason = None,
 			outgoingPaymentMethod = None,
+			interestLock = Some("interestLock"),
+			dunningLock = Some("dunningLock"),
 			paymentReference = paymentReference,
 			paymentAmount = Some(400.0),
 			dueDate = Some("dueDate"),
 			paymentMethod = Some("method"),
 			paymentLot = paymentLot,
 			paymentLotItem = paymentLotItem,
-			paymentId = Some("paymentId"),
-			dunningLock = Some("dunningLock")
+			paymentId = Some("paymentId")
 		)
 	}
 

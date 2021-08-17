@@ -29,6 +29,7 @@ case class FinancialDetail(taxYear: String,
                            clearedAmount: Option[BigDecimal],
                            chargeType: Option[String],
                            mainType: Option[String],
+                           accruedInterest: Option[BigDecimal],
                            items: Option[Seq[SubItem]]
                           )
 
@@ -45,6 +46,7 @@ object FinancialDetail {
       (JsPath \ "clearedAmount").readNullable[BigDecimal] and
       (JsPath \ "chargeType").readNullable[String] and
       (JsPath \ "mainType").readNullable[String] and
+      (JsPath \ "accruedInterest").readNullable[BigDecimal] and
       (JsPath \ "items").readNullable[Seq[SubItem]]
     ) (FinancialDetail.apply _)
 
