@@ -20,13 +20,12 @@ import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.ChargeResponse
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
 import org.scalatestplus.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
-trait MockFinancialDetailsConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockFinancialDetailsConnector extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
 
   val mockFinancialDetailsConnector: FinancialDetailsConnector = mock[FinancialDetailsConnector]
 

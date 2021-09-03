@@ -69,7 +69,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 			get(s"/$nino/payment-allocations/$paymentLot/$paymentLotItem")
 		}
 
-		def get(uri: String): WSResponse = await(buildClient(uri).get())
+		def get(uri: String): WSResponse = buildClient(uri).get().futureValue
 
 		def getChargeDetails(nino: String, from: String, to: String): WSResponse = {
 			get(s"/$nino/financial-details/charges/from/$from/to/$to")

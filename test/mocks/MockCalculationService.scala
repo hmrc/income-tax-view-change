@@ -20,15 +20,14 @@ import connectors.httpParsers.CalculationHttpParser.HttpGetResult
 import models.PreviousCalculation.PreviousCalculationModel
 import org.mockito.stubbing.OngoingStubbing
 import org.mockito.ArgumentMatchers
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
 import services.CalculationService
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
-trait MockCalculationService extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockCalculationService extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
 
   val mockCalculationService: CalculationService = mock[CalculationService]
 

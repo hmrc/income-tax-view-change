@@ -20,13 +20,12 @@ import connectors.OutStandingChargesConnector
 import connectors.httpParsers.OutStandingChargesHttpParser.OutStandingChargeResponse
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
 import org.scalatestplus.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
-trait MockOutStandingChargesConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockOutStandingChargesConnector extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
 
   val mockOutStandingChargesConnector: OutStandingChargesConnector = mock[OutStandingChargesConnector]
 

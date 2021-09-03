@@ -10,14 +10,12 @@ val appName = "income-tax-view-change"
 
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-play-26" % "4.0.0",
-  "uk.gov.hmrc" %% "domain" % "5.6.0-play-26",
+  "uk.gov.hmrc" %% "bootstrap-backend-play-27" % "5.12.0",
   "uk.gov.hmrc" %% "logback-json-logger" % "4.6.0"
 )
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
-  "uk.gov.hmrc" %% "hmrctest" % "3.9.0-play-26" % scope,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3" % scope,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % scope,
   "org.pegdown" % "pegdown" % "1.6.0" % scope,
   "org.jsoup" % "jsoup" % "1.11.3" % scope,
   "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
@@ -41,7 +39,7 @@ lazy val scoverageSettings = {
 }
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(playSettings: _*)
   .settings(scalaSettings: _*)
   .settings(publishingSettings: _*)
@@ -49,9 +47,9 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(majorVersion := 1)
   .settings(
-    Keys.fork in Test := true,
+    Test / Keys.fork := true,
     scalaVersion := "2.12.12",
-    javaOptions in Test += "-Dlogger.resource=logback-test.xml")
+    Test / javaOptions += "-Dlogger.resource=logback-test.xml")
   .settings(
     libraryDependencies ++= appDependencies,
     retrieveManaged := true,
@@ -60,10 +58,10 @@ lazy val microservice = Project(appName, file("."))
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    Keys.fork in IntegrationTest := false,
-    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
+    IntegrationTest / Keys.fork := false,
+    IntegrationTest / unmanagedSourceDirectories := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    parallelExecution in IntegrationTest := false)
+    IntegrationTest / parallelExecution := false)
   .settings(resolvers ++= Seq(
     MavenRepository("HMRC-open-artefacts-maven2", "https://open.artefacts.tax.service.gov.uk/maven2"),
       Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),

@@ -20,7 +20,7 @@ import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HeaderNames.xRequestId
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import java.util.UUID
 import javax.inject.{Inject, Singleton}

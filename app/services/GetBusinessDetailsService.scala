@@ -17,25 +17,26 @@
 package services
 
 import connectors.GetBusinessDetailsConnector
+
 import javax.inject.{Inject, Singleton}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
-import play.api.Logger
+import play.api.{Logger, Logging}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBusinessDetailsConnector) {
+class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBusinessDetailsConnector) extends Logging {
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
-    Logger.debug("[getBusinessDetailsService][getBusinessDetails] - Requesting Income Source Details from Connector")
+    logger.debug("[getBusinessDetailsService][getBusinessDetails] - Requesting Income Source Details from Connector")
     getBusinessDetailsConnector.getBusinessDetails(nino).map {
       case success: IncomeSourceDetailsModel =>
-        Logger.debug(s"[getBusinessDetailsService][getBusinessDetails] - Retrieved Get Business Details:\n\n$success")
+        logger.debug(s"[getBusinessDetailsService][getBusinessDetails] - Retrieved Get Business Details:\n\n$success")
         success
       case error: IncomeSourceDetailsError =>
-        Logger.error(s"[getBusinessDetailsService][getgetBusinessDetails] - Retrieved Income Source Details:\n\n$error")
+        logger.error(s"[getBusinessDetailsService][getgetBusinessDetails] - Retrieved Income Source Details:\n\n$error")
         IncomeSourceDetailsError(error.status, error.reason)
     }
   }

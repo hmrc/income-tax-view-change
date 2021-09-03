@@ -44,7 +44,7 @@ class OutStandingChargesConnectorSpec extends TestSupport with MockHttp {
 
         setupMockHttpFutureGet[OutStandingChargeResponse](listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Right(OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo))))
 
-        val result = await(listOutStandingCharges(idType, idNumber, taxYearEndDate))
+        val result = listOutStandingCharges(idType, idNumber, taxYearEndDate).futureValue
 
         result shouldBe Right(OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo)))
       }
@@ -55,14 +55,14 @@ class OutStandingChargesConnectorSpec extends TestSupport with MockHttp {
 
         setupMockHttpFutureGet(listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Left(UnexpectedOutStandingChargeResponse(NOT_FOUND, responseBody)))
 
-        val result = await(listOutStandingCharges(idType, idNumber, taxYearEndDate))
+        val result = listOutStandingCharges(idType, idNumber, taxYearEndDate).futureValue
 
         result shouldBe Left(UnexpectedOutStandingChargeResponse(NOT_FOUND, responseBody))
       }
       s"when $INTERNAL_SERVER_ERROR is returned" in {
         setupMockHttpFutureGet(listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Left(OutStandingChargeErrorResponse))
 
-        val result = await(listOutStandingCharges(idType, idNumber, taxYearEndDate))
+        val result = listOutStandingCharges(idType, idNumber, taxYearEndDate).futureValue
 
         result shouldBe Left(OutStandingChargeErrorResponse)
       }

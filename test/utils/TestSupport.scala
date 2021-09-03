@@ -18,16 +18,17 @@ package utils
 
 import config.MicroserviceAppConfig
 import org.scalatest._
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext
 
-trait TestSupport extends UnitSpec with GuiceOneServerPerSuite with BeforeAndAfterAll with MockitoSugar with MaterializerSupport {
+trait TestSupport extends WordSpecLike with Matchers with OptionValues
+  with GuiceOneServerPerSuite with BeforeAndAfterAll with MockitoSugar with MaterializerSupport with ScalaFutures {
   this: Suite =>
 
   def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("", "")

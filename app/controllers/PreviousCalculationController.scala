@@ -17,15 +17,15 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import javax.inject.{Inject, Singleton}
 import models.PreviousCalculation._
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.CalculationService
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -33,13 +33,13 @@ import scala.concurrent.Future
 class PreviousCalculationController @Inject()(val authentication: AuthenticationPredicate,
                                               val calculationService: CalculationService,
                                               cc: ControllerComponents
-                                             ) extends BackendController(cc) {
+                                             ) extends BackendController(cc) with Logging {
 
   def getPreviousCalculation(nino: String, year: String): Action[AnyContent] =
     authentication.async {
       implicit request =>
         if (isInvalidNino(nino)) {
-          Logger.error(s"[PreviousCalculationController][getPreviousCalculation] Invalid Nino '$nino' received in request.")
+          logger.error(s"[PreviousCalculationController][getPreviousCalculation] Invalid Nino '$nino' received in request.")
           Future.successful(BadRequest(Json.toJson(InvalidNino)))
         } else {
           getPreviousCalculation(nino, year)
@@ -47,16 +47,16 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
     }
 
   private def getPreviousCalculation(nino: String, year: String)(implicit hc: HeaderCarrier) = {
-    Logger.debug(s"[PreviousCalculationController][getPreviousCalculation] Calling CalculationService.getPreviousCalculation")
+    logger.debug(s"[PreviousCalculationController][getPreviousCalculation] Calling CalculationService.getPreviousCalculation")
     calculationService.getPreviousCalculation(nino, year).map {
       case _@Right(previousCalculation) => Ok(Json.toJson(previousCalculation))
       case _@Left(error) => error.error match {
         case singleError: Error =>
-          Logger.error(s"[PreviousCalculationController][getPreviousCalculation] returned a single error ${singleError.reason}")
+          logger.error(s"[PreviousCalculationController][getPreviousCalculation] returned a single error ${singleError.reason}")
           Status(error.status)(Json.toJson(singleError))
         case multiError: MultiError =>
           multiError.failures.foreach(singleError =>
-            Logger.error(s"[PreviousCalculationController][getPreviousCalculation] returned multiple errors ${singleError.reason}"))
+            logger.error(s"[PreviousCalculationController][getPreviousCalculation] returned multiple errors ${singleError.reason}"))
           Status(error.status)(Json.toJson(multiError))
       }
     }

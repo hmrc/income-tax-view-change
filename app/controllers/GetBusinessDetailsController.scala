@@ -17,30 +17,30 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import javax.inject.{Inject, Singleton}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.GetBusinessDetailsService
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class GetBusinessDetailsController @Inject()(val authentication: AuthenticationPredicate,
                                              val getBusinessDetailsService: GetBusinessDetailsService,
                                              cc: ControllerComponents
-                                            ) extends BackendController(cc) {
+                                            ) extends BackendController(cc) with Logging {
 
 
   def getBusinessDetails(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     getBusinessDetailsService.getBusinessDetails(nino).map {
       case error: IncomeSourceDetailsError =>
-        Logger.error(s"[GetBusinessDetailsController][getBusinessDetails] - Error Response: $error")
+        logger.error(s"[GetBusinessDetailsController][getBusinessDetails] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: IncomeSourceDetailsModel =>
-        Logger.debug(s"[GetBusinessDetailsController][getBusinessDetails] - Successful Response: $success")
+        logger.debug(s"[GetBusinessDetailsController][getBusinessDetails] - Successful Response: $success")
         Ok(Json.toJson(success))
     }
   }

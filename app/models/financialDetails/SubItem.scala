@@ -16,7 +16,7 @@
 
 package models.financialDetails
 
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json._
 
 case class SubItem(subItemId: Option[String],
@@ -24,7 +24,7 @@ case class SubItem(subItemId: Option[String],
                    clearingDate: Option[String],
                    clearingReason: Option[String],
                    outgoingPaymentMethod: Option[String],
-                   interestLock:  Option[String],
+                   interestLock: Option[String],
                    dunningLock: Option[String],
                    paymentReference: Option[String] = None,
                    paymentAmount: Option[BigDecimal],
@@ -34,9 +34,9 @@ case class SubItem(subItemId: Option[String],
                    paymentLotItem: Option[String],
                    paymentId: Option[String])
 
-object SubItem {
+object SubItem extends Logging {
 
-  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None,None)
+  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
 
@@ -84,7 +84,7 @@ object SubItem {
       true
     } catch {
       case _: Exception =>
-        Logger.warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
+        logger.warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
         false
     }
   }

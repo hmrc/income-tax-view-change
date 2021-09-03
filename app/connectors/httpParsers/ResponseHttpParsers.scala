@@ -17,18 +17,18 @@
 package connectors.httpParsers
 
 import models.PreviousCalculation.{Error, ErrorResponse, InvalidJsonResponse, MultiError, UnexpectedJsonFormat}
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 
 import scala.util.{Failure, Success, Try}
 
-trait ResponseHttpParsers {
+trait ResponseHttpParsers extends Logging {
 
   type HttpGetResult[T] = Either[ErrorResponse, T]
 
   protected def handleErrorResponse(httpResponse: HttpResponse): Left[ErrorResponse, Nothing] = {
-    Logger.debug(s"[ResponseHttpParsers][handleErrorResponse] Body received: ${httpResponse.body}")
+    logger.debug(s"[ResponseHttpParsers][handleErrorResponse] Body received: ${httpResponse.body}")
     Left(Try(Json.parse(httpResponse.body)) match {
       case Success(json) => json.asOpt[MultiError].orElse(json.asOpt[Error]) match {
         case Some(error) => ErrorResponse(httpResponse.status, error)

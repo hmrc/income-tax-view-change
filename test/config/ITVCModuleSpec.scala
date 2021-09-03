@@ -17,13 +17,13 @@
 package config
 
 import connectors.{FinancialDetailsConnector, FinancialDetailsConnectorDES, FinancialDetailsConnectorIF}
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.reflect.ClassTag
 
-class ITVCModuleSpec extends UnitSpec {
+class ITVCModuleSpec extends WordSpecLike with Matchers {
 
 
   "ITVCModule" should {

@@ -17,7 +17,7 @@
 package connectors.httpParsers
 
 import models.PreviousCalculation.{PreviousCalculationModel, UnexpectedJsonFormat, UnexpectedResponse}
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
@@ -29,20 +29,20 @@ object CalculationHttpParser extends ResponseHttpParsers {
         case OK =>
           response.json.validate[PreviousCalculationModel].fold(
             invalid => {
-              Logger.error(s"[PreviousCalculationReads][read] could not parse to PreviousCalculationModel. Invalid: $invalid")
+              logger.error(s"[PreviousCalculationReads][read] could not parse to PreviousCalculationModel. Invalid: $invalid")
               Left(UnexpectedJsonFormat)
             },
             valid => {
-              Logger.info(s"[PreviousCalculationReads][read] successfully parsed response to PreviousCalculationModel")
+              logger.info(s"[PreviousCalculationReads][read] successfully parsed response to PreviousCalculationModel")
               Right(valid)
             }
           )
         case status if status >= 400 && status < 500 =>
-          Logger.warn(s"[PreviousCalculationReads][read] $status returned from DES with body: ${response.body}")
+          logger.warn(s"[PreviousCalculationReads][read] $status returned from DES with body: ${response.body}")
           handleErrorResponse(response)
 
         case status =>
-          Logger.error(s"[PreviousCalculationReads][read] Unexpected Response with status: $status")
+          logger.error(s"[PreviousCalculationReads][read] Unexpected Response with status: $status")
           Left(UnexpectedResponse)
       }
     }

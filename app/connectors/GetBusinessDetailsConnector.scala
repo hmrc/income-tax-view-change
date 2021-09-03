@@ -18,11 +18,10 @@ package connectors
 
 import config.MicroserviceAppConfig
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status
 import play.api.http.Status._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
-                                   )(implicit ec: ExecutionContext) extends RawResponseReads {
+                                           )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   val getBusinessDetailsUrl: String => String =
     nino => s"${appConfig.desUrl}/registration/business-details/nino/$nino"
@@ -39,30 +38,30 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
 
     val url = getBusinessDetailsUrl(nino)
 
-    Logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - " +
+    logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - " +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
-    http.GET[HttpResponse](url= url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
+    http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>
-            Logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status:${response.status}, body:${response.body}")
+            logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status:${response.status}, body:${response.body}")
             response.json.validate[IncomeSourceDetailsModel](IncomeSourceDetailsModel.desReads) fold(
               invalid => {
-                Logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Validation Errors: $invalid")
+                logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Validation Errors: $invalid")
                 IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
               },
-              valid =>{
-                Logger.info(s"[GetBusinessDetailsConnector][getBusinessDetails] successfully parsed response to getBusinessDetails")
+              valid => {
+                logger.info(s"[GetBusinessDetailsConnector][getBusinessDetails] successfully parsed response to getBusinessDetails")
                 valid
               }
             )
           case _ =>
-            Logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
             IncomeSourceDetailsError(response.status, response.body)
         }
     } recover {
       case ex =>
-        Logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Unexpected failed future, ${ex.getMessage}")
+        logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Unexpected failed future, ${ex.getMessage}")
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
     }
   }
