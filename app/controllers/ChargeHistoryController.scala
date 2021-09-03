@@ -18,13 +18,12 @@ package controllers
 
 import connectors.ChargeHistoryDetailsConnector
 import connectors.httpParsers.ChargeHistoryHttpParser.UnexpectedChargeHistoryResponse
-import connectors.httpParsers.OutStandingChargesHttpParser.UnexpectedOutStandingChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -44,6 +43,6 @@ class ChargeHistoryController @Inject()(authentication: AuthenticationPredicate,
         case Left(error: UnexpectedChargeHistoryResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
         case Left(_) =>
           InternalServerError("Failed to retrieve charges outstanding details")
-        }
       }
+    }
 }

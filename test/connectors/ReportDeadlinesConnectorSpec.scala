@@ -21,11 +21,10 @@ import assets.ReportDeadlinesTestConstants._
 import models.reportDeadlines.ReportDeadlinesResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, eq => matches}
-import play.api.http.Status._
-import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import utils.TestSupport
 import org.mockito.Mockito._
+import play.api.http.Status._
+import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import utils.TestSupport
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -66,7 +65,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           (any(), any(), any()))
           .thenReturn(Future.successful(successResponse))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = connector.getReportDeadlines(testNino, openObligations = true).futureValue
 
         result shouldBe testObligations
       }
@@ -75,7 +74,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(successResponse))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = false))
+        val result: ReportDeadlinesResponseModel = connector.getReportDeadlines(testNino, openObligations = false).futureValue
 
         result shouldBe testObligations
       }
@@ -87,7 +86,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(badResponse))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = connector.getReportDeadlines(testNino, openObligations = true).futureValue
 
         result shouldBe testReportDeadlinesError
       }
@@ -96,7 +95,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(badJson))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = connector.getReportDeadlines(testNino, openObligations = true).futureValue
 
         result shouldBe testReportDeadlinesErrorJson
       }
@@ -107,7 +106,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.failed(new Exception(exceptionMessage)))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getReportDeadlines(testNino, openObligations = true))
+        val result: ReportDeadlinesResponseModel = connector.getReportDeadlines(testNino, openObligations = true).futureValue
 
         result shouldBe testReportDeadlinesErrorFutureFailed(exceptionMessage)
       }
@@ -122,7 +121,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(successResponse))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testObligations
       }
@@ -134,7 +133,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(badJson))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testReportDeadlinesErrorJson
       }
@@ -144,7 +143,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(badResponse))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testReportDeadlinesError
       }
@@ -154,7 +153,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.failed(new Exception("test exception")))
 
-        val result: ReportDeadlinesResponseModel = await(connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05"))
+        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testReportDeadlinesErrorFutureFailed("test exception")
       }

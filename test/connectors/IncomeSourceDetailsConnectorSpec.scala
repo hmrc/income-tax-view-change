@@ -21,7 +21,7 @@ import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockHttp
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.mvc.Http.Status
-import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
 class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp {
@@ -36,23 +36,23 @@ class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp {
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
-      await(getIncomeSourceDetails(mtdRef)) shouldBe testIncomeSourceDetailsModel
+      getIncomeSourceDetails(mtdRef).futureValue shouldBe testIncomeSourceDetailsModel
     }
 
     "return LastTaxCalculationError model in case of failure" in {
       mock(badResponse)
-      await(getIncomeSourceDetails(mtdRef)) shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+      getIncomeSourceDetails(mtdRef).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
       mock(badJson)
-      await(getIncomeSourceDetails(mtdRef)) shouldBe
+      getIncomeSourceDetails(mtdRef).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getIncomeSourceDetailsUrl(mtdRef))
-      await(getIncomeSourceDetails(mtdRef)) shouldBe
+      getIncomeSourceDetails(mtdRef).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }

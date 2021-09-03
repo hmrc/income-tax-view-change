@@ -17,18 +17,19 @@
 package controllers.predicates
 
 import config.MicroserviceAuthConnector
+
 import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.{AuthorisationException, AuthorisedFunctions}
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConnector, cc: ControllerComponents
-                                       ) extends BackendController(cc) with AuthorisedFunctions {
+                                       ) extends BackendController(cc) with AuthorisedFunctions with Logging {
 
   def async(action: Request[AnyContent] => Future[Result]): Action[AnyContent] =
     Action.async { implicit request =>
@@ -36,7 +37,7 @@ class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConne
         action(request)
       } recover {
         case ex: AuthorisationException =>
-          Logger.error(s"[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response, ${ex.getMessage}")
+          logger.error(s"[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response, ${ex.getMessage}")
           Unauthorized
       }
     }

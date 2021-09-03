@@ -17,7 +17,7 @@
 package connectors.httpParsers
 
 import models.outStandingCharges.{OutStandingCharge, OutstandingChargesSuccessResponse}
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
@@ -36,14 +36,14 @@ object OutStandingChargesHttpParser extends ResponseHttpParsers {
       response.status match {
         case OK =>
           val outstandingCharges = response.json.as[List[OutStandingCharge]]
-          Logger.info(s"[OutStandingChargesResponse][read] successfully parsed response to List[OutStandingCharge]")
+          logger.info(s"[OutStandingChargesResponse][read] successfully parsed response to List[OutStandingCharge]")
 
           Right(OutstandingChargesSuccessResponse(outstandingCharges))
         case status if status >= 400 && status < 500 =>
-          Logger.error(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
+          logger.error(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
           Left(UnexpectedOutStandingChargeResponse(status, response.body))
         case status =>
-          Logger.error(s"[OutStandingChargesResponse][read] Unexpected Response with status: $status")
+          logger.error(s"[OutStandingChargesResponse][read] Unexpected Response with status: $status")
           Left(OutStandingChargeErrorResponse)
       }
     }

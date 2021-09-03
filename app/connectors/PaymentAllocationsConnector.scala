@@ -19,7 +19,7 @@ package connectors
 import config.MicroserviceAppConfig
 import connectors.httpParsers.PaymentAllocationsHttpParser.{PaymentAllocationsReads, PaymentAllocationsResponse}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

@@ -34,10 +34,10 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
       setupMockGetPreviousCalculation(testNino,
         testYear)(successResponse)
 
-      val actual: Either[ErrorResponse, PreviousCalculationModel] = await(TestCalculationService.getPreviousCalculation(
+      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestCalculationService.getPreviousCalculation(
         testNino,
         testYear
-      ))
+      ).futureValue
 
       actual shouldBe successResponse
     }
@@ -46,10 +46,10 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
 
       setupMockGetPreviousCalculation(testNino, testYear)(badRequestSingleError)
 
-      val actual: Either[ErrorResponse, PreviousCalculationModel] = await(TestCalculationService.getPreviousCalculation(
+      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestCalculationService.getPreviousCalculation(
         testNino,
         testYear
-      ))
+      ).futureValue
 
       actual shouldBe badRequestSingleError
     }
@@ -58,10 +58,10 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
 
       setupMockGetPreviousCalculation(testNino, testYear)(badRequestMultiError)
 
-      val actual: Either[ErrorResponse, PreviousCalculationModel] = await(TestCalculationService.getPreviousCalculation(
+      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestCalculationService.getPreviousCalculation(
         testNino,
         testYear
-      ))
+      ).futureValue
 
       actual shouldBe badRequestMultiError
     }

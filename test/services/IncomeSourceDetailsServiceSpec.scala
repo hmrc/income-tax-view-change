@@ -16,10 +16,9 @@
 
 package services
 
-import assets.IncomeSourceDetailsTestConstants._
 import assets.BaseTestConstants.mtdRef
+import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockIncomeSourceDetailsConnector
-import models._
 import models.core.NinoResponse
 import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import utils.TestSupport
@@ -41,7 +40,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
         "return a correctly formatted IncomeSourceDetailsModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
           mockIncomeSourceDetailsResult(resp)
-          await(result) shouldBe testIncomeSourceDetailsModel
+          result.futureValue shouldBe testIncomeSourceDetailsModel
         }
       }
 
@@ -49,7 +48,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
 
         "return a correctly formatted DesBusinessDetailsError model" in {
           mockIncomeSourceDetailsResult(testIncomeSourceDetailsError)
-          await(result) shouldBe testIncomeSourceDetailsError
+          result.futureValue shouldBe testIncomeSourceDetailsError
         }
       }
     }
@@ -63,7 +62,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
         "return a correctly formatted NinoModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
           mockIncomeSourceDetailsResult(resp)
-          await(result) shouldBe testNinoModel
+          result.futureValue shouldBe testNinoModel
         }
       }
 
@@ -71,7 +70,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
 
         "return a correctly formatted IncomeSourceDetailsError model" in {
           mockIncomeSourceDetailsResult(testIncomeSourceDetailsError)
-          await(result) shouldBe testNinoError
+          result.futureValue shouldBe testNinoError
         }
       }
     }

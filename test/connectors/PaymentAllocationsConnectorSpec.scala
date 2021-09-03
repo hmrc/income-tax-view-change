@@ -65,7 +65,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
           headers = microserviceAppConfig.desAuthHeaders
         )(Right(paymentAllocationsFull))
 
-        val result = await(TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem))
+        val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
 
         result shouldBe Right(paymentAllocationsFull)
       }
@@ -79,7 +79,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
 					headers = microserviceAppConfig.desAuthHeaders
 				)(Left(NotFoundResponse))
 
-				val result = await(TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem))
+				val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
 
 				result shouldBe Left(NotFoundResponse)
 			}
@@ -93,7 +93,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedResponse))
 
-        val result = await(TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem))
+        val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
 
         result shouldBe Left(UnexpectedResponse)
       }

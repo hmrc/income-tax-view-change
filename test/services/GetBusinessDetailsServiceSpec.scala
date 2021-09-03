@@ -39,7 +39,7 @@ class GetBusinessDetailsServiceSpec extends TestSupport with MockGetBusinessDeta
         "return a correctly formatted IncomeSourceDetailsModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
           mockGetBusinessDetailsResult(resp)
-          await(result) shouldBe testIncomeSourceDetailsModel
+          result.futureValue shouldBe testIncomeSourceDetailsModel
         }
       }
 
@@ -47,7 +47,7 @@ class GetBusinessDetailsServiceSpec extends TestSupport with MockGetBusinessDeta
 
         "return a correctly formatted DesBusinessDetailsError model" in {
           mockGetBusinessDetailsResult(testIncomeSourceDetailsError)
-          await(result) shouldBe testIncomeSourceDetailsError
+          result.futureValue shouldBe testIncomeSourceDetailsError
         }
       }
     }

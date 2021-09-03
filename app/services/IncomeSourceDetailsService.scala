@@ -16,30 +16,28 @@
 
 package services
 
-import javax.inject.{Inject, Singleton}
-
 import connectors.IncomeSourceDetailsConnector
-import models._
 import models.core.{NinoErrorModel, NinoModel, NinoResponse}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
-import play.api.Logger
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: IncomeSourceDetailsConnector) {
+class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: IncomeSourceDetailsConnector) extends Logging {
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
-    Logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Requesting Income Source Details from Connector")
+    logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Requesting Income Source Details from Connector")
     incomeSourceDetailsConnector.getIncomeSourceDetails(mtdRef).map {
       case success: IncomeSourceDetailsModel =>
-        Logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$success")
-        Logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")
+        logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$success")
+        logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")
         success
       case error: IncomeSourceDetailsError =>
-        Logger.error(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$error")
+        logger.error(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$error")
         IncomeSourceDetailsError(error.status, error.reason)
     }
   }
@@ -47,7 +45,7 @@ class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: Inc
   def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[NinoResponse] = {
     getIncomeSourceDetails(mtdRef).map {
       case success: IncomeSourceDetailsModel =>
-        Logger.debug(s"[IncomeSourceDetailsService][getNino] - Converting to Nino Model")
+        logger.debug(s"[IncomeSourceDetailsService][getNino] - Converting to Nino Model")
         NinoModel(success.nino)
       case error: IncomeSourceDetailsError => NinoErrorModel(error.status, error.reason)
     }

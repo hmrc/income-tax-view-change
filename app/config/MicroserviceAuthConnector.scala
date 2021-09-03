@@ -16,19 +16,14 @@
 
 package config
 
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
 import javax.inject.{Inject, Singleton}
 
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-
 @Singleton
-class MicroserviceAuthConnector @Inject()( val environment: Environment,
-                                           val conf: Configuration,
-                                           val WSHttp: HttpClient,
-                                           ServicesConfig: ServicesConfig) extends PlayAuthConnector{
-  protected def runModeConfiguration: Configuration = conf
-  lazy val serviceUrl = ServicesConfig.baseUrl("auth")
-  lazy val http = WSHttp
+class MicroserviceAuthConnector @Inject()(val http: HttpClient,
+                                          val servicesConfig: ServicesConfig) extends PlayAuthConnector {
+  override val serviceUrl: String = servicesConfig.baseUrl("auth")
 }

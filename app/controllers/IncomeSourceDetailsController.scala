@@ -17,30 +17,30 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import javax.inject.{Inject, Singleton}
 import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.IncomeSourceDetailsService
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class IncomeSourceDetailsController @Inject()(val authentication: AuthenticationPredicate,
                                               val incomeSourceDetailsService: IncomeSourceDetailsService,
                                               cc: ControllerComponents
-                                             ) extends BackendController(cc) {
+                                             ) extends BackendController(cc) with Logging {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getNino(mtdRef).map {
       case error: NinoErrorModel =>
-        Logger.error(s"[IncomeSourceDetailsController][getNino] - Error Response: $error")
+        logger.error(s"[IncomeSourceDetailsController][getNino] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: NinoModel =>
-        Logger.debug(s"[IncomeSourceDetailsController][getNino] - Successful Response: $success")
+        logger.debug(s"[IncomeSourceDetailsController][getNino] - Successful Response: $success")
         Ok(Json.toJson(success))
     }
   }
@@ -48,10 +48,10 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
   def getIncomeSourceDetails(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getIncomeSourceDetails(mtdRef).map {
       case error: IncomeSourceDetailsError =>
-        Logger.error(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Error Response: $error")
+        logger.error(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: IncomeSourceDetailsModel =>
-        Logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Successful Response: $success")
+        logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Successful Response: $success")
         Ok(Json.toJson(success))
     }
   }

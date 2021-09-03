@@ -21,7 +21,7 @@ import connectors.httpParsers.CalculationHttpParser
 import mocks.MockHttp
 import models.PreviousCalculation._
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.{contains, matches}
+import org.mockito.ArgumentMatchers.contains
 import org.mockito.Mockito.when
 import utils.TestSupport
 
@@ -52,7 +52,7 @@ class CalculationConnectorSpec extends TestSupport with MockHttp {
             ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(successResponse))
           val result: Future[CalculationHttpParser.HttpGetResult[PreviousCalculationModel]] =
             TestCalculationConnector.getPreviousCalculation(nino = testNino, year = testYear)
-          await(result) shouldBe successResponse
+          result.futureValue shouldBe successResponse
         }
       }
     }
@@ -67,7 +67,7 @@ class CalculationConnectorSpec extends TestSupport with MockHttp {
             nino = testNino,
             year = testYear
           )
-        await(result) shouldBe badRequestSingleError
+        result.futureValue shouldBe badRequestSingleError
       }
     }
 
@@ -81,7 +81,7 @@ class CalculationConnectorSpec extends TestSupport with MockHttp {
             nino = testNino,
             year = testYear
           )
-        await(result) shouldBe badRequestMultiError
+        result.futureValue shouldBe badRequestMultiError
       }
     }
   }

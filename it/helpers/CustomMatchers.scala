@@ -21,9 +21,8 @@ import org.scalatest._
 import org.scalatest.matchers._
 import play.api.libs.json.{JsValue, Reads}
 import play.api.libs.ws.WSResponse
-import uk.gov.hmrc.play.test.UnitSpec
 
-trait CustomMatchers extends UnitSpec with GivenWhenThen {
+trait CustomMatchers extends WordSpecLike with Matchers with OptionValues with GivenWhenThen {
   def httpStatus(expectedValue: Int): HavePropertyMatcher[WSResponse, Int] =
     new HavePropertyMatcher[WSResponse, Int] {
       def apply(response: WSResponse) = {

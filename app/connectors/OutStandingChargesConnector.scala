@@ -19,7 +19,7 @@ package connectors
 import config.MicroserviceAppConfig
 import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeResponse, OutStandingChargesReads}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

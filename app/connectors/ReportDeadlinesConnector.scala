@@ -18,11 +18,10 @@ package connectors
 
 import config.MicroserviceAppConfig
 import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesResponseModel}
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status
 import play.api.http.Status._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
@@ -49,29 +48,29 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                         (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
     val url = getReportDeadlinesUrl(nino, openObligations)
 
-    Logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>
-            Logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
             response.json.validate[ObligationsModel](ObligationsModel.desReadsApi1330).fold(
               invalid => {
-                Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Json validation error: $invalid")
+                logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Json validation error: $invalid")
                 ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
               },
               valid => {
-                Logger.info(s"[ReportDeadlinesConnector][getReportDeadlines] successfully parsed response to ObligationsModel")
+                logger.info(s"[ReportDeadlinesConnector][getReportDeadlines] successfully parsed response to ObligationsModel")
                 valid
               }
             )
           case _ =>
-            Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
             ReportDeadlinesErrorModel(response.status, response.body)
         }
     } recover {
       case ex =>
-        Logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Unexpected failed future, ${ex.getMessage}")
+        logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Unexpected failed future, ${ex.getMessage}")
         ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
     }
   }
@@ -80,29 +79,29 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                             (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
     val url = getPreviousObligationsUrl(nino, from, to)
 
-    Logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>
-            Logger.debug(s"[ReportDeadlinesConnector][getPreviousObligations] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.debug(s"[ReportDeadlinesConnector][getPreviousObligations] - RESPONSE status: ${response.status}, body: ${response.body}")
             response.json.validate[ObligationsModel](ObligationsModel.desReadsApi1330).fold(
               invalid => {
-                Logger.error(s"[ReportDeadlinesConnector][getPreviousObligations] - Json validation error: $invalid")
+                logger.error(s"[ReportDeadlinesConnector][getPreviousObligations] - Json validation error: $invalid")
                 ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
               },
               valid => {
-                Logger.info(s"[ReportDeadlinesConnector][getPreviousObligations] successfully parsed response to ObligationsModel")
+                logger.info(s"[ReportDeadlinesConnector][getPreviousObligations] successfully parsed response to ObligationsModel")
                 valid
               }
             )
           case _ =>
-            Logger.error(s"[ReportDeadlinesConnector][getPreviousObligations] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.error(s"[ReportDeadlinesConnector][getPreviousObligations] - RESPONSE status: ${response.status}, body: ${response.body}")
             ReportDeadlinesErrorModel(response.status, response.body)
         }
     } recover {
       case ex =>
-        Logger.error(s"[ReportDeadlinesConnector][getPreviousObligations] - Unexpected failed future, ${ex.getMessage}")
+        logger.error(s"[ReportDeadlinesConnector][getPreviousObligations] - Unexpected failed future, ${ex.getMessage}")
         ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
     }
   }

@@ -17,8 +17,7 @@
 package connectors.httpParsers
 
 import models.paymentAllocations.{PaymentAllocations, PaymentDetails}
-import play.api.Logger
-import play.api.http.Status.{OK, NOT_FOUND}
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
@@ -28,7 +27,7 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
 
   case object UnexpectedResponse extends PaymentAllocationsError
 
-	case object NotFoundResponse extends PaymentAllocationsError
+  case object NotFoundResponse extends PaymentAllocationsError
 
   type PaymentAllocationsResponse = Either[PaymentAllocationsError, PaymentAllocations]
 
@@ -36,25 +35,25 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): PaymentAllocationsResponse = {
       response.status match {
         case OK =>
-          Logger.info(s"[PaymentAllocationsReads][read] successfully parsed response to PaymentAllocations")
+          logger.info(s"[PaymentAllocationsReads][read] successfully parsed response to PaymentAllocations")
           response.json.validate[PaymentDetails] match {
             case JsSuccess(result, _) => result.paymentDetails.headOption match {
               case Some(paymentAllocations) => Right(paymentAllocations)
               case None => Left(UnexpectedResponse)
             }
             case JsError(errors) =>
-              Logger.error(s"[PaymentAllocationsReads][read] Json validation error. Reasons: ${errors}")
+              logger.error(s"[PaymentAllocationsReads][read] Json validation error. Reasons: ${errors}")
               Left(UnexpectedResponse)
           }
-				case NOT_FOUND =>
-					Logger.info(s"[PaymentAllocationsReads][read] no allocations found for payment")
-					Left(NotFoundResponse)
+        case NOT_FOUND =>
+          logger.info(s"[PaymentAllocationsReads][read] no allocations found for payment")
+          Left(NotFoundResponse)
         case status if status >= 400 && status < 500 =>
-					Logger.error(s"[PaymentAllocationsReads][read] Unexpected Response with status: $status")
+          logger.error(s"[PaymentAllocationsReads][read] Unexpected Response with status: $status")
           Left(UnexpectedResponse)
         case status =>
-					Logger.error(s"[PaymentAllocationsReads][read] $status returned from DES with body: ${response.body}")
-					Left(UnexpectedResponse)
+          logger.error(s"[PaymentAllocationsReads][read] $status returned from DES with body: ${response.body}")
+          Left(UnexpectedResponse)
       }
     }
   }

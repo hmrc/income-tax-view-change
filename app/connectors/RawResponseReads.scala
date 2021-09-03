@@ -16,12 +16,11 @@
 
 package connectors
 
-import uk.gov.hmrc.http.{ HttpReads, HttpResponse }
+import play.api.Logging
+import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-trait RawResponseReads {
+trait RawResponseReads extends Logging {
 
-  implicit val httpReads: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
-    override def read(method: String, url: String, response: HttpResponse) = response
-  }
+  implicit val httpReads: HttpReads[HttpResponse] = (method: String, url: String, response: HttpResponse) => response
 
 }

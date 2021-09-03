@@ -17,7 +17,7 @@
 package connectors.httpParsers
 
 import models.chargeHistoryDetail.ChargeHistorySuccessResponse
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
@@ -36,13 +36,13 @@ object ChargeHistoryHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): ChargeHistoryResponse = {
       response.status match {
         case OK =>
-          Logger.info(s"[ChargeHistoryResponse][read] successfully parsed response to List[ChargeHistory]")
+          logger.info(s"[ChargeHistoryResponse][read] successfully parsed response to List[ChargeHistory]")
           Right(response.json.as[ChargeHistorySuccessResponse])
         case status if status >= 400 && status < 500 =>
-          Logger.error(s"[ChargeHistoryResponse][read] $status returned from DES with body: ${response.body}")
+          logger.error(s"[ChargeHistoryResponse][read] $status returned from DES with body: ${response.body}")
           Left(UnexpectedChargeHistoryResponse(status, response.body))
         case status =>
-          Logger.error(s"[ChargeHistoryResponse][read] Unexpected Response with status: $status")
+          logger.error(s"[ChargeHistoryResponse][read] Unexpected Response with status: $status")
           Left(ChargeHistoryErrorResponse)
       }
     }

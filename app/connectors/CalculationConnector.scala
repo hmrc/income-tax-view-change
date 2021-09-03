@@ -19,24 +19,23 @@ package connectors
 import config.MicroserviceAppConfig
 import connectors.httpParsers.CalculationHttpParser._
 import models.PreviousCalculation.PreviousCalculationModel
-import play.api.Logger
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import play.api.Logging
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) {
+class CalculationConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) extends Logging {
 
-  private[connectors] def getPreviousCalculationUrl(nino: String, year: String) : String =
+  private[connectors] def getPreviousCalculationUrl(nino: String, year: String): String =
     s"${appConfig.desUrl}/income-tax/previous-calculation/$nino?year=$year"
 
   def getPreviousCalculation(nino: String, year: String)
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[PreviousCalculationModel]] = {
     val url = getPreviousCalculationUrl(nino, year)
 
-    Logger.debug(s"[CalculationConnector][getPreviousCalculation] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    logger.debug(s"[CalculationConnector][getPreviousCalculation] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET(url = url, headers = appConfig.desAuthHeaders)(PreviousCalculationReads, headerCarrier, ec)
   }
 }

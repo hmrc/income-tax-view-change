@@ -17,7 +17,7 @@
 package connectors.httpParsers
 
 import models.financialDetails.responses.ChargesResponse
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status.OK
 import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
@@ -27,6 +27,7 @@ object ChargeHttpParser extends ResponseHttpParsers {
   sealed trait ChargeResponseError
 
   case object UnexpectedChargeErrorResponse extends ChargeResponseError
+
   case class UnexpectedChargeResponse(code: Int, response: String) extends ChargeResponseError
 
   type ChargeResponse = Either[ChargeResponseError, ChargesResponse]
@@ -37,18 +38,18 @@ object ChargeHttpParser extends ResponseHttpParsers {
         case OK =>
           response.json.validate[ChargesResponse] match {
             case JsError(_) =>
-              Logger.error(s"[ChargeReads][read] - Unable to parse response into ChargesResponse")
+              logger.error(s"[ChargeReads][read] - Unable to parse response into ChargesResponse")
               Left(UnexpectedChargeErrorResponse)
 
             case JsSuccess(value, _) =>
-              Logger.info(s"[ChargeReads][read] successfully parsed response into ChargesResponse")
+              logger.info(s"[ChargeReads][read] successfully parsed response into ChargesResponse")
               Right(value)
           }
         case status if status >= 400 && status < 500 =>
-          Logger.error(s"[ChargeReads][read] $status returned from DES with body: ${response.body}")
+          logger.error(s"[ChargeReads][read] $status returned from DES with body: ${response.body}")
           Left(UnexpectedChargeResponse(status, response.body))
         case status =>
-          Logger.error(s"[ChargeReads][read] Unexpected Response with status: $status")
+          logger.error(s"[ChargeReads][read] Unexpected Response with status: $status")
           Left(UnexpectedChargeErrorResponse)
       }
     }

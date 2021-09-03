@@ -122,7 +122,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           headers = expectedHeaders
         )(Right(testChargesResponse))
 
-        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
+        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
 
         result shouldBe Right(testChargesResponse)
       }
@@ -137,7 +137,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           headers = expectedHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
-        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
+        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
 
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
@@ -148,7 +148,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           headers = expectedHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
-        val result = await(TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo))
+        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
 
         result shouldBe Left(UnexpectedChargeErrorResponse)
       }
@@ -186,7 +186,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           headers = expectedHeaders
         )(Right(ChargesResponse(documentDetails, financialDetails)))
 
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
+        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
         result shouldBe Right(ChargesResponse(documentDetails, financialDetails))
       }
@@ -201,7 +201,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           headers = expectedHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
+        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
@@ -212,7 +212,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           headers = expectedHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
-        val result = await(TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId))
+        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
         result shouldBe Left(UnexpectedChargeErrorResponse)
       }

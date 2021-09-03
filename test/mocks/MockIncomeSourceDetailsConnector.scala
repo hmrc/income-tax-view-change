@@ -22,14 +22,13 @@ import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
 import org.scalatestplus.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
 
-trait MockIncomeSourceDetailsConnector extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+trait MockIncomeSourceDetailsConnector extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
 
   val mockIncomeSourceDetailsConnector: IncomeSourceDetailsConnector = mock[IncomeSourceDetailsConnector]
 
