@@ -22,6 +22,7 @@ import mocks.MockHttp
 import models.financialDetails.responses.ChargesResponse
 import models.financialDetails.{DocumentDetail, FinancialDetail}
 import play.api.http.Status.OK
+import play.api.http.Status.NOT_FOUND
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
@@ -35,7 +36,7 @@ class FinancialDetailsConnectorDESSpec extends FinancialDetailsConnectorBehavior
 
   override val expectedBaseUrl: String = microserviceAppConfig.desUrl
 
-  override val expectedHeaders = Seq(
+  override val expectedApiHeaders = Seq(
     "Environment"   -> "localDESEnvironment",
     "Authorization" -> "Bearer localDESToken"
   )
@@ -48,7 +49,7 @@ class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[
 
   private val requestId = "mdtp-request-id"
 
-  override val expectedHeaders = Seq(
+  override val expectedApiHeaders = Seq(
     "Environment"   -> "localIFEnvironment",
     "Authorization" -> "Bearer localIFToken",
     "CorrelationId" -> requestId
@@ -76,19 +77,18 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
 
   def TestFinancialDetailsConnector: C
   def expectedBaseUrl: String
-  def expectedHeaders: Seq[(String, String)]
+  def expectedApiHeaders: Seq[(String, String)]
 
   val testNino: String = "testNino"
   val testFrom: String = "testFrom"
   val testTo: String = "testTo"
   val documentId: String = "123456789"
 
+  lazy val expectedUrl: String = s"$expectedBaseUrl/enterprise/02.00.00/financial-data/NINO/$testNino/ITSA"
+
   "financialDetailUrl" should {
     "return the correct url" in {
-      val expectedUrl: String = s"$expectedBaseUrl/enterprise/02.00.00/financial-data/NINO/$testNino/ITSA"
-      val actualUrl: String = TestFinancialDetailsConnector.financialDetailsUrl(testNino)
-
-      actualUrl shouldBe expectedUrl
+      TestFinancialDetailsConnector.financialDetailsUrl(testNino) shouldBe expectedUrl
     }
   }
 
@@ -119,7 +119,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = expectedHeaders
+          headers = expectedApiHeaders
         )(Right(testChargesResponse))
 
         val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
@@ -134,7 +134,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = expectedHeaders
+          headers = expectedApiHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
         val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
@@ -145,7 +145,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = expectedHeaders
+          headers = expectedApiHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
         val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
@@ -181,9 +181,9 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
         val financialDetails: List[FinancialDetail] = List(financialDetail)
 
         mockDesGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
+          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = expectedHeaders
+          headers = expectedApiHeaders
         )(Right(ChargesResponse(documentDetails, financialDetails)))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
@@ -196,9 +196,9 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
         mockDesGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
+          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = expectedHeaders
+          headers = expectedApiHeaders
         )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
@@ -207,14 +207,79 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
       }
       "something went wrong" in {
         mockDesGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
+          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = expectedHeaders
+          headers = expectedApiHeaders
         )(Left(UnexpectedChargeErrorResponse))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
         result shouldBe Left(UnexpectedChargeErrorResponse)
+      }
+    }
+  }
+
+  "Getting only open items" should {
+
+    val expectedOnlyOpenItemsQueryParameters: Seq[(String, String)] = Seq(
+      "onlyOpenItems" -> "true",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "false",
+      "customerPaymentInformation" -> "true",
+      "includeStatistical" -> "false"
+    )
+
+    "have the correct formatted query parameters" in {
+      TestFinancialDetailsConnector.onlyOpenItemsQuery() shouldBe expectedOnlyOpenItemsQueryParameters
+    }
+
+    "return a list of charges" when {
+      s"$OK is received from ETMP with charges" in {
+        val expectedResponse = Right(ChargesResponse(
+          documentDetails = List(documentDetail),
+          financialDetails = List(financialDetail)))
+
+        mockDesGet[ChargeResponseError, ChargesResponse](
+          url = expectedUrl,
+          queryParameters = expectedOnlyOpenItemsQueryParameters,
+          headers = expectedApiHeaders
+        )(expectedResponse)
+
+        val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
+
+        result shouldBe expectedResponse
+      }
+    }
+
+    s"return an error" when {
+      "when no data found is returned" in {
+        val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+        val expectedErrorResponse = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString))
+
+        mockDesGet[ChargeResponseError, ChargesResponse](
+          url = expectedUrl,
+          queryParameters = expectedOnlyOpenItemsQueryParameters,
+          headers = expectedApiHeaders
+        )(expectedErrorResponse)
+
+        val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
+
+        result shouldBe expectedErrorResponse
+      }
+
+      "something went wrong" in {
+        val expectedErrorResponse = Left(UnexpectedChargeErrorResponse)
+
+        mockDesGet[ChargeResponseError, ChargesResponse](
+          url = expectedUrl,
+          queryParameters = expectedOnlyOpenItemsQueryParameters,
+          headers = expectedApiHeaders
+        )(expectedErrorResponse)
+
+        val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
+
+        result shouldBe expectedErrorResponse
       }
     }
   }

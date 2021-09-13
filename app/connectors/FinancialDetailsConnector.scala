@@ -61,26 +61,35 @@ trait FinancialDetailsConnector extends RawResponseReads {
     Seq(
       "dateFrom" -> from,
       "dateTo" -> to,
-      "onlyOpenItems" -> "false",
-      "includeLocks" -> "true",
-      "calculateAccruedInterest" -> "true",
-      "removePOA" -> "false",
-      "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
-    )
+    ) ++: baseQueryParameters(onlyOpenItems = false)
   }
 
   def getChargeDetails(nino: String, from: String, to: String)
                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    getCharge(url = financialDetailsUrl(nino), queryParameters = chargeDetailsQuery(from, to))
+    getCharge(nino, queryParameters = chargeDetailsQuery(from, to))
   }
-
-  private[connectors] def paymentAllocationFinancialDetailsUrl(nino: String): String = financialDetailsUrl(nino)
 
   private[connectors] def paymentAllocationQuery(documentId: String): Seq[(String, String)] = {
     Seq(
       "docNumber" -> documentId,
-      "onlyOpenItems" -> "false",
+    ) ++: baseQueryParameters(onlyOpenItems = false)
+  }
+
+  def getPaymentAllocationDetails(nino: String, documentId: String)
+                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+    getCharge(nino = nino, queryParameters = paymentAllocationQuery(documentId))
+  }
+
+  private[connectors] def onlyOpenItemsQuery(): Seq[(String, String)] = baseQueryParameters(onlyOpenItems = true)
+
+  def getOnlyOpenItems(nino: String)
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+    getCharge(nino = nino, queryParameters = onlyOpenItemsQuery())
+  }
+
+  private def baseQueryParameters(onlyOpenItems: Boolean): List[(String, String)] = {
+    List(
+      "onlyOpenItems" -> onlyOpenItems.toString,
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
@@ -89,13 +98,8 @@ trait FinancialDetailsConnector extends RawResponseReads {
     )
   }
 
-  def getPaymentAllocationDetails(nino: String, documentId: String)
-                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    getCharge(url = paymentAllocationFinancialDetailsUrl(nino), queryParameters = paymentAllocationQuery(documentId))
-  }
-
-  private[connectors] def getCharge(url: String, queryParameters: Seq[(String, String)])
+  private[connectors] def getCharge(nino: String, queryParameters: Seq[(String, String)])
                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] =
-    http.GET(url, queryParameters, headers)(ChargeReads, hc, ec)
+    http.GET(financialDetailsUrl(nino), queryParameters, headers)(ChargeReads, hc, ec)
 
 }
