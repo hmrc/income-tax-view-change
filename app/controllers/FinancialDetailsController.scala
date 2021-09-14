@@ -27,22 +27,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class FinancialDetailPaymentsController @Inject()(authentication: AuthenticationPredicate,
-                                                  cc: ControllerComponents,
-                                                  financialDetailsConnector: FinancialDetailsConnector)
-                                                 (implicit ec: ExecutionContext) extends BackendController(cc) {
+class FinancialDetailsController @Inject()(authentication: AuthenticationPredicate,
+                                           cc: ControllerComponents,
+                                           financialDetailsConnector: FinancialDetailsConnector)
+                                          (implicit ec: ExecutionContext) extends BackendController(cc) {
 
-  def getPaymentDetails(nino: String, from: String, to: String): Action[AnyContent] = {
-    authentication.async { implicit request =>
-      financialDetailsConnector.getChargeDetails(
-        nino = nino,
-        from = from,
-        to = to
-      ) map {
-        case Right(chargesResponse) => Ok(Json.toJson(chargesResponse.payments))
-        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
-        case Left(_) => InternalServerError("Failed to retrieve charge details to get payments")
-      }
+  def getOnlyOpenItems(nino: String): Action[AnyContent] = authentication.async { implicit request =>
+    financialDetailsConnector.getOnlyOpenItems(
+      nino = nino
+    ) map {
+      case Right(chargesResponse) => Ok(Json.toJson(chargesResponse))
+      case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
+      case Left(_) => InternalServerError("Failed to retrieve open items details")
     }
   }
 }

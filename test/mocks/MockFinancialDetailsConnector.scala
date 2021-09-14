@@ -43,12 +43,18 @@ trait MockFinancialDetailsConnector extends WordSpecLike with Matchers with Opti
     )(ArgumentMatchers.any(), ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 
-
-  def mockNewListCharges(nino: String, documentId: String)
-                     (response: ChargeResponse): Unit = {
+  def mockSingleDocumentDetails(nino: String, documentId: String)
+                               (response: ChargeResponse): Unit = {
     when(mockFinancialDetailsConnector.getPaymentAllocationDetails(
       nino = ArgumentMatchers.eq(nino),
       documentId = ArgumentMatchers.eq(documentId)
+    )(ArgumentMatchers.any(), ArgumentMatchers.any())) thenReturn Future.successful(response)
+  }
+
+  def mockOnlyOpenItems(nino: String)
+                       (response: ChargeResponse): Unit = {
+    when(mockFinancialDetailsConnector.getOnlyOpenItems(
+      nino = ArgumentMatchers.eq(nino)
     )(ArgumentMatchers.any(), ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 }

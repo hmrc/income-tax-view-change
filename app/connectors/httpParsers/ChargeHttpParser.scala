@@ -17,7 +17,6 @@
 package connectors.httpParsers
 
 import models.financialDetails.responses.ChargesResponse
-import play.api.Logging
 import play.api.http.Status.OK
 import play.api.libs.json.{JsError, JsSuccess}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
