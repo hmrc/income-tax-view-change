@@ -17,7 +17,7 @@
 package models.PreviousCalculation
 
 import org.scalatest.Matchers
-import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 import utils.TestSupport
 
 class PreviousCalculationModelSpec extends TestSupport with Matchers {

@@ -1,9 +1,8 @@
 import play.core.PlayVersion
+import play.sbt.routes.RoutesKeys
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings._
-import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "income-tax-view-change"
@@ -32,7 +31,7 @@ lazy val scoverageSettings = {
   Seq(
     // Semicolon-separated list of regexs matching classes to exclude
     ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.BuildInfo;models\\.data\\..*;app.*;prod.*;config.*;com.*;testOnly.*;",
-    ScoverageKeys.coverageMinimum := 90,
+    ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -46,20 +45,21 @@ lazy val microservice = Project(appName, file("."))
   .settings(scoverageSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(majorVersion := 1)
+  .settings(RoutesKeys.routesImport -= "controllers.Assets.Asset")
+  .settings(
+    libraryDependencies ++= appDependencies,
+    retrieveManaged := true,
+    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false)
+  )
   .settings(
     Test / Keys.fork := true,
     scalaVersion := "2.12.12",
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")
-  .settings(
-    libraryDependencies ++= appDependencies,
-    retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
-  )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
     IntegrationTest / Keys.fork := false,
-    IntegrationTest / unmanagedSourceDirectories := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
+    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
     IntegrationTest / parallelExecution := false)
   .settings(resolvers ++= Seq(

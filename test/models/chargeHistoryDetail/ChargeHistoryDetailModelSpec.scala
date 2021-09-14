@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package models.financialDetails
+package models.chargeHistoryDetail
 
 import assets.ChargeHistoryTestConstants._
-import models.chargeHistoryDetail.ChargeHistoryDetailModel
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsSuccess, Json}
 

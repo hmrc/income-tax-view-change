@@ -17,7 +17,6 @@
 package connectors.httpParsers
 
 import models.outStandingCharges.{OutStandingCharge, OutstandingChargesSuccessResponse}
-import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 

@@ -17,7 +17,7 @@
 package models.financialDetails
 
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.libs.json.{JsObject, Json}
 
 class PaymentSpec extends WordSpec with Matchers {
 
