@@ -18,7 +18,7 @@ package assets
 
 
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{DocumentDetail, FinancialDetail, SubItem}
+import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
 
 object FinancialDataTestConstants {
@@ -26,6 +26,11 @@ object FinancialDataTestConstants {
   val validChargesJson: JsValue = Json.parse(
     """
 			|{
+      |"balanceDetails": {
+      | "balanceDueWithin30Days": 100.00,
+      | "overDueAmount": 200.00,
+      | "totalBalance": 300.00
+      | },
 			| "documentDetails": [
 			|   {
 			|     "taxYear": "2018",
@@ -151,6 +156,8 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
+  val testBalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
+
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = "2018",
     transactionId = "id",
@@ -245,6 +252,7 @@ object FinancialDataTestConstants {
   )
 
   val testChargesResponse: ChargesResponse = ChargesResponse(
+    balanceDetails = testBalanceDetails,
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
   )

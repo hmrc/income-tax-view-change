@@ -16,10 +16,12 @@
 
 package models.financialDetails.responses
 
-import models.financialDetails.{DocumentDetail, FinancialDetail, Payment, SubItem}
+import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
 import org.scalatest.{Matchers, WordSpec}
 
 class ChargesResponseSpec extends WordSpec with Matchers {
+
+	val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
 
 	def document(documentId: String = "DOCID01",
 							 paymentLot: Option[String] = Some("lot01"),
@@ -87,32 +89,32 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			"return no payments" when {
 
 				"no documents exist with a paymentLot and paymentLotId" in {
-					ChargesResponse(List(document(paymentLot = None, paymentLotItem = None)), List(financial())).payments shouldBe List()
+					ChargesResponse(balanceDetails, List(document(paymentLot = None, paymentLotItem = None)), List(financial())).payments shouldBe List()
 				}
 
 				"a payment document exists with no matching financial details" in {
-					ChargesResponse(List(document()), List(financial(documentId = "DOCID02"))).payments shouldBe List()
+					ChargesResponse(balanceDetails, List(document()), List(financial(documentId = "DOCID02"))).payments shouldBe List()
 				}
 
 				"a payment document exists with a matching financial details but no matching items" in {
-					ChargesResponse(List(document()), List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))).payments shouldBe List()
+					ChargesResponse(balanceDetails, List(document()), List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))).payments shouldBe List()
 				}
 
 				"a payment document exists with matching financial details but missing data" in {
-					ChargesResponse(List(document()), List(financial(items = Some(List(subItem(paymentReference = None)))))).payments shouldBe List()
+					ChargesResponse(balanceDetails, List(document()), List(financial(items = Some(List(subItem(paymentReference = None)))))).payments shouldBe List()
 				}
 			}
 
 			"return payments" when {
 
 				"a single payment exists" in {
-					ChargesResponse(List(document()), List(financial(items = Some(List(subItem()))))).payments shouldBe List(
+					ChargesResponse(balanceDetails, List(document()), List(financial(items = Some(List(subItem()))))).payments shouldBe List(
 						Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01")
 					)
 				}
 
 				"multiple payments exist" in {
-					ChargesResponse(List(document(), document("DOCID02", paymentLot = Some("lot02"))),
+					ChargesResponse(balanceDetails, List(document(), document("DOCID02", paymentLot = Some("lot02"))),
 						List(financial(items = Some(List(subItem()))), financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))).payments shouldBe List(
 						Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01"),
 						Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot02"), Some("item01"), Some("dueDate"), "DOCID02")

@@ -20,7 +20,7 @@ import assets.BaseIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesChargesStub._
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{DocumentDetail, FinancialDetail, SubItem}
+import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSResponse
@@ -37,6 +37,8 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 	val from: String = "from"
 	val to: String = "to"
 	val documentId: String = "123456789"
+
+	val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
 
 	val financialDetail: FinancialDetail = FinancialDetail(
 		taxYear = "2018",
@@ -133,6 +135,11 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 	)
 
 	val chargeJson: JsObject = Json.obj(
+		"balanceDetails" -> Json.obj(
+"balanceDueWithin30Days" -> 100.00,
+			"overDueAmount" -> 200.00,
+			"totalBalance" -> 300.00
+		),
 		"documentDetails" -> Json.arr(
 			Json.obj(
 				"taxYear" -> "2018",
@@ -236,6 +243,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
 
 				val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+					balanceDetails = balanceDetails,
 					documentDetails = List(documentDetail, documentDetail2),
 					financialDetails = List(financialDetail, financialDetail2)
 				))
@@ -310,6 +318,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				val res: WSResponse = IncomeTaxViewChange.getPaymentAllocationDetails(testNino, documentId)
 
 				val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+					balanceDetails = balanceDetails,
 					documentDetails = List(documentDetail, documentDetail2),
 					financialDetails = List(financialDetail, financialDetail2)
 				))
