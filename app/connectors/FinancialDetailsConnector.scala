@@ -60,7 +60,7 @@ trait FinancialDetailsConnector extends RawResponseReads {
   private[connectors] def chargeDetailsQuery(from: String, to: String): Seq[(String, String)] = {
     Seq(
       "dateFrom" -> from,
-      "dateTo" -> to,
+      "dateTo" -> to
     ) ++: baseQueryParameters(onlyOpenItems = false)
   }
 
@@ -71,7 +71,7 @@ trait FinancialDetailsConnector extends RawResponseReads {
 
   private[connectors] def paymentAllocationQuery(documentId: String): Seq[(String, String)] = {
     Seq(
-      "docNumber" -> documentId,
+      "docNumber" -> documentId
     ) ++: baseQueryParameters(onlyOpenItems = false)
   }
 
