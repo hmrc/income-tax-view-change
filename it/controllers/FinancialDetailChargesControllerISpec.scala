@@ -51,6 +51,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
 
 				val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+					balanceDetails = balanceDetails,
 					documentDetails = List(documentDetail, documentDetail2),
 					financialDetails = List(financialDetail, financialDetail2)
 				))
@@ -125,6 +126,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 				val res: WSResponse = IncomeTaxViewChange.getPaymentAllocationDetails(testNino, documentId)
 
 				val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+					balanceDetails = balanceDetails,
 					documentDetails = List(documentDetail, documentDetail2),
 					financialDetails = List(financialDetail, financialDetail2)
 				))

@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
+import assets.FinancialDataTestConstants.{testBalanceDetails, documentDetail, financialDetail}
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
@@ -43,6 +43,7 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
   val documentId: String = "123456789"
 
   val chargesResponse: ChargesResponse = ChargesResponse(
+    balanceDetails = testBalanceDetails,
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail)
   )

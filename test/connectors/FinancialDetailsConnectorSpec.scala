@@ -16,13 +16,12 @@
 
 package connectors
 
-import assets.FinancialDataTestConstants.{documentDetail, financialDetail, testChargesResponse}
+import assets.FinancialDataTestConstants.{testBalanceDetails, documentDetail, financialDetail, testChargesResponse}
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import mocks.MockHttp
 import models.financialDetails.responses.ChargesResponse
 import models.financialDetails.{DocumentDetail, FinancialDetail}
-import play.api.http.Status.OK
-import play.api.http.Status.NOT_FOUND
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
@@ -184,11 +183,11 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedApiHeaders
-        )(Right(ChargesResponse(documentDetails, financialDetails)))
+        )(Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails)))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
-        result shouldBe Right(ChargesResponse(documentDetails, financialDetails))
+        result shouldBe Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails))
       }
     }
 

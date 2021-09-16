@@ -16,32 +16,33 @@
 
 package models.financialDetails.responses
 
-import models.financialDetails.{DocumentDetail, FinancialDetail, Payment}
+import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment}
 import play.api.libs.json.{Json, OFormat}
 
-case class ChargesResponse(documentDetails: List[DocumentDetail],
+case class ChargesResponse(balanceDetails: BalanceDetails,
+                           documentDetails: List[DocumentDetail],
                            financialDetails: List[FinancialDetail]) {
 
-	val payments: List[Payment] = {
-		val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.paymentLot.isDefined && document.paymentLotItem.isDefined)
+  val payments: List[Payment] = {
+    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.paymentLot.isDefined && document.paymentLotItem.isDefined)
 
-		paymentDocuments.map { document =>
-			val subItem = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
-				_.items.map(_.find(
-					item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
-				))).flatten
+    paymentDocuments.map { document =>
+      val subItem = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+        _.items.map(_.find(
+          item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
+        ))).flatten
 
-			Payment(
-				reference = subItem.flatMap(_.paymentReference),
-				amount = document.originalAmount,
-				method = subItem.flatMap(_.paymentMethod),
-				lot = document.paymentLot,
-				lotItem = document.paymentLotItem,
-				date = subItem.flatMap(_.dueDate),
-				transactionId = document.transactionId
-			)
-		}
-	}.filter(_.reference.isDefined)
+      Payment(
+        reference = subItem.flatMap(_.paymentReference),
+        amount = document.originalAmount,
+        method = subItem.flatMap(_.paymentMethod),
+        lot = document.paymentLot,
+        lotItem = document.paymentLotItem,
+        date = subItem.flatMap(_.dueDate),
+        transactionId = document.transactionId
+      )
+    }
+  }.filter(_.reference.isDefined)
 }
 
 object ChargesResponse {
