@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.FinancialDataTestConstants.{documentDetail, financialDetail, testChargesResponse}
+import assets.FinancialDataTestConstants.{testBalanceDetails, documentDetail, financialDetail, testChargesResponse}
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import mocks.MockHttp
 import models.financialDetails.responses.ChargesResponse
@@ -184,11 +184,11 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           url = TestFinancialDetailsConnector.paymentAllocationFinancialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedHeaders
-        )(Right(ChargesResponse(documentDetails, financialDetails)))
+        )(Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails)))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
-        result shouldBe Right(ChargesResponse(documentDetails, financialDetails))
+        result shouldBe Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails))
       }
     }
 

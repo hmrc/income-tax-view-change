@@ -42,6 +42,11 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
   )
 
   val chargeJson: JsObject = Json.obj(
+    "balanceDetails" -> Json.obj(
+      "balanceDueWithin30Days" -> 100.00,
+      "overDueAmount" -> 200.00,
+      "totalBalance" -> 300.00
+    ),
     "documentDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
