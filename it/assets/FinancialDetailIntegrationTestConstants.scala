@@ -16,12 +16,17 @@
 
 package assets
 
-import models.financialDetails.{DocumentDetail, FinancialDetail, Payment, SubItem}
+import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
 import play.api.libs.json.{JsObject, Json}
 
 object FinancialDetailIntegrationTestConstants {
 
   val chargeJson: JsObject = Json.obj(
+    "balanceDetails" -> Json.obj(
+      "balanceDueWithin30Days" -> 100.00,
+      "overDueAmount" -> 200.00,
+      "totalBalance" -> 300.00
+    ),
     "documentDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
@@ -112,6 +117,12 @@ object FinancialDetailIntegrationTestConstants {
     )
   )
 
+
+  val balanceDetails: BalanceDetails = BalanceDetails(
+    balanceDueWithin30Days = 100.00,
+    overDueAmount = 200.00,
+    totalBalance = 300.00
+  )
 
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = "2018",
@@ -206,27 +217,6 @@ object FinancialDetailIntegrationTestConstants {
         paymentLotItem = Some("paymentLotItem2"),
         paymentId = Some("paymentLot2-paymentLotItem2")
       )))
-  )
-
-
-  val payments1: Payment = Payment(
-    reference = Some("paymentReference"),
-    amount = Some(BigDecimal("300.00")),
-    method = Some("paymentMethod"),
-    lot = Some("lot01"),
-    lotItem = Some("0001"),
-    date = Some("dueDate"),
-    transactionId = "id"
-  )
-
-  val payments2: Payment = Payment(
-    reference = Some("paymentReference2"),
-    amount = Some(BigDecimal("100.00")),
-    method = Some("paymentMethod2"),
-    lot = Some("lot02"),
-    lotItem = Some("0001"),
-    date = Some("dueDate2"),
-    transactionId = "id2"
   )
 
 }

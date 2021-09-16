@@ -236,6 +236,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
     "return a list of charges" when {
       s"$OK is received from ETMP with charges" in {
         val expectedResponse = Right(ChargesResponse(
+          balanceDetails = testBalanceDetails,
           documentDetails = List(documentDetail),
           financialDetails = List(financialDetail)))
 

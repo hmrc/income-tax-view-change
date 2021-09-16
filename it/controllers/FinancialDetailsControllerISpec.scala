@@ -45,6 +45,7 @@ abstract class FinancialDetailsControllerISpec(enableIF: Boolean) extends Compon
         val res: WSResponse = IncomeTaxViewChange.getOnlyOpenItems(testNino)
 
         val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+          balanceDetails = balanceDetails,
           documentDetails = List(documentDetail, documentDetail2),
           financialDetails = List(financialDetail, financialDetail2)
         ))
