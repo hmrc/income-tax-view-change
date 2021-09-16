@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package models.financialDetails
+package models.chargeHistoryDetail
 
 import assets.ChargeHistoryTestConstants._
-import assets.FinancialDataTestConstants._
-import models.chargeHistoryDetail.ChargeHistorySuccessResponse
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class ChargeHistorySuccessResponseSpec extends WordSpec with Matchers {
 

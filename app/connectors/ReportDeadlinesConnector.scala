@@ -18,7 +18,6 @@ package connectors
 
 import config.MicroserviceAppConfig
 import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesResponseModel}
-import play.api.Logging
 import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}

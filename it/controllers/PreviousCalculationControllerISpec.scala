@@ -20,7 +20,7 @@ import assets.BaseIntegrationTestConstants._
 import assets.PreviousCalculationIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesPreviousCalculationStub
-import models.PreviousCalculation.{Error, PreviousCalculationModel}
+import models.PreviousCalculation.PreviousCalculationModel
 import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 

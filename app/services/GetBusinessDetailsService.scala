@@ -17,12 +17,11 @@
 package services
 
 import connectors.GetBusinessDetailsConnector
-
-import javax.inject.{Inject, Singleton}
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
-import play.api.{Logger, Logging}
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

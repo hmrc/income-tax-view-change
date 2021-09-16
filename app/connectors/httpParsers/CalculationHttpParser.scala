@@ -17,7 +17,6 @@
 package connectors.httpParsers
 
 import models.PreviousCalculation.{PreviousCalculationModel, UnexpectedJsonFormat, UnexpectedResponse}
-import play.api.Logging
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 

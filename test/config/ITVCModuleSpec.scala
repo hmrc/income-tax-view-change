@@ -17,7 +17,7 @@
 package config
 
 import connectors.{FinancialDetailsConnector, FinancialDetailsConnectorDES, FinancialDetailsConnectorIF}
-import org.scalatest.{Matchers, OptionValues, WordSpecLike}
+import org.scalatest.{Matchers, WordSpecLike}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
