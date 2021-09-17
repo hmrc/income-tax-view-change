@@ -10,12 +10,12 @@ val appName = "income-tax-view-change"
 
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-backend-play-27" % "5.12.0",
+  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.14.0",
   "uk.gov.hmrc" %% "logback-json-logger" % "4.6.0"
 )
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % scope,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % scope,
   "org.pegdown" % "pegdown" % "1.6.0" % scope,
   "org.jsoup" % "jsoup" % "1.11.3" % scope,
   "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
