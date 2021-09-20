@@ -89,7 +89,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
           }
 
           "return a json body with the invalid nino error message" in {
-            contentAsJson(result) shouldBe Json.toJson(InvalidNino)
+            contentAsJson(result) shouldBe Json.toJson[Error](InvalidNino)
           }
         }
 
