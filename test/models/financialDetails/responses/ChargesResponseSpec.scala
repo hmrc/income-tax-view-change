@@ -35,6 +35,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			interestRate = None,
 			interestFromDate = None,
 			interestEndDate = None,
+			latePaymentInterestId = None,
 			latePaymentInterestAmount = None,
 			interestOutstandingAmount = None,
 			transactionId = documentId,
