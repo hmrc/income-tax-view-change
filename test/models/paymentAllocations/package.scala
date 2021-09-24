@@ -27,7 +27,8 @@ package object paymentAllocations {
     chargeType = Some("type"),
 		mainType = Some("mainType"),
     amount = Some(1000.00),
-    clearedAmount = Some(500.00)
+    clearedAmount = Some(500.00),
+    chargeReference = Some("chargeReference")
   )
 
   val allocationDetailMinimum: AllocationDetail = AllocationDetail.emptyAllocation
@@ -39,7 +40,8 @@ package object paymentAllocations {
     "chargeType" -> "type",
 		"mainType" -> "mainType",
     "amount" -> 1000.00,
-    "clearedAmount" -> 500.00
+    "clearedAmount" -> 500.00,
+    "chargeReference" -> "chargeReference"
   )
 
   val allocationDetailWriteJsonFull: JsObject = Json.obj(
@@ -49,7 +51,8 @@ package object paymentAllocations {
     "chargeType" -> "type",
 		"mainType" -> "mainType",
     "amount" -> 1000.00,
-    "clearedAmount" -> 500.00
+    "clearedAmount" -> 500.00,
+    "chargeReference" -> "chargeReference"
   )
 
   val allocationDetailJsonMinimum: JsObject = Json.obj()

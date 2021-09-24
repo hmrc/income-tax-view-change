@@ -42,7 +42,8 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
         chargeType = Some("type"),
 				mainType = Some("mainType"),
         amount = Some(1500.00),
-        clearedAmount = Some(500.00)
+        clearedAmount = Some(500.00),
+        chargeReference = Some("chargeReference")
       )
     )
   )
@@ -62,7 +63,8 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
             "chargeType" -> "type",
 						"mainType" -> "mainType",
             "amount" -> 1500.00,
-            "clearedAmount" -> 500.00
+            "clearedAmount" -> 500.00,
+            "chargeReference" -> "chargeReference"
           )
         )
       )

@@ -26,11 +26,13 @@ case class AllocationDetail(transactionId: Option[String],
 														chargeType: Option[String],
 														mainType: Option[String],
 														amount: Option[BigDecimal],
-														clearedAmount: Option[BigDecimal])
+														clearedAmount: Option[BigDecimal],
+														chargeReference: Option[String]
+													 )
 
 object AllocationDetail {
 
-  val emptyAllocation: AllocationDetail = AllocationDetail(None, None, None, None, None, None, None)
+  val emptyAllocation: AllocationDetail = AllocationDetail(None, None, None, None, None, None, None, None)
 
   implicit val reads: Reads[AllocationDetail] = (
     readNullable[String](__ \ "sapDocNumber") and
@@ -39,7 +41,8 @@ object AllocationDetail {
       readNullable[String](__ \ "chargeType") and
 			readNullable[String](__ \ "mainType") and
       readNullable[BigDecimal](__ \ "amount") and
-      readNullable[BigDecimal](__ \ "clearedAmount")
+      readNullable[BigDecimal](__ \ "clearedAmount") and
+			readNullable[String](__ \ "chargeReference")
     ) (AllocationDetail.apply _)
 
   implicit val writes: OWrites[AllocationDetail] = Json.writes[AllocationDetail]
