@@ -50,26 +50,11 @@ class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[
 
   override val expectedApiHeaders = Seq(
     "Environment"   -> "localIFEnvironment",
-    "Authorization" -> "Bearer localIFToken",
-    "CorrelationId" -> requestId
+    "Authorization" -> "Bearer localIFToken"
   )
 
   override implicit val hc: HeaderCarrier =
-    HeaderCarrierConverter.fromRequest(FakeRequest().withHeaders(HeaderNames.xRequestId -> requestId))
-
-  "FinancialDetailsConnectorIF" should {
-    "generate a random UUID for CorrelationId header when there is no X-Request-ID header available in request" in {
-      def correlationIdInHeaders(): Option[UUID] = TestFinancialDetailsConnector.headers(hc = HeaderCarrier())
-          .collectFirst { case ("CorrelationId", value) => UUID.fromString(value) }
-
-      val id1 = correlationIdInHeaders()
-      val id2 = correlationIdInHeaders()
-
-      id1 shouldBe defined
-      id2 shouldBe defined
-      id1 should not be id2
-    }
-  }
+    HeaderCarrierConverter.fromRequest(FakeRequest())
 }
 
 abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector] extends TestSupport with MockHttp {
