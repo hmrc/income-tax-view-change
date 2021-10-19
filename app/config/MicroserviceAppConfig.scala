@@ -37,13 +37,12 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
   val isIfEnabled: Boolean =  servicesConfig.getBoolean("microservice.services.if.enabled")
 
   val ifUrl: String = loadConfig("microservice.services.if.url")
-  def ifAuthHeaders(correlationId: String): Seq[(String, String)] = {
+  val ifAuthHeaders: Seq[(String, String)] = {
     val ifEnvironment: String = loadConfig("microservice.services.if.environment")
     val ifToken: String = loadConfig("microservice.services.if.authorization-token")
     Seq(
       "Environment"   -> ifEnvironment,
-      "Authorization" -> s"Bearer $ifToken",
-      "CorrelationId" -> correlationId
+      "Authorization" -> s"Bearer $ifToken"
     )
   }
 

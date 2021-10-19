@@ -46,10 +46,9 @@ class MicroserviceAppConfigSpec extends TestSupport {
 
       "has a correct HTTP headers for IF" in {
         val correlationId = "someCorrelationId"
-        microserviceAppConfig.ifAuthHeaders(correlationId) shouldBe Seq(
+        microserviceAppConfig.ifAuthHeaders shouldBe Seq(
           "Environment"   -> "localIFEnvironment",
-          "Authorization" -> "Bearer localIFToken",
-          "CorrelationId" -> correlationId
+          "Authorization" -> "Bearer localIFToken"
         )
       }
     }
