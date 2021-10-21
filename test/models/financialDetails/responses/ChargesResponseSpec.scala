@@ -40,7 +40,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			interestOutstandingAmount = None,
 			transactionId = documentId,
 			paymentLot = paymentLot,
-			paymentLotItem = paymentLotItem
+			paymentLotItem = paymentLotItem,
+			lpiWithDunningBlock = None
 		)
 	}
 
