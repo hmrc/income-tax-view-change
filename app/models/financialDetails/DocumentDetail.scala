@@ -22,6 +22,7 @@ import play.api.libs.json.{Json, Reads, Writes, __}
 case class DocumentDetail(taxYear: String,
 													transactionId: String,
 													documentDescription: Option[String],
+													documentText: String,
 													originalAmount: Option[BigDecimal],
 													outstandingAmount: Option[BigDecimal],
 													documentDate: String,
@@ -33,7 +34,8 @@ case class DocumentDetail(taxYear: String,
 													interestOutstandingAmount: Option[BigDecimal],
 													paymentLotItem: Option[String],
 													paymentLot: Option[String],
-													lpiWithDunningBlock: Option[BigDecimal]
+													lpiWithDunningBlock: Option[BigDecimal],
+													amountCodedOut: Option[BigDecimal]
 												 )
 
 object DocumentDetail {
@@ -42,6 +44,7 @@ object DocumentDetail {
 		(__ \ "taxYear").read[String] and
 			(__ \ "documentId").read[String] and
 			(__ \ "documentDescription").readNullable[String] and
+			(__ \ "documentText").read[String] and
 			(__ \ "totalAmount").readNullable[BigDecimal] and
 			(__ \ "documentOutstandingAmount").readNullable[BigDecimal] and
 			(__ \ "documentDate").read[String] and
@@ -53,6 +56,7 @@ object DocumentDetail {
 			(__ \ "interestOutstandingAmount").readNullable[BigDecimal] and
 			(__ \ "paymentLotItem").readNullable[String] and
 			(__ \ "paymentLot").readNullable[String] and
-			(__ \ "lpiWithDunningBlock").readNullable[BigDecimal]
+			(__ \ "lpiWithDunningBlock").readNullable[BigDecimal] and
+			(__ \ "amountCodedOut").readNullable[BigDecimal]
 		) (DocumentDetail.apply _)
 }

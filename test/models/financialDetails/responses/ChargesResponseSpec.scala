@@ -29,6 +29,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 		DocumentDetail(
 			taxYear = "2018",
 			documentDescription = None,
+			documentText = "documentText",
 			originalAmount = Some(1000),
 			outstandingAmount = Some(700),
 			documentDate = "date",
@@ -41,7 +42,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			transactionId = documentId,
 			paymentLot = paymentLot,
 			paymentLotItem = paymentLotItem,
-			lpiWithDunningBlock = None
+			lpiWithDunningBlock = None,
+			amountCodedOut = None
 		)
 	}
 

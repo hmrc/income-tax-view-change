@@ -22,11 +22,14 @@ import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
 
 class DocumentDetailSpec extends WordSpec with Matchers {
 
-  val documentDetailMin: DocumentDetail = DocumentDetail("2019", "id", None, None, None, "2018-03-29",
-    None, None, None, None, None, None, None, None, None)
+  val documentDetailMin: DocumentDetail = DocumentDetail("2019", "id", None, "documentText", None, None, "2018-03-29",
+    None, None, None, None, None, None, None, None, None, None)
 
-  val documentDetailMinJsonRead: JsObject = Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> "2018-03-29")
-  val documentDetailMinJsonWrite: JsObject = Json.obj("taxYear" -> "2019", "transactionId" -> "id", "documentDate" -> "2018-03-29")
+  val documentDetailMinJsonRead: JsObject =
+    Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentText" -> "documentText", "documentDate" -> "2018-03-29")
+
+  val documentDetailMinJsonWrite: JsObject =
+    Json.obj("taxYear" -> "2019", "transactionId" -> "id", "documentText" -> "documentText", "documentDate" -> "2018-03-29")
 
   val documentDetailFull: DocumentDetail = documentDetail
 
@@ -34,6 +37,7 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "taxYear" -> "2018",
     "documentId" -> "id",
     "documentDescription" -> "documentDescription",
+    "documentText" -> "documentText",
     "totalAmount" -> 300.00,
     "documentOutstandingAmount" -> 200.00,
     "documentDate" -> "2018-03-29",
@@ -45,13 +49,15 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "interestOutstandingAmount" -> 31.00,
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
-    "lpiWithDunningBlock" -> 12.50
+    "lpiWithDunningBlock" -> 12.50,
+    "amountCodedOut" -> 3.21
   )
 
   val documentDetailFullJsonWrite: JsValue = Json.obj(
     "taxYear" -> "2018",
     "transactionId" -> "id",
     "documentDescription" -> "documentDescription",
+    "documentText" -> "documentText",
     "originalAmount" -> 300.00,
     "outstandingAmount" -> 200.00,
     "documentDate" -> "2018-03-29",
@@ -63,7 +69,8 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "interestOutstandingAmount" -> 31.00,
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
-    "lpiWithDunningBlock" -> 12.50
+    "lpiWithDunningBlock" -> 12.50,
+    "amountCodedOut" -> 3.21
   )
 
   "DocumentDetail" should {

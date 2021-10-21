@@ -36,6 +36,7 @@ object FinancialDataTestConstants {
 			|     "taxYear": "2018",
 			|     "documentId": "id",
 			|     "documentDescription": "documentDescription",
+      |     "documentText": "documentText",
 			|     "totalAmount": 300.00,
 			|     "documentOutstandingAmount": 200.00,
 			|     "lastClearedAmount": 100.00,
@@ -48,12 +49,14 @@ object FinancialDataTestConstants {
 			|     "interestOutstandingAmount": 31.00,
 			|     "paymentLot": "paymentLot",
 			|     "paymentLotItem": "paymentLotItem",
-      |     "lpiWithDunningBlock": 12.50
+      |     "lpiWithDunningBlock": 12.50,
+      |     "amountCodedOut" : 3.21
 			|   },
 			|   {
 			|     "taxYear": "2019",
 			|     "documentId": "id2",
 			|     "documentDescription": "documentDescription2",
+      |     "documentText": "documentText2",
 			|     "totalAmount": 100.00,
 			|     "documentOutstandingAmount": 50.00,
 			|     "lastClearedAmount": 50.00,
@@ -164,6 +167,7 @@ object FinancialDataTestConstants {
     taxYear = "2018",
     transactionId = "id",
     documentDescription = Some("documentDescription"),
+    documentText = "documentText",
     originalAmount = Some(300.00),
     outstandingAmount = Some(200.00),
     documentDate = "2018-03-29",
@@ -175,13 +179,15 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
-    lpiWithDunningBlock = Some(12.50)
+    lpiWithDunningBlock = Some(12.50),
+    amountCodedOut = Some(3.21)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
     taxYear = "2019",
     transactionId = "id2",
     documentDescription = Some("documentDescription2"),
+    documentText = "documentText2",
     originalAmount = Some(100.00),
     outstandingAmount = Some(50.00),
     documentDate = "2018-03-29",
@@ -193,7 +199,8 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
-    lpiWithDunningBlock = None
+    lpiWithDunningBlock = None,
+    amountCodedOut = None
   )
 
   val financialDetail: FinancialDetail = FinancialDetail(
