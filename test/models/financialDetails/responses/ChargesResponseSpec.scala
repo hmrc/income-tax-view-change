@@ -29,7 +29,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 		DocumentDetail(
 			taxYear = "2018",
 			documentDescription = None,
-			documentText = "documentText",
+			documentText = None,
 			originalAmount = Some(1000),
 			outstandingAmount = Some(700),
 			documentDate = "date",
