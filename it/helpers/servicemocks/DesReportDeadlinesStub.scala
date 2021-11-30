@@ -33,7 +33,7 @@ object DesReportDeadlinesStub {
   }
 
   def previousObligationsUrl(nino: String, from: String, to: String): String = {
-    s"/enterprise/obligation-data/nino/$nino/ITSA?status=F&from=$from&to=$to"
+    s"/enterprise/obligation-data/nino/$nino/ITSA?from=$from&to=$to"
   }
 
   def stubGetDesOpenReportDeadlines(nino: String): Unit = {
