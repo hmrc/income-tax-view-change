@@ -40,7 +40,7 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
   }
 
   private[connectors] def getPreviousObligationsUrl(nino: String, from: String, to: String): String = {
-    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=F&from=$from&to=$to"
+    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?from=$from&to=$to"
   }
 
   def getReportDeadlines(nino: String, openObligations: Boolean)
