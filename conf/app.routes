@@ -22,7 +22,7 @@ GET        /:nino/financial-details/charges/documentId/:documentId       control
 
 GET        /:nino/financial-details/payments/from/:from/to/:to           controllers.FinancialDetailPaymentsController.getPaymentDetails(nino, from, to)
 
-GET         /out-standing-charges/:idType/:idNumber/:taxYear             controllers.OutStandingChargesController.listOutStandingCharges(idType, idNumber: Long, taxYear)
+GET         /out-standing-charges/:idType/:idNumber/:taxYear             controllers.OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYear)
 
 GET         /charge-history/:mtdBsa/docId/:docNumber 		 			 controllers.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, docNumber)
 

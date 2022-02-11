@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class OutStandingChargesConnectorSpec extends TestSupport with MockHttp {
 
   "listOutStandingCharges" should {
     val idType: String = "utr"
-    val idNumber: Int = 1234567890
+    val idNumber = "1234567890"
     val taxYearEndDate: String = "2020-04-05"
 
     import TestOutStandingChargesConnector.{listOutStandingCharges, listOutStandingChargesUrl}
