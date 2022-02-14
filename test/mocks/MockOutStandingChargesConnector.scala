@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ trait MockOutStandingChargesConnector extends WordSpecLike with Matchers with Op
     reset(mockOutStandingChargesConnector)
   }
 
-  def mockListOutStandingCharges(idType: String, idNumber: Long, taxYearEndDate: String)
+  def mockListOutStandingCharges(idType: String, idNumber: String, taxYearEndDate: String)
                      (response: OutStandingChargeResponse): Unit = {
     when(mockOutStandingChargesConnector.listOutStandingCharges(
       idType = ArgumentMatchers.eq(idType),

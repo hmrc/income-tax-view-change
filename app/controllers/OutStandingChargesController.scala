@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,13 @@ package controllers
 import connectors.OutStandingChargesConnector
 import connectors.httpParsers.OutStandingChargesHttpParser.UnexpectedOutStandingChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import scala.concurrent.ExecutionContext
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.matching.Regex
 
 
 
@@ -34,17 +35,21 @@ class OutStandingChargesController @Inject()(authentication: AuthenticationPredi
                                              connector: OutStandingChargesConnector)
                                             (implicit ec: ExecutionContext) extends BackendController(cc) {
 
-  def listOutStandingCharges(idType: String, idNumber: Long, taxYearEndDate: String): Action[AnyContent] =
+  def listOutStandingCharges(idType: String, idNumber: String, taxYearEndDate: String): Action[AnyContent] =
     authentication.async { implicit request =>
-      connector.listOutStandingCharges(
-        idType = idType,
-        idNumber = idNumber,
-        taxYearEndDate = taxYearEndDate
-      ) map {
-        case Right(outStandingChargeDetails) => Ok(Json.toJson(outStandingChargeDetails))
-        case Left(error: UnexpectedOutStandingChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
-        case Left(_) => {
-          InternalServerError("Failed to retrieve charges outstanding details")
+      if (idType.equalsIgnoreCase("UTR") && !idNumber.matches("^[0-9]{10}$")) {
+        Future.successful(InternalServerError("Invalid UTR pattern"))
+      } else {
+        connector.listOutStandingCharges(
+          idType = idType,
+          idNumber = idNumber,
+          taxYearEndDate = taxYearEndDate
+        ) map {
+          case Right(outStandingChargeDetails) => Ok(Json.toJson(outStandingChargeDetails))
+          case Left(error: UnexpectedOutStandingChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
+          case Left(_) => {
+            InternalServerError("Failed to retrieve charges outstanding details")
+          }
         }
       }
     }

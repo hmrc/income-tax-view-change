@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ class OutStandingChargesConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def listOutStandingChargesUrl(idType: String, idNumber: Long, taxYearEndDate: String): String =
+  def listOutStandingChargesUrl(idType: String, idNumber: String, taxYearEndDate: String): String =
     s"${appConfig.desUrl}/income-tax/charges/outstanding/$idType/$idNumber/$taxYearEndDate"
 
-  def listOutStandingCharges(idType: String, idNumber: Long, taxYearEndDate: String)
+  def listOutStandingCharges(idType: String, idNumber: String, taxYearEndDate: String)
                             (implicit headerCarrier: HeaderCarrier): Future[OutStandingChargeResponse] = {
 
     http.GET(

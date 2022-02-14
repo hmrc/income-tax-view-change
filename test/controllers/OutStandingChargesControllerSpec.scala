@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,9 @@ class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutSt
   )
 
   val idType: String = "utr"
-  val idNumber: Int = 1234567890
+  val idNumber = "1234567890"
+  val invalidUtr = "1234"
+  val invalidUtr2 = "abcdefghijk"
   val taxYearEndDate: String = "2020-04-05"
 
   "getOutStandingCharges" should {
@@ -66,6 +68,26 @@ class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutSt
     }
 
     s"return $INTERNAL_SERVER_ERROR" when {
+      "utr is number of invalid length" in {
+        mockAuth()
+        mockListOutStandingCharges(idType, invalidUtr, taxYearEndDate)(Right(
+          OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo))))
+
+        val result = OutStandingChargesController.listOutStandingCharges(idType, invalidUtr, taxYearEndDate)(FakeRequest())
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        contentAsString(result) shouldBe "Invalid UTR pattern"
+      }
+      "utr contains characters" in {
+        mockAuth()
+        mockListOutStandingCharges(idType, invalidUtr2, taxYearEndDate)(Right(
+          OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo))))
+
+        val result = OutStandingChargesController.listOutStandingCharges(idType, invalidUtr2, taxYearEndDate)(FakeRequest())
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        contentAsString(result) shouldBe "Invalid UTR pattern"
+      }
       "the connector returns an error" in {
         mockAuth()
         mockListOutStandingCharges(idType, idNumber, taxYearEndDate)(Left(UnexpectedOutStandingChargeResponse(INTERNAL_SERVER_ERROR, "")))
