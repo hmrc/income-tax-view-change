@@ -12,7 +12,7 @@ import play.api.libs.ws.WSResponse
 class OutStandingChargesControllerISpec extends ComponentSpecBase {
 
   val idType: String = "utr"
-  val idNumber: Int = 1234567890
+  val idNumber = "1234567890"
   val taxYearEndDate: String = "2020-04-05"
 
   s"GET ${controllers.routes.OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYearEndDate)}" should {
