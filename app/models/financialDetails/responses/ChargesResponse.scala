@@ -16,10 +16,11 @@
 
 package models.financialDetails.responses
 
-import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment}
+import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, Payment}
 import play.api.libs.json.{Json, OFormat}
 
 case class ChargesResponse(balanceDetails: BalanceDetails,
+                           codingDetails: List[CodingDetails],
                            documentDetails: List[DocumentDetail],
                            financialDetails: List[FinancialDetail]) {
 
