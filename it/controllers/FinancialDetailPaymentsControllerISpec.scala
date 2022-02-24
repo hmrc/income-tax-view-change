@@ -47,6 +47,16 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
       "overDueAmount" -> 200.00,
       "totalBalance" -> 300.00
     ),
+    "codingDetails" -> Json.arr(
+      Json.obj(
+        "taxYearReturn" -> "2018",
+        "totalReturnAmount" -> 100.00,
+        "amountNotCoded" -> 200.00,
+        "amountNotCodedDueDate" -> "2018-01-01",
+        "amountCodedOut" -> 300.00,
+        "taxYearCoding" -> "2019"
+      )
+    ),
     "documentDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",

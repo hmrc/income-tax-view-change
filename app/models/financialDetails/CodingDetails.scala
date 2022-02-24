@@ -16,7 +16,7 @@
 
 package models.financialDetails
 
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{Format, Json}
 
 case class CodingDetails(taxYearReturn: String,
                          totalReturnAmount: Option[BigDecimal],
@@ -26,6 +26,5 @@ case class CodingDetails(taxYearReturn: String,
                          taxYearCoding: String)
 
 object CodingDetails {
-  implicit val writes: Writes[CodingDetails] = Json.writes[CodingDetails]
-  implicit val reads: Reads[CodingDetails] = Json.reads[CodingDetails]
+  implicit val format: Format[CodingDetails] = Json.format[CodingDetails]
 }
