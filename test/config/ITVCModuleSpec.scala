@@ -39,7 +39,7 @@ class ITVCModuleSpec extends WordSpecLike with Matchers {
         instanceOf[FinancialDetailsConnector] shouldBe a[FinancialDetailsConnectorIF]
       }
     }
-}
+  }
 
   private class Setup(conf: (String, Any)*) {
     val application: Application = new GuiceApplicationBuilder()

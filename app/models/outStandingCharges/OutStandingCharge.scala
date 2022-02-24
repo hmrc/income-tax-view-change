@@ -15,6 +15,7 @@
  */
 
 package models.outStandingCharges
+
 import play.api.libs.json.{Json, OFormat}
 
 case class OutStandingCharge(chargeName: String,

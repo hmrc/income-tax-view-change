@@ -46,7 +46,7 @@ class FinancialDetailSpec extends WordSpec with Matchers {
         "clearingDate" -> "clearingDate",
         "clearingReason" -> "clearingReason",
         "outgoingPaymentMethod" -> "outgoingPaymentMethod",
-        "interestLock" ->  "interestLock",
+        "interestLock" -> "interestLock",
         "dunningLock" -> "dunningLock",
         "paymentReference" -> "paymentReference",
         "paymentAmount" -> 2000.00,

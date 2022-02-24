@@ -44,6 +44,7 @@ object ReportDeadlinesIntegrationTestConstants {
 
   //ReportDeadlinesModels
   val reportDeadlinesNino = ReportDeadlinesModel(testNino, Seq(testReportDeadline, testReportDeadline))
+
   def reportDeadlinesId(id: String): ReportDeadlinesModel = ReportDeadlinesModel(id, Seq(testReportDeadline, testReportDeadline))
 
   val obligationsModel = ObligationsModel(Seq(reportDeadlinesId("XAIS009998898"), reportDeadlinesNino, reportDeadlinesId("XAIS0000067890")))

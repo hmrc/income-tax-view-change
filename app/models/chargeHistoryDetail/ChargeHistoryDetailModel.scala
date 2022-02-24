@@ -15,6 +15,7 @@
  */
 
 package models.chargeHistoryDetail
+
 import play.api.libs.json.{Json, OFormat}
 
 

@@ -23,7 +23,7 @@ import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-class OutStandingChargesHttpParserSpec  extends TestSupport  {
+class OutStandingChargesHttpParserSpec extends TestSupport {
   "OutStandingChargesHttpParser" should {
     "return a out standing charge" when {
       s"$OK is returned with valid json" in {

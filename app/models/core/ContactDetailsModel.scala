@@ -31,13 +31,13 @@ object ContactDetailsModel {
       (__ \ "mobileNumber").readNullable[String] and
       (__ \ "faxNumber").readNullable[String] and
       (__ \ "emailAddress").readNullable[String]
-  )(ContactDetailsModel.apply _)
+    ) (ContactDetailsModel.apply _)
 
 
   def propertyContactDetails(email: Option[String]): Option[ContactDetailsModel] =
-    email match{
+    email match {
       case None => None
-      case _ => Some(ContactDetailsModel(None,None,None,email))
+      case _ => Some(ContactDetailsModel(None, None, None, email))
     }
 
   implicit val format: Format[ContactDetailsModel] = Json.format[ContactDetailsModel]

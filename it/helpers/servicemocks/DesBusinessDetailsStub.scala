@@ -25,7 +25,7 @@ object DesBusinessDetailsStub {
 
   val url: (String) => String = (mtdRef) => s"""/registration/business-details/mtdbsa/$mtdRef"""
 
-  def stubGetDesBusinessDetails(mtdRef:String, response: IncomeSourceDetailsModel): Unit = {
+  def stubGetDesBusinessDetails(mtdRef: String, response: IncomeSourceDetailsModel): Unit = {
     val desBusinessDetailsResponse = successResponse(response.nino).toString
     WiremockHelper.stubGet(url(mtdRef), Status.OK, desBusinessDetailsResponse)
   }

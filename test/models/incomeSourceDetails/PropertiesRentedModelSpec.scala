@@ -30,7 +30,7 @@ class PropertiesRentedModelSpec extends TestSupport with Matchers {
     }
 
     "read from DES Json with minimum fields" in {
-      Json.fromJson(Json.obj())(PropertiesRentedModel.desReads) shouldBe JsSuccess(PropertiesRentedModel(None,None,None,None))
+      Json.fromJson(Json.obj())(PropertiesRentedModel.desReads) shouldBe JsSuccess(PropertiesRentedModel(None, None, None, None))
     }
 
     "read from DES Json that has String for the Integer values" in {
@@ -43,15 +43,15 @@ class PropertiesRentedModelSpec extends TestSupport with Matchers {
 
 
     "return Contact details containing only an email when PropertiesRentedModel.propertiesRented is given at least one value" in {
-      PropertiesRentedModel.propertiesRented(Some(3),Some(2),Some(1),Some(4)) shouldBe Some(PropertiesRentedModel(Some(3),Some(2),Some(1),Some(4)))
-      PropertiesRentedModel.propertiesRented(None,Some(2),Some(1),Some(4)) shouldBe Some(PropertiesRentedModel(None,Some(2),Some(1),Some(4)))
-      PropertiesRentedModel.propertiesRented(Some(3),None,Some(1),Some(4)) shouldBe Some(PropertiesRentedModel(Some(3),None,Some(1),Some(4)))
-      PropertiesRentedModel.propertiesRented(Some(3),Some(2),None,Some(4)) shouldBe Some(PropertiesRentedModel(Some(3),Some(2),None,Some(4)))
-      PropertiesRentedModel.propertiesRented(Some(3),Some(2),Some(1),None) shouldBe Some(PropertiesRentedModel(Some(3),Some(2),Some(1),None))
+      PropertiesRentedModel.propertiesRented(Some(3), Some(2), Some(1), Some(4)) shouldBe Some(PropertiesRentedModel(Some(3), Some(2), Some(1), Some(4)))
+      PropertiesRentedModel.propertiesRented(None, Some(2), Some(1), Some(4)) shouldBe Some(PropertiesRentedModel(None, Some(2), Some(1), Some(4)))
+      PropertiesRentedModel.propertiesRented(Some(3), None, Some(1), Some(4)) shouldBe Some(PropertiesRentedModel(Some(3), None, Some(1), Some(4)))
+      PropertiesRentedModel.propertiesRented(Some(3), Some(2), None, Some(4)) shouldBe Some(PropertiesRentedModel(Some(3), Some(2), None, Some(4)))
+      PropertiesRentedModel.propertiesRented(Some(3), Some(2), Some(1), None) shouldBe Some(PropertiesRentedModel(Some(3), Some(2), Some(1), None))
     }
 
     "return None when PropertiesRentedModel.propertiesRented is given None" in {
-      PropertiesRentedModel.propertiesRented(None,None,None,None) shouldBe None
+      PropertiesRentedModel.propertiesRented(None, None, None, None) shouldBe None
     }
   }
 

@@ -40,7 +40,7 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
         from = Some("from"),
         to = Some("to"),
         chargeType = Some("type"),
-				mainType = Some("mainType"),
+        mainType = Some("mainType"),
         amount = Some(1500.00),
         clearedAmount = Some(500.00),
         chargeReference = Some("chargeReference")
@@ -61,7 +61,7 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
             "taxPeriodStartDate" -> "from",
             "taxPeriodEndDate" -> "to",
             "chargeType" -> "type",
-						"mainType" -> "mainType",
+            "mainType" -> "mainType",
             "amount" -> 1500.00,
             "clearedAmount" -> 500.00,
             "chargeReference" -> "chargeReference"

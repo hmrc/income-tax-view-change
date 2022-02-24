@@ -71,19 +71,19 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
       }
     }
 
-		"return a not found response" when {
-			s"$NOT_FOUND is returned from the connector call" in {
-				mockDesGet(
-					url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
-					queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
-					headers = microserviceAppConfig.desAuthHeaders
-				)(Left(NotFoundResponse))
+    "return a not found response" when {
+      s"$NOT_FOUND is returned from the connector call" in {
+        mockDesGet(
+          url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
+          queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
+          headers = microserviceAppConfig.desAuthHeaders
+        )(Left(NotFoundResponse))
 
-				val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
+        val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
 
-				result shouldBe Left(NotFoundResponse)
-			}
-		}
+        result shouldBe Left(NotFoundResponse)
+      }
+    }
 
     s"return an error" when {
       "something went wrong" in {

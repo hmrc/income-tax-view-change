@@ -36,8 +36,8 @@ trait MockCalculationConnector extends WordSpecLike with Matchers with OptionVal
     reset(mockCalculationConnector)
   }
 
-  def setupMockGetPreviousCalculation(nino: String, year: String )
-                            (response: HttpGetResult[PreviousCalculationModel]): OngoingStubbing[Future[HttpGetResult[PreviousCalculationModel]]] =
+  def setupMockGetPreviousCalculation(nino: String, year: String)
+                                     (response: HttpGetResult[PreviousCalculationModel]): OngoingStubbing[Future[HttpGetResult[PreviousCalculationModel]]] =
     when(
       mockCalculationConnector.getPreviousCalculation(
         ArgumentMatchers.eq(nino),

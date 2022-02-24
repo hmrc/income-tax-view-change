@@ -30,7 +30,7 @@ class ContactDetailsModelSpec extends TestSupport with Matchers {
     }
 
     "read from DES Json with minimum fields" in {
-      Json.fromJson(Json.obj())(ContactDetailsModel.desReads) shouldBe JsSuccess(ContactDetailsModel(None,None,None,None))
+      Json.fromJson(Json.obj())(ContactDetailsModel.desReads) shouldBe JsSuccess(ContactDetailsModel(None, None, None, None))
     }
 
     "write to Json" in {
@@ -40,7 +40,7 @@ class ContactDetailsModelSpec extends TestSupport with Matchers {
 
     "return Contact details containing only an email when ContactDetailsModel.propertyContactDetails is given an email" in {
       ContactDetailsModel.propertyContactDetails(Some("email@email.com")) shouldBe
-        Some(ContactDetailsModel(None,None,None,Some("email@email.com")))
+        Some(ContactDetailsModel(None, None, None, Some("email@email.com")))
     }
 
     "return None when ContactDetailsModel.propertyContactDetails is given None" in {

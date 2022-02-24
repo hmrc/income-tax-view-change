@@ -43,5 +43,5 @@ class ChargeHistorySuccessResponseSpec extends WordSpec with Matchers {
         Json.toJson(MultipleChargeHistoryResponseModel) shouldBe testValidMultipleChargeHistoryModelJson
       }
     }
-	}
+  }
 }

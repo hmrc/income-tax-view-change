@@ -38,26 +38,26 @@ object AddressDetailsTestConstants {
     countryCode = "GB")
 
   val testAddressJson = Json.obj(
-    "addressLine1"->"Test Lane",
-    "addressLine2"->"Test Unit",
-    "addressLine3"->"Test Town",
-    "addressLine4"->"Test City",
-    "postalCode"->"TE5 7TE",
-    "countryCode"->"GB"
+    "addressLine1" -> "Test Lane",
+    "addressLine2" -> "Test Unit",
+    "addressLine3" -> "Test Town",
+    "addressLine4" -> "Test City",
+    "postalCode" -> "TE5 7TE",
+    "countryCode" -> "GB"
   )
 
   val testAddressToJson = Json.obj(
-    "addressLine1"->"Test Lane",
-    "addressLine2"->"Test Unit",
-    "addressLine3"->"Test Town",
-    "addressLine4"->"Test City",
-    "postCode"->"TE5 7TE",
-    "countryCode"->"GB"
+    "addressLine1" -> "Test Lane",
+    "addressLine2" -> "Test Unit",
+    "addressLine3" -> "Test Town",
+    "addressLine4" -> "Test City",
+    "postCode" -> "TE5 7TE",
+    "countryCode" -> "GB"
   )
 
   val testMinimumAddressJson = Json.obj(
-    "addressLine1"->"Test Lane",
-    "countryCode"->"GB"
+    "addressLine1" -> "Test Lane",
+    "countryCode" -> "GB"
   )
 
 

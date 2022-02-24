@@ -23,6 +23,7 @@ import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
 import models.incomeSourceDetails.{PropertiesRentedModel, PropertyDetailsModel}
 import play.api.libs.json.Json
+
 object PropertyDetailsTestConstants {
 
   val testPropertiesRentedModel = PropertiesRentedModel(
@@ -53,7 +54,6 @@ object PropertyDetailsTestConstants {
   )
 
 
-
   val testPropertiesRentedJson = Json.obj(
     "numPropRented" -> 4,
     "numPropRentedUK" -> 3,
@@ -78,8 +78,8 @@ object PropertyDetailsTestConstants {
 
   val testPropertyDetailsJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriodStartDate"->"2017-06-01",
-    "accountingPeriodEndDate"->"2018-05-31",
+    "accountingPeriodStartDate" -> "2017-06-01",
+    "accountingPeriodEndDate" -> "2018-05-31",
     "emailAddress" -> "stephen@manncorpone.co.uk",
     "numPropRentedUK" -> 3,
     "numPropRentedEEA" -> 2,
@@ -93,8 +93,8 @@ object PropertyDetailsTestConstants {
 
   val testPropertyDetailsJsonString = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriodStartDate"->"2017-06-01",
-    "accountingPeriodEndDate"->"2018-05-31",
+    "accountingPeriodStartDate" -> "2017-06-01",
+    "accountingPeriodEndDate" -> "2018-05-31",
     "emailAddress" -> "stephen@manncorpone.co.uk",
     "numPropRentedUK" -> "3",
     "numPropRentedEEA" -> "2",
@@ -118,8 +118,8 @@ object PropertyDetailsTestConstants {
 
   val testMinimumPropertyDetailsJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriodStartDate"->"2017-06-01",
-    "accountingPeriodEndDate"->"2018-05-31"
+    "accountingPeriodStartDate" -> "2017-06-01",
+    "accountingPeriodEndDate" -> "2018-05-31"
   )
 
 

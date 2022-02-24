@@ -29,7 +29,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
 
       "has a correct HTTP headers for DES" in {
         microserviceAppConfig.desAuthHeaders shouldBe Seq(
-          "Environment"   -> "localDESEnvironment",
+          "Environment" -> "localDESEnvironment",
           "Authorization" -> "Bearer localDESToken"
         )
       }
@@ -47,7 +47,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
       "has a correct HTTP headers for IF" in {
         val correlationId = "someCorrelationId"
         microserviceAppConfig.ifAuthHeaders shouldBe Seq(
-          "Environment"   -> "localIFEnvironment",
+          "Environment" -> "localIFEnvironment",
           "Authorization" -> "Bearer localIFToken"
         )
       }

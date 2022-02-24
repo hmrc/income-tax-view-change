@@ -33,7 +33,7 @@ object ReportDeadlinesModel {
           )
         )
       }
-    )(ReportDeadlinesModel.apply _)
+    ) (ReportDeadlinesModel.apply _)
 
   implicit val format: Format[ReportDeadlinesModel] = Json.format[ReportDeadlinesModel]
 }

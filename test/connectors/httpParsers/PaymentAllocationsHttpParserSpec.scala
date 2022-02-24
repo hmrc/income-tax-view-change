@@ -36,7 +36,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         from = Some("from"),
         to = Some("to"),
         chargeType = Some("type"),
-				mainType = Some("mainType"),
+        mainType = Some("mainType"),
         amount = Some(1500.00),
         clearedAmount = Some(500.00),
         chargeReference = Some("chargeReference")
@@ -57,7 +57,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
             "taxPeriodStartDate" -> "from",
             "taxPeriodEndDate" -> "to",
             "chargeType" -> "type",
-						"mainType" -> "mainType",
+            "mainType" -> "mainType",
             "amount" -> 1500.00,
             "clearedAmount" -> 500.00,
             "chargeReference" -> "chargeReference"
@@ -80,7 +80,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
             "taxPeriodStartDate" -> "from",
             "taxPeriodEndDate" -> "to",
             "chargeType" -> "type",
-						"mainType" -> "mainType",
+            "mainType" -> "mainType",
             "amount" -> 1500.00,
             "clearedAmount" -> 500.00,
             "chargeReference" -> "chargeReference"
@@ -98,7 +98,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
             "taxPeriodStartDate" -> "from",
             "taxPeriodEndDate" -> "to",
             "chargeType" -> "type",
-						"mainType" -> "mainType",
+            "mainType" -> "mainType",
             "amount" -> 1500.00,
             "clearedAmount" -> 500.00,
             "chargeReference" -> "chargeReference"
@@ -133,15 +133,15 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResponse
       }
     }
-		"return a Not Found response" when {
-			"the status of the response is 404" in {
-				val httpResponse:HttpResponse = HttpResponse(
-					responseStatus = NOT_FOUND
-				)
+    "return a Not Found response" when {
+      "the status of the response is 404" in {
+        val httpResponse: HttpResponse = HttpResponse(
+          responseStatus = NOT_FOUND
+        )
 
-				PaymentAllocationsReads.read("", "", httpResponse) shouldBe Left(NotFoundResponse)
-			}
-		}
+        PaymentAllocationsReads.read("", "", httpResponse) shouldBe Left(NotFoundResponse)
+      }
+    }
     s"return $UnexpectedResponse" when {
       "no payment details are returned in the json" in {
         val httpResponse: HttpResponse = HttpResponse(

@@ -45,7 +45,7 @@ object ReportDeadlineModel {
           case _ => "Quarterly"
         }
       })
-    )(ReportDeadlineModel.apply _)
+    ) (ReportDeadlineModel.apply _)
 
   implicit val format: Format[ReportDeadlineModel] = Json.format[ReportDeadlineModel]
 }
