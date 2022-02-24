@@ -104,7 +104,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 				"no documents exist with a paymentLot and paymentLotId" in {
 					ChargesResponse(
 						balanceDetails = balanceDetails,
-						codingDetails = List(codingDetails),
+						codingDetails = Some(List(codingDetails)),
 						documentDetails = List(document(paymentLot = None, paymentLotItem = None)),
 						financialDetails = List(financial())
 					).payments shouldBe List()
@@ -113,7 +113,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 				"a payment document exists with no matching financial details" in {
 					ChargesResponse(
 						balanceDetails = balanceDetails,
-						codingDetails = List(codingDetails),
+						codingDetails = Some(List(codingDetails)),
 						documentDetails = List(document()),
 						financialDetails = List(financial(documentId = "DOCID02"))
 					).payments shouldBe List()
@@ -122,7 +122,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 				"a payment document exists with a matching financial details but no matching items" in {
 					ChargesResponse(
 						balanceDetails = balanceDetails,
-						codingDetails = List(codingDetails),
+						codingDetails = Some(List(codingDetails)),
 						documentDetails = List(document()),
 						financialDetails = List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))
 					).payments shouldBe List()
@@ -131,7 +131,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 				"a payment document exists with matching financial details but missing data" in {
 					ChargesResponse(
 						balanceDetails = balanceDetails,
-						codingDetails = List(codingDetails),
+						codingDetails = Some(List(codingDetails)),
 						documentDetails = List(document()),
 						financialDetails = List(financial(items = Some(List(subItem(paymentReference = None)))))
 					).payments shouldBe List()
@@ -143,7 +143,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 				"a single payment exists" in {
 					ChargesResponse(
 						balanceDetails = balanceDetails,
-						codingDetails = List(codingDetails),
+						codingDetails = Some(List(codingDetails)),
 						documentDetails = List(document()),
 						financialDetails = List(financial(items = Some(List(subItem()))))
 					).payments shouldBe List(
@@ -154,7 +154,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 				"multiple payments exist" in {
 					ChargesResponse(
 						balanceDetails = balanceDetails,
-						codingDetails = List(codingDetails),
+						codingDetails = Some(List(codingDetails)),
 						documentDetails = List(
 							document(),
 							document("DOCID02", paymentLot = Some("lot02"))),

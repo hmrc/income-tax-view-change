@@ -284,7 +284,7 @@ object FinancialDataTestConstants {
 
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
-    codingDetails = List(codingDetail),
+    codingDetails = Some(List(codingDetail)),
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
   )

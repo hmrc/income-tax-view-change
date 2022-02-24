@@ -167,11 +167,11 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedApiHeaders
-        )(Right(ChargesResponse(testBalanceDetails, codingDetails, documentDetails, financialDetails)))
+        )(Right(ChargesResponse(testBalanceDetails, Some(codingDetails), documentDetails, financialDetails)))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
-        result shouldBe Right(ChargesResponse(testBalanceDetails, codingDetails, documentDetails, financialDetails))
+        result shouldBe Right(ChargesResponse(testBalanceDetails, Some(codingDetails), documentDetails, financialDetails))
       }
     }
 
@@ -220,7 +220,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
     "return a list of charges" when {
       s"$OK is received from ETMP with charges" in {
         val expectedResponse = Right(ChargesResponse(
-          codingDetails = List(codingDetail),
+          codingDetails = Some(List(codingDetail)),
           balanceDetails = testBalanceDetails,
           documentDetails = List(documentDetail),
           financialDetails = List(financialDetail)))

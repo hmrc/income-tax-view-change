@@ -20,7 +20,7 @@ import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, F
 import play.api.libs.json.{Json, OFormat}
 
 case class ChargesResponse(balanceDetails: BalanceDetails,
-                           codingDetails: List[CodingDetails],
+                           codingDetails: Option[List[CodingDetails]],
                            documentDetails: List[DocumentDetail],
                            financialDetails: List[FinancialDetail]) {
 

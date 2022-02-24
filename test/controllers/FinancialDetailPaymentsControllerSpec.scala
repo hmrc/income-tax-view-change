@@ -54,7 +54,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
 
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
-    codingDetails = List(codingDetail),
+    codingDetails = Some(List(codingDetail)),
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail)
   )
