@@ -18,7 +18,7 @@ package assets
 
 
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, SubItem}
+import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
 
 object FinancialDataTestConstants {
@@ -31,6 +31,16 @@ object FinancialDataTestConstants {
       | "overDueAmount": 200.00,
       | "totalBalance": 300.00
       | },
+      | "codingDetails": [
+      |   {
+      |     "taxYearReturn": "2018",
+      |     "totalReturnAmount": 100.00,
+      |     "amountNotCoded": 200.00,
+      |     "amountNotCodedDueDate": "2018-01-01",
+      |     "amountCodedOut": 300.00,
+      |     "taxYearCoding": "2019"
+      |   }
+      | ],
 			| "documentDetails": [
 			|   {
 			|     "taxYear": "2018",
@@ -160,7 +170,16 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-  val testBalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
+  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
+
+  val codingDetail: CodingDetails = CodingDetails(
+    taxYearReturn = "2018",
+    totalReturnAmount = Some(100.00),
+    amountNotCoded = Some(200.00),
+    amountNotCodedDueDate = Some("2018-01-01"),
+    amountCodedOut = 300.00,
+    taxYearCoding = "2019"
+  )
 
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = "2018",
@@ -265,6 +284,7 @@ object FinancialDataTestConstants {
 
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
+    codingDetails = List(codingDetail),
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
   )
