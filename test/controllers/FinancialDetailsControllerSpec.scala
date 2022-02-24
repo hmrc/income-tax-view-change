@@ -16,11 +16,10 @@
 
 package controllers
 
-import assets.FinancialDataTestConstants.{codingDetail, documentDetail, financialDetail, testBalanceDetails}
+import assets.FinancialDataTestConstants.{chargesResponse, chargesResponseNoCodingDetails}
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
-import models.financialDetails.responses.ChargesResponse
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
@@ -38,12 +37,6 @@ class FinancialDetailsControllerSpec extends ControllerBaseSpec with MockFinanci
 
   val nino: String = "AA000000A"
 
-  val chargesResponse: ChargesResponse = ChargesResponse(
-    balanceDetails = testBalanceDetails,
-    codingDetails = Some(List(codingDetail)),
-    documentDetails = List(documentDetail),
-    financialDetails = List(financialDetail)
-  )
 
   "getOnlyOpenItems" should {
     s"return $OK with the retrieved charge details" when {
@@ -55,6 +48,15 @@ class FinancialDetailsControllerSpec extends ControllerBaseSpec with MockFinanci
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.toJson(chargesResponse)
+      }
+      "the connector returns the charge details with no CodingDetails" in {
+        mockAuth()
+        mockOnlyOpenItems(nino)(Right(chargesResponseNoCodingDetails))
+
+        val result = TestFinancialDetailsController.getOnlyOpenItems(nino)(FakeRequest())
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.toJson(chargesResponseNoCodingDetails)
       }
     }
 

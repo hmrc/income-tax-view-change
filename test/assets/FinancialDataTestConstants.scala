@@ -282,6 +282,15 @@ object FinancialDataTestConstants {
       )))
   )
 
+  val chargesResponse: ChargesResponse = ChargesResponse(
+    balanceDetails = testBalanceDetails,
+    codingDetails = Some(List(codingDetail)),
+    documentDetails = List(documentDetail),
+    financialDetails = List(financialDetail)
+  )
+
+  val chargesResponseNoCodingDetails: ChargesResponse = chargesResponse.copy(codingDetails = None)
+
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
     codingDetails = Some(List(codingDetail)),
