@@ -35,7 +35,7 @@ object AddressModel {
       (__ \ "addressLine4").readNullable[String] and
       (__ \ "postalCode").readNullable[String] and
       (__ \ "countryCode").read[String]
-  )(AddressModel.apply _)
+    ) (AddressModel.apply _)
 
   implicit val format: Format[AddressModel] = Json.format[AddressModel]
 

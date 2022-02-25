@@ -29,7 +29,7 @@ object NinoIntegrationTestConstants {
     "reason" -> "ISE"
   )
 
-  val ninoError: NinoErrorModel = NinoErrorModel(500,ninoErrorJson.toString())
+  val ninoError: NinoErrorModel = NinoErrorModel(500, ninoErrorJson.toString())
 
 
 }

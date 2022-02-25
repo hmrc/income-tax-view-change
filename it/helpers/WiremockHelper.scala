@@ -31,11 +31,11 @@ object WiremockHelper extends Eventually with IntegrationPatience {
   val url = s"http://$wiremockHost:$wiremockPort"
 
   def verifyPost(uri: String, xmlBody: String): Unit = {
-      verify(postRequestedFor(urlEqualTo(uri)).withRequestBody(equalToXml(xmlBody)))
+    verify(postRequestedFor(urlEqualTo(uri)).withRequestBody(equalToXml(xmlBody)))
   }
 
   def verifyGet(uri: String): Unit = {
-     verify(getRequestedFor(urlEqualTo(uri)))
+    verify(getRequestedFor(urlEqualTo(uri)))
   }
 
   def stubGet(url: String, status: Integer, body: String): StubMapping =

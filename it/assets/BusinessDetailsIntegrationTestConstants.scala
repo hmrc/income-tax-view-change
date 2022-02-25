@@ -53,17 +53,17 @@ object BusinessDetailsIntegrationTestConstants {
     )
   )
 
-	val testPropertyDetailsModel = PropertyDetailsModel(
-		incomeSourceId = "2222222222",
-		accountingPeriod = AccountingPeriodModel(
-			start = LocalDate.parse("2017-06-01"),
-			end = LocalDate.parse("2018-05-31")),
-		None,
-		None,
-		None,
-		Some(true),
-		Some(LocalDate.parse("2017-06-01"))
-	)
+  val testPropertyDetailsModel = PropertyDetailsModel(
+    incomeSourceId = "2222222222",
+    accountingPeriod = AccountingPeriodModel(
+      start = LocalDate.parse("2017-06-01"),
+      end = LocalDate.parse("2018-05-31")),
+    None,
+    None,
+    None,
+    Some(true),
+    Some(LocalDate.parse("2017-06-01"))
+  )
 
   def successResponse(nino: String): JsValue = {
 
@@ -99,15 +99,15 @@ object BusinessDetailsIntegrationTestConstants {
           "firstAccountingPeriodEndDate" -> "2016-01-01"
         )
       ),
-			"propertyData" -> Json.arr(
-				Json.obj(
-					"incomeSourceId" ->"2222222222",
-					"accountingPeriodStartDate" -> "2017-06-01",
-					"accountingPeriodEndDate" -> "2018-05-31",
-					"paperLess" ->true,
-					"firstAccountingPeriodEndDate" ->"2017-06-01"
-				)
-			)
+      "propertyData" -> Json.arr(
+        Json.obj(
+          "incomeSourceId" -> "2222222222",
+          "accountingPeriodStartDate" -> "2017-06-01",
+          "accountingPeriodEndDate" -> "2018-05-31",
+          "paperLess" -> true,
+          "firstAccountingPeriodEndDate" -> "2017-06-01"
+        )
+      )
     )
 
   }
@@ -118,9 +118,9 @@ object BusinessDetailsIntegrationTestConstants {
       "reason" -> reason
     )
 
-	def jsonSuccessOutput(): JsValue = {
-		Json.parse(
-			"""
+  def jsonSuccessOutput(): JsValue = {
+    Json.parse(
+      """
 				|{
 				|	"nino":"BB123456A",
 				|	"mtdbsa":"123456789012345",
@@ -161,6 +161,6 @@ object BusinessDetailsIntegrationTestConstants {
 				|	}
 				|}
 |""".stripMargin)
-	}
+  }
 
 }

@@ -35,7 +35,7 @@ trait MockOutStandingChargesConnector extends WordSpecLike with Matchers with Op
   }
 
   def mockListOutStandingCharges(idType: String, idNumber: String, taxYearEndDate: String)
-                     (response: OutStandingChargeResponse): Unit = {
+                                (response: OutStandingChargeResponse): Unit = {
     when(mockOutStandingChargesConnector.listOutStandingCharges(
       idType = ArgumentMatchers.eq(idType),
       idNumber = ArgumentMatchers.eq(idNumber),

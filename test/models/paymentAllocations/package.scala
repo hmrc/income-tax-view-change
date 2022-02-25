@@ -25,7 +25,7 @@ package object paymentAllocations {
     from = Some("from"),
     to = Some("to"),
     chargeType = Some("type"),
-		mainType = Some("mainType"),
+    mainType = Some("mainType"),
     amount = Some(1000.00),
     clearedAmount = Some(500.00),
     chargeReference = Some("chargeReference")
@@ -38,7 +38,7 @@ package object paymentAllocations {
     "taxPeriodStartDate" -> "from",
     "taxPeriodEndDate" -> "to",
     "chargeType" -> "type",
-		"mainType" -> "mainType",
+    "mainType" -> "mainType",
     "amount" -> 1000.00,
     "clearedAmount" -> 500.00,
     "chargeReference" -> "chargeReference"
@@ -49,7 +49,7 @@ package object paymentAllocations {
     "from" -> "from",
     "to" -> "to",
     "chargeType" -> "type",
-		"mainType" -> "mainType",
+    "mainType" -> "mainType",
     "amount" -> 1000.00,
     "clearedAmount" -> 500.00,
     "chargeReference" -> "chargeReference"

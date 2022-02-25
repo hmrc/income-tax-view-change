@@ -29,7 +29,7 @@ trait MockMicroserviceAuthConnector extends TestSupport with BeforeAndAfterEach 
   val mockMicroserviceAuthConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 
   def mockAuth(response: Future[Unit] = Future.successful()): Future[Nothing] = {
-    doReturn(response, Nil:_*).when(mockMicroserviceAuthConnector)
+    doReturn(response, Nil: _*).when(mockMicroserviceAuthConnector)
       .authorise(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())
   }
 }

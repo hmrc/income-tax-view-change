@@ -33,9 +33,9 @@ object DesChargesStub {
     s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?onlyOpenItems=true&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
-	private def historyUrl(mtdBsa: String, documentId: String): String = {
-		s"/cross-regime/charges/MTDBSA/$mtdBsa/ITSA?docNumber=$documentId"
-	}
+  private def historyUrl(mtdBsa: String, documentId: String): String = {
+    s"/cross-regime/charges/MTDBSA/$mtdBsa/ITSA?docNumber=$documentId"
+  }
 
   def stubGetChargeDetails(nino: String, from: String, to: String)(status: Int, response: JsValue = Json.obj()): Unit = {
     stubGetChargeDetails(nino, from, to, status, response.toString)
@@ -57,7 +57,7 @@ object DesChargesStub {
     WiremockHelper.stubGet(onlyOpenItemsUrl(nino), status, responseBody)
   }
 
-	def stubChargeHistory(mtdBsa: String, documentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {
-		WiremockHelper.stubGet(historyUrl(mtdBsa, documentId), status, response.toString())
-	}
+  def stubChargeHistory(mtdBsa: String, documentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {
+    WiremockHelper.stubGet(historyUrl(mtdBsa, documentId), status, response.toString())
+  }
 }

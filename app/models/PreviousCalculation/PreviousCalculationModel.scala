@@ -51,13 +51,13 @@ object TaxableIncomeModel {
     (__ \ "totalIncomeAllowancesUsed").readNullable[BigDecimal] and
       (__ \ "incomeReceived").readNullable[IncomeReceivedModel] and
       (__ \ "allowancesAndDeductions" \ "giftOfInvestmentsAndPropertyToCharity").readNullable[BigDecimal].orElse(Reads.pure(None))
-  )(TaxableIncomeModel.apply _)
+    ) (TaxableIncomeModel.apply _)
 
   val writes: OWrites[TaxableIncomeModel] = (
     (__ \ "totalIncomeAllowancesUsed").writeNullable[BigDecimal] and
       (__ \ "incomeReceived").writeNullable[IncomeReceivedModel] and
       (__ \ "allowancesAndDeductions" \ "giftOfInvestmentsAndPropertyToCharity").writeNullable[BigDecimal]
-  )(unlift(TaxableIncomeModel.unapply))
+    ) (unlift(TaxableIncomeModel.unapply))
 
   implicit val format: OFormat[TaxableIncomeModel] = OFormat(reads, writes)
 
@@ -115,16 +115,16 @@ object DividendsModel {
 }
 
 case class PayPensionsProfitModel(totalAmount: BigDecimal,
-                          taxableIncome: BigDecimal,
-                          band: Seq[BandModel])
+                                  taxableIncome: BigDecimal,
+                                  band: Seq[BandModel])
 
 object PayPensionsProfitModel {
   implicit val formats: OFormat[PayPensionsProfitModel] = Json.format[PayPensionsProfitModel]
 }
 
-case class GiftAidModel (paymentsMade: BigDecimal,
-                         rate: BigDecimal,
-                         taxableAmount: BigDecimal)
+case class GiftAidModel(paymentsMade: BigDecimal,
+                        rate: BigDecimal,
+                        taxableAmount: BigDecimal)
 
 object GiftAidModel {
   implicit val formats: OFormat[GiftAidModel] = Json.format[GiftAidModel]

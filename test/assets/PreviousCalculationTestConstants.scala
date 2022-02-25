@@ -442,7 +442,7 @@ object PreviousCalculationTestConstants {
                 BandModel(20000.00, 20.0, 4000.00, "BRT"),
                 BandModel(100000.00, 40.0, 40000.00, "HRT"),
                 BandModel(50000.00, 45.0, 22500.00, "ART")
-            ))),
+              ))),
             dividends = Some(DividendsModel(
               totalAmount = 1968,
               taxableIncome = 5000,
@@ -547,18 +547,18 @@ object PreviousCalculationTestConstants {
       |}""".stripMargin)
 
   val jsonMultipleErrors: JsValue =
-  Json.obj(
-    "failures" -> Json.arr(
-      Json.obj(
-        "code" -> "ERROR CODE 1",
-        "reason" -> "ERROR MESSAGE 1"
-      ),
-      Json.obj(
-        "code" -> "ERROR CODE 2",
-        "reason" -> "ERROR MESSAGE 2"
+    Json.obj(
+      "failures" -> Json.arr(
+        Json.obj(
+          "code" -> "ERROR CODE 1",
+          "reason" -> "ERROR MESSAGE 1"
+        ),
+        Json.obj(
+          "code" -> "ERROR CODE 2",
+          "reason" -> "ERROR MESSAGE 2"
+        )
       )
     )
-  )
 
   val multiError = MultiError(
     failures = Seq(
@@ -569,7 +569,7 @@ object PreviousCalculationTestConstants {
 
   val singleError = Error(code = "CODE", reason = "ERROR MESSAGE")
 
-  val jsonSingleError: JsValue = Json.obj("code"->"CODE","reason"->"ERROR MESSAGE")
+  val jsonSingleError: JsValue = Json.obj("code" -> "CODE", "reason" -> "ERROR MESSAGE")
 
   val badRequestMultiError: Either[ErrorResponse, Nothing] = Left(ErrorResponse(
     Status.BAD_REQUEST,

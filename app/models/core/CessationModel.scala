@@ -28,12 +28,12 @@ object CessationModel {
   val desReads: Reads[CessationModel] = (
     (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String]
-  )(CessationModel.apply _)
+    ) (CessationModel.apply _)
 
   def cessation(date: Option[LocalDate], reason: Option[String]): Option[CessationModel] =
-    (date,reason) match{
-      case (None,None) => None
-      case _ => Some(CessationModel(date,reason))
+    (date, reason) match {
+      case (None, None) => None
+      case _ => Some(CessationModel(date, reason))
     }
 
   implicit val format: Format[CessationModel] = Json.format[CessationModel]

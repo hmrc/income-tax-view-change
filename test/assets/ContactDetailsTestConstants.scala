@@ -27,17 +27,17 @@ object ContactDetailsTestConstants {
     faxNumber = Some("01332754256"),
     emailAddress = Some("stephen@manncorpone.co.uk"))
 
-  val testSomeContactDetailsModel = ContactDetailsModel(None,None,None, emailAddress = Some("stephen@manncorpone.co.uk"))
+  val testSomeContactDetailsModel = ContactDetailsModel(None, None, None, emailAddress = Some("stephen@manncorpone.co.uk"))
 
   val testContactDetailsJson = Json.obj(
-    "phoneNumber"->"01332752856",
-    "mobileNumber"->"07782565326",
-    "faxNumber"->"01332754256",
-    "emailAddress"->"stephen@manncorpone.co.uk"
+    "phoneNumber" -> "01332752856",
+    "mobileNumber" -> "07782565326",
+    "faxNumber" -> "01332754256",
+    "emailAddress" -> "stephen@manncorpone.co.uk"
   )
 
   val testSomeContactDetailsJson = Json.obj(
-    "emailAddress"->"stephen@manncorpone.co.uk"
+    "emailAddress" -> "stephen@manncorpone.co.uk"
   )
 
 }

@@ -28,17 +28,17 @@ import play.api.test.Helpers._
 
 class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with MockFinancialDetailsConnector with MockMicroserviceAuthConnector {
 
-	val paymentJson: JsArray = Json.arr(
-		Json.obj(
-		"reference" -> "paymentReference",
-		"amount" -> 300,
-		"method" -> "paymentMethod",
-		"lot" -> "paymentLot",
-		"lotItem" -> "paymentLotItem",
-		"date" -> "dueDate",
-		"transactionId" -> "id"
-		)
-	)
+  val paymentJson: JsArray = Json.arr(
+    Json.obj(
+      "reference" -> "paymentReference",
+      "amount" -> 300,
+      "method" -> "paymentMethod",
+      "lot" -> "paymentLot",
+      "lotItem" -> "paymentLotItem",
+      "date" -> "dueDate",
+      "transactionId" -> "id"
+    )
+  )
 
   val controllerComponents: ControllerComponents = stubControllerComponents()
 

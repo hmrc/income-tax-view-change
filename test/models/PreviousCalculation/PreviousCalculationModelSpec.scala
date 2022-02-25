@@ -38,9 +38,7 @@ class PreviousCalculationModelSpec extends TestSupport with Matchers {
     val annualAllowancesWithoutValues = Some(AnnualAllowancesModel(None, None))
 
 
-
-
-    def successModel(incomeTaxNicYtd: BigDecimal, eoyEstimate :Option[EoyEstimate], annualAllowances: Option[AnnualAllowancesModel] ): PreviousCalculationModel =
+    def successModel(incomeTaxNicYtd: BigDecimal, eoyEstimate: Option[EoyEstimate], annualAllowances: Option[AnnualAllowancesModel]): PreviousCalculationModel =
       PreviousCalculationModel(
         CalcOutput(calcID = calcId, calcAmount = Some(calcAmount), calcTimestamp = Some(calcTimestamp), crystallised = Some(crystallised),
           calcResult = Some(CalcResult(incomeTaxNicYtd, eoyEstimate, annualAllowances = annualAllowances))))
@@ -85,12 +83,12 @@ class PreviousCalculationModelSpec extends TestSupport with Matchers {
       "be translated to Json correctly" in {
         Json.toJson(successModel(incomeTaxNicYtd, eoyEstimate, None)) should be
         """
-            |{"calcOutput":{
-            |"calcID":"1",
-            |"calcAmount":22.56,
-            |"calcTimestamp":"2008-05-01",
-            |"crystallised":true,
-            |"calcResult":{"incomeTaxNicYtd":500.68,"eoyEstimate":{"incomeTaxNicAmount":125.63}}}}
+          |{"calcOutput":{
+          |"calcID":"1",
+          |"calcAmount":22.56,
+          |"calcTimestamp":"2008-05-01",
+          |"crystallised":true,
+          |"calcResult":{"incomeTaxNicYtd":500.68,"eoyEstimate":{"incomeTaxNicAmount":125.63}}}}
           """.stripMargin.trim
       }
     }
@@ -98,17 +96,17 @@ class PreviousCalculationModelSpec extends TestSupport with Matchers {
     "processing the personal annual allowance object" should {
 
       "have the correct personal allowance and gift aid extender with a value" in {
-        val calcResult =successModel(incomeTaxNicAmount, eoyEstimate, annualAllowancesWithValues).calcOutput.calcResult.get
+        val calcResult = successModel(incomeTaxNicAmount, eoyEstimate, annualAllowancesWithValues).calcOutput.calcResult.get
 
         calcResult.annualAllowances.get.personalAllowance shouldBe annualAllowancesWithValues.get.personalAllowance
-        calcResult.annualAllowances.get.giftAidExtender  shouldBe annualAllowancesWithValues.get.giftAidExtender
+        calcResult.annualAllowances.get.giftAidExtender shouldBe annualAllowancesWithValues.get.giftAidExtender
       }
 
-      "have the correct personal allowance and gift aid extender without a value"  in {
-        val calcResult =successModel(incomeTaxNicAmount, eoyEstimate, annualAllowancesWithoutValues).calcOutput.calcResult.get
+      "have the correct personal allowance and gift aid extender without a value" in {
+        val calcResult = successModel(incomeTaxNicAmount, eoyEstimate, annualAllowancesWithoutValues).calcOutput.calcResult.get
 
         calcResult.annualAllowances.get.personalAllowance shouldBe None
-        calcResult.annualAllowances.get.giftAidExtender  shouldBe None
+        calcResult.annualAllowances.get.giftAidExtender shouldBe None
       }
 
       "be translated to Json correctly with the values" in {

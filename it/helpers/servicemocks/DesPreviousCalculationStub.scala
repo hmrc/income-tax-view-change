@@ -23,7 +23,7 @@ import play.api.http.Status
 
 object DesPreviousCalculationStub {
 
-  def url(nino: String, year:String): String =  s"""/income-tax/previous-calculation/$nino?year=$year"""
+  def url(nino: String, year: String): String = s"""/income-tax/previous-calculation/$nino?year=$year"""
 
   def stubGetDesPreviousCalculation(nino: String, year: String, response: PreviousCalculationModel): Unit = {
     val previousCalculationResponse = successResponse.toString

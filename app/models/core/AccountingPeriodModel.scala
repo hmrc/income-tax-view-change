@@ -28,7 +28,7 @@ object AccountingPeriodModel {
   val desReads: Reads[AccountingPeriodModel] = (
     (__ \ "accountingPeriodStartDate").read[LocalDate] and
       (__ \ "accountingPeriodEndDate").read[LocalDate]
-  )(AccountingPeriodModel.apply _)
+    ) (AccountingPeriodModel.apply _)
 
   implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
 }
