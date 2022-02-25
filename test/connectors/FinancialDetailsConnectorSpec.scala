@@ -16,19 +16,17 @@
 
 package connectors
 
-import assets.FinancialDataTestConstants.{testBalanceDetails, documentDetail, financialDetail, testChargesResponse}
+import assets.FinancialDataTestConstants._
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import mocks.MockHttp
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{DocumentDetail, FinancialDetail}
+import models.financialDetails.{CodingDetails, DocumentDetail, FinancialDetail}
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.TestSupport
-
-import java.util.UUID
 
 class FinancialDetailsConnectorDESSpec extends FinancialDetailsConnectorBehavior[FinancialDetailsConnectorDES] {
   override val TestFinancialDetailsConnector = new FinancialDetailsConnectorDES(mockHttpGet, microserviceAppConfig)
@@ -163,6 +161,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
   "Payment Allocation - documentId" should {
     "return a list of charges" when {
       s"$OK is received from ETMP with charges " in {
+        val codingDetails: List[CodingDetails] = List(codingDetail)
         val documentDetails: List[DocumentDetail] = List(documentDetail)
         val financialDetails: List[FinancialDetail] = List(financialDetail)
 
@@ -170,11 +169,11 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedApiHeaders
-        )(Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails)))
+        )(Right(ChargesResponse(testBalanceDetails, Some(codingDetails), documentDetails, financialDetails)))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
-        result shouldBe Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails))
+        result shouldBe Right(ChargesResponse(testBalanceDetails, Some(codingDetails), documentDetails, financialDetails))
       }
     }
 
@@ -223,6 +222,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
     "return a list of charges" when {
       s"$OK is received from ETMP with charges" in {
         val expectedResponse = Right(ChargesResponse(
+          codingDetails = Some(List(codingDetail)),
           balanceDetails = testBalanceDetails,
           documentDetails = List(documentDetail),
           financialDetails = List(financialDetail)))

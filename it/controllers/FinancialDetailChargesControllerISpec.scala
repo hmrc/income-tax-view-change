@@ -52,6 +52,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 
         val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
           balanceDetails = balanceDetails,
+          codingDetails = Some(List(codingDetails)),
           documentDetails = List(documentDetail, documentDetail2),
           financialDetails = List(financialDetail, financialDetail2)
         ))
@@ -127,6 +128,7 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
 
         val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
           balanceDetails = balanceDetails,
+          codingDetails = Some(List(codingDetails)),
           documentDetails = List(documentDetail, documentDetail2),
           financialDetails = List(financialDetail, financialDetail2)
         ))

@@ -16,7 +16,7 @@
 
 package assets
 
-import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
+import models.financialDetails._
 import play.api.libs.json.{JsObject, Json}
 
 object FinancialDetailIntegrationTestConstants {
@@ -26,6 +26,16 @@ object FinancialDetailIntegrationTestConstants {
       "balanceDueWithin30Days" -> 100.00,
       "overDueAmount" -> 200.00,
       "totalBalance" -> 300.00
+    ),
+    "codingDetails" -> Json.arr(
+      Json.obj(
+        "taxYearReturn" -> "2018",
+        "totalReturnAmount" -> 100.00,
+        "amountNotCoded" -> 200.00,
+        "amountNotCodedDueDate" -> "2018-01-01",
+        "amountCodedOut" -> 300.00,
+        "taxYearCoding" -> "2019"
+      )
     ),
     "documentDetails" -> Json.arr(
       Json.obj(
@@ -126,6 +136,15 @@ object FinancialDetailIntegrationTestConstants {
     balanceDueWithin30Days = 100.00,
     overDueAmount = 200.00,
     totalBalance = 300.00
+  )
+
+  val codingDetails: CodingDetails = CodingDetails(
+    taxYearReturn = "2018",
+    totalReturnAmount = Some(100.00),
+    amountNotCoded = Some(200.00),
+    amountNotCodedDueDate = Some("2018-01-01"),
+    amountCodedOut = 300.00,
+    taxYearCoding = "2019"
   )
 
   val documentDetail: DocumentDetail = DocumentDetail(

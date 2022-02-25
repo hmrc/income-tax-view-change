@@ -16,15 +16,13 @@
 
 package controllers
 
-import assets.FinancialDataTestConstants.{testBalanceDetails, documentDetail, financialDetail}
+import assets.FinancialDataTestConstants.{chargesResponse, chargesResponseNoCodingDetails}
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
-import models.financialDetails.responses.ChargesResponse
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{status, stubControllerComponents}
 import play.api.test.Helpers._
 
 class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockFinancialDetailsConnector with MockMicroserviceAuthConnector {
@@ -42,12 +40,6 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
   val to: String = "to"
   val documentId: String = "123456789"
 
-  val chargesResponse: ChargesResponse = ChargesResponse(
-    balanceDetails = testBalanceDetails,
-    documentDetails = List(documentDetail),
-    financialDetails = List(financialDetail)
-  )
-
   "getChargeDetails" should {
     s"return $OK with the retrieved charge details" when {
       "the connector returns the charge details" in {
@@ -58,6 +50,15 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.toJson(chargesResponse)
+      }
+      "the connector returns the charge details with no CodingDetails" in {
+        mockAuth()
+        mockListCharges(nino, from, to)(Right(chargesResponseNoCodingDetails))
+
+        val result = FinancialDetailChargesController.getChargeDetails(nino, from, to)(FakeRequest())
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.toJson(chargesResponseNoCodingDetails)
       }
     }
     s"return $NOT_FOUND" when {
@@ -95,6 +96,15 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.toJson(chargesResponse)
+      }
+      "the connector returns the charge details with no CodingDetails" in {
+        mockAuth()
+        mockSingleDocumentDetails(nino, documentId)(Right(chargesResponseNoCodingDetails))
+
+        val result = FinancialDetailChargesController.getPaymentAllocationDetails(nino, documentId)(FakeRequest())
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.toJson(chargesResponseNoCodingDetails)
       }
     }
     s"return $NOT_FOUND" when {
