@@ -28,7 +28,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
 
 
-
 @Singleton
 class OutStandingChargesController @Inject()(authentication: AuthenticationPredicate,
                                              cc: ControllerComponents,

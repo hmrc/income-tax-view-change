@@ -32,7 +32,7 @@ class PaymentSpec extends WordSpec with Matchers {
     lot = Some("lot"),
     lotItem = Some("lotItem"),
     date = Some("date"),
-		transactionId = "DOCID01"
+    transactionId = "DOCID01"
   )
 
   val paymentFullJson: JsObject = Json.obj(
@@ -42,7 +42,7 @@ class PaymentSpec extends WordSpec with Matchers {
     "lot" -> "lot",
     "lotItem" -> "lotItem",
     "date" -> "date",
-		"transactionId" -> "DOCID01"
+    "transactionId" -> "DOCID01"
   )
 
   "Charge" should {

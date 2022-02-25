@@ -26,8 +26,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
-                                            val appConfig: MicroserviceAppConfig
-                                           )(implicit ec: ExecutionContext) extends RawResponseReads {
+                                              val appConfig: MicroserviceAppConfig
+                                             )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String): String =
     s"${appConfig.desUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"

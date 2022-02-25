@@ -25,12 +25,12 @@ import play.api.libs.ws.WSResponse
 
 class ChargeHistoryControllerISpec extends ComponentSpecBase {
 
-	val mtdBsa = "XAIT000000000000"
-	val documentId = "DOCID01"
+  val mtdBsa = "XAIT000000000000"
+  val documentId = "DOCID01"
 
-	val chargeHistoryJson: JsValue = {
-		Json.parse(
-			s"""|{
+  val chargeHistoryJson: JsValue = {
+    Json.parse(
+      s"""|{
    			 	|	"idType" : "MTDBSA",
    			 	|	"idValue" : "${mtdBsa}",
    			 	|	"regimeType" : "ITSA",
@@ -44,77 +44,77 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
 					|		"reversalReason" : "reason"
 					|	}]
 					|}""".stripMargin)
-	}
+  }
 
-	s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, documentId)}" should {
-		s"return $OK" when {
-			"charge details are successfully retrieved" in {
+  s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, documentId)}" should {
+    s"return $OK" when {
+      "charge details are successfully retrieved" in {
 
-				isAuthorised(true)
+        isAuthorised(true)
 
-				stubChargeHistory(mtdBsa, documentId)(
-					status = OK,
-					response = chargeHistoryJson)
+        stubChargeHistory(mtdBsa, documentId)(
+          status = OK,
+          response = chargeHistoryJson)
 
-				val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
 
-				val expectedResponseBody: JsValue = Json.toJson(ChargeHistorySuccessResponse(
-					idType = "MTDBSA",
-					idValue = mtdBsa,
-					regimeType = "ITSA",
-					chargeHistoryDetails = Some(List(
-						ChargeHistoryDetailModel(
-							taxYear = "2017",
-							documentId = "DOCID01",
-							documentDate = "07-08-2017",
-							documentDescription = "desc",
-							totalAmount = 10000.00,
-							reversalDate = "09-10-2018",
-							reversalReason = "reason"
-						)
-					))))
+        val expectedResponseBody: JsValue = Json.toJson(ChargeHistorySuccessResponse(
+          idType = "MTDBSA",
+          idValue = mtdBsa,
+          regimeType = "ITSA",
+          chargeHistoryDetails = Some(List(
+            ChargeHistoryDetailModel(
+              taxYear = "2017",
+              documentId = "DOCID01",
+              documentDate = "07-08-2017",
+              documentDescription = "desc",
+              totalAmount = 10000.00,
+              reversalDate = "09-10-2018",
+              reversalReason = "reason"
+            )
+          ))))
 
-				res should have(
-					httpStatus(OK),
-					jsonBodyMatching(expectedResponseBody)
-				)
-			}
-		}
+        res should have(
+          httpStatus(OK),
+          jsonBodyMatching(expectedResponseBody)
+        )
+      }
+    }
 
-		s"return $NOT_FOUND" when {
-			"an unexpected status with NOT_FOUND was returned when retrieving charge details" in {
+    s"return $NOT_FOUND" when {
+      "an unexpected status with NOT_FOUND was returned when retrieving charge details" in {
 
-				isAuthorised(true)
+        isAuthorised(true)
 
-				val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-				stubChargeHistory(mtdBsa, documentId)(
-					status = NOT_FOUND, response = errorJson
-				)
+        val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+        stubChargeHistory(mtdBsa, documentId)(
+          status = NOT_FOUND, response = errorJson
+        )
 
-				val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
 
-				res should have(
-					httpStatus(NOT_FOUND),
-					bodyMatching(errorJson.toString())
-				)
-			}
-		}
+        res should have(
+          httpStatus(NOT_FOUND),
+          bodyMatching(errorJson.toString())
+        )
+      }
+    }
 
-		s"return $INTERNAL_SERVER_ERROR" when {
-			"an unexpected status was returned when retrieving charge details" in {
+    s"return $INTERNAL_SERVER_ERROR" when {
+      "an unexpected status was returned when retrieving charge details" in {
 
-				isAuthorised(true)
+        isAuthorised(true)
 
-				stubChargeHistory(mtdBsa, documentId)(
-					status = SERVICE_UNAVAILABLE
-				)
+        stubChargeHistory(mtdBsa, documentId)(
+          status = SERVICE_UNAVAILABLE
+        )
 
-				val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
 
-				res should have(
-					httpStatus(INTERNAL_SERVER_ERROR)
-				)
-			}
-		}
-	}
+        res should have(
+          httpStatus(INTERNAL_SERVER_ERROR)
+        )
+      }
+    }
+  }
 }

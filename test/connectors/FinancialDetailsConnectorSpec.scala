@@ -34,7 +34,7 @@ class FinancialDetailsConnectorDESSpec extends FinancialDetailsConnectorBehavior
   override val expectedBaseUrl: String = microserviceAppConfig.desUrl
 
   override val expectedApiHeaders = Seq(
-    "Environment"   -> "localDESEnvironment",
+    "Environment" -> "localDESEnvironment",
     "Authorization" -> "Bearer localDESToken"
   )
 }
@@ -47,7 +47,7 @@ class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[
   private val requestId = "mdtp-request-id"
 
   override val expectedApiHeaders = Seq(
-    "Environment"   -> "localIFEnvironment",
+    "Environment" -> "localIFEnvironment",
     "Authorization" -> "Bearer localIFToken"
   )
 
@@ -58,7 +58,9 @@ class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[
 abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector] extends TestSupport with MockHttp {
 
   def TestFinancialDetailsConnector: C
+
   def expectedBaseUrl: String
+
   def expectedApiHeaders: Seq[(String, String)]
 
   val testNino: String = "testNino"

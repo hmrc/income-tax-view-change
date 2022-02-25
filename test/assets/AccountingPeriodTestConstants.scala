@@ -29,13 +29,13 @@ object AccountingPeriodTestConstants {
   )
 
   val testAccountingPeriodJson = Json.obj(
-    "accountingPeriodStartDate"->"2017-06-01",
-    "accountingPeriodEndDate"->"2018-05-31"
+    "accountingPeriodStartDate" -> "2017-06-01",
+    "accountingPeriodEndDate" -> "2018-05-31"
   )
 
   val testAccountingPeriodToJson = Json.obj(
-    "start"->"2017-06-01",
-    "end"->"2018-05-31"
+    "start" -> "2017-06-01",
+    "end" -> "2018-05-31"
   )
 
 }

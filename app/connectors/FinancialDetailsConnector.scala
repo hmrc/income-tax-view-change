@@ -46,7 +46,9 @@ class FinancialDetailsConnectorIF @Inject()(val http: HttpClient,
 trait FinancialDetailsConnector extends RawResponseReads {
 
   def http: HttpClient
+
   def baseUrl: String
+
   def headers(implicit hc: HeaderCarrier): Seq[(String, String)]
 
   private[connectors] def financialDetailsUrl(nino: String): String = {

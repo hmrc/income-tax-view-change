@@ -107,7 +107,7 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
 
           res should have(
             httpStatus(OK),
-						jsonBodyMatching(jsonSuccessOutput())
+            jsonBodyMatching(jsonSuccessOutput())
           )
         }
       }

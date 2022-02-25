@@ -67,11 +67,11 @@ class LastTaxCalculationResponseModelSpec extends TestSupport with Matchers {
       }
       "be translated into Json correctly" in {
         Json.toJson(errorModel) should be
-          s"""
-             |{
-             |  "error": $errorStatus,
-             |  "message": "$errorMessage"
-             |}
+        s"""
+           |{
+           |  "error": $errorStatus,
+           |  "message": "$errorMessage"
+           |}
            """.stripMargin.trim
       }
     }

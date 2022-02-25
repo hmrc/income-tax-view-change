@@ -26,27 +26,27 @@ object FinancialDataTestConstants {
   val validChargesJson: JsValue = Json.parse(
     """
 			|{
-      |"balanceDetails": {
-      | "balanceDueWithin30Days": 100.00,
-      | "overDueAmount": 200.00,
-      | "totalBalance": 300.00
-      | },
-      | "codingDetails": [
-      |   {
-      |     "taxYearReturn": "2018",
-      |     "totalReturnAmount": 100.00,
-      |     "amountNotCoded": 200.00,
-      |     "amountNotCodedDueDate": "2018-01-01",
-      |     "amountCodedOut": 300.00,
-      |     "taxYearCoding": "2019"
-      |   }
-      | ],
+|"balanceDetails": {
+| "balanceDueWithin30Days": 100.00,
+| "overDueAmount": 200.00,
+| "totalBalance": 300.00
+| },
+|"codingDetails": [
+|   {
+|     "taxYearReturn": "2018",
+|     "totalReturnAmount": 100.00,
+|     "amountNotCoded": 200.00,
+|     "amountNotCodedDueDate": "2018-01-01",
+|     "amountCodedOut": 300.00,
+|     "taxYearCoding": "2019"
+|   }
+| ],
 			| "documentDetails": [
 			|   {
 			|     "taxYear": "2018",
 			|     "documentId": "id",
 			|     "documentDescription": "documentDescription",
-      |     "documentText": "documentText",
+|     "documentText": "documentText",
 			|     "totalAmount": 300.00,
 			|     "documentOutstandingAmount": 200.00,
 			|     "lastClearedAmount": 100.00,
@@ -54,13 +54,13 @@ object FinancialDataTestConstants {
 			|     "interestRate": 2.60,
 			|     "interestFromDate": "2018-08-01",
 			|     "interestEndDate": "2019-01-15",
-      |     "latePaymentInterestID": "latePaymentInterestID",
+|     "latePaymentInterestID": "latePaymentInterestID",
 			|     "latePaymentInterestAmount": 12.34,
 			|     "interestOutstandingAmount": 31.00,
 			|     "paymentLot": "paymentLot",
 			|     "paymentLotItem": "paymentLotItem",
-      |     "lpiWithDunningBlock": 12.50,
-      |     "amountCodedOut" : 3.21
+|     "lpiWithDunningBlock": 12.50,
+|     "amountCodedOut" : 3.21
 			|   },
 			|   {
 			|     "taxYear": "2019",
@@ -84,14 +84,14 @@ object FinancialDataTestConstants {
 			|     "documentOutstandingAmount": 500.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-      |     "accruedInterest": 1000,
+|     "accruedInterest": 1000,
 			|     "items": [{
 			|       "subItem": "1",
 			|       "amount": 100.00,
 			|       "clearingDate": "clearingDate",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
+|       "interestLock": "interestLock",
 			|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
@@ -113,15 +113,15 @@ object FinancialDataTestConstants {
 			|     "documentOutstandingAmount": 200.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-      |     "accruedInterest": 2000,
+|     "accruedInterest": 2000,
 			|     "items": [{
 			|       "subItem": "2",
 			|       "amount": 200.00,
 			|       "clearingDate": "clearingDate2",
 			|       "clearingReason": "clearingReason2",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod2",
-      |       "interestLock": "interestLock2",
-      |       "dunningLock": "dunningLock2",
+|       "interestLock": "interestLock2",
+|       "dunningLock": "dunningLock2",
 			|       "paymentReference": "paymentReference2",
 			|       "paymentAmount": 3000.00,
 			|       "dueDate": "dueDate2",
@@ -149,15 +149,15 @@ object FinancialDataTestConstants {
 			|     "clearedAmount": 500.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-      |     "accruedInterest": 1000,
+|     "accruedInterest": 1000,
 			|     "items": [{
 			|       "subItemId": "1",
 			|       "amount": 100.00,
 			|       "clearingDate": "clearingDate",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "dueDate",
@@ -306,8 +306,8 @@ object FinancialDataTestConstants {
 			|       "clearingDate": "clearingDate",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "dueDate",
@@ -343,8 +343,8 @@ object FinancialDataTestConstants {
 			|       "clearingDate": "clearingDate",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "dueDate",

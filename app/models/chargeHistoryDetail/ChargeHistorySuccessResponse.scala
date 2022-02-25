@@ -15,12 +15,13 @@
  */
 
 package models.chargeHistoryDetail
+
 import play.api.libs.json.{Json, OFormat}
 
 case class ChargeHistorySuccessResponse(idType: String,
-																				idValue: String,
-																				regimeType: String,
-																				chargeHistoryDetails: Option[List[ChargeHistoryDetailModel]])
+                                        idValue: String,
+                                        regimeType: String,
+                                        chargeHistoryDetails: Option[List[ChargeHistoryDetailModel]])
 
 object ChargeHistorySuccessResponse {
   implicit val format: OFormat[ChargeHistorySuccessResponse] = Json.format[ChargeHistorySuccessResponse]

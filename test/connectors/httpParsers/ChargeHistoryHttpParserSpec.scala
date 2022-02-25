@@ -23,7 +23,7 @@ import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-class ChargeHistoryHttpParserSpec extends TestSupport  {
+class ChargeHistoryHttpParserSpec extends TestSupport {
   "ChargeHistoryHttpParser" should {
     "return charge history" when {
       s"$OK is returned with valid json" in {
@@ -33,30 +33,30 @@ class ChargeHistoryHttpParserSpec extends TestSupport  {
         )
 
         val expectedResult: ChargeHistoryResponse = Right(ChargeHistorySuccessResponse(
-					idType = "MTDBSA",
-					idValue = "XAIT000000000000",
-					regimeType = "ITSA",
-					chargeHistoryDetails = Some(List(chargeHistoryDetail))))
+          idType = "MTDBSA",
+          idValue = "XAIT000000000000",
+          regimeType = "ITSA",
+          chargeHistoryDetails = Some(List(chargeHistoryDetail))))
         val actualResult: ChargeHistoryResponse = ChargeHistoryReads.read("", "", httpResponse)
 
         actualResult shouldBe expectedResult
       }
 
-			s"$OK is returned with no charge history" in {
-				val httpResponse: HttpResponse = HttpResponse(
-					responseStatus = OK,
-					responseJson = Some(testEmptyValidChargeHistorySuccessResponseJson)
-				)
+      s"$OK is returned with no charge history" in {
+        val httpResponse: HttpResponse = HttpResponse(
+          responseStatus = OK,
+          responseJson = Some(testEmptyValidChargeHistorySuccessResponseJson)
+        )
 
-				val expectedResult: ChargeHistoryResponse = Right(ChargeHistorySuccessResponse(
-					idType = "MTDBSA",
-					idValue = "XAIT000000000000",
-					regimeType = "ITSA",
-					chargeHistoryDetails = None))
-				val actualResult: ChargeHistoryResponse = ChargeHistoryReads.read("", "", httpResponse)
+        val expectedResult: ChargeHistoryResponse = Right(ChargeHistorySuccessResponse(
+          idType = "MTDBSA",
+          idValue = "XAIT000000000000",
+          regimeType = "ITSA",
+          chargeHistoryDetails = None))
+        val actualResult: ChargeHistoryResponse = ChargeHistoryReads.read("", "", httpResponse)
 
-				actualResult shouldBe expectedResult
-			}
+        actualResult shouldBe expectedResult
+      }
     }
     s"return $UnexpectedChargeHistoryResponse" when {
       "a 4xx status is returned" in {
