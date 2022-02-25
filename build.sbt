@@ -9,8 +9,8 @@ val appName = "income-tax-view-change"
 
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.14.0",
-  "uk.gov.hmrc" %% "logback-json-logger" % "4.6.0"
+  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.20.0",
+  "uk.gov.hmrc" %% "logback-json-logger" % "5.2.0"
 )
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
