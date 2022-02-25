@@ -23,14 +23,14 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 
   val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
 
-	val codingDetails: CodingDetails = CodingDetails(
-		taxYearReturn = "2018",
-		totalReturnAmount = None,
-		amountNotCoded = None,
-		amountNotCodedDueDate = None,
-		amountCodedOut = 100.00,
-		taxYearCoding = "2019"
-	)
+  val codingDetails: CodingDetails = CodingDetails(
+    taxYearReturn = "2018",
+    totalReturnAmount = None,
+    amountNotCoded = None,
+    amountNotCodedDueDate = None,
+    amountCodedOut = 100.00,
+    taxYearCoding = "2019"
+  )
 
   def document(documentId: String = "DOCID01",
                paymentLot: Option[String] = Some("lot01"),
@@ -103,37 +103,37 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 
         "no documents exist with a paymentLot and paymentLotId" in {
           ChargesResponse(balanceDetails = balanceDetails,
-						codingDetails = Some(List(codingDetails)),
-						documentDetails = List(document(paymentLot = None, paymentLotItem = None)),
-						financialDetails = List(financial())
-					).payments shouldBe List()
+            codingDetails = Some(List(codingDetails)),
+            documentDetails = List(document(paymentLot = None, paymentLotItem = None)),
+            financialDetails = List(financial())
+          ).payments shouldBe List()
         }
 
         "a payment document exists with no matching financial details" in {
           ChargesResponse(
-						balanceDetails = balanceDetails,
-						codingDetails = Some(List(codingDetails)),
-						documentDetails = List(document()),
-						financialDetails = List(financial(documentId = "DOCID02"))
-					).payments shouldBe List()
+            balanceDetails = balanceDetails,
+            codingDetails = Some(List(codingDetails)),
+            documentDetails = List(document()),
+            financialDetails = List(financial(documentId = "DOCID02"))
+          ).payments shouldBe List()
         }
 
         "a payment document exists with a matching financial details but no matching items" in {
           ChargesResponse(
-						balanceDetails = balanceDetails,
-						codingDetails = Some(List(codingDetails)),
-						documentDetails = List(document()),
-						financialDetails = List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))
-					).payments shouldBe List()
+            balanceDetails = balanceDetails,
+            codingDetails = Some(List(codingDetails)),
+            documentDetails = List(document()),
+            financialDetails = List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))
+          ).payments shouldBe List()
         }
 
         "a payment document exists with matching financial details but missing data" in {
           ChargesResponse(
-						balanceDetails = balanceDetails,
-						codingDetails = Some(List(codingDetails)),
-						documentDetails = List(document()),
-						financialDetails = List(financial(items = Some(List(subItem(paymentReference = None)))))
-					).payments shouldBe List()
+            balanceDetails = balanceDetails,
+            codingDetails = Some(List(codingDetails)),
+            documentDetails = List(document()),
+            financialDetails = List(financial(items = Some(List(subItem(paymentReference = None)))))
+          ).payments shouldBe List()
         }
       }
 
@@ -141,29 +141,29 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 
         "a single payment exists" in {
           ChargesResponse(
-						balanceDetails = balanceDetails,
-						codingDetails = Some(List(codingDetails)),
-						documentDetails = List(document()),
-						financialDetails = List(financial(items = Some(List(subItem()))))
-					).payments shouldBe List(
-						Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01")
-					)
+            balanceDetails = balanceDetails,
+            codingDetails = Some(List(codingDetails)),
+            documentDetails = List(document()),
+            financialDetails = List(financial(items = Some(List(subItem()))))
+          ).payments shouldBe List(
+            Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01")
+          )
         }
 
         "multiple payments exist" in {
           ChargesResponse(
-						balanceDetails = balanceDetails,
-						codingDetails = Some(List(codingDetails)),
-						documentDetails = List(
-							document(),
-							document("DOCID02", paymentLot = Some("lot02"))),
-						financialDetails = List(
-							financial(items = Some(List(subItem()))),
-							financial("DOCID02",items = Some(List(subItem(paymentLot = Some("lot02"))))))
-					).payments shouldBe List(
-						Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01"),
-						Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot02"), Some("item01"), Some("dueDate"), "DOCID02")
-					)
+            balanceDetails = balanceDetails,
+            codingDetails = Some(List(codingDetails)),
+            documentDetails = List(
+              document(),
+              document("DOCID02", paymentLot = Some("lot02"))),
+            financialDetails = List(
+              financial(items = Some(List(subItem()))),
+              financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))
+          ).payments shouldBe List(
+            Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01"),
+            Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot02"), Some("item01"), Some("dueDate"), "DOCID02")
+          )
         }
       }
     }
