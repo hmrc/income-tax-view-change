@@ -31,9 +31,9 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
 
     paymentDocuments.map { document =>
       val subItem = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
-          _.items.map(_.find(
-            item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
-          ))).flatten
+        _.items.map(_.find(
+          item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
+        ))).flatten
 
       Payment(
         reference = subItem.flatMap(_.paymentReference),
@@ -52,10 +52,10 @@ object ChargesResponse {
 
   implicit val writes: Writes[ChargesResponse] = Json.writes[ChargesResponse]
   implicit val reads: Reads[ChargesResponse] = (
-          (__ \ "balanceDetails").read[BalanceDetails] and
-            (__ \ "codingDetails").readNullable[List[CodingDetails]] and
-            readNullableList[DocumentDetail](__ \ "documentDetails") and
-            readNullableList[FinancialDetail](__ \ "financialDetails")
-          ) (ChargesResponse.apply _)
+    (__ \ "balanceDetails").read[BalanceDetails] and
+      (__ \ "codingDetails").readNullable[List[CodingDetails]] and
+      readNullableList[DocumentDetail](__ \ "documentDetails") and
+      readNullableList[FinancialDetail](__ \ "financialDetails")
+    ) (ChargesResponse.apply _)
 
 }

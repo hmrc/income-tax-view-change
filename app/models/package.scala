@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads, Writes}
+import play.api.libs.json.{JsPath, Reads}
 
 package object models {
 

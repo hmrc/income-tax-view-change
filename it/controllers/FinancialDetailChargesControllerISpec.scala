@@ -53,8 +53,8 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
         val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
           balanceDetails = balanceDetails,
           codingDetails = Some(List(codingDetails)),
-          documentDetails = Some(List(documentDetail, documentDetail2)),
-          financialDetails = Some(List(financialDetail, financialDetail2))
+          documentDetails = List(documentDetail, documentDetail2),
+          financialDetails = List(financialDetail, financialDetail2)
         ))
 
         res should have(
@@ -129,8 +129,8 @@ abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends 
         val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
           balanceDetails = balanceDetails,
           codingDetails = Some(List(codingDetails)),
-          documentDetails = Some(List(documentDetail, documentDetail2)),
-          financialDetails = Some(List(financialDetail, financialDetail2))
+          documentDetails = List(documentDetail, documentDetail2),
+          financialDetails = List(financialDetail, financialDetail2)
         ))
 
         res should have(
