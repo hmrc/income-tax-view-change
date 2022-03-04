@@ -22,4 +22,7 @@ package object models {
 
   def readNullableSeq[T](path: JsPath)(implicit reads: Reads[Seq[T]]): Reads[Seq[T]] = path.read[Seq[T]] orElse Reads.pure[Seq[T]](Nil)
 
+  def readNullableList[T](path: JsPath)(implicit reads: Reads[List[T]]): Reads[List[T]] = path.read[List[T]] orElse Reads.pure[List[T]](Nil)
+
 }
+

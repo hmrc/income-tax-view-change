@@ -197,8 +197,7 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
-    lpiWithDunningBlock = Some(12.50),
-    amountCodedOut = Some(3.21)
+    lpiWithDunningBlock = Some(12.50)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -217,8 +216,7 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
-    lpiWithDunningBlock = None,
-    amountCodedOut = None
+    lpiWithDunningBlock = None
   )
 
   val financialDetail: FinancialDetail = FinancialDetail(
