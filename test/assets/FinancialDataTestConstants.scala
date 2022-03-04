@@ -197,8 +197,7 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
-    lpiWithDunningBlock = Some(12.50),
-    amountCodedOut = Some(3.21)
+    lpiWithDunningBlock = Some(12.50)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -217,8 +216,7 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
-    lpiWithDunningBlock = None,
-    amountCodedOut = None
+    lpiWithDunningBlock = None
   )
 
   val financialDetail: FinancialDetail = FinancialDetail(
@@ -285,8 +283,8 @@ object FinancialDataTestConstants {
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
     codingDetails = Some(List(codingDetail)),
-    documentDetails = List(documentDetail),
-    financialDetails = List(financialDetail)
+    documentDetails = Some(List(documentDetail)),
+    financialDetails = Some(List(financialDetail))
   )
 
   val chargesResponseNoCodingDetails: ChargesResponse = chargesResponse.copy(codingDetails = None)
@@ -294,8 +292,8 @@ object FinancialDataTestConstants {
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
     codingDetails = Some(List(codingDetail)),
-    documentDetails = List(documentDetail, documentDetail2),
-    financialDetails = List(financialDetail, financialDetail2)
+    documentDetails = Some(List(documentDetail, documentDetail2)),
+    financialDetails = Some(List(financialDetail, financialDetail2))
   )
 
   val validSubItemJson: JsValue = Json.parse(

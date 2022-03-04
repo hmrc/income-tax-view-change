@@ -16,8 +16,10 @@
 
 package models.financialDetails.responses
 
+import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
 import org.scalatest.{Matchers, WordSpec}
+import play.api.libs.json.Json
 
 class ChargesResponseSpec extends WordSpec with Matchers {
 
@@ -30,6 +32,94 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     amountNotCodedDueDate = None,
     amountCodedOut = 100.00,
     taxYearCoding = "2019"
+  )
+
+  val chargeResponseMin = ChargesResponse(balanceDetails, None, None, None)
+  val chargeResponseMinJson = Json.obj(
+    "balanceDetails" -> Json.obj(
+      "balanceDueWithin30Days" -> 100.00,
+      "overDueAmount" -> 200.00,
+      "totalBalance" -> 300.00
+    ),
+    "documentDetails" -> Json.arr(),
+    "financialDetails" -> Json.arr()
+  )
+
+  val chargeResponseFull = ChargesResponse(balanceDetails = balanceDetails,
+    codingDetails = Some(List(CodingDetails(
+      taxYearReturn = "2018",
+      totalReturnAmount = Some(100.00),
+      amountNotCoded = Some(200.00),
+      amountNotCodedDueDate = Some("2018-01-01"),
+      amountCodedOut = 300.00,
+      taxYearCoding = "2019"))),
+    documentDetails = Some(List(documentDetail)),
+    financialDetails = Some(List(financialDetail)))
+  val chargeResponseFullJson = Json.obj(
+    "balanceDetails" -> Json.obj(
+      "balanceDueWithin30Days" -> 100.00,
+      "overDueAmount" -> 200.00,
+      "totalBalance" -> 300.00
+    ),
+    "codingDetails" -> Json.arr(Json.obj(
+      "taxYearReturn" -> "2018",
+      "totalReturnAmount" -> 100.00,
+      "amountNotCoded" -> 200.00,
+      "amountNotCodedDueDate" -> "2018-01-01",
+      "amountCodedOut" -> 300.00,
+      "taxYearCoding" -> "2019"
+    )),
+    "documentDetails" -> Json.arr(Json.obj(
+      "taxYear" -> "2018",
+      "transactionId" -> "id",
+      "documentDescription" -> "documentDescription",
+      "documentText" -> "documentText",
+      "originalAmount" -> 300.00,
+      "outstandingAmount" -> 200.00,
+      "documentDate" -> "2018-03-29",
+      "interestRate" -> 2.60,
+      "interestFromDate" -> "2018-08-01",
+      "interestEndDate" -> "2019-01-15",
+      "latePaymentInterestId" -> "latePaymentInterestID",
+      "latePaymentInterestAmount" -> 12.34,
+      "interestOutstandingAmount" -> 31.00,
+      "paymentLotItem" -> "paymentLotItem",
+      "paymentLot" -> "paymentLot",
+      "lpiWithDunningBlock" -> 12.50
+    )),
+    "financialDetails" -> Json.arr(Json.parse(
+      """
+			|{
+			|     "taxYear": "2018",
+			|     "transactionId": "id",
+			|     "transactionDate": "transactionDate",
+			|     "type": "type",
+			|     "totalAmount": 1000.00,
+			|     "originalAmount": 500.00,
+			|     "outstandingAmount": 500.00,
+			|     "clearedAmount": 500.00,
+			|     "chargeType": "POA1",
+			|     "mainType": "4920",
+|     "accruedInterest": 1000,
+			|     "items": [{
+			|       "subItemId": "1",
+			|       "amount": 100.00,
+			|       "clearingDate": "clearingDate",
+			|       "clearingReason": "clearingReason",
+			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
+			|       "paymentReference": "paymentReference",
+			|       "paymentAmount": 2000.00,
+			|       "dueDate": "dueDate",
+			|       "paymentMethod": "paymentMethod",
+			|       "paymentLot": "paymentLot",
+			|       "paymentLotItem": "paymentLotItem",
+			|       "paymentId": "paymentLot-paymentLotItem"
+			|       }
+			|     ]
+			|}
+			|""".stripMargin))
   )
 
   def document(documentId: String = "DOCID01",
@@ -51,8 +141,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       transactionId = documentId,
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
-      lpiWithDunningBlock = None,
-      amountCodedOut = None
+      lpiWithDunningBlock = None
     )
   }
 
@@ -104,8 +193,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
         "no documents exist with a paymentLot and paymentLotId" in {
           ChargesResponse(balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = List(document(paymentLot = None, paymentLotItem = None)),
-            financialDetails = List(financial())
+            documentDetails = Some(List(document(paymentLot = None, paymentLotItem = None))),
+            financialDetails = Some(List(financial()))
           ).payments shouldBe List()
         }
 
@@ -113,8 +202,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = List(document()),
-            financialDetails = List(financial(documentId = "DOCID02"))
+            documentDetails = Some(List(document())),
+            financialDetails = Some(List(financial(documentId = "DOCID02")))
           ).payments shouldBe List()
         }
 
@@ -122,8 +211,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = List(document()),
-            financialDetails = List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))
+            documentDetails = Some(List(document())),
+            financialDetails = Some(List(financial(items = Some(List(subItem(paymentLot = Some("lot02")))))))
           ).payments shouldBe List()
         }
 
@@ -131,8 +220,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = List(document()),
-            financialDetails = List(financial(items = Some(List(subItem(paymentReference = None)))))
+            documentDetails = Some(List(document())),
+            financialDetails = Some(List(financial(items = Some(List(subItem(paymentReference = None))))))
           ).payments shouldBe List()
         }
       }
@@ -143,8 +232,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = List(document()),
-            financialDetails = List(financial(items = Some(List(subItem()))))
+            documentDetails = Some(List(document())),
+            financialDetails = Some(List(financial(items = Some(List(subItem())))))
           ).payments shouldBe List(
             Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01")
           )
@@ -154,17 +243,26 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = List(
+            documentDetails = Some(List(
               document(),
-              document("DOCID02", paymentLot = Some("lot02"))),
-            financialDetails = List(
+              document("DOCID02", paymentLot = Some("lot02")))),
+            financialDetails = Some(List(
               financial(items = Some(List(subItem()))),
-              financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))
+              financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02")))))))
           ).payments shouldBe List(
             Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01"),
             Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot02"), Some("item01"), Some("dueDate"), "DOCID02")
           )
         }
+      }
+    }
+
+    "write to Json" when {
+      "the model has the minimal details" in {
+        Json.toJson(chargeResponseMin) shouldBe chargeResponseMinJson
+      }
+      "the model has the full details" in {
+        Json.toJson(chargeResponseFull) shouldBe chargeResponseFullJson
       }
     }
   }

@@ -47,8 +47,8 @@ abstract class FinancialDetailsControllerISpec(enableIF: Boolean) extends Compon
         val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
           balanceDetails = balanceDetails,
           codingDetails = Some(List(codingDetails)),
-          documentDetails = List(documentDetail, documentDetail2),
-          financialDetails = List(financialDetail, financialDetail2)
+          documentDetails = Some(List(documentDetail, documentDetail2)),
+          financialDetails = Some(List(financialDetail, financialDetail2))
         ))
 
         res should have(

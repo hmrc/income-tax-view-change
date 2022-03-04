@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import play.api.libs.json.{JsPath, Reads}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads, Writes}
 
 package object models {
 
@@ -22,4 +22,12 @@ package object models {
 
   def readNullableSeq[T](path: JsPath)(implicit reads: Reads[Seq[T]]): Reads[Seq[T]] = path.read[Seq[T]] orElse Reads.pure[Seq[T]](Nil)
 
+  def writeOptionList[T](fieldName: String)(implicit writes: Writes[T]): OWrites[Option[T]] = OWrites((ddlOpt: Option[T]) => {
+    val json = ddlOpt match {
+      case Some(ddl) => Json.toJson[T](ddl)
+      case None => Json.arr()
+    }
+    Json.obj(fieldName -> json)
+  })
 }
+

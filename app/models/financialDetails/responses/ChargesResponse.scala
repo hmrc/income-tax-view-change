@@ -17,21 +17,29 @@
 package models.financialDetails.responses
 
 import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, Payment}
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import models.writeOptionList
 
 case class ChargesResponse(balanceDetails: BalanceDetails,
                            codingDetails: Option[List[CodingDetails]],
-                           documentDetails: List[DocumentDetail],
-                           financialDetails: List[FinancialDetail]) {
+                           documentDetails: Option[List[DocumentDetail]],
+                           financialDetails: Option[List[FinancialDetail]]) {
 
   val payments: List[Payment] = {
-    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.paymentLot.isDefined && document.paymentLotItem.isDefined)
+    val paymentDocuments: List[DocumentDetail] = documentDetails match {
+      case Some(dds) => dds.filter(document => document.paymentLot.isDefined && document.paymentLotItem.isDefined)
+      case None => List.empty
+    }
 
     paymentDocuments.map { document =>
-      val subItem = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
-        _.items.map(_.find(
-          item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
-        ))).flatten
+      val subItem = financialDetails match {
+        case Some(fds) => fds.find(_.transactionId.equals(document.transactionId)).flatMap(
+          _.items.map(_.find(
+            item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
+          ))).flatten
+        case None => None
+      }
 
       Payment(
         reference = subItem.flatMap(_.paymentReference),
@@ -47,5 +55,13 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
 }
 
 object ChargesResponse {
-  implicit val format: OFormat[ChargesResponse] = Json.format[ChargesResponse]
+  implicit val writes: Writes[ChargesResponse] =
+    (
+      (__ \ "balanceDetails").write[BalanceDetails] and
+        (__ \ "codingDetails").writeNullable[List[CodingDetails]] and
+        writeOptionList[List[DocumentDetail]]("documentDetails") and
+        writeOptionList[List[FinancialDetail]]("financialDetails")
+      ) (unlift(ChargesResponse.unapply))
+
+  implicit val reads: Reads[ChargesResponse] = Json.reads[ChargesResponse]
 }
