@@ -169,11 +169,11 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedApiHeaders
-        )(Right(ChargesResponse(testBalanceDetails, Some(codingDetails), Some(documentDetails), Some(financialDetails))))
+        )(Right(ChargesResponse(testBalanceDetails, Some(codingDetails), documentDetails, financialDetails)))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
-        result shouldBe Right(ChargesResponse(testBalanceDetails, Some(codingDetails), Some(documentDetails), Some(financialDetails)))
+        result shouldBe Right(ChargesResponse(testBalanceDetails, Some(codingDetails), documentDetails, financialDetails))
       }
     }
 
@@ -224,8 +224,8 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
         val expectedResponse = Right(ChargesResponse(
           codingDetails = Some(List(codingDetail)),
           balanceDetails = testBalanceDetails,
-          documentDetails = Some(List(documentDetail)),
-          financialDetails = Some(List(financialDetail))))
+          documentDetails = List(documentDetail),
+          financialDetails = List(financialDetail)))
 
         mockDesGet[ChargeResponseError, ChargesResponse](
           url = expectedUrl,

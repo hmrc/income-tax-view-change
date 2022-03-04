@@ -283,8 +283,8 @@ object FinancialDataTestConstants {
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
     codingDetails = Some(List(codingDetail)),
-    documentDetails = Some(List(documentDetail)),
-    financialDetails = Some(List(financialDetail))
+    documentDetails = List(documentDetail),
+    financialDetails = List(financialDetail)
   )
 
   val chargesResponseNoCodingDetails: ChargesResponse = chargesResponse.copy(codingDetails = None)
@@ -292,8 +292,8 @@ object FinancialDataTestConstants {
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
     codingDetails = Some(List(codingDetail)),
-    documentDetails = Some(List(documentDetail, documentDetail2)),
-    financialDetails = Some(List(financialDetail, financialDetail2))
+    documentDetails = List(documentDetail, documentDetail2),
+    financialDetails = List(financialDetail, financialDetail2)
   )
 
   val validSubItemJson: JsValue = Json.parse(

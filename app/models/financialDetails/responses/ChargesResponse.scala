@@ -19,27 +19,21 @@ package models.financialDetails.responses
 import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, Payment}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import models.writeOptionList
+import models.readNullableList
 
 case class ChargesResponse(balanceDetails: BalanceDetails,
                            codingDetails: Option[List[CodingDetails]],
-                           documentDetails: Option[List[DocumentDetail]],
-                           financialDetails: Option[List[FinancialDetail]]) {
+                           documentDetails: List[DocumentDetail],
+                           financialDetails: List[FinancialDetail]) {
 
   val payments: List[Payment] = {
-    val paymentDocuments: List[DocumentDetail] = documentDetails match {
-      case Some(dds) => dds.filter(document => document.paymentLot.isDefined && document.paymentLotItem.isDefined)
-      case None => List.empty
-    }
+    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.paymentLot.isDefined && document.paymentLotItem.isDefined)
 
     paymentDocuments.map { document =>
-      val subItem = financialDetails match {
-        case Some(fds) => fds.find(_.transactionId.equals(document.transactionId)).flatMap(
+      val subItem = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
           _.items.map(_.find(
             item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
           ))).flatten
-        case None => None
-      }
 
       Payment(
         reference = subItem.flatMap(_.paymentReference),
@@ -55,13 +49,13 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
 }
 
 object ChargesResponse {
-  implicit val writes: Writes[ChargesResponse] =
-    (
-      (__ \ "balanceDetails").write[BalanceDetails] and
-        (__ \ "codingDetails").writeNullable[List[CodingDetails]] and
-        writeOptionList[List[DocumentDetail]]("documentDetails") and
-        writeOptionList[List[FinancialDetail]]("financialDetails")
-      ) (unlift(ChargesResponse.unapply))
 
-  implicit val reads: Reads[ChargesResponse] = Json.reads[ChargesResponse]
+  implicit val writes: Writes[ChargesResponse] = Json.writes[ChargesResponse]
+  implicit val reads: Reads[ChargesResponse] = (
+          (__ \ "balanceDetails").read[BalanceDetails] and
+            (__ \ "codingDetails").readNullable[List[CodingDetails]] and
+            readNullableList[DocumentDetail](__ \ "documentDetails") and
+            readNullableList[FinancialDetail](__ \ "financialDetails")
+          ) (ChargesResponse.apply _)
+
 }

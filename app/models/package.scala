@@ -22,12 +22,7 @@ package object models {
 
   def readNullableSeq[T](path: JsPath)(implicit reads: Reads[Seq[T]]): Reads[Seq[T]] = path.read[Seq[T]] orElse Reads.pure[Seq[T]](Nil)
 
-  def writeOptionList[T](fieldName: String)(implicit writes: Writes[T]): OWrites[Option[T]] = OWrites((ddlOpt: Option[T]) => {
-    val json = ddlOpt match {
-      case Some(ddl) => Json.toJson[T](ddl)
-      case None => Json.arr()
-    }
-    Json.obj(fieldName -> json)
-  })
+  def readNullableList[T](path: JsPath)(implicit reads: Reads[List[T]]): Reads[List[T]] = path.read[List[T]] orElse Reads.pure[List[T]](Nil)
+
 }
 

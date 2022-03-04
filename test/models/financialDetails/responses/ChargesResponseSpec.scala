@@ -19,7 +19,7 @@ package models.financialDetails.responses
 import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsSuccess, Json}
 
 class ChargesResponseSpec extends WordSpec with Matchers {
 
@@ -34,8 +34,9 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     taxYearCoding = "2019"
   )
 
-  val chargeResponseMin = ChargesResponse(balanceDetails, None, None, None)
-  val chargeResponseMinJson = Json.obj(
+  val chargeResponseMinWrite = ChargesResponse(balanceDetails, None, List(), List())
+
+  val chargeResponseMinWriteJson = Json.obj(
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
       "overDueAmount" -> 200.00,
@@ -43,6 +44,16 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     ),
     "documentDetails" -> Json.arr(),
     "financialDetails" -> Json.arr()
+  )
+
+  val chargeResponseMinRead = ChargesResponse(balanceDetails, None, List(), List())
+
+  val chargeResponseMinReadJson = Json.obj(
+    "balanceDetails" -> Json.obj(
+      "balanceDueWithin30Days" -> 100.00,
+      "overDueAmount" -> 200.00,
+      "totalBalance" -> 300.00
+    )
   )
 
   val chargeResponseFull = ChargesResponse(balanceDetails = balanceDetails,
@@ -53,8 +64,9 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       amountNotCodedDueDate = Some("2018-01-01"),
       amountCodedOut = 300.00,
       taxYearCoding = "2019"))),
-    documentDetails = Some(List(documentDetail)),
-    financialDetails = Some(List(financialDetail)))
+    documentDetails = List(documentDetail),
+    financialDetails = List(financialDetail))
+
   val chargeResponseFullJson = Json.obj(
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
@@ -193,8 +205,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
         "no documents exist with a paymentLot and paymentLotId" in {
           ChargesResponse(balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = Some(List(document(paymentLot = None, paymentLotItem = None))),
-            financialDetails = Some(List(financial()))
+            documentDetails = List(document(paymentLot = None, paymentLotItem = None)),
+            financialDetails = List(financial())
           ).payments shouldBe List()
         }
 
@@ -202,8 +214,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = Some(List(document())),
-            financialDetails = Some(List(financial(documentId = "DOCID02")))
+            documentDetails = List(document()),
+            financialDetails = List(financial(documentId = "DOCID02"))
           ).payments shouldBe List()
         }
 
@@ -211,8 +223,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = Some(List(document())),
-            financialDetails = Some(List(financial(items = Some(List(subItem(paymentLot = Some("lot02")))))))
+            documentDetails = List(document()),
+            financialDetails = List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))
           ).payments shouldBe List()
         }
 
@@ -220,8 +232,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = Some(List(document())),
-            financialDetails = Some(List(financial(items = Some(List(subItem(paymentReference = None))))))
+            documentDetails = List(document()),
+            financialDetails = List(financial(items = Some(List(subItem(paymentReference = None)))))
           ).payments shouldBe List()
         }
       }
@@ -232,8 +244,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = Some(List(document())),
-            financialDetails = Some(List(financial(items = Some(List(subItem())))))
+            documentDetails = List(document()),
+            financialDetails = List(financial(items = Some(List(subItem()))))
           ).payments shouldBe List(
             Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01")
           )
@@ -243,12 +255,12 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = Some(List(
+            documentDetails = List(
               document(),
-              document("DOCID02", paymentLot = Some("lot02")))),
-            financialDetails = Some(List(
+              document("DOCID02", paymentLot = Some("lot02"))),
+            financialDetails = List(
               financial(items = Some(List(subItem()))),
-              financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02")))))))
+              financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))
           ).payments shouldBe List(
             Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01"),
             Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot02"), Some("item01"), Some("dueDate"), "DOCID02")
@@ -257,9 +269,14 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       }
     }
 
+    "read from Json" when {
+      "the model has the minimal details" in {
+        Json.fromJson[ChargesResponse](chargeResponseMinReadJson) shouldBe JsSuccess(chargeResponseMinRead)
+      }
+    }
     "write to Json" when {
       "the model has the minimal details" in {
-        Json.toJson(chargeResponseMin) shouldBe chargeResponseMinJson
+        Json.toJson(chargeResponseMinWrite) shouldBe chargeResponseMinWriteJson
       }
       "the model has the full details" in {
         Json.toJson(chargeResponseFull) shouldBe chargeResponseFullJson
