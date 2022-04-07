@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.FinancialDataTestConstants.{chargesResponse, chargesResponseNoCodingDetails}
+import assets.FinancialDataTestConstants.{chargesResponseNoCodingDetails2, creditChargesResponse}
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}
@@ -39,6 +39,15 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
     )
   )
 
+  val paymentJsonCredit: JsArray = Json.arr(
+    Json.obj(
+      "reference" -> "paymentReference",
+      "amount" -> -1000,
+      "date" -> "dueDate",
+      "transactionId" -> "id"
+    )
+  )
+
   val controllerComponents: ControllerComponents = stubControllerComponents()
 
   object TestFinancialDetailPaymentsController extends FinancialDetailPaymentsController(
@@ -56,21 +65,21 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
     s"return $OK with the retrieved payment details from the charge details" when {
       "the connector returns the charge details" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Right(chargesResponse))
+        mockListCharges(nino, from, to)(Right(creditChargesResponse))
 
         val result = TestFinancialDetailPaymentsController.getPaymentDetails(nino, from, to)(FakeRequest())
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe paymentJson
+        contentAsJson(result) shouldBe paymentJsonCredit
       }
       "the connector returns the charge details with no CodingDetails" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Right(chargesResponseNoCodingDetails))
+        mockListCharges(nino, from, to)(Right(chargesResponseNoCodingDetails2))
 
         val result = TestFinancialDetailPaymentsController.getPaymentDetails(nino, from, to)(FakeRequest())
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe paymentJson
+        contentAsJson(result) shouldBe paymentJsonCredit
       }
     }
 

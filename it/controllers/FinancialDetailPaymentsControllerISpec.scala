@@ -23,20 +23,20 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
 
   val payments1: Payment = Payment(
     reference = Some("paymentReference"),
-    amount = Some(BigDecimal("300.00")),
+    amount = Some(BigDecimal("-1000.00")),
     method = Some("paymentMethod"),
-    lot = Some("lot01"),
-    lotItem = Some("0001"),
+    lot = None,
+    lotItem = None,
     date = Some("dueDate"),
     transactionId = "id"
   )
 
   val payments2: Payment = Payment(
     reference = Some("paymentReference2"),
-    amount = Some(BigDecimal("100.00")),
+    amount = Some(BigDecimal("-1000.00")),
     method = Some("paymentMethod2"),
-    lot = Some("lot02"),
-    lotItem = Some("0001"),
+    lot = None,
+    lotItem = None,
     date = Some("dueDate2"),
     transactionId = "id2"
   )
@@ -63,22 +63,18 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
         "documentId" -> "id",
         "documentDescription" -> "documentDescription",
         "documentText" -> "documentText",
-        "totalAmount" -> 300.00,
-        "documentOutstandingAmount" -> 200.00,
-        "documentDate" -> "2018-03-29",
-        "paymentLot" -> "lot01",
-        "paymentLotItem" -> "0001"
+        "totalAmount" -> -1000.00,
+        "documentOutstandingAmount" -> 0.00,
+        "documentDate" -> "2018-03-29"
       ),
       Json.obj(
         "taxYear" -> "2019",
         "documentId" -> "id2",
         "documentDescription" -> "documentDescription2",
         "documentText" -> "documentText2",
-        "totalAmount" -> 100.00,
-        "documentOutstandingAmount" -> 50.00,
-        "documentDate" -> "2018-03-29",
-        "paymentLot" -> "lot02",
-        "paymentLotItem" -> "0001"
+        "totalAmount" -> -1000.00,
+        "documentOutstandingAmount" -> 0.00,
+        "documentDate" -> "2018-03-29"
       )
     ),
     "financialDetails" -> Json.arr(
@@ -87,23 +83,21 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
         "documentId" -> "id",
         "documentDate" -> "transactionDate",
         "documentDescription" -> "type",
-        "originalAmount" -> 1000.00,
-        "totalAmount" -> 1000.00,
-        "originalAmount" -> 500.00,
-        "documentOutstandingAmount" -> 500.00,
+        "originalAmount" -> -1000.00,
+        "totalAmount" -> -1000.00,
+        "originalAmount" -> -1000.00,
+        "documentOutstandingAmount" -> 0.00,
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "1",
-            "amount" -> 100.00,
+            "amount" -> -1000.00,
             "clearingDate" -> "clearingDate",
             "clearingReason" -> "clearingReason",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod",
             "paymentReference" -> "paymentReference",
-            "paymentAmount" -> 2000.00,
+            "paymentAmount" -> -1000.00,
             "dueDate" -> "dueDate",
-            "paymentMethod" -> "paymentMethod",
-            "paymentLot" -> "lot01",
-            "paymentLotItem" -> "0001"
+            "paymentMethod" -> "paymentMethod"
           )
         )
       ),
@@ -112,22 +106,20 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
         "documentId" -> "id2",
         "documentDate" -> "transactionDate2",
         "documentDescription" -> "type2",
-        "totalAmount" -> 2000.00,
-        "originalAmount" -> 500.00,
-        "documentOutstandingAmount" -> 200.00,
+        "totalAmount" -> -1000.00,
+        "originalAmount" -> -1000.00,
+        "documentOutstandingAmount" -> 0.00,
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "2",
-            "amount" -> 200.00,
+            "amount" -> -1000.00,
             "clearingDate" -> "clearingDate2",
             "clearingReason" -> "clearingReason2",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod2",
             "paymentReference" -> "paymentReference2",
-            "paymentAmount" -> 3000.00,
+            "paymentAmount" -> -1000.00,
             "dueDate" -> "dueDate2",
-            "paymentMethod" -> "paymentMethod2",
-            "paymentLot" -> "lot02",
-            "paymentLotItem" -> "0001"
+            "paymentMethod" -> "paymentMethod2"
           )
         )
       )

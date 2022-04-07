@@ -157,6 +157,27 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     )
   }
 
+  def document2(documentId: String = "DOCID01"): DocumentDetail = {
+    DocumentDetail(
+      taxYear = "2018",
+      documentDescription = None,
+      documentText = None,
+      originalAmount = Some(-1000),
+      outstandingAmount = Some(700),
+      documentDate = "date",
+      interestRate = None,
+      interestFromDate = None,
+      interestEndDate = None,
+      latePaymentInterestId = None,
+      latePaymentInterestAmount = None,
+      interestOutstandingAmount = None,
+      transactionId = documentId,
+      paymentLot = None,
+      paymentLotItem = None,
+      lpiWithDunningBlock = None
+    )
+  }
+
   def financial(documentId: String = "DOCID01", items: Option[List[SubItem]] = None): FinancialDetail = {
     FinancialDetail(
       taxYear = "2018",
@@ -244,10 +265,10 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ChargesResponse(
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
-            documentDetails = List(document()),
+            documentDetails = List(document2()),
             financialDetails = List(financial(items = Some(List(subItem()))))
           ).payments shouldBe List(
-            Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01")
+            Payment(Some("ref"), Some(-1000.0), Some("method"), None, None, Some("dueDate"), "DOCID01")
           )
         }
 
@@ -256,14 +277,14 @@ class ChargesResponseSpec extends WordSpec with Matchers {
             balanceDetails = balanceDetails,
             codingDetails = Some(List(codingDetails)),
             documentDetails = List(
-              document(),
-              document("DOCID02", paymentLot = Some("lot02"))),
+              document2(),
+              document2("DOCID02")),
             financialDetails = List(
               financial(items = Some(List(subItem()))),
               financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))
           ).payments shouldBe List(
-            Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot01"), Some("item01"), Some("dueDate"), "DOCID01"),
-            Payment(Some("ref"), Some(1000.0), Some("method"), Some("lot02"), Some("item01"), Some("dueDate"), "DOCID02")
+            Payment(Some("ref"), Some(-1000.0), Some("method"), None, None, Some("dueDate"), "DOCID01"),
+            Payment(Some("ref"), Some(-1000.0), Some("method"), None, None, Some("dueDate"), "DOCID02")
           )
         }
       }

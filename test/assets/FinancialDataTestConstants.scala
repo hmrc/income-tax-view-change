@@ -219,6 +219,56 @@ object FinancialDataTestConstants {
     lpiWithDunningBlock = None
   )
 
+  val documentDetail3: DocumentDetail = DocumentDetail(
+    taxYear = "2018",
+    documentDescription = None,
+    documentText = None,
+    originalAmount = Some(-1000),
+    outstandingAmount = Some(0),
+    documentDate = "date",
+    interestRate = None,
+    interestFromDate = None,
+    interestEndDate = None,
+    latePaymentInterestId = None,
+    latePaymentInterestAmount = None,
+    interestOutstandingAmount = None,
+    transactionId = "id",
+    paymentLot = None,
+    paymentLotItem = None,
+    lpiWithDunningBlock = None
+  )
+
+  val financialDetail3: FinancialDetail = FinancialDetail(
+    taxYear = "2018",
+    transactionId = "id",
+    transactionDate = Some("transactionDate"),
+    `type` = Some("type"),
+    totalAmount = Some(BigDecimal("-1000.00")),
+    originalAmount = Some(BigDecimal(-1000.00)),
+    outstandingAmount = Some(BigDecimal("0")),
+    clearedAmount = Some(BigDecimal(-1000.00)),
+    chargeType = Some("Cutover Credits"),
+    mainType = Some("ITSA Cutover Credits"),
+    accruedInterest = Some(BigDecimal("0")),
+    items = Some(Seq(
+      SubItem(
+        subItemId = Some("1"),
+        amount = Some(BigDecimal("-1000.00")),
+        clearingDate = Some("clearingDate"),
+        clearingReason = Some("clearingReason"),
+        outgoingPaymentMethod = Some("outgoingPaymentMethod"),
+        interestLock = Some("interestLock"),
+        dunningLock = Some("dunningLock"),
+        paymentReference = Some("paymentReference"),
+        paymentAmount = None,
+        dueDate = Some("dueDate"),
+        paymentMethod = None,
+        paymentLot = None,
+        paymentLotItem = None,
+        paymentId = None
+      )))
+  )
+
   val financialDetail: FinancialDetail = FinancialDetail(
     taxYear = "2018",
     transactionId = "id",
@@ -286,6 +336,15 @@ object FinancialDataTestConstants {
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail)
   )
+
+  val creditChargesResponse: ChargesResponse = ChargesResponse(
+    balanceDetails = testBalanceDetails,
+    codingDetails = Some(List(codingDetail)),
+    documentDetails = List(documentDetail3),
+    financialDetails = List(financialDetail3)
+  )
+
+  val chargesResponseNoCodingDetails2: ChargesResponse = creditChargesResponse.copy(codingDetails = None)
 
   val chargesResponseNoCodingDetails: ChargesResponse = chargesResponse.copy(codingDetails = None)
 
