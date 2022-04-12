@@ -27,13 +27,22 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
                            financialDetails: List[FinancialDetail]) {
 
   val payments: List[Payment] = {
-    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.paymentLot.isDefined && document.paymentLotItem.isDefined)
-
+    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.originalAmount.exists(_< 0))
     paymentDocuments.map { document =>
-      val subItem = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+      val subItem = {
+        if (document.paymentLot.isDefined && document.paymentLotItem.isDefined) {
+        financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
         _.items.map(_.find(
           item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
         ))).flatten
+      } else {
+          financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+            _.items.map(_.find(
+              item => item.dueDate.isDefined
+            ))).flatten
+        }
+      }
+
 
       Payment(
         reference = subItem.flatMap(_.paymentReference),
