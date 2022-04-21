@@ -23,7 +23,7 @@ import play.api.libs.json.{JsSuccess, Json}
 
 class ChargesResponseSpec extends WordSpec with Matchers {
 
-  val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
+	val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None)
 
   val codingDetails: CodingDetails = CodingDetails(
     taxYearReturn = "2018",
