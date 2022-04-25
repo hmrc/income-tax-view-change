@@ -170,7 +170,7 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00)
+  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None)
 
   val codingDetail: CodingDetails = CodingDetails(
     taxYearReturn = "2018",
@@ -363,8 +363,8 @@ object FinancialDataTestConstants {
 			|       "clearingDate": "clearingDate",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-|       "interestLock": "interestLock",
-|       "dunningLock": "dunningLock",
+      |       "interestLock": "interestLock",
+      |       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "dueDate",
@@ -400,8 +400,8 @@ object FinancialDataTestConstants {
 			|       "clearingDate": "clearingDate",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-|       "interestLock": "interestLock",
-|       "dunningLock": "dunningLock",
+      |       "interestLock": "interestLock",
+      |       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "dueDate",

@@ -135,7 +135,10 @@ object FinancialDetailIntegrationTestConstants {
   val balanceDetails: BalanceDetails = BalanceDetails(
     balanceDueWithin30Days = 100.00,
     overDueAmount = 200.00,
-    totalBalance = 300.00
+    totalBalance = 300.00,
+    None,
+    None,
+    None
   )
 
   val codingDetails: CodingDetails = CodingDetails(
