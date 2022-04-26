@@ -54,7 +54,7 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
         transactionId = document.transactionId
       )
     }
-  }.filter(_.reference.isDefined)
+  }
 }
 
 object ChargesResponse {
