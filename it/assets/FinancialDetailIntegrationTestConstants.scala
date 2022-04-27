@@ -25,7 +25,8 @@ object FinancialDetailIntegrationTestConstants {
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
       "overDueAmount" -> 200.00,
-      "totalBalance" -> 300.00
+      "totalBalance" -> 300.00,
+      "unallocatedCredit" -> 400.00
     ),
     "codingDetails" -> Json.arr(
       Json.obj(
@@ -138,7 +139,8 @@ object FinancialDetailIntegrationTestConstants {
     totalBalance = 300.00,
     None,
     None,
-    None
+    None,
+    unallocatedCredit = Some(400.00)
   )
 
   val codingDetails: CodingDetails = CodingDetails(

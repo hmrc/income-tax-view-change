@@ -29,7 +29,8 @@ object FinancialDataTestConstants {
 |"balanceDetails": {
 | "balanceDueWithin30Days": 100.00,
 | "overDueAmount": 200.00,
-| "totalBalance": 300.00
+| "totalBalance": 300.00,
+| "unallocatedCredit": 400.00
 | },
 |"codingDetails": [
 |   {
@@ -170,7 +171,7 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None)
+  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, Some(400.00))
 
   val codingDetail: CodingDetails = CodingDetails(
     taxYearReturn = "2018",
