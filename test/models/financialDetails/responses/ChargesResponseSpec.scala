@@ -23,7 +23,7 @@ import play.api.libs.json.{JsSuccess, Json}
 
 class ChargesResponseSpec extends WordSpec with Matchers {
 
-	val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None)
+	val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, Some(400.00))
 
   val codingDetails: CodingDetails = CodingDetails(
     taxYearReturn = "2018",
@@ -40,7 +40,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
       "overDueAmount" -> 200.00,
-      "totalBalance" -> 300.00
+      "totalBalance" -> 300.00,
+      "unallocatedCredit" -> 400.00
     ),
     "documentDetails" -> Json.arr(),
     "financialDetails" -> Json.arr()
@@ -52,7 +53,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
       "overDueAmount" -> 200.00,
-      "totalBalance" -> 300.00
+      "totalBalance" -> 300.00,
+      "unallocatedCredit" -> 400.00
     )
   )
 
@@ -71,7 +73,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
       "overDueAmount" -> 200.00,
-      "totalBalance" -> 300.00
+      "totalBalance" -> 300.00,
+      "unallocatedCredit" -> 400.00
     ),
     "codingDetails" -> Json.arr(Json.obj(
       "taxYearReturn" -> "2018",
