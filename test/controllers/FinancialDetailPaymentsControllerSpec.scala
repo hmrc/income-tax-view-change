@@ -31,6 +31,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
     Json.obj(
       "reference" -> "paymentReference",
       "amount" -> 300,
+      "outstandingAmount" -> 0,
       "method" -> "paymentMethod",
       "lot" -> "paymentLot",
       "lotItem" -> "paymentLotItem",
@@ -43,6 +44,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
     Json.obj(
       "reference" -> "paymentReference",
       "amount" -> -1000,
+      "outstandingAmount" -> 0,
       "date" -> "dueDate",
       "transactionId" -> "id"
     )

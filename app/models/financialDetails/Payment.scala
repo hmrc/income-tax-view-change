@@ -20,6 +20,7 @@ import play.api.libs.json._
 
 case class Payment(reference: Option[String],
                    amount: Option[BigDecimal],
+                   outstandingAmount: Option[BigDecimal],
                    method: Option[String],
                    lot: Option[String],
                    lotItem: Option[String],

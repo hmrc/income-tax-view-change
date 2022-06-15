@@ -27,15 +27,15 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
                            financialDetails: List[FinancialDetail]) {
 
   val payments: List[Payment] = {
-    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.originalAmount.exists(_< 0))
+    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.originalAmount.exists(_ < 0))
     paymentDocuments.map { document =>
       val subItem = {
         if (document.paymentLot.isDefined && document.paymentLotItem.isDefined) {
-        financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
-        _.items.map(_.find(
-          item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
-        ))).flatten
-      } else {
+          financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+            _.items.map(_.find(
+              item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
+            ))).flatten
+        } else {
           financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
             _.items.map(_.find(
               item => item.dueDate.isDefined
@@ -47,6 +47,7 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
       Payment(
         reference = subItem.flatMap(_.paymentReference),
         amount = document.originalAmount,
+        outstandingAmount = document.outstandingAmount,
         method = subItem.flatMap(_.paymentMethod),
         lot = document.paymentLot,
         lotItem = document.paymentLotItem,
