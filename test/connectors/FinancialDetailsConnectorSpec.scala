@@ -44,8 +44,6 @@ class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[
 
   override val expectedBaseUrl: String = microserviceAppConfig.ifUrl
 
-  private val requestId = "mdtp-request-id"
-
   override val expectedApiHeaders = Seq(
     "Environment" -> "localIFEnvironment",
     "Authorization" -> "Bearer localIFToken"

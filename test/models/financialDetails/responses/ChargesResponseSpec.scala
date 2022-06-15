@@ -271,7 +271,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
             documentDetails = List(document2()),
             financialDetails = List(financial(items = Some(List(subItem()))))
           ).payments shouldBe List(
-            Payment(Some("ref"), Some(-1000.0), Some("method"), None, None, Some("dueDate"), "DOCID01")
+            Payment(Some("ref"), Some(-1000.0), Some(700), Some("method"), None, None, Some("dueDate"), "DOCID01")
           )
         }
 
@@ -286,8 +286,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
               financial(items = Some(List(subItem()))),
               financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))
           ).payments shouldBe List(
-            Payment(Some("ref"), Some(-1000.0), Some("method"), None, None, Some("dueDate"), "DOCID01"),
-            Payment(Some("ref"), Some(-1000.0), Some("method"), None, None, Some("dueDate"), "DOCID02")
+            Payment(Some("ref"), Some(-1000.0), Some(700), Some("method"), None, None, Some("dueDate"), "DOCID01"),
+            Payment(Some("ref"), Some(-1000.0), Some(700), Some("method"), None, None, Some("dueDate"), "DOCID02")
           )
         }
       }

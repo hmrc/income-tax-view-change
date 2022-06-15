@@ -24,6 +24,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
   val payments1: Payment = Payment(
     reference = Some("paymentReference"),
     amount = Some(BigDecimal("-1000.00")),
+    outstandingAmount = Some(BigDecimal("0")),
     method = Some("paymentMethod"),
     lot = None,
     lotItem = None,
@@ -34,6 +35,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
   val payments2: Payment = Payment(
     reference = Some("paymentReference2"),
     amount = Some(BigDecimal("-1000.00")),
+    outstandingAmount = Some(BigDecimal("0")),
     method = Some("paymentMethod2"),
     lot = None,
     lotItem = None,
