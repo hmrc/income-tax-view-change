@@ -38,7 +38,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     amount = Some(BigDecimal("-1000.00")),
     outstandingAmount = Some(BigDecimal("0")),
     method = Some("paymentMethod2"),
-    documentDescription =  Some("documentDescription"),
+    documentDescription =  Some("documentDescription2"),
     lot = None,
     lotItem = None,
     date = Some("dueDate2"),
