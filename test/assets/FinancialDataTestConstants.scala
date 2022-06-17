@@ -222,7 +222,7 @@ object FinancialDataTestConstants {
 
   val documentDetail3: DocumentDetail = DocumentDetail(
     taxYear = "2018",
-    documentDescription = None,
+    documentDescription = Some("documentDescription"),
     documentText = None,
     originalAmount = Some(-1000),
     outstandingAmount = Some(0),
