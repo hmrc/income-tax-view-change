@@ -32,6 +32,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "reference" -> "paymentReference",
       "amount" -> 300,
       "outstandingAmount" -> 0,
+      "documentDescription" -> "documentDescription",
       "method" -> "paymentMethod",
       "lot" -> "paymentLot",
       "lotItem" -> "paymentLotItem",
@@ -45,6 +46,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "reference" -> "paymentReference",
       "amount" -> -1000,
       "outstandingAmount" -> 0,
+      "documentDescription" -> "documentDescription",
       "date" -> "dueDate",
       "transactionId" -> "id"
     )
