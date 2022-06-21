@@ -31,21 +31,34 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
   def listRepaymentHistoryDetailsUrl(nino: String): String =
     s"${appConfig.desUrl}/repayments/$nino"
 
-  private[connectors] def queryParameters(repaymentId: String, fromDate: String, toDate: String): Seq[(String, String)] = {
+  private[connectors] def dateQueryParameters(fromDate: String, toDate: String): Seq[(String, String)] = {
     Seq(
-      "repaymentId" -> repaymentId,
       "fromDate" -> fromDate,
       "toDate" -> toDate
     )
   }
 
-  def getRepaymentHistoryDetails(nino: String,
-                                 repaymentId: String,
-                                 fromDate: String,
-                                 toDate: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
+  private[connectors] def IdQueryParameters(repaymentId: String): Seq[(String, String)] = {
+    Seq(
+      "repaymentId" -> repaymentId
+    )
+  }
+
+  def getRepaymentHistoryDetailsByDate(nino: String,
+                                       fromDate: String,
+                                       toDate: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
     http.GET(
       url = listRepaymentHistoryDetailsUrl(nino),
-      queryParams = queryParameters(repaymentId, fromDate, toDate),
+      queryParams = dateQueryParameters(fromDate, toDate),
+      headers = appConfig.desAuthHeaders
+    )(RepaymentHistoryReads, headerCarrier, ec)
+  }
+
+  def getRepaymentHistoryDetailsById(nino: String,
+                                     repaymentId: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
+    http.GET(
+      url = listRepaymentHistoryDetailsUrl(nino),
+      queryParams = IdQueryParameters(repaymentId),
       headers = appConfig.desAuthHeaders
     )(RepaymentHistoryReads, headerCarrier, ec)
   }
