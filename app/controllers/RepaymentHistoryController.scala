@@ -17,7 +17,6 @@
 package controllers
 
 import connectors.RepaymentHistoryDetailsConnector
-import connectors.httpParsers.ChargeHistoryHttpParser.UnexpectedChargeHistoryResponse
 import connectors.httpParsers.RepaymentHistoryHttpParser.UnexpectedRepaymentHistoryResponse
 import controllers.predicates.AuthenticationPredicate
 import javax.inject.{Inject, Singleton}
