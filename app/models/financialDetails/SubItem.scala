@@ -19,16 +19,18 @@ package models.financialDetails
 import play.api.Logging
 import play.api.libs.json._
 
+import java.time.LocalDate
+
 case class SubItem(subItemId: Option[String],
                    amount: Option[BigDecimal],
-                   clearingDate: Option[String],
+                   clearingDate: Option[LocalDate],
                    clearingReason: Option[String],
                    outgoingPaymentMethod: Option[String],
                    interestLock: Option[String],
                    dunningLock: Option[String],
                    paymentReference: Option[String] = None,
                    paymentAmount: Option[BigDecimal],
-                   dueDate: Option[String],
+                   dueDate: Option[LocalDate],
                    paymentMethod: Option[String],
                    paymentLot: Option[String],
                    paymentLotItem: Option[String],
@@ -43,14 +45,14 @@ object SubItem extends Logging {
   implicit val reads: Reads[SubItem] = for {
     subItemId <- (JsPath \ "subItem").readNullable[String](Reads.of[String].filter(subItemJsonError)(isIntString))
     amount <- (JsPath \ "amount").readNullable[BigDecimal]
-    clearingDate <- (JsPath \ "clearingDate").readNullable[String]
+    clearingDate <- (JsPath \ "clearingDate").readNullable[LocalDate]
     clearingReason <- (JsPath \ "clearingReason").readNullable[String]
     outgoingPaymentMethod <- (JsPath \ "outgoingPaymentMethod").readNullable[String]
     interestLock <- (JsPath \ "interestLock").readNullable[String]
     dunningLock <- (JsPath \ "dunningLock").readNullable[String]
     paymentReference <- (JsPath \ "paymentReference").readNullable[String]
     paymentAmount <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
-    dueDate <- (JsPath \ "dueDate").readNullable[String]
+    dueDate <- (JsPath \ "dueDate").readNullable[LocalDate]
     paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
     paymentLot <- (JsPath \ "paymentLot").readNullable[String]
     paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]

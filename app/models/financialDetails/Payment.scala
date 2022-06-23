@@ -18,6 +18,8 @@ package models.financialDetails
 
 import play.api.libs.json._
 
+import java.time.LocalDate
+
 case class Payment(reference: Option[String],
                    amount: Option[BigDecimal],
                    outstandingAmount: Option[BigDecimal],
@@ -25,7 +27,7 @@ case class Payment(reference: Option[String],
                    method: Option[String],
                    lot: Option[String],
                    lotItem: Option[String],
-                   date: Option[String],
+                   date: Option[LocalDate],
                    transactionId: String)
 
 object Payment {

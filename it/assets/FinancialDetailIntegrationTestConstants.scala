@@ -19,6 +19,8 @@ package assets
 import models.financialDetails._
 import play.api.libs.json.{JsObject, Json}
 
+import java.time.LocalDate
+
 object FinancialDetailIntegrationTestConstants {
 
   val chargeJson: JsObject = Json.obj(
@@ -71,7 +73,7 @@ object FinancialDetailIntegrationTestConstants {
       Json.obj(
         "taxYear" -> "2018",
         "documentId" -> "transactionId",
-        "documentDate" -> "transactionDate",
+        "documentDate" -> "2022-06-23",
         "documentDescription" -> "type",
         "originalAmount" -> 1000.00,
         "totalAmount" -> 1000.00,
@@ -85,14 +87,14 @@ object FinancialDetailIntegrationTestConstants {
           Json.obj(
             "subItem" -> "1",
             "amount" -> 100.00,
-            "clearingDate" -> "clearingDate",
+            "clearingDate" -> "2022-06-23",
             "clearingReason" -> "clearingReason",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod",
             "interestLock" -> "interestLock",
             "dunningLock" -> "dunningLock",
             "paymentReference" -> "paymentReference",
             "paymentAmount" -> 2000.00,
-            "dueDate" -> "dueDate",
+            "dueDate" -> "2022-06-23",
             "paymentMethod" -> "paymentMethod",
             "paymentLot" -> "paymentLot",
             "paymentLotItem" -> "paymentLotItem"
@@ -102,7 +104,7 @@ object FinancialDetailIntegrationTestConstants {
       Json.obj(
         "taxYear" -> "2019",
         "documentId" -> "transactionId2",
-        "documentDate" -> "transactionDate2",
+        "documentDate" -> "2022-06-23",
         "documentDescription" -> "type2",
         "totalAmount" -> 2000.00,
         "originalAmount" -> 500.00,
@@ -115,14 +117,14 @@ object FinancialDetailIntegrationTestConstants {
           Json.obj(
             "subItem" -> "2",
             "amount" -> 200.00,
-            "clearingDate" -> "clearingDate2",
+            "clearingDate" -> "2022-06-23",
             "clearingReason" -> "clearingReason2",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod2",
             "interestLock" -> "interestLock2",
             "dunningLock" -> "dunningLock2",
             "paymentReference" -> "paymentReference2",
             "paymentAmount" -> 3000.00,
-            "dueDate" -> "dueDate2",
+            "dueDate" -> "2022-06-23",
             "paymentMethod" -> "paymentMethod2",
             "paymentLot" -> "paymentLot2",
             "paymentLotItem" -> "paymentLotItem2"
@@ -147,7 +149,7 @@ object FinancialDetailIntegrationTestConstants {
     taxYearReturn = "2018",
     totalReturnAmount = Some(100.00),
     amountNotCoded = Some(200.00),
-    amountNotCodedDueDate = Some("2018-01-01"),
+    amountNotCodedDueDate = Some(LocalDate.parse("2018-01-01")),
     amountCodedOut = 300.00,
     taxYearCoding = "2019"
   )
@@ -159,10 +161,10 @@ object FinancialDetailIntegrationTestConstants {
     documentText = Some("documentText"),
     originalAmount = Some(300.00),
     outstandingAmount = Some(200.00),
-    documentDate = "2018-03-29",
+    documentDate = LocalDate.parse("2018-03-29"),
     interestRate = Some(2.60),
-    interestFromDate = Some("2018-08-01"),
-    interestEndDate = Some("2019-01-15"),
+    interestFromDate = Some(LocalDate.parse("2018-08-01")),
+    interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
     latePaymentInterestAmount = Some(12.34),
     interestOutstandingAmount = Some(31.00),
@@ -178,7 +180,7 @@ object FinancialDetailIntegrationTestConstants {
     documentText = None,
     originalAmount = Some(100.00),
     outstandingAmount = Some(50.00),
-    documentDate = "2018-03-29",
+    documentDate = LocalDate.parse("2018-03-29"),
     interestRate = None,
     interestFromDate = None,
     interestEndDate = None,
@@ -194,7 +196,7 @@ object FinancialDetailIntegrationTestConstants {
   val financialDetail: FinancialDetail = FinancialDetail(
     taxYear = "2018",
     transactionId = "transactionId",
-    transactionDate = Some("transactionDate"),
+    transactionDate = Some(LocalDate.parse("2022-06-23")),
     `type` = Some("type"),
     totalAmount = Some(BigDecimal("1000.00")),
     originalAmount = Some(BigDecimal("500.00")),
@@ -207,14 +209,14 @@ object FinancialDetailIntegrationTestConstants {
       SubItem(
         subItemId = Some("1"),
         amount = Some(BigDecimal("100.00")),
-        clearingDate = Some("clearingDate"),
+        clearingDate = Some(LocalDate.parse("2022-06-23")),
         clearingReason = Some("clearingReason"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod"),
         interestLock = Some("interestLock"),
         dunningLock = Some("dunningLock"),
         paymentReference = Some("paymentReference"),
         paymentAmount = Some(BigDecimal("2000.00")),
-        dueDate = Some("dueDate"),
+        dueDate = Some(LocalDate.parse("2022-06-23")),
         paymentMethod = Some("paymentMethod"),
         paymentLot = Some("paymentLot"),
         paymentLotItem = Some("paymentLotItem"),
@@ -225,7 +227,7 @@ object FinancialDetailIntegrationTestConstants {
   val financialDetail2: FinancialDetail = FinancialDetail(
     taxYear = "2019",
     transactionId = "transactionId2",
-    transactionDate = Some("transactionDate2"),
+    transactionDate = Some(LocalDate.parse("2022-06-23")),
     `type` = Some("type2"),
     totalAmount = Some(BigDecimal("2000.00")),
     originalAmount = Some(BigDecimal("500.00")),
@@ -238,14 +240,14 @@ object FinancialDetailIntegrationTestConstants {
       SubItem(
         subItemId = Some("2"),
         amount = Some(BigDecimal("200.00")),
-        clearingDate = Some("clearingDate2"),
+        clearingDate = Some(LocalDate.parse("2022-06-23")),
         clearingReason = Some("clearingReason2"),
         outgoingPaymentMethod = Some("outgoingPaymentMethod2"),
         interestLock = Some("interestLock2"),
         dunningLock = Some("dunningLock2"),
         paymentReference = Some("paymentReference2"),
         paymentAmount = Some(BigDecimal("3000.00")),
-        dueDate = Some("dueDate2"),
+        dueDate = Some(LocalDate.parse("2022-06-23")),
         paymentMethod = Some("paymentMethod2"),
         paymentLot = Some("paymentLot2"),
         paymentLotItem = Some("paymentLotItem2"),

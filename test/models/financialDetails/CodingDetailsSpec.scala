@@ -19,6 +19,8 @@ package models.financialDetails
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsObject, Json}
 
+import java.time.LocalDate
+
 class CodingDetailsSpec extends WordSpec with Matchers {
 
   val codingDetailsMin: CodingDetails = CodingDetails(
@@ -39,7 +41,7 @@ class CodingDetailsSpec extends WordSpec with Matchers {
     taxYearReturn = "2018",
     totalReturnAmount = Some(100.00),
     amountNotCoded = Some(200.00),
-    amountNotCodedDueDate = Some("2018-01-01"),
+    amountNotCodedDueDate = Some(LocalDate.parse("2018-01-01")),
     amountCodedOut = 300.00,
     taxYearCoding = "2019")
 

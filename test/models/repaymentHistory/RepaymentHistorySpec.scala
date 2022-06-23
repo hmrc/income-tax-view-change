@@ -19,6 +19,8 @@ package models.repaymentHistory
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsValue, Json}
 
+import java.time.LocalDate
+
 class RepaymentHistorySpec extends WordSpec with Matchers {
 
 
@@ -31,8 +33,8 @@ class RepaymentHistorySpec extends WordSpec with Matchers {
       RepaymentSupplementItem(
         parentCreditReference = Some("002420002231"),
         amount = Some(400.0),
-        fromDate = Some("2021-07-23"),
-        toDate = Some("2021-08-23"),
+        fromDate = Some(LocalDate.parse("2021-07-23")),
+        toDate = Some(LocalDate.parse("2021-08-23")),
         rate = Some(500.0)
       )
     )))

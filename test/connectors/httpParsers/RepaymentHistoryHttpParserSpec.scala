@@ -23,6 +23,8 @@ import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
+import java.time.LocalDate
+
 class RepaymentHistoryHttpParserSpec extends TestSupport {
   "RepaymentHistoryHttpParser" should {
     "return Repayment history" when {
@@ -44,8 +46,8 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
                   RepaymentSupplementItem(
                     parentCreditReference = Some("002420002231"),
                     amount = Some(400.0),
-                    fromDate = Some("2021-07-23"),
-                    toDate = Some("2021-08-23"),
+                    fromDate = Some(LocalDate.parse("2021-07-23")),
+                    toDate = Some(LocalDate.parse("2021-08-23")),
                     rate = Some(500.0)
                   )
                 )))

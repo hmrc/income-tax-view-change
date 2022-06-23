@@ -18,10 +18,12 @@ package models.financialDetails
 
 import play.api.libs.json.{Format, Json}
 
+import java.time.LocalDate
+
 case class CodingDetails(taxYearReturn: String,
                          totalReturnAmount: Option[BigDecimal],
                          amountNotCoded: Option[BigDecimal],
-                         amountNotCodedDueDate: Option[String],
+                         amountNotCodedDueDate: Option[LocalDate],
                          amountCodedOut: BigDecimal,
                          taxYearCoding: String)
 

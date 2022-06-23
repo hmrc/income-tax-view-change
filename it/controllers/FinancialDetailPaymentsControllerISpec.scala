@@ -9,6 +9,8 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSResponse
 
+import java.time.LocalDate
+
 class FinancialDetailPaymentsControllerDESISpec extends FinancialDetailPaymentsControllerISpec(enableIF = false)
 
 class FinancialDetailPaymentsControllerIFISpec extends FinancialDetailPaymentsControllerISpec(enableIF = true)
@@ -29,7 +31,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     method = Some("paymentMethod"),
     lot = None,
     lotItem = None,
-    date = Some("dueDate"),
+    date = Some(LocalDate.parse("2022-06-23")),
     transactionId = "id"
   )
 
@@ -41,7 +43,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     documentDescription =  Some("documentDescription2"),
     lot = None,
     lotItem = None,
-    date = Some("dueDate2"),
+    date = Some(LocalDate.parse("2022-06-23")),
     transactionId = "id2"
   )
 
@@ -85,7 +87,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
       Json.obj(
         "taxYear" -> "2018",
         "documentId" -> "id",
-        "documentDate" -> "transactionDate",
+        "documentDate" -> "2022-06-23",
         "documentDescription" -> "type",
         "originalAmount" -> -1000.00,
         "totalAmount" -> -1000.00,
@@ -95,12 +97,12 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
           Json.obj(
             "subItem" -> "1",
             "amount" -> -1000.00,
-            "clearingDate" -> "clearingDate",
+            "clearingDate" -> "2022-06-23",
             "clearingReason" -> "clearingReason",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod",
             "paymentReference" -> "paymentReference",
             "paymentAmount" -> -1000.00,
-            "dueDate" -> "dueDate",
+            "dueDate" -> "2022-06-23",
             "paymentMethod" -> "paymentMethod"
           )
         )
@@ -108,7 +110,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
       Json.obj(
         "taxYear" -> "2019",
         "documentId" -> "id2",
-        "documentDate" -> "transactionDate2",
+        "documentDate" -> "2022-06-23",
         "documentDescription" -> "type2",
         "totalAmount" -> -1000.00,
         "originalAmount" -> -1000.00,
@@ -117,12 +119,12 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
           Json.obj(
             "subItem" -> "2",
             "amount" -> -1000.00,
-            "clearingDate" -> "clearingDate2",
+            "clearingDate" -> "2022-06-23",
             "clearingReason" -> "clearingReason2",
             "outgoingPaymentMethod" -> "outgoingPaymentMethod2",
             "paymentReference" -> "paymentReference2",
             "paymentAmount" -> -1000.00,
-            "dueDate" -> "dueDate2",
+            "dueDate" -> "2022-06-23",
             "paymentMethod" -> "paymentMethod2"
           )
         )

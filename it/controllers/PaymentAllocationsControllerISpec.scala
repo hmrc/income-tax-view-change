@@ -24,6 +24,8 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSResponse
 
+import java.time.LocalDate
+
 class PaymentAllocationsControllerISpec extends ComponentSpecBase {
 
   val paymentLot: String = "paymentLot"
@@ -32,13 +34,13 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
   val paymentAllocations: PaymentAllocations = PaymentAllocations(
     amount = Some(1000.00),
     method = Some("method"),
-    transactionDate = Some("transactionDate"),
+    transactionDate = Some(LocalDate.parse("2022-06-23")),
     reference = Some("reference"),
     allocations = Seq(
       AllocationDetail(
         transactionId = Some("transactionId"),
-        from = Some("from"),
-        to = Some("to"),
+        from = Some(LocalDate.parse("2022-06-23")),
+        to = Some(LocalDate.parse("2022-06-23")),
         chargeType = Some("type"),
         mainType = Some("mainType"),
         amount = Some(1500.00),
@@ -53,13 +55,13 @@ class PaymentAllocationsControllerISpec extends ComponentSpecBase {
       Json.obj(
         "paymentAmount" -> 1000.00,
         "paymentMethod" -> "method",
-        "valueDate" -> "transactionDate",
+        "valueDate" -> "2022-06-23",
         "paymentReference" -> "reference",
         "sapClearingDocsDetails" -> Json.arr(
           Json.obj(
             "sapDocNumber" -> "transactionId",
-            "taxPeriodStartDate" -> "from",
-            "taxPeriodEndDate" -> "to",
+            "taxPeriodStartDate" -> "2022-06-23",
+            "taxPeriodEndDate" -> "2022-06-23",
             "chargeType" -> "type",
             "mainType" -> "mainType",
             "amount" -> 1500.00,
