@@ -29,7 +29,8 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     method = Some("paymentMethod"),
     lot = None,
     lotItem = None,
-    date = Some("dueDate"),
+    dueDate = Some("dueDate"),
+    documentDate = "2018-03-29",
     transactionId = "id"
   )
 
@@ -41,7 +42,8 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     documentDescription =  Some("documentDescription2"),
     lot = None,
     lotItem = None,
-    date = Some("dueDate2"),
+    dueDate = Some("dueDate2"),
+    documentDate = "2018-03-29",
     transactionId = "id2"
   )
 
