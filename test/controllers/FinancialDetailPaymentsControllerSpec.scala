@@ -36,7 +36,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "method" -> "paymentMethod",
       "lot" -> "paymentLot",
       "lotItem" -> "paymentLotItem",
-      "date" -> "dueDate",
+      "dueDate" -> "dueDate",
+      "documentDate" -> "date",
       "transactionId" -> "id"
     )
   )
@@ -47,7 +48,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "amount" -> -1000,
       "outstandingAmount" -> 0,
       "documentDescription" -> "documentDescription",
-      "date" -> "dueDate",
+      "dueDate" -> "dueDate",
+      "documentDate" -> "date",
       "transactionId" -> "id"
     )
   )

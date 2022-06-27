@@ -21,9 +21,9 @@ import play.api.libs.json.{JsObject, Json}
 
 class PaymentSpec extends WordSpec with Matchers {
 
-  val paymentEmpty: Payment = Payment(None, None, None, None, None, None, None, None, "DOCID01")
+  val paymentEmpty: Payment = Payment(None, None, None, None, None, None, None, None, "docDate", "DOCID01")
 
-  val paymentEmptyJson: JsObject = Json.obj("transactionId" -> "DOCID01")
+  val paymentEmptyJson: JsObject = Json.obj("documentDate" -> "docDate", "transactionId" -> "DOCID01")
 
   val paymentFull: Payment = Payment(
     reference = Some("reference"),
@@ -33,7 +33,8 @@ class PaymentSpec extends WordSpec with Matchers {
     method = Some("method"),
     lot = Some("lot"),
     lotItem = Some("lotItem"),
-    date = Some("date"),
+    dueDate = Some("date"),
+    documentDate = "docDate",
     transactionId = "DOCID01"
   )
 
@@ -45,7 +46,8 @@ class PaymentSpec extends WordSpec with Matchers {
     "method" -> "method",
     "lot" -> "lot",
     "lotItem" -> "lotItem",
-    "date" -> "date",
+    "dueDate" -> "date",
+    "documentDate" -> "docDate",
     "transactionId" -> "DOCID01"
   )
 
