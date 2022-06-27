@@ -107,5 +107,13 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getOutStandingChargeDetails(idType: String, idNumber: String, taxYearEndDate: String): WSResponse = get(s"/out-standing-charges/$idType/$idNumber/$taxYearEndDate")
 
+    def getRepaymentHistoryById(nino: String, repaymentId: String): WSResponse = {
+      get(s"/repayments/$nino/repaymentId/$repaymentId")
+    }
+
+    def getRepaymentHistoryByDate(nino: String, fromDate: String, toDate: String): WSResponse = {
+      get(s"/repayments/$nino/fromDate/$fromDate/toDate/$toDate")
+    }
+
   }
 }

@@ -37,6 +37,14 @@ object DesChargesStub {
     s"/cross-regime/charges/MTDBSA/$mtdBsa/ITSA?docNumber=$documentId"
   }
 
+  private def repaymentHistoryByIdUrl(nino: String, repaymentId: String): String = {
+    s"/repayments/$nino?repaymentId=$repaymentId"
+  }
+
+  private def repaymentHistoryByDateUrl(nino: String, fromDate: String, toDate: String): String = {
+    s"/repayments/$nino?fromDate=$fromDate&toDate=$toDate"
+  }
+
   def stubGetChargeDetails(nino: String, from: String, to: String)(status: Int, response: JsValue = Json.obj()): Unit = {
     stubGetChargeDetails(nino, from, to, status, response.toString)
   }
@@ -59,5 +67,13 @@ object DesChargesStub {
 
   def stubChargeHistory(mtdBsa: String, documentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {
     WiremockHelper.stubGet(historyUrl(mtdBsa, documentId), status, response.toString())
+  }
+
+  def stubRepaymentHistoryById(nino: String, repaymentId: String)(status: Int, response: JsValue = Json.obj()): Unit = {
+    WiremockHelper.stubGet(repaymentHistoryByIdUrl(nino, repaymentId), status, response.toString())
+  }
+
+  def stubRepaymentHistoryByDate(nino: String, fromDate: String, toDate: String)(status: Int, response: JsValue = Json.obj()): Unit = {
+    WiremockHelper.stubGet(repaymentHistoryByDateUrl(nino, fromDate, toDate), status, response.toString())
   }
 }
