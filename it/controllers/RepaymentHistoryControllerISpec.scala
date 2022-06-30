@@ -48,7 +48,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
               "rate" -> Some(500.0)
             )
           ),
-          "estimatedRepaymentDate" -> "2021-01-21"
+          "estimatedRepaymentDate" -> "2021-01-21",
+          "creationDate" -> "2020-12-25"
         )
       )
   )
@@ -82,7 +83,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                   rate = Some(500.0)
                 )
               )),
-              estimatedRepaymentDate = "2021-01-21"
+              estimatedRepaymentDate = "2021-01-21",
+              creationDate = "2020-12-25"
             ))))
 
         res should have(
@@ -159,7 +161,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                   rate = Some(500.0)
                 )
               )),
-              estimatedRepaymentDate = "2021-01-21"
+              estimatedRepaymentDate = "2021-01-21",
+              creationDate = "2020-12-25",
             ))))
 
         res should have(

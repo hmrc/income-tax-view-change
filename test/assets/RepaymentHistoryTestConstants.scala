@@ -45,7 +45,8 @@ object RepaymentHistoryTestConstants {
                 "rate" -> Some(500.0)
               )
             ),
-            "estimatedRepaymentDate" -> "2021-08-11"
+            "estimatedRepaymentDate" -> "2021-08-11",
+            "creationDate" -> "2020-12-06"
           )
         )
     )
@@ -83,7 +84,8 @@ object RepaymentHistoryTestConstants {
               "rate" -> Some(500.0)
             )
           ),
-          "estimatedRepaymentDate" -> "2021-08-03"
+          "estimatedRepaymentDate" -> "2021-08-03",
+          "creationDate" -> "2020-12-03"
         )
       )
   )
@@ -102,6 +104,7 @@ object RepaymentHistoryTestConstants {
         rate = Some(500.0)
       )
     )),
-    estimatedRepaymentDate = "2021-08-11")
+    estimatedRepaymentDate = "2021-08-11",
+    creationDate = "2020-12-03")
 
 }

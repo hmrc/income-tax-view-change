@@ -50,7 +50,8 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
                     rate = Some(500.0)
                   )
                 )),
-                estimatedRepaymentDate = "2021-08-11")
+                estimatedRepaymentDate = "2021-08-11",
+                creationDate = "2020-12-06")
             )
           )
         )

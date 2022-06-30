@@ -23,7 +23,9 @@ case class RepaymentHistory(amountApprovedforRepayment: Option[BigDecimal],
                             repaymentMethod: String,
                             totalRepaymentAmount: BigDecimal,
                             items: Option[Seq[RepaymentSupplementItem]],
-                            estimatedRepaymentDate: String
+
+                            estimatedRepaymentDate: String,
+                            creationDate: String
                            )
 
 object RepaymentHistory {
