@@ -35,6 +35,7 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
     "repaymentsViewerDetails" ->
       Json.arr(
         Json.obj(
+          "repaymentRequestNumber" -> "000000003135",
           "amountApprovedforRepayment" -> Some(100.0),
           "amountRequested" -> 200.0,
           "repaymentMethod" -> "BACD",
@@ -84,7 +85,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                 )
               )),
               estimatedRepaymentDate = "2021-01-21",
-              creationDate = "2020-12-25"
+              creationDate = "2020-12-25",
+              repaymentRequestNumber = "000000003135"
             ))))
 
         res should have(
@@ -163,6 +165,7 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
               )),
               estimatedRepaymentDate = "2021-01-21",
               creationDate = "2020-12-25",
+              repaymentRequestNumber = "000000003135"
             ))))
 
         res should have(

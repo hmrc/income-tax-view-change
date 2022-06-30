@@ -51,7 +51,9 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
                   )
                 )),
                 estimatedRepaymentDate = "2021-08-11",
-                creationDate = "2020-12-06")
+                creationDate = "2020-12-06",
+                repaymentRequestNumber = "000000003135"
+              )
             )
           )
         )

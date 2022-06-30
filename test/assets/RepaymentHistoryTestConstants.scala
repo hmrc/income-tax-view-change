@@ -32,6 +32,7 @@ object RepaymentHistoryTestConstants {
       "repaymentsViewerDetails" ->
         Json.arr(
           Json.obj(
+            "repaymentRequestNumber" -> "000000003135",
             "amountApprovedforRepayment" -> Some(100.0),
             "amountRequested" -> 200.0,
             "repaymentMethod" -> "BACD",
@@ -55,6 +56,7 @@ object RepaymentHistoryTestConstants {
     "repaymentsViewerDetails" ->
       Json.arr(
         Json.obj(
+          "repaymentRequestNumber" -> "000000003135",
           "amountApprovedforRepayment" -> Some(100.0),
           "amountRequested" -> 200.0,
           "repaymentMethod" -> "BACD",
@@ -71,6 +73,7 @@ object RepaymentHistoryTestConstants {
           "estimatedRepaymentDate" -> "2021-08-01"
         ),
         Json.obj(
+          "repaymentRequestNumber" -> "000000003135",
           "amountApprovedforRepayment" -> Some(100.0),
           "amountRequested" -> 200.0,
           "repaymentMethod" -> "BACD",
@@ -91,6 +94,7 @@ object RepaymentHistoryTestConstants {
   )
 
   val repaymentHistoryDetail: RepaymentHistory = RepaymentHistory(
+    repaymentRequestNumber = "000000003135",
     amountApprovedforRepayment = Some(100.0),
     amountRequested = 200.0,
     repaymentMethod = "BACD",
