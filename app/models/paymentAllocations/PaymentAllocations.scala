@@ -20,10 +20,12 @@ import models.{readNullable, readNullableSeq}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import java.time.LocalDate
+
 case class PaymentAllocations(amount: Option[BigDecimal],
                               method: Option[String],
                               reference: Option[String],
-                              transactionDate: Option[String],
+                              transactionDate: Option[LocalDate],
                               allocations: Seq[AllocationDetail])
 
 object PaymentAllocations {
@@ -32,7 +34,7 @@ object PaymentAllocations {
     readNullable[BigDecimal](__ \ "paymentAmount") and
       readNullable[String](__ \ "paymentMethod") and
       readNullable[String](__ \ "paymentReference") and
-      readNullable[String](__ \ "valueDate") and
+      readNullable[LocalDate](__ \ "valueDate") and
       readNullableSeq[AllocationDetail](__ \ "sapClearingDocsDetails")
     ) (PaymentAllocations.apply _)
 

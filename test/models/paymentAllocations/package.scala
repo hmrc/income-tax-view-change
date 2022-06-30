@@ -18,12 +18,14 @@ package models
 
 import play.api.libs.json.{JsObject, Json}
 
+import java.time.LocalDate
+
 package object paymentAllocations {
 
   val allocationDetailFull: AllocationDetail = AllocationDetail(
     transactionId = Some("transactionId"),
-    from = Some("from"),
-    to = Some("to"),
+    from = Some(LocalDate.parse("2022-06-23")),
+    to = Some(LocalDate.parse("2022-06-23")),
     chargeType = Some("type"),
     mainType = Some("mainType"),
     amount = Some(1000.00),
@@ -35,8 +37,8 @@ package object paymentAllocations {
 
   val allocationDetailReadJsonFull: JsObject = Json.obj(
     "sapDocNumber" -> "transactionId",
-    "taxPeriodStartDate" -> "from",
-    "taxPeriodEndDate" -> "to",
+    "taxPeriodStartDate" -> LocalDate.parse("2022-06-23"),
+    "taxPeriodEndDate" -> LocalDate.parse("2022-06-23"),
     "chargeType" -> "type",
     "mainType" -> "mainType",
     "amount" -> 1000.00,
@@ -46,8 +48,8 @@ package object paymentAllocations {
 
   val allocationDetailWriteJsonFull: JsObject = Json.obj(
     "transactionId" -> "transactionId",
-    "from" -> "from",
-    "to" -> "to",
+    "from" -> LocalDate.parse("2022-06-23"),
+    "to" -> LocalDate.parse("2022-06-23"),
     "chargeType" -> "type",
     "mainType" -> "mainType",
     "amount" -> 1000.00,
@@ -61,7 +63,7 @@ package object paymentAllocations {
     amount = Some(500.00),
     method = Some("method"),
     reference = Some("reference"),
-    transactionDate = Some("transactionDate"),
+    transactionDate = Some(LocalDate.parse("2022-06-23")),
     allocations = Seq(allocationDetailFull)
   )
 
@@ -73,7 +75,7 @@ package object paymentAllocations {
     "paymentAmount" -> 500.00,
     "paymentMethod" -> "method",
     "paymentReference" -> "reference",
-    "valueDate" -> "transactionDate",
+    "valueDate" -> LocalDate.parse("2022-06-23"),
     "sapClearingDocsDetails" -> Json.arr(
       allocationDetailReadJsonFull
     )
@@ -83,7 +85,7 @@ package object paymentAllocations {
     "amount" -> 500.00,
     "method" -> "method",
     "reference" -> "reference",
-    "transactionDate" -> "transactionDate",
+    "transactionDate" -> LocalDate.parse("2022-06-23"),
     "allocations" -> Json.arr(
       allocationDetailWriteJsonFull
     )

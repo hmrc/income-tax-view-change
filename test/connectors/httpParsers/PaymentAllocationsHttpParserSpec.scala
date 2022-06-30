@@ -23,18 +23,20 @@ import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
+import java.time.LocalDate
+
 class PaymentAllocationsHttpParserSpec extends TestSupport {
 
   val paymentAllocations: PaymentAllocations = PaymentAllocations(
     amount = Some(1000.00),
     method = Some("method"),
     reference = Some("reference"),
-    transactionDate = Some("transactionDate"),
+    transactionDate = Some(LocalDate.parse("2022-06-23")),
     allocations = Seq(
       AllocationDetail(
         transactionId = Some("transactionId"),
-        from = Some("from"),
-        to = Some("to"),
+        from = Some(LocalDate.parse("2022-06-23")),
+        to = Some(LocalDate.parse("2022-06-23")),
         chargeType = Some("type"),
         mainType = Some("mainType"),
         amount = Some(1500.00),
@@ -50,12 +52,12 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         "paymentAmount" -> 1000.00,
         "paymentMethod" -> "method",
         "paymentReference" -> "reference",
-        "valueDate" -> "transactionDate",
+        "valueDate" -> LocalDate.parse("2022-06-23"),
         "sapClearingDocsDetails" -> Json.arr(
           Json.obj(
             "sapDocNumber" -> "transactionId",
-            "taxPeriodStartDate" -> "from",
-            "taxPeriodEndDate" -> "to",
+            "taxPeriodStartDate" -> LocalDate.parse("2022-06-23"),
+            "taxPeriodEndDate" -> LocalDate.parse("2022-06-23"),
             "chargeType" -> "type",
             "mainType" -> "mainType",
             "amount" -> 1500.00,
@@ -73,12 +75,12 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         "paymentAmount" -> 1000.00,
         "paymentMethod" -> "method",
         "paymentReference" -> "reference",
-        "valueDate" -> "transactionDate",
+        "valueDate" -> LocalDate.parse("2022-06-23"),
         "sapClearingDocsDetails" -> Json.arr(
           Json.obj(
             "sapDocNumber" -> "transactionId",
-            "taxPeriodStartDate" -> "from",
-            "taxPeriodEndDate" -> "to",
+            "taxPeriodStartDate" -> LocalDate.parse("2022-06-23"),
+            "taxPeriodEndDate" -> LocalDate.parse("2022-06-23"),
             "chargeType" -> "type",
             "mainType" -> "mainType",
             "amount" -> 1500.00,
@@ -91,12 +93,12 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         "paymentAmount" -> 1000.00,
         "paymentMethod" -> "method",
         "paymentReference" -> "reference2",
-        "valueDate" -> "transactionDate",
+        "valueDate" -> LocalDate.parse("2022-06-23"),
         "sapClearingDocsDetails" -> Json.arr(
           Json.obj(
             "sapDocNumber" -> "transactionId",
-            "taxPeriodStartDate" -> "from",
-            "taxPeriodEndDate" -> "to",
+            "taxPeriodStartDate" -> LocalDate.parse("2022-06-23"),
+            "taxPeriodEndDate" -> LocalDate.parse("2022-06-23"),
             "chargeType" -> "type",
             "mainType" -> "mainType",
             "amount" -> 1500.00,

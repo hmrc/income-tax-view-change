@@ -23,6 +23,8 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVA
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 
+import java.time.LocalDate
+
 class RepaymentHistoryControllerISpec extends ComponentSpecBase {
 
   val repaymentId = "12789971"
@@ -76,8 +78,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                 RepaymentSupplementItem(
                   parentCreditReference = Some("002420002231"),
                   amount = Some(400.0),
-                  fromDate = Some("2021-07-23"),
-                  toDate = Some("2021-08-23"),
+                  fromDate = Some(LocalDate.parse("2021-07-23")),
+                  toDate = Some(LocalDate.parse("2021-08-23")),
                   rate = Some(500.0)
                 )
               ))
@@ -152,8 +154,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                 RepaymentSupplementItem(
                   parentCreditReference = Some("002420002231"),
                   amount = Some(400.0),
-                  fromDate = Some("2021-07-23"),
-                  toDate = Some("2021-08-23"),
+                  fromDate = Some(LocalDate.parse("2021-07-23")),
+                  toDate = Some(LocalDate.parse("2021-08-23")),
                   rate = Some(500.0)
                 )
               ))

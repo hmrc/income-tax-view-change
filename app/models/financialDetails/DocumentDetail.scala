@@ -19,16 +19,18 @@ package models.financialDetails
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{Json, Reads, Writes, __}
 
+import java.time.LocalDate
+
 case class DocumentDetail(taxYear: String,
                           transactionId: String,
                           documentDescription: Option[String],
                           documentText: Option[String],
                           originalAmount: Option[BigDecimal],
                           outstandingAmount: Option[BigDecimal],
-                          documentDate: String,
+                          documentDate: LocalDate,
                           interestRate: Option[BigDecimal],
-                          interestFromDate: Option[String],
-                          interestEndDate: Option[String],
+                          interestFromDate: Option[LocalDate],
+                          interestEndDate: Option[LocalDate],
                           latePaymentInterestId: Option[String],
                           latePaymentInterestAmount: Option[BigDecimal],
                           interestOutstandingAmount: Option[BigDecimal],
@@ -46,10 +48,10 @@ object DocumentDetail {
       (__ \ "documentText").readNullable[String] and
       (__ \ "totalAmount").readNullable[BigDecimal] and
       (__ \ "documentOutstandingAmount").readNullable[BigDecimal] and
-      (__ \ "documentDate").read[String] and
+      (__ \ "documentDate").read[LocalDate] and
       (__ \ "interestRate").readNullable[BigDecimal] and
-      (__ \ "interestFromDate").readNullable[String] and
-      (__ \ "interestEndDate").readNullable[String] and
+      (__ \ "interestFromDate").readNullable[LocalDate] and
+      (__ \ "interestEndDate").readNullable[LocalDate] and
       (__ \ "latePaymentInterestID").readNullable[String] and
       (__ \ "latePaymentInterestAmount").readNullable[BigDecimal] and
       (__ \ "interestOutstandingAmount").readNullable[BigDecimal] and

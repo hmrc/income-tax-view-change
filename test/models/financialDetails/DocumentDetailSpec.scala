@@ -20,16 +20,18 @@ import assets.FinancialDataTestConstants._
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
 
+import java.time.LocalDate
+
 class DocumentDetailSpec extends WordSpec with Matchers {
 
-  val documentDetailMin: DocumentDetail = DocumentDetail("2019", "id", None, None, None, None, "2018-03-29",
+  val documentDetailMin: DocumentDetail = DocumentDetail("2019", "id", None, None, None, None, LocalDate.parse("2018-03-29"),
     None, None, None, None, None, None, None, None, None)
 
   val documentDetailMinJsonRead: JsObject =
-    Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> "2018-03-29")
+    Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"))
 
   val documentDetailMinJsonWrite: JsObject =
-    Json.obj("taxYear" -> "2019", "transactionId" -> "id", "documentDate" -> "2018-03-29")
+    Json.obj("taxYear" -> "2019", "transactionId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"))
 
   val documentDetailFull: DocumentDetail = documentDetail
 
@@ -40,10 +42,10 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "documentText" -> "documentText",
     "totalAmount" -> 300.00,
     "documentOutstandingAmount" -> 200.00,
-    "documentDate" -> "2018-03-29",
+    "documentDate" -> LocalDate.parse("2018-03-29"),
     "interestRate" -> 2.60,
-    "interestFromDate" -> "2018-08-01",
-    "interestEndDate" -> "2019-01-15",
+    "interestFromDate" -> LocalDate.parse("2018-08-01"),
+    "interestEndDate" -> LocalDate.parse("2019-01-15"),
     "latePaymentInterestID" -> "latePaymentInterestID",
     "latePaymentInterestAmount" -> 12.34,
     "interestOutstandingAmount" -> 31.00,
@@ -59,10 +61,10 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "documentText" -> "documentText",
     "originalAmount" -> 300.00,
     "outstandingAmount" -> 200.00,
-    "documentDate" -> "2018-03-29",
+    "documentDate" -> LocalDate.parse("2018-03-29"),
     "interestRate" -> 2.60,
-    "interestFromDate" -> "2018-08-01",
-    "interestEndDate" -> "2019-01-15",
+    "interestFromDate" -> LocalDate.parse("2018-08-01"),
+    "interestEndDate" -> LocalDate.parse("2019-01-15"),
     "latePaymentInterestId" -> "latePaymentInterestID",
     "latePaymentInterestAmount" -> 12.34,
     "interestOutstandingAmount" -> 31.00,

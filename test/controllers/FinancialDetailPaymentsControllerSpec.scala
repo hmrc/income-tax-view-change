@@ -25,6 +25,8 @@ import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
+import java.time.LocalDate
+
 class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with MockFinancialDetailsConnector with MockMicroserviceAuthConnector {
 
   val paymentJson: JsArray = Json.arr(
@@ -36,8 +38,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "method" -> "paymentMethod",
       "lot" -> "paymentLot",
       "lotItem" -> "paymentLotItem",
-      "dueDate" -> "dueDate",
-      "documentDate" -> "date",
+      "dueDate" -> LocalDate.parse("2022-06-23"),
+      "documentDate" -> LocalDate.parse("2022-06-23"),
       "transactionId" -> "id"
     )
   )
@@ -48,8 +50,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "amount" -> -1000,
       "outstandingAmount" -> 0,
       "documentDescription" -> "documentDescription",
-      "dueDate" -> "dueDate",
-      "documentDate" -> "date",
+      "dueDate" -> LocalDate.parse("2022-06-23"),
+      "documentDate" -> LocalDate.parse("2022-06-23"),
       "transactionId" -> "id"
     )
   )

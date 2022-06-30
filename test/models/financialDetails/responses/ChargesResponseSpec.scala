@@ -21,6 +21,8 @@ import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, F
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsSuccess, Json}
 
+import java.time.LocalDate
+
 class ChargesResponseSpec extends WordSpec with Matchers {
 
 	val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, Some(400.00))
@@ -63,7 +65,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       taxYearReturn = "2018",
       totalReturnAmount = Some(100.00),
       amountNotCoded = Some(200.00),
-      amountNotCodedDueDate = Some("2018-01-01"),
+      amountNotCodedDueDate = Some(LocalDate.parse("2018-01-01")),
       amountCodedOut = 300.00,
       taxYearCoding = "2019"))),
     documentDetails = List(documentDetail),
@@ -80,7 +82,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       "taxYearReturn" -> "2018",
       "totalReturnAmount" -> 100.00,
       "amountNotCoded" -> 200.00,
-      "amountNotCodedDueDate" -> "2018-01-01",
+      "amountNotCodedDueDate" -> LocalDate.parse("2018-01-01"),
       "amountCodedOut" -> 300.00,
       "taxYearCoding" -> "2019"
     )),
@@ -91,10 +93,10 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       "documentText" -> "documentText",
       "originalAmount" -> 300.00,
       "outstandingAmount" -> 200.00,
-      "documentDate" -> "2018-03-29",
+      "documentDate" -> LocalDate.parse("2018-03-29"),
       "interestRate" -> 2.60,
-      "interestFromDate" -> "2018-08-01",
-      "interestEndDate" -> "2019-01-15",
+      "interestFromDate" -> LocalDate.parse("2018-08-01"),
+      "interestEndDate" -> LocalDate.parse("2019-01-15"),
       "latePaymentInterestId" -> "latePaymentInterestID",
       "latePaymentInterestAmount" -> 12.34,
       "interestOutstandingAmount" -> 31.00,
@@ -107,7 +109,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			|{
 			|     "taxYear": "2018",
 			|     "transactionId": "id",
-			|     "transactionDate": "transactionDate",
+			|     "transactionDate": "2022-06-23",
 			|     "type": "type",
 			|     "totalAmount": 1000.00,
 			|     "originalAmount": 500.00,
@@ -119,14 +121,14 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 			|     "items": [{
 			|       "subItemId": "1",
 			|       "amount": 100.00,
-			|       "clearingDate": "clearingDate",
+			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
 |       "interestLock": "interestLock",
 |       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
-			|       "dueDate": "dueDate",
+			|       "dueDate": "2022-06-23",
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
 			|       "paymentLotItem": "paymentLotItem",
@@ -146,7 +148,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       documentText = None,
       originalAmount = Some(1000),
       outstandingAmount = Some(700),
-      documentDate = "date",
+      documentDate = LocalDate.parse("2022-06-23"),
       interestRate = None,
       interestFromDate = None,
       interestEndDate = None,
@@ -167,7 +169,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       documentText = None,
       originalAmount = Some(-1000),
       outstandingAmount = Some(700),
-      documentDate = "date",
+      documentDate = LocalDate.parse("2022-06-23"),
       interestRate = None,
       interestFromDate = None,
       interestEndDate = None,
@@ -212,7 +214,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       dunningLock = Some("dunningLock"),
       paymentReference = paymentReference,
       paymentAmount = Some(400.0),
-      dueDate = Some("dueDate"),
+      dueDate = Some(LocalDate.parse("2022-06-23")),
       paymentMethod = Some("method"),
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
@@ -271,7 +273,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
             documentDetails = List(document2()),
             financialDetails = List(financial(items = Some(List(subItem()))))
           ).payments shouldBe List(
-            Payment(Some("ref"), Some(-1000.0), Some(700), None, Some("method"), None, None, Some("dueDate"), "date", "DOCID01")
+            Payment(Some("ref"), Some(-1000.0), Some(700), None, Some("method"), None, None, Some(LocalDate.parse("2022-06-23")),LocalDate.parse("2022-06-23"), "DOCID01")
           )
         }
 
@@ -286,8 +288,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
               financial(items = Some(List(subItem()))),
               financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))
           ).payments shouldBe List(
-            Payment(Some("ref"), Some(-1000.0), Some(700), None, Some("method"), None, None, Some("dueDate"), "date", "DOCID01"),
-            Payment(Some("ref"), Some(-1000.0), Some(700), None, Some("method"), None, None, Some("dueDate"), "date", "DOCID02")
+            Payment(Some("ref"), Some(-1000.0), Some(700), None, Some("method"), None, None, Some(LocalDate.parse("2022-06-23")),LocalDate.parse("2022-06-23"), "DOCID01"),
+            Payment(Some("ref"), Some(-1000.0), Some(700), None, Some("method"), None, None, Some(LocalDate.parse("2022-06-23")),LocalDate.parse("2022-06-23"), "DOCID02")
           )
         }
       }

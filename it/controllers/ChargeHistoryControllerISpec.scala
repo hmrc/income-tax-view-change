@@ -23,6 +23,8 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVA
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 
+import java.time.LocalDate
+
 class ChargeHistoryControllerISpec extends ComponentSpecBase {
 
   val mtdBsa = "XAIT000000000000"
@@ -37,10 +39,10 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
    			 	|	"chargeHistoryDetails" : [{
 					|		"taxYear" : "2017",
 					|		"documentId" : "DOCID01",
-					|		"documentDate" : "07-08-2017",
+					|		"documentDate" : "2017-08-07",
 					|		"documentDescription" : "desc",
 					|		"totalAmount" : 10000.00,
-					|		"reversalDate" : "09-10-2018",
+					|		"reversalDate" : "2018-10-09",
 					|		"reversalReason" : "reason"
 					|	}]
 					|}""".stripMargin)
@@ -66,10 +68,10 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
             ChargeHistoryDetailModel(
               taxYear = "2017",
               documentId = "DOCID01",
-              documentDate = "07-08-2017",
+              documentDate = LocalDate.parse("2017-08-07"),
               documentDescription = "desc",
               totalAmount = 10000.00,
-              reversalDate = "09-10-2018",
+              reversalDate = "2018-10-09",
               reversalReason = "reason"
             )
           ))))
