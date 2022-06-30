@@ -26,3 +26,6 @@ GET         /out-standing-charges/:idType/:idNumber/:taxYear             control
 
 GET         /charge-history/:mtdBsa/docId/:docNumber 		 			 controllers.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, docNumber)
 
+GET         /repayments/:nino/repaymentId/:repaymentId                   controllers.RepaymentHistoryController.getRepaymentHistoryById(nino, repaymentId)
+
+GET         /repayments/:nino/fromDate/:fromDate/toDate/:toDate         controllers.RepaymentHistoryController.getRepaymentHistoryByDate(nino, fromDate, toDate)

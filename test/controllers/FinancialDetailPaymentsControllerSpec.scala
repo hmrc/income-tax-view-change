@@ -38,7 +38,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "method" -> "paymentMethod",
       "lot" -> "paymentLot",
       "lotItem" -> "paymentLotItem",
-      "date" -> LocalDate.parse("2022-06-23"),
+      "dueDate" -> LocalDate.parse("2022-06-23"),
+      "documentDate" -> LocalDate.parse("2022-06-23"),
       "transactionId" -> "id"
     )
   )
@@ -49,7 +50,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "amount" -> -1000,
       "outstandingAmount" -> 0,
       "documentDescription" -> "documentDescription",
-      "date" -> LocalDate.parse("2022-06-23"),
+      "dueDate" -> LocalDate.parse("2022-06-23"),
+      "documentDate" -> LocalDate.parse("2022-06-23"),
       "transactionId" -> "id"
     )
   )

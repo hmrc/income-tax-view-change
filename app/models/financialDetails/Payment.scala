@@ -27,7 +27,8 @@ case class Payment(reference: Option[String],
                    method: Option[String],
                    lot: Option[String],
                    lotItem: Option[String],
-                   date: Option[LocalDate],
+                   dueDate: Option[LocalDate],
+                   documentDate: LocalDate,
                    transactionId: String)
 
 object Payment {
