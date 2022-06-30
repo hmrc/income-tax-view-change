@@ -18,14 +18,9 @@ package models.repaymentHistory
 
 import play.api.libs.json.{Format, Json}
 
-case class RepaymentSupplementItem(parentCreditReference: Option[String],
-                                   amount: Option[BigDecimal],
-                                   fromDate: Option[String],
-                                   toDate: Option[String],
-                                   rate: Option[BigDecimal]
-                                  )
+case class RepaymentItem(repaymentSupplementItem: Seq[RepaymentSupplementItem])
 
-object RepaymentSupplementItem {
+object RepaymentItem {
 
-  implicit val format: Format[RepaymentSupplementItem] = Json.format[RepaymentSupplementItem]
+  implicit val format: Format[RepaymentItem] = Json.format[RepaymentItem]
 }

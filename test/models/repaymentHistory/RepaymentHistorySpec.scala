@@ -27,15 +27,19 @@ class RepaymentHistorySpec extends WordSpec with Matchers {
     amountRequested = 200.0,
     repaymentMethod = "BACD",
     totalRepaymentAmount = 300.0,
-    items = Some(Seq(
-      RepaymentSupplementItem(
-        parentCreditReference = Some("002420002231"),
-        amount = Some(400.0),
-        fromDate = Some("2021-07-23"),
-        toDate = Some("2021-08-23"),
-        rate = Some(500.0)
+    repaymentItems = Seq[RepaymentItem](
+      RepaymentItem(
+        Seq(
+          RepaymentSupplementItem(
+            parentCreditReference = Some("002420002231"),
+            amount = Some(400.0),
+            fromDate = Some("2021-07-23"),
+            toDate = Some("2021-08-23"),
+            rate = Some(500.0)
+          )
+        )
       )
-    )),
+    ),
     estimatedRepaymentDate = "2021-01-21",
     creationDate = "2020-12-28",
     repaymentRequestNumber = "000000003135"
@@ -47,13 +51,17 @@ class RepaymentHistorySpec extends WordSpec with Matchers {
     "amountRequested" -> 200.0,
     "repaymentMethod" -> "BACD",
     "totalRepaymentAmount" -> 300.0,
-    "items" -> Json.arr(
+    "repaymentItems" -> Json.arr(
       Json.obj(
-        "parentCreditReference" -> Some("002420002231"),
-        "amount" -> Some(400.0),
-        "fromDate" -> Some("2021-07-23"),
-        "toDate" -> Some("2021-08-23"),
-        "rate" -> Some(500.0)
+        "repaymentSupplementItem" -> Json.arr(
+          Json.obj(
+            "parentCreditReference" -> Some("002420002231"),
+            "amount" -> Some(400.0),
+            "fromDate" -> Some("2021-07-23"),
+            "toDate" -> Some("2021-08-23"),
+            "rate" -> Some(500.0)
+          )
+        )
       )
     ),
     "estimatedRepaymentDate" -> "2021-01-21",
