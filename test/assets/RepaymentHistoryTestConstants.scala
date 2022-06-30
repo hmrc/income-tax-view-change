@@ -44,7 +44,8 @@ object RepaymentHistoryTestConstants {
                 "toDate" -> Some("2021-08-23"),
                 "rate" -> Some(500.0)
               )
-            )
+            ),
+            "estimatedRepaymentDate" -> "2021-08-11"
           )
         )
     )
@@ -65,7 +66,8 @@ object RepaymentHistoryTestConstants {
               "toDate" -> Some("2021-08-23"),
               "rate" -> Some(500.0)
             )
-          )
+          ),
+          "estimatedRepaymentDate" -> "2021-08-01"
         ),
         Json.obj(
           "amountApprovedforRepayment" -> Some(100.0),
@@ -80,7 +82,8 @@ object RepaymentHistoryTestConstants {
               "toDate" -> Some("2021-08-23"),
               "rate" -> Some(500.0)
             )
-          )
+          ),
+          "estimatedRepaymentDate" -> "2021-08-03"
         )
       )
   )
@@ -98,6 +101,7 @@ object RepaymentHistoryTestConstants {
         toDate = Some("2021-08-23"),
         rate = Some(500.0)
       )
-    )))
+    )),
+    estimatedRepaymentDate = "2021-08-11")
 
 }

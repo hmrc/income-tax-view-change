@@ -25,6 +25,7 @@ import utils.TestSupport
 
 class RepaymentHistoryHttpParserSpec extends TestSupport {
   "RepaymentHistoryHttpParser" should {
+
     "return Repayment history" when {
       s"$OK is returned with valid json" in {
         val httpResponse: HttpResponse = HttpResponse(
@@ -48,7 +49,8 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
                     toDate = Some("2021-08-23"),
                     rate = Some(500.0)
                   )
-                )))
+                )),
+                estimatedRepaymentDate = "2021-08-11")
             )
           )
         )
@@ -81,5 +83,4 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
       }
     }
   }
-
 }

@@ -35,7 +35,8 @@ class RepaymentHistorySpec extends WordSpec with Matchers {
         toDate = Some("2021-08-23"),
         rate = Some(500.0)
       )
-    )))
+    )),
+    estimatedRepaymentDate = "2021-01-21")
 
   val repaymentHistoryFullJson: JsValue = Json.obj(
     "amountApprovedforRepayment" -> Some(100.0),
@@ -50,7 +51,8 @@ class RepaymentHistorySpec extends WordSpec with Matchers {
         "toDate" -> Some("2021-08-23"),
         "rate" -> Some(500.0)
       )
-    )
+    ),
+    "estimatedRepaymentDate" -> "2021-01-21"
   )
 
   "RepaymentHistory" should {
