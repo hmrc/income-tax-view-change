@@ -31,12 +31,12 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
     amount = Some(1000.00),
     method = Some("method"),
     reference = Some("reference"),
-    transactionDate = Some(LocalDate.now()),
+    transactionDate = Some(LocalDate.parse("2022-06-23")),
     allocations = Seq(
       AllocationDetail(
         transactionId = Some("transactionId"),
-        from = Some(LocalDate.now()),
-        to = Some(LocalDate.now()),
+        from = Some(LocalDate.parse("2022-06-23")),
+        to = Some(LocalDate.parse("2022-06-23")),
         chargeType = Some("type"),
         mainType = Some("mainType"),
         amount = Some(1500.00),

@@ -31,12 +31,8 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     method = Some("paymentMethod"),
     lot = None,
     lotItem = None,
-<<<<<<< HEAD
-    date = Some(LocalDate.parse("2022-06-23")),
-=======
-    dueDate = Some("dueDate"),
-    documentDate = "2018-03-29",
->>>>>>> main
+    dueDate = Some(LocalDate.parse("2022-06-23")),
+    documentDate = LocalDate.parse("2018-03-29"),
     transactionId = "id"
   )
 
@@ -48,12 +44,8 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     documentDescription =  Some("documentDescription2"),
     lot = None,
     lotItem = None,
-<<<<<<< HEAD
-    date = Some(LocalDate.parse("2022-06-23")),
-=======
-    dueDate = Some("dueDate2"),
-    documentDate = "2018-03-29",
->>>>>>> main
+    dueDate = Some(LocalDate.parse("2022-06-23")),
+    documentDate = LocalDate.parse("2018-03-29"),
     transactionId = "id2"
   )
 

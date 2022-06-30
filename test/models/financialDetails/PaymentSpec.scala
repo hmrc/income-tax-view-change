@@ -25,7 +25,7 @@ class PaymentSpec extends WordSpec with Matchers {
 
   val paymentEmpty: Payment = Payment(None, None, None, None, None, None, None, None, LocalDate.parse("2022-06-23"), "DOCID01")
 
-  val paymentEmptyJson: JsObject = Json.obj("documentDate" -> "docDate", "transactionId" -> "DOCID01")
+  val paymentEmptyJson: JsObject = Json.obj("documentDate" -> LocalDate.parse("2022-06-23"), "transactionId" -> "DOCID01")
 
   val paymentFull: Payment = Payment(
     reference = Some("reference"),
