@@ -19,6 +19,8 @@ package assets
 import models.chargeHistoryDetail.{ChargeHistoryDetailModel, ChargeHistorySuccessResponse}
 import play.api.libs.json.{JsValue, Json}
 
+import java.time.LocalDate
+
 object ChargeHistoryTestConstants {
 
 
@@ -114,7 +116,7 @@ object ChargeHistoryTestConstants {
     idValue = "XAIT000000000000",
     regimeType = "ITSA",
     chargeHistoryDetails = Some(List(
-      ChargeHistoryDetailModel("  2019 ", "123456789", "2020-01-29", "Balancing Charge", 12345678912.12, "2020-02-24", "amended return")
+      ChargeHistoryDetailModel("  2019 ", "123456789", LocalDate.parse("2020-01-29"), "Balancing Charge", 12345678912.12, "2020-02-24", "amended return")
     )))
 
   val testValidChargeHistoryModel2: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
@@ -122,14 +124,14 @@ object ChargeHistoryTestConstants {
     idValue = "XAIT000000000000",
     regimeType = "ITSA",
     chargeHistoryDetails = Some(List(
-      ChargeHistoryDetailModel("  2021 ", "123456789", "2020-01-29", "Balancing Charge", 123456789012345.67, "2020-02-24", "amended return")
+      ChargeHistoryDetailModel("  2021 ", "123456789", LocalDate.parse("2020-01-29"), "Balancing Charge", 123456789012345.67, "2020-02-24", "amended return")
     )))
 
 
   val singleChargeHistoryDetail: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
     taxYear = "2019",
     documentId = "123456789",
-    documentDate = "2020-01-29",
+    documentDate = LocalDate.parse("2020-01-29"),
     documentDescription = "Balancing Charge",
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",
@@ -139,7 +141,7 @@ object ChargeHistoryTestConstants {
   val singleChargeHistoryDetailTwo: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
     taxYear = "2018",
     documentId = "123456789",
-    documentDate = "2020-01-29",
+    documentDate = LocalDate.parse("2020-01-29"),
     documentDescription = "POA1",
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",
@@ -162,7 +164,7 @@ object ChargeHistoryTestConstants {
   val chargeHistoryDetail: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
     taxYear = "2019",
     documentId = "123456789",
-    documentDate = "2020-01-29",
+    documentDate = LocalDate.parse("2020-01-29"),
     documentDescription = "Balancing Charge",
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",

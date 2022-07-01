@@ -20,9 +20,11 @@ import models.readNullable
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, OWrites, Reads, __}
 
+import java.time.LocalDate
+
 case class AllocationDetail(transactionId: Option[String],
-                            from: Option[String],
-                            to: Option[String],
+                            from: Option[LocalDate],
+                            to: Option[LocalDate],
                             chargeType: Option[String],
                             mainType: Option[String],
                             amount: Option[BigDecimal],
@@ -36,8 +38,8 @@ object AllocationDetail {
 
   implicit val reads: Reads[AllocationDetail] = (
     readNullable[String](__ \ "sapDocNumber") and
-      readNullable[String](__ \ "taxPeriodStartDate") and
-      readNullable[String](__ \ "taxPeriodEndDate") and
+      readNullable[LocalDate](__ \ "taxPeriodStartDate") and
+      readNullable[LocalDate](__ \ "taxPeriodEndDate") and
       readNullable[String](__ \ "chargeType") and
       readNullable[String](__ \ "mainType") and
       readNullable[BigDecimal](__ \ "amount") and

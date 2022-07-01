@@ -20,6 +20,8 @@ import assets.FinancialDataTestConstants._
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
 
+import java.time.LocalDate
+
 class FinancialDetailSpec extends WordSpec with Matchers {
 
   val financialDetailEmpty: FinancialDetail = FinancialDetail("2019", "id", None, None, None, None, None, None, None, None, None, None)
@@ -30,7 +32,7 @@ class FinancialDetailSpec extends WordSpec with Matchers {
   val financialDetailFullJson: JsValue = Json.obj(
     "taxYear" -> "2018",
     "documentId" -> "id",
-    "documentDate" -> "transactionDate",
+    "documentDate" -> LocalDate.parse("2022-06-23"),
     "documentDescription" -> "type",
     "totalAmount" -> 1000.00,
     "originalAmount" -> 500.00,
@@ -43,14 +45,14 @@ class FinancialDetailSpec extends WordSpec with Matchers {
       Json.obj(
         "subItem" -> "1",
         "amount" -> 100.00,
-        "clearingDate" -> "clearingDate",
+        "clearingDate" -> LocalDate.parse("2022-06-23"),
         "clearingReason" -> "clearingReason",
         "outgoingPaymentMethod" -> "outgoingPaymentMethod",
         "interestLock" -> "interestLock",
         "dunningLock" -> "dunningLock",
         "paymentReference" -> "paymentReference",
         "paymentAmount" -> 2000.00,
-        "dueDate" -> "dueDate",
+        "dueDate" -> LocalDate.parse("2022-06-23"),
         "paymentMethod" -> "paymentMethod",
         "paymentLot" -> "paymentLot",
         "paymentLotItem" -> "paymentLotItem"

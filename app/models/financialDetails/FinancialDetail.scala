@@ -19,9 +19,11 @@ package models.financialDetails
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
+import java.time.LocalDate
+
 case class FinancialDetail(taxYear: String,
                            transactionId: String,
-                           transactionDate: Option[String],
+                           transactionDate: Option[LocalDate],
                            `type`: Option[String],
                            totalAmount: Option[BigDecimal],
                            originalAmount: Option[BigDecimal],
@@ -38,7 +40,7 @@ object FinancialDetail {
   implicit val reads: Reads[FinancialDetail] = (
     (JsPath \ "taxYear").read[String] and
       (JsPath \ "documentId").read[String] and
-      (JsPath \ "documentDate").readNullable[String] and
+      (JsPath \ "documentDate").readNullable[LocalDate] and
       (JsPath \ "documentDescription").readNullable[String] and
       (JsPath \ "totalAmount").readNullable[BigDecimal] and
       (JsPath \ "originalAmount").readNullable[BigDecimal] and

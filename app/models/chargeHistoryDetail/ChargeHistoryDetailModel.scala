@@ -18,10 +18,11 @@ package models.chargeHistoryDetail
 
 import play.api.libs.json.{Json, OFormat}
 
+import java.time.LocalDate
 
 case class ChargeHistoryDetailModel(taxYear: String,
                                     documentId: String,
-                                    documentDate: String,
+                                    documentDate: LocalDate,
                                     documentDescription: String,
                                     totalAmount: BigDecimal,
                                     reversalDate: String,
