@@ -17,7 +17,7 @@
 package models.paymentAllocations
 
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class PaymentDetailsSpec extends WordSpec with Matchers {
 

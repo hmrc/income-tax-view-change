@@ -18,7 +18,7 @@ package controllers
 
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesChargesStub.{stubRepaymentHistoryByDate, stubRepaymentHistoryById}
-import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse, RepaymentSupplementItem}
+import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse, RepaymentItem, RepaymentSupplementItem}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
@@ -37,19 +37,26 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
     "repaymentsViewerDetails" ->
       Json.arr(
         Json.obj(
+          "repaymentRequestNumber" -> "000000003135",
           "amountApprovedforRepayment" -> Some(100.0),
           "amountRequested" -> 200.0,
           "repaymentMethod" -> "BACD",
           "totalRepaymentAmount" -> 300.0,
-          "items" -> Json.arr(
+          "repaymentItems" -> Json.arr(
             Json.obj(
-              "parentCreditReference" -> Some("002420002231"),
-              "amount" -> Some(400.0),
-              "fromDate" -> Some("2021-07-23"),
-              "toDate" -> Some("2021-08-23"),
-              "rate" -> Some(500.0)
+              "repaymentSupplementItem" -> Json.arr(
+                Json.obj(
+                  "parentCreditReference" -> Some("002420002231"),
+                  "amount" -> Some(400.0),
+                  "fromDate" -> Some( LocalDate.parse("2021-07-23") ),
+                  "toDate" -> Some( LocalDate.parse("2021-08-23") ),
+                  "rate" -> Some(500.0)
+                )
+              )
             )
-          )
+          ),
+          "estimatedRepaymentDate" -> LocalDate.parse("2021-01-21"),
+          "creationDate" -> LocalDate.parse("2020-12-25")
         )
       )
   )
@@ -74,15 +81,23 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
               amountRequested = 200.0,
               repaymentMethod = "BACD",
               totalRepaymentAmount = 300.0,
-              items = Some(Seq(
-                RepaymentSupplementItem(
-                  parentCreditReference = Some("002420002231"),
-                  amount = Some(400.0),
-                  fromDate = Some(LocalDate.parse("2021-07-23")),
-                  toDate = Some(LocalDate.parse("2021-08-23")),
-                  rate = Some(500.0)
+              repaymentItems = Seq[RepaymentItem](
+                RepaymentItem(
+                  repaymentSupplementItem =
+                      Seq(
+                        RepaymentSupplementItem(
+                          parentCreditReference = Some("002420002231"),
+                          amount = Some(400.0),
+                          fromDate = Some( LocalDate.parse("2021-07-23") ),
+                          toDate = Some( LocalDate.parse("2021-08-23") ),
+                          rate = Some(500.0)
+                      )
+                  )
                 )
-              ))
+              ),
+              estimatedRepaymentDate = LocalDate.parse("2021-01-21"),
+              creationDate = LocalDate.parse("2020-12-25"),
+              repaymentRequestNumber = "000000003135"
             ))))
 
         res should have(
@@ -150,15 +165,22 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
               amountRequested = 200.0,
               repaymentMethod = "BACD",
               totalRepaymentAmount = 300.0,
-              items = Some(Seq(
-                RepaymentSupplementItem(
-                  parentCreditReference = Some("002420002231"),
-                  amount = Some(400.0),
-                  fromDate = Some(LocalDate.parse("2021-07-23")),
-                  toDate = Some(LocalDate.parse("2021-08-23")),
-                  rate = Some(500.0)
-                )
-              ))
+              repaymentItems = Seq[RepaymentItem](
+                RepaymentItem(
+                  repaymentSupplementItem =
+                    Seq(
+                      RepaymentSupplementItem(
+                        parentCreditReference = Some("002420002231"),
+                        amount = Some(400.0),
+                        fromDate = Some( LocalDate.parse("2021-07-23") ),
+                        toDate = Some( LocalDate.parse("2021-08-23") ),
+                        rate = Some(500.0)
+                      )
+                    )
+                )),
+              estimatedRepaymentDate = LocalDate.parse("2021-01-21"),
+              creationDate = LocalDate.parse("2020-12-25"),
+              repaymentRequestNumber = "000000003135"
             ))))
 
         res should have(
