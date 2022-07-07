@@ -29,12 +29,11 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
                                              )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   def listRepaymentHistoryDetailsUrl(nino: String): String =
-    s"${appConfig.desUrl}/repayments/$nino"
+    s"${appConfig.desUrl}/income-tax/self-assessment/repayments-viewer/$nino"
 
-  private[connectors] def dateQueryParameters(fromDate: String, toDate: String): Seq[(String, String)] = {
+  private[connectors] def dateQueryParameters(fromDate: String): Seq[(String, String)] = {
     Seq(
-      "fromDate" -> fromDate,
-      "toDate" -> toDate
+      "fromDate" -> fromDate
     )
   }
 
@@ -44,12 +43,9 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
     )
   }
 
-  def getRepaymentHistoryDetailsByDate(nino: String,
-                                       fromDate: String,
-                                       toDate: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
+  def getAllRepaymentHistoryDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
     http.GET(
       url = listRepaymentHistoryDetailsUrl(nino),
-      queryParams = dateQueryParameters(fromDate, toDate),
       headers = appConfig.desAuthHeaders
     )(RepaymentHistoryReads, headerCarrier, ec)
   }

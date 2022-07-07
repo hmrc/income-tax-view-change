@@ -96,7 +96,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
           repaymentsViewerDetails = repaymentHistoryDetails)
         ))
 
-        val result = TestRepaymentHistoryConnector.getRepaymentHistoryDetailsByDate(nino, fromDate, toDate).futureValue
+        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino, fromDate, toDate).futureValue
 
         result shouldBe Right(RepaymentHistorySuccessResponse(
           repaymentsViewerDetails = repaymentHistoryDetails))
@@ -113,7 +113,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString())))
 
-        val result = TestRepaymentHistoryConnector.getRepaymentHistoryDetailsByDate(nino, fromDate, toDate).futureValue
+        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino, fromDate, toDate).futureValue
 
         result shouldBe Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString()))
       }
@@ -124,7 +124,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(RepaymentHistoryErrorResponse))
 
-        val result = TestRepaymentHistoryConnector.getRepaymentHistoryDetailsByDate(nino, fromDate, toDate).futureValue
+        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino, fromDate, toDate).futureValue
 
         result shouldBe Left(RepaymentHistoryErrorResponse)
       }

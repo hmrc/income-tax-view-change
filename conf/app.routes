@@ -28,4 +28,4 @@ GET         /charge-history/:mtdBsa/docId/:docNumber 		 			 controllers.ChargeHi
 
 GET         /repayments/:nino/repaymentId/:repaymentId                   controllers.RepaymentHistoryController.getRepaymentHistoryById(nino, repaymentId)
 
-GET         /repayments/:nino/fromDate/:fromDate/toDate/:toDate         controllers.RepaymentHistoryController.getRepaymentHistoryByDate(nino, fromDate, toDate)
+GET         /repayments/:nino                                            controllers.RepaymentHistoryController.getAllRepaymentHistory(nino)

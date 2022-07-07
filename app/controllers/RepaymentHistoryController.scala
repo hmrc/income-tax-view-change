@@ -33,12 +33,10 @@ class RepaymentHistoryController @Inject()(authentication: AuthenticationPredica
                                           (implicit ec: ExecutionContext) extends BackendController(cc) {
 
 
-  def getRepaymentHistoryByDate(nino: String, fromDate: String, toDate: String): Action[AnyContent] =
+  def getAllRepaymentHistory(nino: String): Action[AnyContent] =
     authentication.async { implicit request =>
-      repaymentHistoryDetailsConnector.getRepaymentHistoryDetailsByDate(
-        nino = nino,
-        fromDate = fromDate,
-        toDate = toDate
+      repaymentHistoryDetailsConnector.getAllRepaymentHistoryDetails(
+        nino = nino
       ) map {
         case Right(repaymentHistory) => Ok(Json.toJson(repaymentHistory))
         case Left(error: UnexpectedRepaymentHistoryResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
