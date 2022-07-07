@@ -39,7 +39,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
 
   private[connectors] def IdQueryParameters(repaymentId: String): Seq[(String, String)] = {
     Seq(
-      "repaymentId" -> repaymentId
+      "repaymentRequestNumber" -> repaymentId
     )
   }
 
