@@ -17,7 +17,7 @@
 package controllers
 
 import helpers.ComponentSpecBase
-import helpers.servicemocks.DesChargesStub.{stubRepaymentHistoryByDate, stubRepaymentHistoryById}
+import helpers.servicemocks.DesChargesStub.{stubAllRepaymentHistory, stubRepaymentHistoryById}
 import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse, RepaymentItem, RepaymentSupplementItem}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.{JsValue, Json}
@@ -146,17 +146,17 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
 
   }
 
-  s"GET ${controllers.routes.RepaymentHistoryController.getRepaymentHistoryByDate(nino, fromDate, toDate)}" should {
+  s"GET ${controllers.routes.RepaymentHistoryController.getAllRepaymentHistory(nino)}" should {
     s"return $OK" when {
       "repayment history is successfully retrieved by date range" in {
 
         isAuthorised(true)
 
-        stubRepaymentHistoryByDate(nino, fromDate, toDate)(
+        stubAllRepaymentHistory(nino)(
           status = OK,
           response = validRepaymentHistoryJson)
 
-        val res: WSResponse = IncomeTaxViewChange.getRepaymentHistoryByDate(nino, fromDate, toDate)
+        val res: WSResponse = IncomeTaxViewChange.getAllRepaymentHistory(nino)
 
         val expectedResponseBody: JsValue = Json.toJson(RepaymentHistorySuccessResponse(
           repaymentsViewerDetails = List(
@@ -195,11 +195,11 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
 
         isAuthorised(true)
 
-        stubRepaymentHistoryByDate(nino, fromDate, toDate)(
+        stubAllRepaymentHistory(nino)(
           status = SERVICE_UNAVAILABLE
         )
 
-        val res: WSResponse = IncomeTaxViewChange.getRepaymentHistoryByDate(nino, fromDate, toDate)
+        val res: WSResponse = IncomeTaxViewChange.getAllRepaymentHistory(nino)
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
@@ -213,11 +213,11 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        stubRepaymentHistoryByDate(nino, fromDate, toDate)(
+        stubAllRepaymentHistory(nino)(
           status = NOT_FOUND, response = errorJson
         )
 
-        val res: WSResponse = IncomeTaxViewChange.getRepaymentHistoryByDate(nino, fromDate, toDate)
+        val res: WSResponse = IncomeTaxViewChange.getAllRepaymentHistory(nino)
 
         res should have(
           httpStatus(NOT_FOUND),

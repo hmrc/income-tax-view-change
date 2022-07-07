@@ -111,8 +111,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
       get(s"/repayments/$nino/repaymentId/$repaymentId")
     }
 
-    def getRepaymentHistoryByDate(nino: String, fromDate: String, toDate: String): WSResponse = {
-      get(s"/repayments/$nino/fromDate/$fromDate/toDate/$toDate")
+    def getAllRepaymentHistory(nino: String): WSResponse = {
+      get(s"/repayments/$nino")
     }
 
   }
