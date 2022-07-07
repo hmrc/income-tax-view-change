@@ -82,7 +82,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
     }
   }
 
-  "The repaymentHistoryDetails connector get by date method" should {
+  "The repaymentHistoryDetails connector get ALL method" should {
     "return a list of repayments" when {
       s"$OK is received with repayment history " in {
 
@@ -90,13 +90,13 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
 
         mockDesGet(
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
-          queryParameters = TestRepaymentHistoryConnector.dateQueryParameters(fromDate = fromDate, toDate = toDate),
+          queryParameters = Seq(),
           headers = microserviceAppConfig.desAuthHeaders
         )(Right(RepaymentHistorySuccessResponse(
           repaymentsViewerDetails = repaymentHistoryDetails)
         ))
 
-        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino, fromDate, toDate).futureValue
+        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino).futureValue
 
         result shouldBe Right(RepaymentHistorySuccessResponse(
           repaymentsViewerDetails = repaymentHistoryDetails))
@@ -109,22 +109,22 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
         mockDesGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
-          queryParameters = TestRepaymentHistoryConnector.dateQueryParameters(fromDate = fromDate, toDate = toDate),
+          queryParameters = Seq(),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString())))
 
-        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino, fromDate, toDate).futureValue
+        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino).futureValue
 
         result shouldBe Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
         mockDesGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
-          queryParameters = TestRepaymentHistoryConnector.dateQueryParameters(fromDate = fromDate, toDate = toDate),
+          queryParameters = Seq(),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(RepaymentHistoryErrorResponse))
 
-        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino, fromDate, toDate).futureValue
+        val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino).futureValue
 
         result shouldBe Left(RepaymentHistoryErrorResponse)
       }

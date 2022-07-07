@@ -46,6 +46,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
   def getAllRepaymentHistoryDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
     http.GET(
       url = listRepaymentHistoryDetailsUrl(nino),
+      queryParams = Seq.empty,
       headers = appConfig.desAuthHeaders
     )(RepaymentHistoryReads, headerCarrier, ec)
   }
