@@ -43,6 +43,9 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
         }
       }
 
+      val mainType = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+        _.mainType
+      )
 
       Payment(
         reference = subItem.flatMap(_.paymentReference),
@@ -54,7 +57,8 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
         lotItem = document.paymentLotItem,
         dueDate = subItem.flatMap(_.dueDate),
         documentDate = document.documentDate,
-        transactionId = document.transactionId
+        transactionId = document.transactionId,
+        mainType = mainType
       )
     }
   }
