@@ -29,7 +29,8 @@ case class Payment(reference: Option[String],
                    lotItem: Option[String],
                    dueDate: Option[LocalDate],
                    documentDate: LocalDate,
-                   transactionId: String)
+                   transactionId: String,
+                   mainType: Option[String] = None)
 
 object Payment {
   implicit val format: Format[Payment] = Json.format[Payment]

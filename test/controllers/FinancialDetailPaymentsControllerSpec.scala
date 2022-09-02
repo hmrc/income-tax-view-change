@@ -40,7 +40,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "lotItem" -> "paymentLotItem",
       "dueDate" -> LocalDate.parse("2022-06-23"),
       "documentDate" -> LocalDate.parse("2022-06-23"),
-      "transactionId" -> "id"
+      "transactionId" -> "id",
+      "mainType" -> "ITSA Cutover Credits"
     )
   )
 
@@ -52,7 +53,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "documentDescription" -> "documentDescription",
       "dueDate" -> LocalDate.parse("2022-06-23"),
       "documentDate" -> LocalDate.parse("2022-06-23"),
-      "transactionId" -> "id"
+      "transactionId" -> "id",
+      "mainType" -> "ITSA Cutover Credits"
     )
   )
 
