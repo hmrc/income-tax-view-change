@@ -19,7 +19,7 @@ package models.financialDetails.responses
 import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import java.time.LocalDate
 
@@ -50,6 +50,13 @@ class ChargesResponseSpec extends WordSpec with Matchers {
   )
 
   val chargeResponseMinRead = ChargesResponse(balanceDetails, None, List(), List())
+
+  val chargeResponseBadJson = Json.obj(
+    "qwer" -> Json.obj(
+      "asdf" -> 100.00,
+      "qwer2" -> 200.00
+    )
+  )
 
   val chargeResponseMinReadJson = Json.obj(
     "balanceDetails" -> Json.obj(
@@ -307,6 +314,12 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     "read from Json" when {
       "the model has the minimal details" in {
         Json.fromJson[ChargesResponse](chargeResponseMinReadJson) shouldBe JsSuccess(chargeResponseMinRead)
+      }
+    }
+    "read from bad Json" when {
+      "a parse error is generated" in {
+        Json.fromJson[ChargesResponse](chargeResponseBadJson).toString shouldBe
+          "JsError(List((/balanceDetails,List(JsonValidationError(List(error.path.missing),WrappedArray())))))"
       }
     }
     "write to Json" when {
