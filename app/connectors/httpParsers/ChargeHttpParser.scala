@@ -36,8 +36,8 @@ object ChargeHttpParser extends ResponseHttpParsers {
       response.status match {
         case OK =>
           response.json.validate[ChargesResponse] match {
-            case JsError(_) =>
-              logger.error(s"[ChargeReads][read] - Unable to parse response into ChargesResponse")
+            case JsError(errors) =>
+              logger.error(s"[ChargeReads][read] - Unable to parse response into ChargesResponse - " + errors)
               Left(UnexpectedChargeErrorResponse)
 
             case JsSuccess(value, _) =>
