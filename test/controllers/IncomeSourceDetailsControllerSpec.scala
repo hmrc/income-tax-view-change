@@ -41,7 +41,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "a valid response from the IncomeSourceDetailsService" should {
 
         mockNinoResponse(testNinoModel)
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -52,7 +52,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockNinoResponse(testNinoError)
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
@@ -71,7 +71,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "a valid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -82,7 +82,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)

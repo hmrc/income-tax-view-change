@@ -50,7 +50,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
 
 
           "return a status of 200 (OK)" in {
-            mockAuth(Future.successful())
+            mockAuth(Future.successful(()))
             setupMockGetPreviousCalculation(testNino,
               testYear)(successResponse)
             status(result) shouldBe Status.OK
@@ -67,7 +67,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
 
 
           "return a status of 400 (BAD_REQUEST)" in {
-            mockAuth(Future.successful())
+            mockAuth(Future.successful(()))
             setupMockGetPreviousCalculation(testNino,
               testYear)(badRequestSingleError)
 
@@ -84,7 +84,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
           lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(badNino, testYear)(fakeRequest)
 
           "return a status of 400 (BAD_REQUEST)" in {
-            mockAuth(Future.successful())
+            mockAuth(Future.successful(()))
             status(result) shouldBe Status.BAD_REQUEST
           }
 
@@ -98,7 +98,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
 
 
           "return a status of 400 (BAD_REQUEST)" in {
-            mockAuth(Future.successful())
+            mockAuth(Future.successful(()))
             setupMockGetPreviousCalculation(testNino,
               testYear)(badRequestMultiError)
             status(result) shouldBe Status.BAD_REQUEST
@@ -115,7 +115,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
         lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino, testYear)(fakeRequest)
 
         "return a status of 400 (BAD_REQUEST)" in {
-          mockAuth(Future.successful())
+          mockAuth(Future.successful(()))
           setupMockGetPreviousCalculation(testNino,
             testYear)(badRequestSingleError)
 

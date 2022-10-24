@@ -30,9 +30,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 200 OK and matches expected Schema when fully populated" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJson = Some(
-        responseJsonFull
-      ))
+      val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJsonFull, Map.empty)
 
       val expected: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationFull)
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
@@ -44,9 +42,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 200 OK and matches expected Schema with minimal data" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJson = Some(
-        responseJsonMinimum
-      ))
+      val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJsonMinimum, Map.empty)
 
       val expected: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationMinimum)
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
@@ -58,9 +54,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 200 OK and matches expected Schema with no eoyData data" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJson = Some(
-        responseJsonNoEoy
-      ))
+      val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJsonNoEoy, Map.empty)
 
       val expected: Either[Nothing, PreviousCalculationModel] = Right(testPreviousCalculationNoEoy)
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
@@ -72,7 +66,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 200 OK but the response is not as expected" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.OK, responseJson = Some(Json.obj("invalid" -> "data")))
+      val httpResponse: HttpResponse = HttpResponse(Status.OK, Json.obj("invalid" -> "data"), Map.empty)
 
       val expected: Either[UnexpectedJsonFormat.type, Nothing] = Left(UnexpectedJsonFormat)
 
@@ -85,9 +79,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 400 BAD_REQUEST (single error)" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST,
-        responseJson = Some(jsonSingleError)
-      )
+      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, jsonSingleError, Map.empty)
 
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] =
         PreviousCalculationReads.read("", "", httpResponse)
@@ -99,9 +91,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 400 BAD_REQUEST (multiple errors)" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST,
-        responseJson = Some(jsonMultipleErrors)
-      )
+      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, jsonMultipleErrors, Map.empty)
 
       val result: CalculationHttpParser.HttpGetResult[PreviousCalculationModel] = PreviousCalculationReads.read("", "", httpResponse)
 
@@ -113,7 +103,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 400 BAD_REQUEST (Unexpected Json Returned)" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, responseJson = Some(Json.obj("foo" -> "bar")))
+      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, Json.obj("foo" -> "bar"), Map.empty)
 
       val expected: Either[UnexpectedJsonFormat.type, Nothing] = Left(UnexpectedJsonFormat)
 
@@ -127,7 +117,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the json is in an invalid format" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, responseString = Some("Banana"))
+      val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, "Banana", Map.empty)
 
       val expected: Either[InvalidJsonResponse.type, Nothing] = Left(InvalidJsonResponse)
 
@@ -141,9 +131,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is 500 Internal Server Error" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR,
-        responseJson = Some(jsonSingleError)
-      )
+      val httpResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, jsonSingleError, Map.empty)
 
       val expected: Either[UnexpectedResponse.type, Nothing] = Left(UnexpectedResponse)
 
@@ -156,7 +144,7 @@ class CalculationHttpParserSpec extends TestSupport {
 
     "the http response status is unexpected" should {
 
-      val httpResponse: HttpResponse = HttpResponse(Status.SEE_OTHER)
+      val httpResponse: HttpResponse = HttpResponse(Status.SEE_OTHER, "")
 
       val expected: Either[UnexpectedResponse.type, Nothing] = Left(UnexpectedResponse)
 

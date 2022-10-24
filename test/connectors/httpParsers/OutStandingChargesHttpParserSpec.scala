@@ -27,10 +27,7 @@ class OutStandingChargesHttpParserSpec extends TestSupport {
   "OutStandingChargesHttpParser" should {
     "return a out standing charge" when {
       s"$OK is returned with valid json" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(validMultipleOutStandingChargeDesResponseJson)
-        )
+        val httpResponse: HttpResponse = HttpResponse(OK, validMultipleOutStandingChargeDesResponseJson, Map.empty)
 
         val expectedResult: OutStandingChargeResponse = Right(OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo)))
         val actualResult: OutStandingChargeResponse = OutStandingChargesReads.read("", "", httpResponse)
@@ -40,9 +37,7 @@ class OutStandingChargesHttpParserSpec extends TestSupport {
     }
     s"return $UnexpectedOutStandingChargeResponse" when {
       "a 4xx status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = BAD_REQUEST, responseString = Some("Bad request")
-        )
+        val httpResponse: HttpResponse = HttpResponse(BAD_REQUEST, "Bad request", Map.empty)
 
         val expectedResult: OutStandingChargeResponse = Left(UnexpectedOutStandingChargeResponse(BAD_REQUEST, "Bad request"))
         val actualResult: OutStandingChargeResponse = OutStandingChargesReads.read("", "", httpResponse)
@@ -50,9 +45,7 @@ class OutStandingChargesHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResult
       }
       "any other status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = INTERNAL_SERVER_ERROR
-        )
+        val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, "")
 
         val expectedResult: OutStandingChargeResponse = Left(OutStandingChargeErrorResponse)
         val actualResult: OutStandingChargeResponse = OutStandingChargesReads.read("", "", httpResponse)

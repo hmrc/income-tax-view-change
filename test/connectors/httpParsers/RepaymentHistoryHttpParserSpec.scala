@@ -30,10 +30,7 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
 
     "return Repayment history" when {
       s"$OK is returned with valid json" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(repaymentHistoryFullJson)
-        )
+        val httpResponse: HttpResponse = HttpResponse(OK, repaymentHistoryFullJson, Map.empty)
 
         val expectedResult: RepaymentHistoryResponse = Right(
           RepaymentHistorySuccessResponse(
@@ -72,9 +69,7 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
 
     s"return $UnexpectedRepaymentHistoryResponse" when {
       "a 4xx status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = BAD_REQUEST, responseString = Some("Bad request")
-        )
+        val httpResponse: HttpResponse = HttpResponse(BAD_REQUEST, "Bad request", Map.empty)
 
         val expectedResult: RepaymentHistoryResponse = Left(UnexpectedRepaymentHistoryResponse(BAD_REQUEST, "Bad request"))
         val actualResult: RepaymentHistoryResponse = RepaymentHistoryReads.read("", "", httpResponse)
@@ -82,9 +77,7 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResult
       }
       "any other status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = INTERNAL_SERVER_ERROR
-        )
+        val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, "")
 
         val expectedResult: RepaymentHistoryResponse = Left(RepaymentHistoryErrorResponse)
         val actualResult: RepaymentHistoryResponse = RepaymentHistoryReads.read("", "", httpResponse)

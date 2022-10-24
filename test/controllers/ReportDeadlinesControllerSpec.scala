@@ -50,7 +50,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
 
   "getOpenObligations" should {
     s"return ${Status.OK} with valid report deadlines" in new Setup {
-      mockAuth(Future.successful())
+      mockAuth(Future.successful(()))
       when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
         .thenReturn(Future.successful(testObligations))
 
@@ -62,7 +62,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
     }
 
     "return the status of the error model when the connector returns one" in new Setup {
-      mockAuth(Future.successful())
+      mockAuth(Future.successful(()))
       when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(true))(any()))
         .thenReturn(Future.successful(testReportDeadlinesError))
 
@@ -83,7 +83,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
 
   "getFulfilledObligations" should {
     s"return ${Status.OK} with valid report deadlines" in new Setup {
-      mockAuth(Future.successful())
+      mockAuth(Future.successful(()))
       when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(false))(any()))
         .thenReturn(Future.successful(testObligations))
 
@@ -95,7 +95,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
     }
 
     "return the status of the error model when the connector returns one" in new Setup {
-      mockAuth(Future.successful())
+      mockAuth(Future.successful(()))
       when(reportDeadlinesConnector.getReportDeadlines(matches(testNino), matches(false))(any()))
         .thenReturn(Future.successful(testReportDeadlinesError))
 
@@ -117,7 +117,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
   "getPreviousObligations" should {
     s"return ${Status.OK}" when {
       "valid obligations are returned from the connector" in new Setup {
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         when(reportDeadlinesConnector.getPreviousObligations(matches(testNino), matches("2020-04-06"), matches("2021-04-05"))(any()))
           .thenReturn(Future.successful(testObligations))
 
@@ -130,7 +130,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
     }
     "return the status of the error model" when {
       "an error model is returned from the connector" in new Setup {
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         when(reportDeadlinesConnector.getPreviousObligations(matches(testNino), matches("2020-04-06"), matches("2021-04-05"))(any()))
           .thenReturn(Future.successful(testReportDeadlinesError))
 
