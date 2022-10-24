@@ -145,15 +145,6 @@ object FinancialDetailIntegrationTestConstants {
     unallocatedCredit = Some(400.00)
   )
 
-  val codingDetails: CodingDetails = CodingDetails(
-    taxYearReturn = "2018",
-    totalReturnAmount = Some(100.00),
-    amountNotCoded = Some(200.00),
-    amountNotCodedDueDate = Some(LocalDate.parse("2018-01-01")),
-    amountCodedOut = 300.00,
-    taxYearCoding = "2019"
-  )
-
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = "2018",
     transactionId = "id",
@@ -170,7 +161,8 @@ object FinancialDetailIntegrationTestConstants {
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
-    lpiWithDunningBlock = Some(12.50)
+    lpiWithDunningBlock = Some(12.50),
+    amountCodedOut = Some(3.21)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
