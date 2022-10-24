@@ -54,6 +54,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     Test / Keys.fork := true,
     scalaVersion := "2.13.8",
+    scalacOptions += "-Wconf:src=routes/.*:s",
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
