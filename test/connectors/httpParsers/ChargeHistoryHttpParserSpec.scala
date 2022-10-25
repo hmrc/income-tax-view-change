@@ -27,10 +27,7 @@ class ChargeHistoryHttpParserSpec extends TestSupport {
   "ChargeHistoryHttpParser" should {
     "return charge history" when {
       s"$OK is returned with valid json" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(testValidChargeHistorySuccessResponseJson)
-        )
+        val httpResponse: HttpResponse = HttpResponse(OK, testValidChargeHistorySuccessResponseJson, Map.empty)
 
         val expectedResult: ChargeHistoryResponse = Right(ChargeHistorySuccessResponse(
           idType = "MTDBSA",
@@ -43,10 +40,7 @@ class ChargeHistoryHttpParserSpec extends TestSupport {
       }
 
       s"$OK is returned with no charge history" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(testEmptyValidChargeHistorySuccessResponseJson)
-        )
+        val httpResponse: HttpResponse = HttpResponse(OK, testEmptyValidChargeHistorySuccessResponseJson, Map.empty)
 
         val expectedResult: ChargeHistoryResponse = Right(ChargeHistorySuccessResponse(
           idType = "MTDBSA",
@@ -60,9 +54,7 @@ class ChargeHistoryHttpParserSpec extends TestSupport {
     }
     s"return $UnexpectedChargeHistoryResponse" when {
       "a 4xx status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = BAD_REQUEST, responseString = Some("Bad request")
-        )
+        val httpResponse: HttpResponse = HttpResponse(BAD_REQUEST, "Bad request", Map.empty)
 
         val expectedResult: ChargeHistoryResponse = Left(UnexpectedChargeHistoryResponse(BAD_REQUEST, "Bad request"))
         val actualResult: ChargeHistoryResponse = ChargeHistoryReads.read("", "", httpResponse)
@@ -70,9 +62,7 @@ class ChargeHistoryHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResult
       }
       "any other status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = INTERNAL_SERVER_ERROR
-        )
+        val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, "")
 
         val expectedResult: ChargeHistoryResponse = Left(ChargeHistoryErrorResponse)
         val actualResult: ChargeHistoryResponse = ChargeHistoryReads.read("", "", httpResponse)

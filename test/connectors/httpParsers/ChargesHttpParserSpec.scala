@@ -53,9 +53,7 @@ class ChargesHttpParserSpec extends TestSupport {
         actualResponse shouldBe expectedResponse
       }
       "a non 200 or 4xx status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = INTERNAL_SERVER_ERROR
-        )
+        val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, body = "{}")
 
         val expectedResult: ChargeResponse = Left(UnexpectedChargeErrorResponse)
         val actualResult: ChargeResponse = ChargeReads.read("", "", httpResponse)

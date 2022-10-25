@@ -42,7 +42,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
       "a valid response from the GetBusinessDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         lazy val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -53,7 +53,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         lazy val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)

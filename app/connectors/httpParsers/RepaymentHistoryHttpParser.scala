@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse}
+import models.repaymentHistory.RepaymentHistorySuccessResponse
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 

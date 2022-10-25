@@ -9,7 +9,7 @@ val appName = "income-tax-view-change"
 
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.20.0",
+  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.24.0",
   "uk.gov.hmrc" %% "logback-json-logger" % "5.2.0"
 )
 
@@ -53,7 +53,8 @@ lazy val microservice = Project(appName, file("."))
   )
   .settings(
     Test / Keys.fork := true,
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.13.8",
+    scalacOptions += "-Wconf:src=routes/.*:s",
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)

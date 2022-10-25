@@ -30,8 +30,6 @@ class PreviousCalculationModelSpec extends TestSupport with Matchers {
     val calcAmount = 22.56
     val incomeTaxNicYtd = 500.68
     val incomeTaxNicAmount = 125.63
-    val errorStatus = 500
-    val errorMessage = "Error Message"
     val eoyEstimate = Some(EoyEstimate(incomeTaxNicAmount = incomeTaxNicAmount))
 
     val annualAllowancesWithValues = Some(AnnualAllowancesModel(Some(101.98), Some(12.89)))
@@ -42,16 +40,6 @@ class PreviousCalculationModelSpec extends TestSupport with Matchers {
       PreviousCalculationModel(
         CalcOutput(calcID = calcId, calcAmount = Some(calcAmount), calcTimestamp = Some(calcTimestamp), crystallised = Some(crystallised),
           calcResult = Some(CalcResult(incomeTaxNicYtd, eoyEstimate, annualAllowances = annualAllowances))))
-
-
-    val singleError = Error(code = "CODE", reason = "ERROR MESSAGE")
-    val multiError = MultiError(
-      failures = Seq(
-        Error(code = "ERROR CODE 1", reason = "ERROR MESSAGE 1"),
-        Error(code = "ERROR CODE 2" +
-          "", reason = "ERROR MESSAGE 2")
-      )
-    )
 
     "successful" should {
       "have the correct calcId assigned in the model" in {
