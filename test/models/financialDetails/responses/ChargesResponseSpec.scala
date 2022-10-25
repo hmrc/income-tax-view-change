@@ -69,14 +69,6 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       "totalBalance" -> 300.00,
       "unallocatedCredit" -> 400.00
     ),
-    "codingDetails" -> Json.arr(Json.obj(
-      "taxYearReturn" -> "2018",
-      "totalReturnAmount" -> 100.00,
-      "amountNotCoded" -> 200.00,
-      "amountNotCodedDueDate" -> LocalDate.parse("2018-01-01"),
-      "amountCodedOut" -> 300.00,
-      "taxYearCoding" -> "2019"
-    )),
     "documentDetails" -> Json.arr(Json.obj(
       "taxYear" -> "2018",
       "transactionId" -> "id",
@@ -93,7 +85,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       "interestOutstandingAmount" -> 31.00,
       "paymentLotItem" -> "paymentLotItem",
       "paymentLot" -> "paymentLot",
-      "lpiWithDunningBlock" -> 12.50
+      "lpiWithDunningBlock" -> 12.50,
+      "amountCodedOut" -> 3.21
     )),
     "financialDetails" -> Json.arr(Json.parse(
       """
@@ -149,7 +142,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       transactionId = documentId,
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
-      lpiWithDunningBlock = None
+      lpiWithDunningBlock = None,
+      amountCodedOut = Some(3.21)
     )
   }
 
@@ -170,7 +164,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       transactionId = documentId,
       paymentLot = None,
       paymentLotItem = None,
-      lpiWithDunningBlock = None
+      lpiWithDunningBlock = None,
+      amountCodedOut = Some(3.21)
     )
   }
 
