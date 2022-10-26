@@ -72,7 +72,7 @@ object IncomeSourceDetailsTestConstants {
   val testIncomeSourceDetailsError = IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
   val testNinoError = NinoErrorModel(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
 
-  val successResponse = HttpResponse(Status.OK, Some(testIncomeSourceDetailsJson))
-  val badJson = HttpResponse(Status.OK, Some(Json.toJson("{}")))
-  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Dummy error message"))
+  val successResponse = HttpResponse(Status.OK, testIncomeSourceDetailsJson, Map.empty)
+  val badJson = HttpResponse(Status.OK, Json.toJson("{}"), Map.empty)
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
 }

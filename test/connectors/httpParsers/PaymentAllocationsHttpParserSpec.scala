@@ -113,10 +113,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
   "PaymentAllocationsHttpParser" should {
     "return a payment allocations" when {
       s"$OK is returned with valid json and a single payment allocations" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(paymentAllocationsJson)
-        )
+        val httpResponse: HttpResponse = HttpResponse(OK, paymentAllocationsJson, Map.empty)
 
         val expectedResult: PaymentAllocationsResponse = Right(paymentAllocations)
         val actualResult: PaymentAllocationsResponse = PaymentAllocationsReads.read("", "", httpResponse)
@@ -124,10 +121,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResult
       }
       s"$OK is returned with valid json and multiple payment allocations" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(multiplePaymentAllocationJson)
-        )
+        val httpResponse: HttpResponse = HttpResponse(OK, multiplePaymentAllocationJson, Map.empty)
 
         val expectedResponse: PaymentAllocationsResponse = Right(paymentAllocations)
         val actualResult: PaymentAllocationsResponse = PaymentAllocationsReads.read("", "", httpResponse)
@@ -137,9 +131,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
     }
     "return a Not Found response" when {
       "the status of the response is 404" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = NOT_FOUND
-        )
+        val httpResponse: HttpResponse = HttpResponse(NOT_FOUND, "")
 
         PaymentAllocationsReads.read("", "", httpResponse) shouldBe Left(NotFoundResponse)
       }
@@ -147,10 +139,10 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
     s"return $UnexpectedResponse" when {
       "no payment details are returned in the json" in {
         val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = OK,
-          responseJson = Some(Json.obj(
+          OK,
+          Json.obj(
             "paymentDetails" -> Json.arr()
-          ))
+          ), Map.empty
         )
 
         val expectedResult: PaymentAllocationsResponse = Left(UnexpectedResponse)
@@ -159,9 +151,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResult
       }
       "a 4xx status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = BAD_REQUEST
-        )
+        val httpResponse: HttpResponse = HttpResponse(BAD_REQUEST, "")
 
         val expectedResult: PaymentAllocationsResponse = Left(UnexpectedResponse)
         val actualResult: PaymentAllocationsResponse = PaymentAllocationsReads.read("", "", httpResponse)
@@ -169,9 +159,7 @@ class PaymentAllocationsHttpParserSpec extends TestSupport {
         actualResult shouldBe expectedResult
       }
       "any other status is returned" in {
-        val httpResponse: HttpResponse = HttpResponse(
-          responseStatus = INTERNAL_SERVER_ERROR
-        )
+        val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, "")
 
         val expectedResult: PaymentAllocationsResponse = Left(UnexpectedResponse)
         val actualResult: PaymentAllocationsResponse = PaymentAllocationsReads.read("", "", httpResponse)

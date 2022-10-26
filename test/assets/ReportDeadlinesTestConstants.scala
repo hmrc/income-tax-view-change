@@ -217,7 +217,7 @@ object ReportDeadlinesTestConstants {
   )
 
   //Connector Responses
-  val successResponse = HttpResponse(Status.OK, Some(testObligationsFromJson))
-  val badJson = HttpResponse(Status.OK, responseJson = Some(Json.parse("{}")))
-  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, responseString = Some("Error Message"))
+  val successResponse = HttpResponse(Status.OK, testObligationsFromJson, Map.empty)
+  val badJson = HttpResponse(Status.OK, Json.parse("{}"), Map.empty)
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Error Message")
 }

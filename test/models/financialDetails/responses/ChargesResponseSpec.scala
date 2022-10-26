@@ -292,7 +292,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
     "read from bad Json" when {
       "a parse error is generated" in {
         Json.fromJson[ChargesResponse](chargeResponseBadJson).toString shouldBe
-          "JsError(List((/balanceDetails,List(JsonValidationError(List(error.path.missing),WrappedArray())))))"
+          "JsError(List((/balanceDetails,List(JsonValidationError(List(error.path.missing),ArraySeq())))))"
       }
     }
     "write to Json" when {

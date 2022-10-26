@@ -52,7 +52,7 @@ class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroservi
       object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC)
 
       "return status OK" should {
-        mockAuth(Future.successful())
+        mockAuth(Future.successful(()))
         checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
       }
     }
