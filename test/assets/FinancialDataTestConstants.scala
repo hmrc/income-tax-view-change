@@ -18,7 +18,7 @@ package assets
 
 
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{BalanceDetails, CodingDetails, DocumentDetail, FinancialDetail, SubItem}
+import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
 
 import java.time.LocalDate
@@ -28,28 +28,28 @@ object FinancialDataTestConstants {
   val validChargesJson: JsValue = Json.parse(
     """
 			|{
-|"balanceDetails": {
-| "balanceDueWithin30Days": 100.00,
-| "overDueAmount": 200.00,
-| "totalBalance": 300.00,
-| "unallocatedCredit": 400.00
-| },
-|"codingDetails": [
-|   {
-|     "taxYearReturn": "2018",
-|     "totalReturnAmount": 100.00,
-|     "amountNotCoded": 200.00,
-|     "amountNotCodedDueDate": "2018-01-01",
-|     "amountCodedOut": 300.00,
-|     "taxYearCoding": "2019"
-|   }
-| ],
+      |"balanceDetails": {
+      | "balanceDueWithin30Days": 100.00,
+      | "overDueAmount": 200.00,
+      | "totalBalance": 300.00,
+      | "unallocatedCredit": 400.00
+      | },
+      |"codingDetails": [
+      |   {
+      |     "taxYearReturn": "2018",
+      |     "totalReturnAmount": 100.00,
+      |     "amountNotCoded": 200.00,
+      |     "amountNotCodedDueDate": "2018-01-01",
+      |     "amountCodedOut": 300.00,
+      |     "taxYearCoding": "2019"
+      |   }
+      | ],
 			| "documentDetails": [
 			|   {
 			|     "taxYear": "2018",
 			|     "documentId": "id",
 			|     "documentDescription": "documentDescription",
-|     "documentText": "documentText",
+      |     "documentText": "documentText",
 			|     "totalAmount": 300.00,
 			|     "documentOutstandingAmount": 200.00,
 			|     "lastClearedAmount": 100.00,
@@ -57,13 +57,13 @@ object FinancialDataTestConstants {
 			|     "interestRate": 2.60,
 			|     "interestFromDate": "2018-08-01",
 			|     "interestEndDate": "2019-01-15",
-|     "latePaymentInterestID": "latePaymentInterestID",
+      |     "latePaymentInterestID": "latePaymentInterestID",
 			|     "latePaymentInterestAmount": 12.34,
 			|     "interestOutstandingAmount": 31.00,
 			|     "paymentLot": "paymentLot",
 			|     "paymentLotItem": "paymentLotItem",
-|     "lpiWithDunningBlock": 12.50,
-|     "amountCodedOut" : 3.21
+      |     "lpiWithDunningBlock": 12.50,
+      |     "amountCodedOut" : 3.21
 			|   },
 			|   {
 			|     "taxYear": "2019",
@@ -87,14 +87,14 @@ object FinancialDataTestConstants {
 			|     "documentOutstandingAmount": 500.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-|     "accruedInterest": 1000,
+      |     "accruedInterest": 1000,
 			|     "items": [{
 			|       "subItem": "1",
 			|       "amount": 100.00,
 			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-|       "interestLock": "interestLock",
+      |       "interestLock": "interestLock",
 			|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
@@ -116,15 +116,15 @@ object FinancialDataTestConstants {
 			|     "documentOutstandingAmount": 200.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-|     "accruedInterest": 2000,
+      |     "accruedInterest": 2000,
 			|     "items": [{
 			|       "subItem": "2",
 			|       "amount": 200.00,
 			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason2",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod2",
-|       "interestLock": "interestLock2",
-|       "dunningLock": "dunningLock2",
+      |       "interestLock": "interestLock2",
+      |       "dunningLock": "dunningLock2",
 			|       "paymentReference": "paymentReference2",
 			|       "paymentAmount": 3000.00,
 			|       "dueDate": "2022-06-23",
@@ -152,15 +152,15 @@ object FinancialDataTestConstants {
 			|     "clearedAmount": 500.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-|     "accruedInterest": 1000,
+      |     "accruedInterest": 1000,
 			|     "items": [{
 			|       "subItemId": "1",
 			|       "amount": 100.00,
 			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-|       "interestLock": "interestLock",
-|       "dunningLock": "dunningLock",
+      |       "interestLock": "interestLock",
+      |       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "2022-06-23",
@@ -174,15 +174,6 @@ object FinancialDataTestConstants {
 			|""".stripMargin)
 
   val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, Some(400.00))
-
-  val codingDetail: CodingDetails = CodingDetails(
-    taxYearReturn = "2018",
-    totalReturnAmount = Some(100.00),
-    amountNotCoded = Some(200.00),
-    amountNotCodedDueDate = Some(LocalDate.parse("2018-01-01")),
-    amountCodedOut = 300.00,
-    taxYearCoding = "2019"
-  )
 
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = "2018",
@@ -200,7 +191,8 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
-    lpiWithDunningBlock = Some(12.50)
+    lpiWithDunningBlock = Some(12.50),
+    amountCodedOut = Some(3.21)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -335,25 +327,22 @@ object FinancialDataTestConstants {
 
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
-    codingDetails = Some(List(codingDetail)),
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail)
   )
 
   val creditChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
-    codingDetails = Some(List(codingDetail)),
     documentDetails = List(documentDetail3),
     financialDetails = List(financialDetail3)
   )
 
-  val chargesResponseNoCodingDetails2: ChargesResponse = creditChargesResponse.copy(codingDetails = None)
+  val chargesResponseNoCodingDetails2: ChargesResponse = creditChargesResponse
 
-  val chargesResponseNoCodingDetails: ChargesResponse = chargesResponse.copy(codingDetails = None)
+  val chargesResponseNoCodingDetails: ChargesResponse = chargesResponse
 
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
-    codingDetails = Some(List(codingDetail)),
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
   )
