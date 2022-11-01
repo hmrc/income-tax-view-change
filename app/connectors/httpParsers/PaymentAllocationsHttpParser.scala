@@ -38,8 +38,9 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
           logger.info(s"[PaymentAllocationsReads][read] got OK PaymentAllocations response: " + response.json)
           response.json.validate[PaymentDetails] match {
             case JsSuccess(result, _) => result.paymentDetails.headOption match {
-              logger.info(s"[PaymentAllocationsReads][read] successfully parsed response to PaymentAllocations: " + result)
-              case Some(paymentAllocations) => Right(paymentAllocations)
+              case Some(paymentAllocations) =>
+                logger.info(s"[PaymentAllocationsReads][read] successfully parsed response to PaymentAllocations: " + result)
+                Right(paymentAllocations)
               case None =>
                 logger.error(s"[PaymentAllocationsReads][read] could not parse response")
                 Left(UnexpectedResponse)
