@@ -19,6 +19,7 @@ package controllers
 import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
+import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -30,7 +31,7 @@ import scala.concurrent.ExecutionContext
 class FinancialDetailChargesController @Inject()(authentication: AuthenticationPredicate,
                                                  cc: ControllerComponents,
                                                  financialDetailsConnector: FinancialDetailsConnector)
-                                                (implicit ec: ExecutionContext) extends BackendController(cc) {
+                                                (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getChargeDetails(nino: String, from: String, to: String): Action[AnyContent] = {
     authentication.async { implicit request =>
@@ -39,9 +40,14 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
         from = from,
         to = to
       ) map {
-        case Right(chargeDetails) => Ok(Json.toJson(chargeDetails))
-        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
-        case Left(_) =>
+        case Right(chargeDetails) =>
+          logger.debug("[FinancialDetailChargesController][getChargeDetails] - Successful Response: " + chargeDetails)
+          Ok(Json.toJson(chargeDetails))
+        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 =>
+          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - error: " + error)
+          Status(error.code)(error.response)
+        case Left(otherError) =>
+          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - other error: " + otherError)
           InternalServerError("Failed to retrieve charge details")
       }
     }
@@ -53,9 +59,14 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
         nino = nino,
         documentId = documentId
       ) map {
-        case Right(chargeDetails) => Ok(Json.toJson(chargeDetails))
-        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
-        case Left(_) =>
+        case Right(chargeDetails) =>
+          logger.debug("[FinancialDetailChargesController][getPaymentAllocationDetails] - Successful Response: " + chargeDetails)
+          Ok(Json.toJson(chargeDetails))
+        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 =>
+          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - error: " + error)
+          Status(error.code)(error.response)
+        case Left(otherError) =>
+          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - other error: " + otherError)
           InternalServerError("Failed to retrieve payment allocation details")
       }
     }
