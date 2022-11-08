@@ -19,6 +19,7 @@ package controllers
 import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
+import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -30,7 +31,7 @@ import scala.concurrent.ExecutionContext
 class FinancialDetailsController @Inject()(authentication: AuthenticationPredicate,
                                            cc: ControllerComponents,
                                            financialDetailsConnector: FinancialDetailsConnector)
-                                          (implicit ec: ExecutionContext) extends BackendController(cc) {
+                                          (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getOnlyOpenItems(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     financialDetailsConnector.getOnlyOpenItems(
