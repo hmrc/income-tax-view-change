@@ -44,10 +44,10 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
           logger.debug("[FinancialDetailChargesController][getChargeDetails] - Successful Response: " + chargeDetails)
           Ok(Json.toJson(chargeDetails))
         case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 =>
-          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - error: " + error)
+          logger.error("[FinancialDetailChargesController][getChargeDetails] - error: " + error)
           Status(error.code)(error.response)
         case Left(otherError) =>
-          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - other error: " + otherError)
+          logger.error("[FinancialDetailChargesController][getChargeDetails] - other error: " + otherError)
           InternalServerError("Failed to retrieve charge details")
       }
     }
