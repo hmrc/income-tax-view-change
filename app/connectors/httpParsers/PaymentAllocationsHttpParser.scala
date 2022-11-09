@@ -35,7 +35,7 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): PaymentAllocationsResponse = {
       response.status match {
         case OK =>
-          logger.info(s"[PaymentAllocationsReads][read] got OK PaymentAllocations response: " + response.json)
+          logger.debug(s"[PaymentAllocationsReads][read] got OK PaymentAllocations response: " + response.json)
           response.json.validate[PaymentDetails] match {
             case JsSuccess(result, _) => result.paymentDetails.headOption match {
               case Some(paymentAllocations) =>
