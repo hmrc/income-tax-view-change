@@ -63,7 +63,8 @@ object FinancialDataTestConstants {
 			|     "paymentLot": "paymentLot",
 			|     "paymentLotItem": "paymentLotItem",
       |     "lpiWithDunningBlock": 12.50,
-      |     "amountCodedOut" : 3.21
+      |     "amountCodedOut" : 3.21,
+      |     "accruingInterestAmount": 1.27
 			|   },
 			|   {
 			|     "taxYear": "2019",
@@ -192,7 +193,8 @@ object FinancialDataTestConstants {
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
     lpiWithDunningBlock = Some(12.50),
-    amountCodedOut = Some(3.21)
+    amountCodedOut = Some(3.21),
+    accruingInterestAmount = Some(1.27)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
