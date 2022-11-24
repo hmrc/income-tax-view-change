@@ -18,13 +18,19 @@ package helpers.servicemocks
 
 import helpers.WiremockHelper
 import play.api.http.Status
+import play.api.libs.json.{JsObject, Json}
+import uk.gov.hmrc.auth.core.{ConfidenceLevel}
 
 object AuthStub {
 
   val postAuthoriseUrl = "/auth/authorise"
 
+  private def successfulAuthResponse(confidenceLevel: Option[ConfidenceLevel]): JsObject = {
+    confidenceLevel.fold(Json.obj())(unwrappedConfidenceLevel => Json.obj("confidenceLevel" -> unwrappedConfidenceLevel))
+  }
+
   def stubAuthorised(): Unit = {
-    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, "{}")
+    WiremockHelper.stubPost(postAuthoriseUrl, Status.OK, successfulAuthResponse(Some(ConfidenceLevel.L250)).toString())
   }
 
   def stubUnauthorised(): Unit = {

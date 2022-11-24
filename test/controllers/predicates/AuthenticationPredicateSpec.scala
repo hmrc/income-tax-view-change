@@ -23,7 +23,7 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
-import uk.gov.hmrc.auth.core.MissingBearerToken
+import uk.gov.hmrc.auth.core.{ConfidenceLevel, MissingBearerToken}
 
 import scala.concurrent.Future
 
@@ -39,8 +39,7 @@ class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroservi
     }.apply(FakeRequest())
 
     "called with an Unauthenticated user (No Bearer Token in Header)" should {
-      object TestUnauthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC)
-
+      object TestUnauthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
 
       "return status UNAUTHORISED" should {
         mockAuth(Future.failed(new MissingBearerToken))
@@ -49,12 +48,22 @@ class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroservi
     }
 
     "called with an authenticated user (Some Bearer Token in Header)" should {
-      object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC)
+      object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
 
       "return status OK" should {
-        mockAuth(Future.successful(()))
+        mockAuth()
         checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
       }
+    }
+
+    "called with low confidence level" should {
+      object TestUnauthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
+
+      "return status UNAUTHORISED" should {
+        mockAuth(Future.successful(ConfidenceLevel.L200))
+        checkStatusOf(result(TestUnauthenticationPredicate))(Status.UNAUTHORIZED)
+      }
+
     }
   }
 }
