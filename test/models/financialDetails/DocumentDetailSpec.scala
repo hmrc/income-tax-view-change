@@ -52,7 +52,8 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
     "lpiWithDunningBlock" -> 12.50,
-    "amountCodedOut" -> 3.21
+    "amountCodedOut" -> 3.21,
+    "accruingInterestAmount" -> 1.27
   )
 
   val documentDetailFullJsonWrite: JsValue = Json.obj(
@@ -72,7 +73,8 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
     "lpiWithDunningBlock" -> 12.50,
-    "amountCodedOut" -> 3.21
+    "amountCodedOut" -> 3.21,
+    "accruingInterestAmount" -> 1.27
   )
 
   "DocumentDetail" should {
