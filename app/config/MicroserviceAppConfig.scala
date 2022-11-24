@@ -45,5 +45,6 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
       "Authorization" -> s"Bearer $ifToken"
     )
   }
+  val confidenceLevel:Int = servicesConfig.getInt("auth.confidenceLevel")
 
 }
