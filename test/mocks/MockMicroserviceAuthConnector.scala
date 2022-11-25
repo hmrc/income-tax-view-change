@@ -21,6 +21,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.doReturn
 import org.scalatest.BeforeAndAfterEach
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.auth.core.authorise.Predicate
 import utils.TestSupport
 
 import scala.concurrent.Future
@@ -29,7 +30,7 @@ trait MockMicroserviceAuthConnector extends TestSupport with BeforeAndAfterEach 
 
   val mockMicroserviceAuthConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
 
-  def mockAuth(response: Future[Any] = Future.successful(ConfidenceLevel.L250)): Future[Nothing] = {
+  def mockAuth(response: Future[Predicate] = Future.successful(ConfidenceLevel.L250)): Future[Nothing] = {
     doReturn(response, Nil: _*).when(mockMicroserviceAuthConnector)
       .authorise(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())
   }

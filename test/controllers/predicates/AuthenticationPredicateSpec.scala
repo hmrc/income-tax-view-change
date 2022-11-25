@@ -29,41 +29,29 @@ import scala.concurrent.Future
 
 class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroserviceAuthConnector {
 
-  "The AuthenticationPredicate.authenticated method" when {
+  "The AuthenticationPredicate.authenticated method" should {
 
     lazy val mockCC = stubControllerComponents()
+    object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
 
     def result(authenticationPredicate: AuthenticationPredicate): Future[Result] = authenticationPredicate.async {
       implicit request =>
         Future.successful(Ok)
     }.apply(FakeRequest())
 
-    "called with an Unauthenticated user (No Bearer Token in Header)" should {
-      object TestUnauthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
-
-      "return status UNAUTHORISED" should {
+    "called with an Unauthenticated user (No Bearer Token in Header)" when {
         mockAuth(Future.failed(new MissingBearerToken))
-        checkStatusOf(result(TestUnauthenticationPredicate))(Status.UNAUTHORIZED)
-      }
+        checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
     }
 
-    "called with an authenticated user (Some Bearer Token in Header)" should {
-      object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
-
-      "return status OK" should {
+    "called with an authenticated user (Some Bearer Token in Header)" when {
         mockAuth()
         checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
-      }
     }
 
-    "called with low confidence level" should {
-      object TestUnauthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
-
-      "return status UNAUTHORISED" should {
-        mockAuth(Future.successful(ConfidenceLevel.L200))
-        checkStatusOf(result(TestUnauthenticationPredicate))(Status.UNAUTHORIZED)
-      }
-
+    "called with low confidence level" when {
+        mockAuth(Future.successful(ConfidenceLevel.L50))
+        checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
     }
   }
 }
