@@ -105,9 +105,6 @@ class DocumentDetailSpec extends WordSpec with Matchers {
       "the model is empty" in {
         Json.toJson(documentDetailMin) shouldBe documentDetailMinJsonWrite
       }
-      "the model converts r7c lpiWithDunningLock to lpiWithDunningBlock (legacy)" in {
-        Json.toJson(documentDetailLpiWithDunningBlock) shouldBe documentDetailLpiWithDunningBlockJsonWrite
-      }
     }
   }
 }
