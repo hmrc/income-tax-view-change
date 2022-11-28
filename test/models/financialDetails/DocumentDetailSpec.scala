@@ -77,10 +77,14 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "accruingInterestAmount" -> 1.27
   )
 
-  val documentDetailLpiWithDunningLockJsonRead: JsValue = Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningLock" -> 13.70)
+  val documentDetailLpiWithDunningLockJsonRead: JsValue = Json.obj("taxYear" -> "2018", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningLock" -> 13.70)
 
-  val documentDetailLpiWithDunningBlock: DocumentDetail = DocumentDetail("2019", "id", None, None, None, None, LocalDate.parse("2018-03-29"),
+  val documentDetailLpiWithDunningBlock: DocumentDetail = DocumentDetail("2018", "id", None, None, None, None, LocalDate.parse("2018-03-29"),
     None, None, None, None, None, None, None, None, lpiWithDunningBlock = Some(13.70))
+
+  val documentDetailLpiWithDunningBlockJsonWrite: JsObject =
+    Json.obj("taxYear" -> "2018", "transactionId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningBlock" -> 13.70)
+
 
   "DocumentDetail" should {
     "read from json" when {
@@ -90,7 +94,7 @@ class DocumentDetailSpec extends WordSpec with Matchers {
       "the json is minimal" in {
         Json.fromJson[DocumentDetail](documentDetailMinJsonRead) shouldBe JsSuccess(documentDetailMin)
       }
-      "the json contains lpiWithDunningLock but not lpiWithDunningBlock" in {
+      "the json contains r7c lpiWithDunningLock but not lpiWithDunningBlock (legacy)" in {
         Json.fromJson[DocumentDetail](documentDetailLpiWithDunningLockJsonRead) shouldBe JsSuccess(documentDetailLpiWithDunningBlock)
       }
     }
@@ -100,6 +104,9 @@ class DocumentDetailSpec extends WordSpec with Matchers {
       }
       "the model is empty" in {
         Json.toJson(documentDetailMin) shouldBe documentDetailMinJsonWrite
+      }
+      "the model converts r7c lpiWithDunningLock to lpiWithDunningBlock (legacy)" in {
+        Json.toJson(documentDetailLpiWithDunningBlock) shouldBe documentDetailLpiWithDunningBlockJsonWrite
       }
     }
   }
