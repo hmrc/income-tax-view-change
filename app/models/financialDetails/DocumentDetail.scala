@@ -59,7 +59,7 @@ object DocumentDetail {
       (__ \ "interestOutstandingAmount").readNullable[BigDecimal] and
       (__ \ "paymentLotItem").readNullable[String] and
       (__ \ "paymentLot").readNullable[String] and
-      (__ \ "lpiWithDunningBlock").readNullable[BigDecimal] and
+      (__ \ "lpiWithDunningBlock").read[BigDecimal].map(Option(_)).orElse((__ \ "lpiWithDunningLock").readNullable[BigDecimal]) and
       (__ \ "amountCodedOut").readNullable[BigDecimal] and
       (__ \ "accruingInterestAmount").readNullable[BigDecimal]
     ) (DocumentDetail.apply _)
