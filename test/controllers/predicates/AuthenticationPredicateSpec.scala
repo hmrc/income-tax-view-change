@@ -23,38 +23,35 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
-import uk.gov.hmrc.auth.core.MissingBearerToken
+import uk.gov.hmrc.auth.core.{ConfidenceLevel, MissingBearerToken}
 
 import scala.concurrent.Future
 
 class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroserviceAuthConnector {
 
-  "The AuthenticationPredicate.authenticated method" when {
+  "The AuthenticationPredicate.authenticated method" should {
 
     lazy val mockCC = stubControllerComponents()
+    object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
 
     def result(authenticationPredicate: AuthenticationPredicate): Future[Result] = authenticationPredicate.async {
       implicit request =>
         Future.successful(Ok)
     }.apply(FakeRequest())
 
-    "called with an Unauthenticated user (No Bearer Token in Header)" should {
-      object TestUnauthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC)
-
-
-      "return status UNAUTHORISED" should {
+    "called with an Unauthenticated user (No Bearer Token in Header)" when {
         mockAuth(Future.failed(new MissingBearerToken))
-        checkStatusOf(result(TestUnauthenticationPredicate))(Status.UNAUTHORIZED)
-      }
+        checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
     }
 
-    "called with an authenticated user (Some Bearer Token in Header)" should {
-      object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC)
-
-      "return status OK" should {
-        mockAuth(Future.successful(()))
+    "called with an authenticated user (Some Bearer Token in Header)" when {
+        mockAuth()
         checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
-      }
+    }
+
+    "called with low confidence level" when {
+        mockAuth(Future.successful(ConfidenceLevel.L50))
+        checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
     }
   }
 }

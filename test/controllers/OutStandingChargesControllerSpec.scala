@@ -30,7 +30,7 @@ class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutSt
   val controllerComponents: ControllerComponents = stubControllerComponents()
 
   object OutStandingChargesController extends OutStandingChargesController(
-    authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents),
+    authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents, microserviceAppConfig),
     cc = controllerComponents,
     connector = mockOutStandingChargesConnector
   )
