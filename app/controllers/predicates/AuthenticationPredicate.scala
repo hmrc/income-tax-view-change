@@ -16,25 +16,37 @@
 
 package controllers.predicates
 
-import config.MicroserviceAuthConnector
+import config.{MicroserviceAppConfig, MicroserviceAuthConnector}
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logging
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.{AuthorisationException, AuthorisedFunctions}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.confidenceLevel
+import uk.gov.hmrc.auth.core.{AuthorisationException, AuthorisedFunctions, ConfidenceLevel}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 @Singleton
-class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConnector, cc: ControllerComponents
+class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConnector, cc: ControllerComponents,
+                                        val appConfig: MicroserviceAppConfig
                                        ) extends BackendController(cc) with AuthorisedFunctions with Logging {
+
+  val minimumConfidenceLevel: Int = ConfidenceLevel.fromInt(appConfig.confidenceLevel) match {
+    case Success(value) => value.level
+    case Failure(ex) => throw ex
+  }
 
   def async(action: Request[AnyContent] => Future[Result]): Action[AnyContent] =
     Action.async { implicit request =>
-      authorised() {
-        action(request)
+      authorised().retrieve(confidenceLevel) {
+        case userConfidence if userConfidence.level >= minimumConfidenceLevel =>
+          action(request)
+        case _ =>
+          logger.info(s"[AuthenticationPredicate][authenticated] User has confidence level below ${minimumConfidenceLevel}")
+          Future(Unauthorized)
       } recover {
         case ex: AuthorisationException =>
           logger.error(s"[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response, ${ex.getMessage}")
