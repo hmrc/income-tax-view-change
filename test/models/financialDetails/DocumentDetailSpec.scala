@@ -52,8 +52,7 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
     "lpiWithDunningBlock" -> 12.50,
-    "amountCodedOut" -> 3.21,
-    "accruingInterestAmount" -> 1.27
+    "amountCodedOut" -> 3.21
   )
 
   val documentDetailFullJsonWrite: JsValue = Json.obj(
@@ -73,8 +72,7 @@ class DocumentDetailSpec extends WordSpec with Matchers {
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
     "lpiWithDunningBlock" -> 12.50,
-    "amountCodedOut" -> 3.21,
-    "accruingInterestAmount" -> 1.27
+    "amountCodedOut" -> 3.21
   )
 
   val documentDetailLpiWithDunningLockJsonRead: JsValue = Json.obj("taxYear" -> "2018", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningLock" -> 13.70)
