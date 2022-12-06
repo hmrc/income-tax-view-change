@@ -86,8 +86,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       "paymentLotItem" -> "paymentLotItem",
       "paymentLot" -> "paymentLot",
       "lpiWithDunningBlock" -> 12.50,
-      "amountCodedOut" -> 3.21,
-      "accruingInterestAmount" -> 1.27
+      "amountCodedOut" -> 3.21
     )),
     "financialDetails" -> Json.arr(Json.parse(
       """
