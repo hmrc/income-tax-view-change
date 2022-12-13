@@ -30,7 +30,7 @@ class FinancialDetailsControllerSpec extends ControllerBaseSpec with MockFinanci
   val controllerComponents: ControllerComponents = stubControllerComponents()
 
   object TestFinancialDetailsController extends FinancialDetailsController(
-    authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents, microserviceAppConfig),
+    authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents),
     cc = controllerComponents,
     financialDetailsConnector = mockFinancialDetailsConnector
   )

@@ -35,14 +35,14 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
     "getBusinessDetails called with an Authenticated user" when {
 
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         getBusinessDetailsService = mockGetBusinessDetailsService, mockCC
       )
 
       "a valid response from the GetBusinessDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
-        mockAuth()
+        mockAuth(Future.successful(()))
         lazy val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -53,7 +53,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
-        mockAuth()
+        mockAuth(Future.successful(()))
         lazy val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
@@ -65,7 +65,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
     "called with an Unauthenticated user" should {
 
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         getBusinessDetailsService = mockGetBusinessDetailsService, mockCC
       )
 

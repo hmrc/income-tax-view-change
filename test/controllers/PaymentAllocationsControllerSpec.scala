@@ -29,7 +29,7 @@ class PaymentAllocationsControllerSpec extends ControllerBaseSpec with MockPayme
   val controllerComponents: ControllerComponents = stubControllerComponents()
 
   object PaymentAllocationsController extends PaymentAllocationsController(
-    authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents, microserviceAppConfig),
+    authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents),
     cc = controllerComponents,
     paymentAllocationsConnector = mockPaymentAllocationsConnector
   )

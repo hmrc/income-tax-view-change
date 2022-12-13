@@ -34,14 +34,14 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     "getNino called with an Authenticated user" when {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       "a valid response from the IncomeSourceDetailsService" should {
 
         mockNinoResponse(testNinoModel)
-        mockAuth()
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -52,7 +52,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockNinoResponse(testNinoError)
-        mockAuth()
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
@@ -64,14 +64,14 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     "getIncomeSourceDetails called with an Authenticated user" when {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       "a valid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
-        mockAuth()
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
@@ -82,7 +82,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
-        mockAuth()
+        mockAuth(Future.successful(()))
         lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
@@ -94,7 +94,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     "called with an Unauthenticated user" should {
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
