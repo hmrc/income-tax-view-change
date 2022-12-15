@@ -23,7 +23,9 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
-import uk.gov.hmrc.auth.core.{ConfidenceLevel, MissingBearerToken}
+import uk.gov.hmrc.auth.core.{AffinityGroup, ConfidenceLevel, MissingBearerToken}
+
+import uk.gov.hmrc.auth.core.syntax.retrieved.authSyntaxForRetrieved
 
 import scala.concurrent.Future
 
@@ -40,18 +42,23 @@ class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroservi
     }.apply(FakeRequest())
 
     "called with an Unauthenticated user (No Bearer Token in Header)" when {
-        mockAuth(Future.failed(new MissingBearerToken))
-        checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
+      mockAuth(Future.failed(new MissingBearerToken))
+      checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
     }
 
     "called with an authenticated user (Some Bearer Token in Header)" when {
-        mockAuth()
-        checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
+      mockAuth()
+      checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
     }
 
     "called with low confidence level" when {
-        mockAuth(Future.successful(ConfidenceLevel.L50))
-        checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
+      mockAuth(Future.successful(Some(AffinityGroup.Individual) and ConfidenceLevel.L50))
+      checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
+    }
+
+    "agent called with low confidence level" when {
+      mockAuth(Future.successful(Some(AffinityGroup.Agent) and ConfidenceLevel.L50))
+      checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
     }
   }
 }
