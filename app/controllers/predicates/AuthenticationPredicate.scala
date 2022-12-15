@@ -21,8 +21,9 @@ import config.{MicroserviceAppConfig, MicroserviceAuthConnector}
 import javax.inject.{Inject, Singleton}
 import play.api.Logging
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.confidenceLevel
-import uk.gov.hmrc.auth.core.{AuthorisationException, AuthorisedFunctions, ConfidenceLevel}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, confidenceLevel}
+import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.auth.core.{AffinityGroup, AuthorisationException, AuthorisedFunctions, ConfidenceLevel}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,10 +42,11 @@ class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConne
 
   def async(action: Request[AnyContent] => Future[Result]): Action[AnyContent] =
     Action.async { implicit request =>
-      authorised().retrieve(confidenceLevel) {
-        case userConfidence if userConfidence.level >= minimumConfidenceLevel =>
+      authorised().retrieve(affinityGroup and confidenceLevel) {
+        case Some(AffinityGroup.Agent) ~ _ => action(request)
+        case _ ~ userConfidence if userConfidence.level >= minimumConfidenceLevel =>
           action(request)
-        case _ =>
+        case _ ~ _ =>
           logger.info(s"[AuthenticationPredicate][authenticated] User has confidence level below ${minimumConfidenceLevel}")
           Future(Unauthorized)
       } recover {
