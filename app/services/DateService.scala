@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package models.core
+package services
 
 import java.time.LocalDate
+import javax.inject.{Inject, Singleton}
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+@Singleton
+class DateService @Inject() extends DateServiceInterface {
 
-case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
+  def getCurrentDate: LocalDate = LocalDate.now()
 
-object AccountingPeriodModel {
+}
 
-  val desReads: Reads[AccountingPeriodModel] = (
-    (__ \ "accountingPeriodStartDate").read[LocalDate] and
-      (__ \ "accountingPeriodEndDate").read[LocalDate]
-    ) (AccountingPeriodModel.apply _)
+trait DateServiceInterface {
+  def getCurrentDate: LocalDate
 
-  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
 }
