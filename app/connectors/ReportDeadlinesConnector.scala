@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import config.MicroserviceAppConfig
 import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesResponseModel}
 import play.api.http.Status
 import play.api.http.Status._
+import services.DateService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import java.time.LocalDate
@@ -28,12 +29,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ReportDeadlinesConnector @Inject()(val http: HttpClient,
-                                         val appConfig: MicroserviceAppConfig
+                                         val appConfig: MicroserviceAppConfig,
+                                         val dateService: DateService
                                         )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
     val status: String = if (openObligations) "O" else "F"
-    val toDate: LocalDate = LocalDate.now()
+    val toDate: LocalDate = dateService.getCurrentDate
     val fromDate: LocalDate = toDate.minusDays(365)
     val dateParameters: String = if (openObligations) "" else s"&from=$fromDate&to=$toDate"
     s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"

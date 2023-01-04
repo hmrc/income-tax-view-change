@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, eq => matches}
 import org.mockito.Mockito._
 import play.api.http.Status._
+import services.DateService
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import utils.TestSupport
 
@@ -33,10 +34,13 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
 
   trait Setup {
     val httpClient: HttpClient = mock[HttpClient]
+    val dateService = new DateService()
 
     val connector: ReportDeadlinesConnector = new ReportDeadlinesConnector(
       httpClient,
-      microserviceAppConfig
+      microserviceAppConfig,
+      dateService
+
     )
   }
 
@@ -50,7 +54,7 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
       }
 
       "called for fulfilled obligations" in new Setup {
-        val date: LocalDate = LocalDate.now()
+        val date: LocalDate = new DateService().getCurrentDate
         connector.getReportDeadlinesUrl(testNino, openObligations = false) shouldBe
           s"http://localhost:9084/enterprise/obligation-data/nino/$testNino/ITSA?status=F&from=${date.minusDays(365)}&to=$date"
       }
