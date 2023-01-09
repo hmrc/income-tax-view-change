@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,63 +17,114 @@
 package models.repaymentHistory
 
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsSuccess, JsValue, Json}
 
 import java.time.LocalDate
 
 class RepaymentHistorySpec extends WordSpec with Matchers {
 
-
   val repaymentHistoryFull: RepaymentHistory = RepaymentHistory(
-    amountApprovedforRepayment = Some(100.0),
-    amountRequested = 200.0,
-    repaymentMethod = "BACD",
-    totalRepaymentAmount = 300.0,
-    repaymentItems = Seq[RepaymentItem](
+    amountApprovedforRepayment = Some(705.2),
+    amountRequested = 705.2,
+    repaymentMethod = Some("BACS"),
+    totalRepaymentAmount = Some(1234.56),
+    repaymentItems = Some(Seq[RepaymentItem](
       RepaymentItem(
-        Seq(
+        Some(Seq(
           RepaymentSupplementItem(
             parentCreditReference = Some("002420002231"),
-            amount = Some(400.0),
-            fromDate = Some( LocalDate.parse("2021-07-23")),
-            toDate = Some( LocalDate.parse("2021-08-23") ),
-            rate = Some(500.0)
+            amount = Some(700.0),
+            fromDate = Some(LocalDate.parse("2021-07-23")),
+            toDate = Some(LocalDate.parse("2021-08-23")),
+            rate = Some(12.12)
           )
         )
-      )
+      )))
     ),
-    estimatedRepaymentDate = LocalDate.parse("2021-01-21"),
-    creationDate = LocalDate.parse("2020-12-28"),
+    estimatedRepaymentDate = Some(LocalDate.parse("2021-07-23")),
+    creationDate = Some(LocalDate.parse("2021-07-21")),
     repaymentRequestNumber = "000000003135"
   )
 
   val repaymentHistoryFullJson: JsValue = Json.obj(
-    "repaymentRequestNumber" -> "000000003135",
-    "amountApprovedforRepayment" -> Some(100.0),
-    "amountRequested" -> 200.0,
-    "repaymentMethod" -> "BACD",
-    "totalRepaymentAmount" -> 300.0,
+    "amountApprovedforRepayment" -> Some(705.2),
+    "amountRequested" -> 705.2,
+    "repaymentMethod" -> Some("BACS"),
+    "totalRepaymentAmount" -> Some(1234.56),
     "repaymentItems" -> Json.arr(
+      Json.obj("creditItems" -> Json.arr(
+        Json.obj(
+          "creditReference" -> "002420002231",
+          "creditChargeName" -> "creditChargeName",
+          "amount" -> 700.0,
+          "creationDate" -> LocalDate.parse("2021-07-23"),
+          "taxYear" -> "2021"
+        ))),
+      Json.obj("paymentItems" -> Json.arr(
+        Json.obj("paymentReference" -> "002420002231000",
+          "amount" -> 700.0,
+          "paymentSource" -> "Payment Source",
+          "edp" -> LocalDate.parse("2021-07-23"))
+
+      )),
+      Json.obj("creditReasons" -> Json.arr(
+        Json.obj(
+          "creditReference" -> "002420002231",
+          "creditReason" -> "Voluntary payment",
+          "receivedDate" -> LocalDate.parse("2021-07-23"),
+          "edp" -> LocalDate.parse("2021-07-23"),
+          "amount" -> 700.0,
+          "originalChargeReduced" -> "Original Charge Reduced",
+          "amendmentDate" -> LocalDate.parse("2021-07-23"),
+          "taxYear" -> "2020"
+        ))),
       Json.obj(
-        "repaymentSupplementItem" -> Json.arr(
+        "repaymentSupplementItem" -> Some(Json.arr(
           Json.obj(
             "parentCreditReference" -> Some("002420002231"),
-            "amount" -> Some(400.0),
-            "fromDate" -> Some( LocalDate.parse("2021-07-23") ),
-            "toDate" -> Some( LocalDate.parse("2021-08-23") ),
-            "rate" -> Some(500.0)
+            "amount" -> Some(700.0),
+            "fromDate" -> Some(LocalDate.parse("2021-07-23")),
+            "toDate" -> Some(LocalDate.parse("2021-08-23")),
+            "rate" -> Some(12.12)
           )
-        )
-      )
-    ),
-    "estimatedRepaymentDate" -> LocalDate.parse("2021-01-21"),
-    "creationDate" -> LocalDate.parse("2020-12-28")
+        ))
+      )),
+    "estimatedRepaymentDate" -> LocalDate.parse("2021-07-23"),
+    "creationDate" -> LocalDate.parse("2021-07-21"),
+    "repaymentRequestNumber" -> "000000003135"
+  )
+
+  val repaymentHistoryWithRepaymentSupplementItemJson: JsValue = Json.obj(
+    "amountApprovedforRepayment" -> Some(705.2),
+    "amountRequested" -> 705.2,
+    "repaymentMethod" -> Some("BACS"),
+    "totalRepaymentAmount" -> Some(1234.56),
+    "repaymentItems" -> Json.arr(
+      Json.obj(
+        "repaymentSupplementItem" -> Some(Json.arr(
+          Json.obj(
+            "parentCreditReference" -> Some("002420002231"),
+            "amount" -> Some(700.0),
+            "fromDate" -> Some(LocalDate.parse("2021-07-23")),
+            "toDate" -> Some(LocalDate.parse("2021-08-23")),
+            "rate" -> Some(12.12)
+          )
+        ))
+      )),
+    "estimatedRepaymentDate" -> LocalDate.parse("2021-07-23"),
+    "creationDate" -> LocalDate.parse("2021-07-21"),
+    "repaymentRequestNumber" -> "000000003135"
   )
 
   "RepaymentHistory" should {
+    "read from json" when {
+      "the response has all possible repayment items" in {
+        Json.fromJson[RepaymentHistory](repaymentHistoryFullJson) shouldBe JsSuccess(repaymentHistoryFull)
+      }
+    }
     "write to Json" when {
       "the model has all details" in {
-        Json.toJson(repaymentHistoryFull) shouldBe repaymentHistoryFullJson
+        Json.toJson(repaymentHistoryFull) shouldBe repaymentHistoryWithRepaymentSupplementItemJson
       }
     }
   }

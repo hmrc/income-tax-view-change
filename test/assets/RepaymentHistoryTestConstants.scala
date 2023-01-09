@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,12 +104,12 @@ object RepaymentHistoryTestConstants {
     repaymentRequestNumber = "000000003135",
     amountApprovedforRepayment = Some(100.0),
     amountRequested = 200.0,
-    repaymentMethod = "BACD",
-    totalRepaymentAmount = 300.0,
-    repaymentItems = Seq[RepaymentItem](
+    repaymentMethod = Some("BACD"),
+    totalRepaymentAmount = Some(300.0),
+    repaymentItems = Some(Seq[RepaymentItem](
       RepaymentItem(
         repaymentSupplementItem =
-          Seq(
+          Some(Seq(
             RepaymentSupplementItem(
               parentCreditReference = Some("002420002231"),
               amount = Some(400.0),
@@ -118,10 +118,10 @@ object RepaymentHistoryTestConstants {
               rate = Some(500.0)
             )
           )
-      )
+      )))
     ),
-    estimatedRepaymentDate = LocalDate.parse("2021-08-11"),
-    creationDate = LocalDate.parse("2020-12-03")
+    estimatedRepaymentDate = Some(LocalDate.parse("2021-08-11")),
+    creationDate = Some(LocalDate.parse("2020-12-03"))
   )
 
 }

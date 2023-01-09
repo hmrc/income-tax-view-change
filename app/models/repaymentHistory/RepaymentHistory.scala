@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,38 @@
 
 package models.repaymentHistory
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 import java.time.LocalDate
 
 case class RepaymentHistory(amountApprovedforRepayment: Option[BigDecimal],
                             amountRequested: BigDecimal,
-                            repaymentMethod: String,
-                            totalRepaymentAmount: BigDecimal,
-                            repaymentItems : Seq[RepaymentItem],
-                            estimatedRepaymentDate: LocalDate,
-                            creationDate: LocalDate,
+                            repaymentMethod: Option[String],
+                            totalRepaymentAmount: Option[BigDecimal],
+                            repaymentItems: Option[Seq[RepaymentItem]],
+                            estimatedRepaymentDate: Option[LocalDate],
+                            creationDate: Option[LocalDate],
                             repaymentRequestNumber: String
                            )
 
 object RepaymentHistory {
-  implicit val format: OFormat[RepaymentHistory] = Json.format[RepaymentHistory]
+
+  implicit val reads: Reads[RepaymentHistory] = (
+    (__ \ "amountApprovedforRepayment").readNullable[BigDecimal] and
+      (__ \ "amountRequested").read[BigDecimal] and
+      (__ \ "repaymentMethod").readNullable[String] and
+      (__ \ "totalRepaymentAmount").readNullable[BigDecimal] and
+      (__ \ "repaymentItems").readNullable[Seq[RepaymentItem]].map {
+              case Some(x) => Some(x.collect{
+                case r if r.repaymentSupplementItem.nonEmpty => r
+              })
+              case None => None} and
+      (__ \ "estimatedRepaymentDate").readNullable[LocalDate] and
+      (__ \ "creationDate").readNullable[LocalDate] and
+      (__ \ "repaymentRequestNumber").read[String]
+    ) (RepaymentHistory.apply _)
+
+  implicit val writes: OWrites[RepaymentHistory] = Json.writes[RepaymentHistory]
+
 }

@@ -79,12 +79,12 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
             RepaymentHistory(
               amountApprovedforRepayment = Some(100.0),
               amountRequested = 200.0,
-              repaymentMethod = "BACD",
-              totalRepaymentAmount = 300.0,
-              repaymentItems = Seq[RepaymentItem](
+              repaymentMethod = Some("BACD"),
+              totalRepaymentAmount = Some(300.0),
+              repaymentItems = Some(Seq[RepaymentItem](
                 RepaymentItem(
                   repaymentSupplementItem =
-                      Seq(
+                      Some(Seq(
                         RepaymentSupplementItem(
                           parentCreditReference = Some("002420002231"),
                           amount = Some(400.0),
@@ -93,10 +93,10 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                           rate = Some(500.0)
                       )
                   )
-                )
+                )))
               ),
-              estimatedRepaymentDate = LocalDate.parse("2021-01-21"),
-              creationDate = LocalDate.parse("2020-12-25"),
+              estimatedRepaymentDate = Some(LocalDate.parse("2021-01-21")),
+              creationDate = Some(LocalDate.parse("2020-12-25")),
               repaymentRequestNumber = "000000003135"
             ))))
 
@@ -163,12 +163,12 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
             RepaymentHistory(
               amountApprovedforRepayment = Some(100.0),
               amountRequested = 200.0,
-              repaymentMethod = "BACD",
-              totalRepaymentAmount = 300.0,
-              repaymentItems = Seq[RepaymentItem](
+              repaymentMethod = Some("BACD"),
+              totalRepaymentAmount = Some(300.0),
+              repaymentItems = Some(Seq[RepaymentItem](
                 RepaymentItem(
                   repaymentSupplementItem =
-                    Seq(
+                    Some(Seq(
                       RepaymentSupplementItem(
                         parentCreditReference = Some("002420002231"),
                         amount = Some(400.0),
@@ -176,10 +176,10 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                         toDate = Some( LocalDate.parse("2021-08-23") ),
                         rate = Some(500.0)
                       )
-                    )
-                )),
-              estimatedRepaymentDate = LocalDate.parse("2021-01-21"),
-              creationDate = LocalDate.parse("2020-12-25"),
+                    ))))
+                ),
+              estimatedRepaymentDate = Some(LocalDate.parse("2021-01-21")),
+              creationDate = Some(LocalDate.parse("2020-12-25")),
               repaymentRequestNumber = "000000003135"
             ))))
 
