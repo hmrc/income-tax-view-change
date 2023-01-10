@@ -39,10 +39,9 @@ object RepaymentHistory {
       (__ \ "repaymentMethod").readNullable[String] and
       (__ \ "totalRepaymentAmount").readNullable[BigDecimal] and
       (__ \ "repaymentItems").readNullable[Seq[RepaymentItem]].map {
-              case Some(x) => Some(x.collect{
-                case r if r.repaymentSupplementItem.nonEmpty => r
-              })
-              case None => None} and
+        case Some(seq) => Some(seq.filter(_.repaymentSupplementItem.nonEmpty)).filter(_.nonEmpty) // repaymentSupplementItem(s) or None
+        case None => None
+      } and
       (__ \ "estimatedRepaymentDate").readNullable[LocalDate] and
       (__ \ "creationDate").readNullable[LocalDate] and
       (__ \ "repaymentRequestNumber").read[String]
