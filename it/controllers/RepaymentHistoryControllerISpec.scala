@@ -40,7 +40,7 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
           "repaymentRequestNumber" -> "000000003135",
           "amountApprovedforRepayment" -> Some(100.0),
           "amountRequested" -> 200.0,
-          "repaymentMethod" -> "BACS",
+          "repaymentMethod" -> "BACD",
           "totalRepaymentAmount" -> 300.0,
           "repaymentItems" -> Json.arr(
             Json.obj(
@@ -79,7 +79,7 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
             RepaymentHistory(
               amountApprovedforRepayment = Some(100.0),
               amountRequested = 200.0,
-              repaymentMethod = Some("BACS"),
+              repaymentMethod = Some("BACD"),
               totalRepaymentAmount = Some(300.0),
               repaymentItems = Some(Seq[RepaymentItem](
                 RepaymentItem(
@@ -163,7 +163,7 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
             RepaymentHistory(
               amountApprovedforRepayment = Some(100.0),
               amountRequested = 200.0,
-              repaymentMethod = Some("BACS"),
+              repaymentMethod = Some("BACD"),
               totalRepaymentAmount = Some(300.0),
               repaymentItems = Some(Seq[RepaymentItem](
                 RepaymentItem(
