@@ -37,7 +37,7 @@ object RepaymentHistoryTestConstants {
             "repaymentRequestNumber" -> "000000003135",
             "amountApprovedforRepayment" -> Some(100.0),
             "amountRequested" -> 200.0,
-            "repaymentMethod" -> "BACD",
+            "repaymentMethod" -> "BACS",
             "totalRepaymentAmount" -> 300.0,
             "repaymentItems" -> Json.arr(
               Json.obj(
@@ -65,7 +65,7 @@ object RepaymentHistoryTestConstants {
           "repaymentRequestNumber" -> "000000003135",
           "amountApprovedforRepayment" -> Some(100.0),
           "amountRequested" -> 200.0,
-          "repaymentMethod" -> "BACD",
+          "repaymentMethod" -> "BACS",
           "totalRepaymentAmount" -> 300.0,
           "items" -> Json.arr(
             Json.obj(
@@ -83,7 +83,7 @@ object RepaymentHistoryTestConstants {
           "repaymentRequestNumber" -> "000000003135",
           "amountApprovedforRepayment" -> Some(100.0),
           "amountRequested" -> 200.0,
-          "repaymentMethod" -> "BACD",
+          "repaymentMethod" -> "BACS",
           "totalRepaymentAmount" -> 300.0,
           "items" -> Json.arr(
             Json.obj(
@@ -104,7 +104,7 @@ object RepaymentHistoryTestConstants {
     repaymentRequestNumber = "000000003135",
     amountApprovedforRepayment = Some(100.0),
     amountRequested = 200.0,
-    repaymentMethod = Some("BACD"),
+    repaymentMethod = Some("BACS"),
     totalRepaymentAmount = Some(300.0),
     repaymentItems = Some(Seq[RepaymentItem](
       RepaymentItem(
