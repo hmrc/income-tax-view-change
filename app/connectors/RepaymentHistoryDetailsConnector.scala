@@ -31,6 +31,12 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
   def listRepaymentHistoryDetailsUrl(nino: String): String =
     s"${appConfig.desUrl}/income-tax/self-assessment/repayments-viewer/$nino"
 
+  private[connectors] def dateQueryParameters(fromDate: String): Seq[(String, String)] = {
+    Seq(
+      "fromDate" -> fromDate
+    )
+  }
+  
   private[connectors] def IdQueryParameters(repaymentId: String): Seq[(String, String)] = {
     Seq(
       "repaymentRequestNumber" -> repaymentId
