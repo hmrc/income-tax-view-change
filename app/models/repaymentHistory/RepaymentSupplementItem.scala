@@ -16,7 +16,8 @@
 
 package models.repaymentHistory
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json._
 
 import java.time.LocalDate
 
@@ -29,5 +30,13 @@ case class RepaymentSupplementItem(parentCreditReference: Option[String],
 
 object RepaymentSupplementItem {
 
-  implicit val format: Format[RepaymentSupplementItem] = Json.format[RepaymentSupplementItem]
+  implicit val reads: Reads[RepaymentSupplementItem] = (
+    (JsPath \ "parentCreditReference").readNullable[String] and
+      (JsPath \ "amount").readNullable[BigDecimal] and
+      (JsPath \ "fromDate").readNullable[LocalDate] and
+      (JsPath \ "toDate").readNullable[LocalDate] and
+      (JsPath \ "rate").readNullable[BigDecimal]
+    )(RepaymentSupplementItem.apply _)
+
+  implicit val writes: OWrites[RepaymentSupplementItem] = Json.writes[RepaymentSupplementItem]
 }
