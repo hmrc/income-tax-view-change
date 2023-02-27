@@ -54,6 +54,9 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
                 valid
               }
             )
+          case NOT_FOUND =>
+            logger.warn(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
+            IncomeSourceDetailsError(response.status, response.body)
           case _ =>
             logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
             IncomeSourceDetailsError(response.status, response.body)

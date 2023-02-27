@@ -19,6 +19,7 @@ package services
 import connectors.GetBusinessDetailsConnector
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
 import play.api.Logging
+import play.api.http.Status._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -34,6 +35,9 @@ class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBu
       case success: IncomeSourceDetailsModel =>
         logger.debug(s"[getBusinessDetailsService][getBusinessDetails] - Retrieved Get Business Details:\n\n$success")
         success
+      case error: IncomeSourceDetailsError if error.status == NOT_FOUND =>
+        logger.warn(s"[getBusinessDetailsService][getgetBusinessDetails] - Retrieved Income Source Details:\n\n$error")
+        IncomeSourceDetailsError(error.status, error.reason)
       case error: IncomeSourceDetailsError =>
         logger.error(s"[getBusinessDetailsService][getgetBusinessDetails] - Retrieved Income Source Details:\n\n$error")
         IncomeSourceDetailsError(error.status, error.reason)

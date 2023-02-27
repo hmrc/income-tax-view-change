@@ -36,6 +36,9 @@ class GetBusinessDetailsController @Inject()(val authentication: AuthenticationP
 
   def getBusinessDetails(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     getBusinessDetailsService.getBusinessDetails(nino).map {
+      case error: IncomeSourceDetailsError if error.status == NOT_FOUND =>
+        logger.warn(s"[GetBusinessDetailsController][getBusinessDetails] - Error Response: $error")
+        Status(error.status)(Json.toJson(error))
       case error: IncomeSourceDetailsError =>
         logger.error(s"[GetBusinessDetailsController][getBusinessDetails] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
