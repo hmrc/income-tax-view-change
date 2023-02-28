@@ -17,7 +17,7 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
 import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -55,8 +55,8 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
               }
             )
           case NOT_FOUND =>
-            logger.warn(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
-            IncomeSourceDetailsError(response.status, response.body)
+            logger.warn(s"[GetBusinessDetailsConnector][getBusinessDetails] -  RESPONSE status: ${response.status}, body: ${response.body}")
+            IncomeSourceDetailsNotFound(response.status, response.body)
           case _ =>
             logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
             IncomeSourceDetailsError(response.status, response.body)
