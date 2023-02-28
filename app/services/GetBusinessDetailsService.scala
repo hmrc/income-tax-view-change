@@ -31,17 +31,7 @@ class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBu
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     logger.debug("[getBusinessDetailsService][getBusinessDetails] - Requesting Income Source Details from Connector")
-    getBusinessDetailsConnector.getBusinessDetails(nino).map {
-      case success: IncomeSourceDetailsModel =>
-        logger.debug(s"[getBusinessDetailsService][getBusinessDetails] - Retrieved Get Business Details:\n\n$success")
-        success
-      case notFound: IncomeSourceDetailsNotFound =>
-        logger.warn(s"[getBusinessDetailsService][getgetBusinessDetails] - Income Source Details not found:\n\n$notFound")
-        IncomeSourceDetailsError(notFound.status, notFound.reason)
-      case error: IncomeSourceDetailsError =>
-        logger.error(s"[getBusinessDetailsService][getgetBusinessDetails] - Retrieved Income Source Details:\n\n$error")
-        IncomeSourceDetailsError(error.status, error.reason)
-    }
+    getBusinessDetailsConnector.getBusinessDetails(nino)
   }
 
 }
