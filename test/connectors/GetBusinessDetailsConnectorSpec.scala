@@ -19,7 +19,7 @@ package connectors
 import assets.BaseTestConstants._
 import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockHttp
-import models.incomeSourceDetails.IncomeSourceDetailsError
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsNotFound}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
@@ -42,6 +42,11 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
     "return LastTaxCalculationError model in case of failure" in {
       mock(badResponse)
       getBusinessDetails(testNino).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+    }
+
+    "return LastTaxCalculationError model with status 404 in case of failure" in {
+      mock(notFoundBadResponse)
+      getBusinessDetails(testNino).futureValue shouldBe IncomeSourceDetailsNotFound(Status.NOT_FOUND, "Dummy error message")
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
