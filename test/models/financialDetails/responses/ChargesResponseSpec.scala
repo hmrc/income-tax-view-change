@@ -70,7 +70,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       "unallocatedCredit" -> 400.00
     ),
     "documentDetails" -> Json.arr(Json.obj(
-      "taxYear" -> "2018",
+      "taxYear" -> 2018,
       "transactionId" -> "id",
       "documentDescription" -> "documentDescription",
       "documentText" -> "documentText",
@@ -127,7 +127,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
                paymentLot: Option[String] = Some("lot01"),
                paymentLotItem: Option[String] = Some("item01")): DocumentDetail = {
     DocumentDetail(
-      taxYear = "2018",
+      taxYear = 2018,
       documentDescription = None,
       documentText = None,
       originalAmount = Some(1000),
@@ -149,7 +149,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
 
   def document2(documentId: String = "DOCID01"): DocumentDetail = {
     DocumentDetail(
-      taxYear = "2018",
+      taxYear = 2018,
       documentDescription = None,
       documentText = None,
       originalAmount = Some(-1000),

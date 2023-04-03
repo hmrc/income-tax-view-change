@@ -17,11 +17,11 @@
 package models.financialDetails
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{Json, Reads, Writes, __}
+import play.api.libs.json.{JsValue, Json, Reads, Writes, __}
 
 import java.time.LocalDate
 
-case class DocumentDetail(taxYear: String,
+case class DocumentDetail(taxYear: Int,
                           transactionId: String,
                           documentDescription: Option[String],
                           documentText: Option[String],
@@ -43,7 +43,7 @@ case class DocumentDetail(taxYear: String,
 object DocumentDetail {
   implicit val writes: Writes[DocumentDetail] = Json.writes[DocumentDetail]
   implicit val reads: Reads[DocumentDetail] = (
-    (__ \ "taxYear").read[String] and
+    (__ \ "taxYear").read[String].map(_.toInt) and
       (__ \ "documentId").read[String] and
       (__ \ "documentDescription").readNullable[String] and
       (__ \ "documentText").readNullable[String] and
