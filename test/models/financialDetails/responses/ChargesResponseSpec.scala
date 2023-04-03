@@ -86,7 +86,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       "paymentLotItem" -> "paymentLotItem",
       "paymentLot" -> "paymentLot",
       "lpiWithDunningBlock" -> 12.50,
-      "amountCodedOut" -> 3.21
+      "amountCodedOut" -> 3.21,
+      "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
     )),
     "financialDetails" -> Json.arr(Json.parse(
       """
@@ -143,7 +144,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
       lpiWithDunningBlock = None,
-      amountCodedOut = Some(3.21)
+      amountCodedOut = Some(3.21),
+      effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
     )
   }
 
@@ -165,7 +167,8 @@ class ChargesResponseSpec extends WordSpec with Matchers {
       paymentLot = None,
       paymentLotItem = None,
       lpiWithDunningBlock = None,
-      amountCodedOut = Some(3.21)
+      amountCodedOut = Some(3.21),
+      effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
     )
   }
 
@@ -256,7 +259,7 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ).payments shouldBe List(
             Payment(reference = Some("ref"), amount = Some(-1000.0), outstandingAmount = Some(700),
               documentDescription = None, method = Some("method"), lot = None, lotItem = None,
-              dueDate = Some(LocalDate.parse("2022-06-23")), documentDate = LocalDate.parse("2022-06-23"),
+              dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
               transactionId = "DOCID01", mainType = Some("mainType1"))
           )
         }
@@ -273,11 +276,11 @@ class ChargesResponseSpec extends WordSpec with Matchers {
           ).payments shouldBe List(
             Payment(reference = Some("ref"), amount = Some(-1000.0), outstandingAmount = Some(700),
               documentDescription = None, method = Some("method"), lot = None, lotItem = None,
-              dueDate = Some(LocalDate.parse("2022-06-23")), documentDate = LocalDate.parse("2022-06-23"),
+              dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
               transactionId = "DOCID01", mainType = Some("mainType1")),
             Payment(reference = Some("ref"), amount = Some(-1000.0), outstandingAmount = Some(700),
               documentDescription = None, method = Some("method"), lot = None, lotItem = None,
-              dueDate = Some(LocalDate.parse("2022-06-23")), documentDate = LocalDate.parse("2022-06-23"),
+              dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
               transactionId = "DOCID02", mainType = Some("mainType1"))
           )
         }
