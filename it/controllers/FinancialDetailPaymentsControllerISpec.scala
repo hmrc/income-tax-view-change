@@ -31,7 +31,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     method = Some("paymentMethod"),
     lot = None,
     lotItem = None,
-    dueDate = Some(LocalDate.parse("2022-06-23")),
+    dueDate = Some(LocalDate.parse("2018-03-29")),
     documentDate = LocalDate.parse("2018-03-29"),
     transactionId = "id"
   )
@@ -44,7 +44,7 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
     documentDescription =  Some("documentDescription2"),
     lot = None,
     lotItem = None,
-    dueDate = Some(LocalDate.parse("2022-06-23")),
+    dueDate = Some(LocalDate.parse("2018-03-29")),
     documentDate = LocalDate.parse("2018-03-29"),
     transactionId = "id2"
   )
@@ -73,7 +73,8 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
         "documentText" -> "documentText",
         "totalAmount" -> -1000.00,
         "documentOutstandingAmount" -> 0.00,
-        "documentDate" -> "2018-03-29"
+        "documentDate" -> "2018-03-29",
+        "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
       ),
       Json.obj(
         "taxYear" -> "2019",
@@ -82,7 +83,8 @@ abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends
         "documentText" -> "documentText2",
         "totalAmount" -> -1000.00,
         "documentOutstandingAmount" -> 0.00,
-        "documentDate" -> "2018-03-29"
+        "documentDate" -> "2018-03-29",
+        "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
       )
     ),
     "financialDetails" -> Json.arr(
