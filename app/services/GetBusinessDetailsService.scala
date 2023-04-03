@@ -17,8 +17,9 @@
 package services
 
 import connectors.GetBusinessDetailsConnector
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
 import play.api.Logging
+import play.api.http.Status._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -30,14 +31,7 @@ class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBu
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     logger.debug("[getBusinessDetailsService][getBusinessDetails] - Requesting Income Source Details from Connector")
-    getBusinessDetailsConnector.getBusinessDetails(nino).map {
-      case success: IncomeSourceDetailsModel =>
-        logger.debug(s"[getBusinessDetailsService][getBusinessDetails] - Retrieved Get Business Details:\n\n$success")
-        success
-      case error: IncomeSourceDetailsError =>
-        logger.error(s"[getBusinessDetailsService][getgetBusinessDetails] - Retrieved Income Source Details:\n\n$error")
-        IncomeSourceDetailsError(error.status, error.reason)
-    }
+    getBusinessDetailsConnector.getBusinessDetails(nino)
   }
 
 }

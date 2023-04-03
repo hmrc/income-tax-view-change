@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound}
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -36,6 +36,9 @@ class GetBusinessDetailsController @Inject()(val authentication: AuthenticationP
 
   def getBusinessDetails(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     getBusinessDetailsService.getBusinessDetails(nino).map {
+      case notFound: IncomeSourceDetailsNotFound =>
+        logger.warn(s"[GetBusinessDetailsController][getBusinessDetails] - Income tax details not found: $notFound")
+        Status(notFound.status)(Json.toJson(notFound))
       case error: IncomeSourceDetailsError =>
         logger.error(s"[GetBusinessDetailsController][getBusinessDetails] - Error Response: $error")
         Status(error.status)(Json.toJson(error))

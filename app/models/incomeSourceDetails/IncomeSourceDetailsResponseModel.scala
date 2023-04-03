@@ -28,6 +28,7 @@ case class IncomeSourceDetailsModel(nino: String,
                                     property: Option[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
+case class IncomeSourceDetailsNotFound(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
 
 object IncomeSourceDetailsModel {
 
@@ -63,4 +64,8 @@ object IncomeSourceDetailsModel {
 
 object IncomeSourceDetailsError {
   implicit val format: Format[IncomeSourceDetailsError] = Json.format[IncomeSourceDetailsError]
+}
+
+object IncomeSourceDetailsNotFound {
+  implicit val format: Format[IncomeSourceDetailsNotFound] = Json.format[IncomeSourceDetailsNotFound]
 }
