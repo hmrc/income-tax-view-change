@@ -24,14 +24,17 @@ import java.time.LocalDate
 
 class DocumentDetailSpec extends WordSpec with Matchers {
 
-  val documentDetailMin: DocumentDetail = DocumentDetail("2019", "id", None, None, None, None, LocalDate.parse("2018-03-29"),
-    None, None, None, None, None, None, None, None, None, effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")))
+  val documentDetailMin: DocumentDetail = DocumentDetail(2019, "id", None, None, None, None,
+    LocalDate.parse("2018-03-29"), None, None, None, None, None, None, None, None, None,
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")))
 
   val documentDetailMinJsonRead: JsObject =
-    Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"))
+    Json.obj("taxYear" -> "2019", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"),
+      "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"))
 
   val documentDetailMinJsonWrite: JsObject =
-    Json.obj("taxYear" -> "2019", "transactionId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"))
+    Json.obj("taxYear" -> 2019, "transactionId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"),
+      "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"))
 
   val documentDetailFull: DocumentDetail = documentDetail
 
@@ -57,7 +60,7 @@ class DocumentDetailSpec extends WordSpec with Matchers {
   )
 
   val documentDetailFullJsonWrite: JsValue = Json.obj(
-    "taxYear" -> "2018",
+    "taxYear" -> 2018,
     "transactionId" -> "id",
     "documentDescription" -> "documentDescription",
     "documentText" -> "documentText",
@@ -79,11 +82,11 @@ class DocumentDetailSpec extends WordSpec with Matchers {
 
   val documentDetailLpiWithDunningLockJsonRead: JsValue = Json.obj("taxYear" -> "2018", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningLock" -> 13.70, "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"))
 
-  val documentDetailLpiWithDunningBlock: DocumentDetail = DocumentDetail("2018", "id", None, None, None, None, LocalDate.parse("2018-03-29"),
+  val documentDetailLpiWithDunningBlock: DocumentDetail = DocumentDetail(2018, "id", None, None, None, None, LocalDate.parse("2018-03-29"),
     None, None, None, None, None, None, None, None, lpiWithDunningBlock = Some(13.70), effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")))
 
   val documentDetailLpiWithDunningBlockJsonWrite: JsObject =
-    Json.obj("taxYear" -> "2018", "transactionId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningBlock" -> 13.70)
+    Json.obj("taxYear" -> 2018, "transactionId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningBlock" -> 13.70)
 
 
   "DocumentDetail" should {

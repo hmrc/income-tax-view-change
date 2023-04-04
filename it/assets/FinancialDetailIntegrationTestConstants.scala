@@ -148,7 +148,7 @@ object FinancialDetailIntegrationTestConstants {
   )
 
   val documentDetail: DocumentDetail = DocumentDetail(
-    taxYear = "2018",
+    taxYear = 2018,
     transactionId = "id",
     documentDescription = Some("documentDescription"),
     documentText = Some("documentText"),
@@ -169,7 +169,7 @@ object FinancialDetailIntegrationTestConstants {
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
-    taxYear = "2019",
+    taxYear = 2019,
     transactionId = "id2",
     documentDescription = Some("documentDescription2"),
     documentText = None,

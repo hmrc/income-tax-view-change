@@ -178,7 +178,7 @@ object FinancialDataTestConstants {
   val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, Some(400.00))
 
   val documentDetail: DocumentDetail = DocumentDetail(
-    taxYear = "2018",
+    taxYear = 2018,
     transactionId = "id",
     documentDescription = Some("documentDescription"),
     documentText = Some("documentText"),
@@ -199,7 +199,7 @@ object FinancialDataTestConstants {
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
-    taxYear = "2019",
+    taxYear = 2019,
     transactionId = "id2",
     documentDescription = Some("documentDescription2"),
     documentText = None,
@@ -219,7 +219,7 @@ object FinancialDataTestConstants {
   )
 
   val documentDetail3: DocumentDetail = DocumentDetail(
-    taxYear = "2018",
+    taxYear = 2018,
     documentDescription = Some("documentDescription"),
     documentText = None,
     originalAmount = Some(-1000),
