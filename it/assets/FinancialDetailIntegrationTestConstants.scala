@@ -58,7 +58,8 @@ object FinancialDetailIntegrationTestConstants {
         "paymentLotItem" -> "paymentLotItem",
         "paymentLot" -> "paymentLot",
         "lpiWithDunningBlock" -> 12.50,
-        "amountCodedOut" -> 3.21
+        "amountCodedOut" -> 3.21,
+        "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
       ),
       Json.obj(
         "taxYear" -> "2019",
@@ -66,7 +67,8 @@ object FinancialDetailIntegrationTestConstants {
         "documentDescription" -> "documentDescription2",
         "totalAmount" -> 100.00,
         "documentOutstandingAmount" -> 50.00,
-        "documentDate" -> "2018-03-29"
+        "documentDate" -> "2018-03-29",
+        "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
       )
     ),
     "financialDetails" -> Json.arr(
@@ -162,7 +164,8 @@ object FinancialDetailIntegrationTestConstants {
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
     lpiWithDunningBlock = Some(12.50),
-    amountCodedOut = Some(3.21)
+    amountCodedOut = Some(3.21),
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -181,7 +184,8 @@ object FinancialDetailIntegrationTestConstants {
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
-    lpiWithDunningBlock = None
+    lpiWithDunningBlock = None,
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
   )
 
 

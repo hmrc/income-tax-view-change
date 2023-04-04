@@ -63,7 +63,8 @@ object FinancialDataTestConstants {
 			|     "paymentLot": "paymentLot",
 			|     "paymentLotItem": "paymentLotItem",
       |     "lpiWithDunningBlock": 12.50,
-      |     "amountCodedOut" : 3.21
+      |     "amountCodedOut" : 3.21,
+      |     "effectiveDateOfPayment" : "2018-03-29"
 			|   },
 			|   {
 			|     "taxYear": "2019",
@@ -72,7 +73,8 @@ object FinancialDataTestConstants {
 			|     "totalAmount": 100.00,
 			|     "documentOutstandingAmount": 50.00,
 			|     "lastClearedAmount": 50.00,
-			|     "documentDate": "2018-03-29"
+			|     "documentDate": "2018-03-29",
+      |     "effectiveDateOfPayment" : "2018-03-29"
 			|   }
 			| ],
 			| "financialDetails": [
@@ -192,7 +194,8 @@ object FinancialDataTestConstants {
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
     lpiWithDunningBlock = Some(12.50),
-    amountCodedOut = Some(3.21)
+    amountCodedOut = Some(3.21),
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -211,7 +214,8 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
-    lpiWithDunningBlock = None
+    lpiWithDunningBlock = None,
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
   )
 
   val documentDetail3: DocumentDetail = DocumentDetail(
@@ -230,7 +234,8 @@ object FinancialDataTestConstants {
     transactionId = "id",
     paymentLot = None,
     paymentLotItem = None,
-    lpiWithDunningBlock = None
+    lpiWithDunningBlock = None,
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
   )
 
   val financialDetail3: FinancialDetail = FinancialDetail(

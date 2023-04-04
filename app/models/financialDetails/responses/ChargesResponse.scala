@@ -54,7 +54,7 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
         method = subItem.flatMap(_.paymentMethod),
         lot = document.paymentLot,
         lotItem = document.paymentLotItem,
-        dueDate = subItem.flatMap(_.dueDate),
+        dueDate = document.effectiveDateOfPayment,
         documentDate = document.documentDate,
         transactionId = document.transactionId,
         mainType = mainType
