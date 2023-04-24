@@ -39,6 +39,8 @@ object PropertyDetailsTestConstants {
     contactDetails = Some(testSomeContactDetailsModel),
     propertiesRented = Some(testPropertiesRentedModel),
     cessation = Some(testCessationModel),
+    incomeSourceType = Some("property-unspecified"),
+    tradingStartDate = Some("2022-01-01"),
     paperless = Some(true),
     firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1))
   )
@@ -49,6 +51,8 @@ object PropertyDetailsTestConstants {
     contactDetails = None,
     propertiesRented = None,
     cessation = None,
+    incomeSourceType = None,
+    tradingStartDate = None,
     paperless = None,
     firstAccountingPeriodEndDate = None
   )
