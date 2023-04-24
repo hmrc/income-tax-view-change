@@ -62,7 +62,9 @@ object BusinessDetailsIntegrationTestConstants {
     None,
     None,
     Some(true),
-    Some(LocalDate.parse("2017-06-01"))
+    Some(LocalDate.parse("2017-06-01")),
+    None,
+    None
   )
 
   def successResponse(nino: String): JsValue = {
