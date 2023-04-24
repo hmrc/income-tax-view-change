@@ -27,6 +27,8 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 contactDetails: Option[ContactDetailsModel],
                                 propertiesRented: Option[PropertiesRentedModel],
                                 cessation: Option[CessationModel],
+                                incomeSourceType: Option[String],
+                                tradingStartDate: Option[String],
                                 paperless: Option[Boolean],
                                 firstAccountingPeriodEndDate: Option[LocalDate])
 
@@ -42,6 +44,8 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "numPropRented").readNullable[Int](readInt) and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
+      (__ \ "incomeSourceType").readNullable[String] and
+      (__ \ "tradingStartDate").readNullable[String] and
       (__ \ "paperLess").readNullable[Boolean] and
       (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate]
     ) (PropertyDetailsModel.applyWithFields _)
@@ -55,6 +59,8 @@ object PropertyDetailsModel extends CustomReads {
                       total: Option[Int],
                       cessationDate: Option[LocalDate],
                       cessationReason: Option[String],
+                      incomeSourceType: Option[String],
+                      tradingStartDate: Option[String],
                       paperless: Option[Boolean],
                       firstAccountingPeriodEndDate: Option[LocalDate]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
@@ -62,6 +68,8 @@ object PropertyDetailsModel extends CustomReads {
     ContactDetailsModel.propertyContactDetails(email),
     PropertiesRentedModel.propertiesRented(uk, eea, nonEea, total),
     CessationModel.cessation(cessationDate, cessationReason),
+    incomeSourceType,
+    tradingStartDate,
     paperless,
     firstAccountingPeriodEndDate
   )
