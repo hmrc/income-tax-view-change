@@ -42,7 +42,7 @@ object PropertyDetailsTestConstants {
     paperless = Some(true),
     firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
     incomeSourceType = Some("property-unspecified"),
-    tradingStartDate = Some("2015-01-01")
+    tradingStartDate = Some(LocalDate.parse("2015-01-01"))
   )
 
   val testMinimumPropertyDetailsModel = PropertyDetailsModel(

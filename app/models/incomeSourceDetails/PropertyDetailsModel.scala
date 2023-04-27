@@ -30,7 +30,7 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 paperless: Option[Boolean],
                                 firstAccountingPeriodEndDate: Option[LocalDate],
                                 incomeSourceType: Option[String],
-                                tradingStartDate: Option[String])
+                                tradingStartDate: Option[LocalDate])
 
 object PropertyDetailsModel extends CustomReads {
 
@@ -47,7 +47,7 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "paperLess").readNullable[Boolean] and
       (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
       (__ \ "incomeSourceType").readNullable[String] and
-      (__ \ "tradingStartDate").readNullable[String]
+      (__ \ "tradingStartDate").readNullable[LocalDate]
     ) (PropertyDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
@@ -62,7 +62,7 @@ object PropertyDetailsModel extends CustomReads {
                       paperless: Option[Boolean],
                       firstAccountingPeriodEndDate: Option[LocalDate],
                       incomeSourceType: Option[String],
-                      tradingStartDate: Option[String]): PropertyDetailsModel = PropertyDetailsModel(
+                      tradingStartDate: Option[LocalDate]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,
     ContactDetailsModel.propertyContactDetails(email),
