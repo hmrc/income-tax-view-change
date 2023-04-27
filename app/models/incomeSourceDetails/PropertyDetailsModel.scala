@@ -28,7 +28,9 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 propertiesRented: Option[PropertiesRentedModel],
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean],
-                                firstAccountingPeriodEndDate: Option[LocalDate])
+                                firstAccountingPeriodEndDate: Option[LocalDate],
+                                incomeSourceType: Option[String],
+                                tradingStartDate: Option[LocalDate])
 
 object PropertyDetailsModel extends CustomReads {
 
@@ -43,7 +45,9 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
       (__ \ "paperLess").readNullable[Boolean] and
-      (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate]
+      (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
+      (__ \ "incomeSourceType").readNullable[String] and
+      (__ \ "tradingStartDate").readNullable[LocalDate]
     ) (PropertyDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
@@ -56,14 +60,18 @@ object PropertyDetailsModel extends CustomReads {
                       cessationDate: Option[LocalDate],
                       cessationReason: Option[String],
                       paperless: Option[Boolean],
-                      firstAccountingPeriodEndDate: Option[LocalDate]): PropertyDetailsModel = PropertyDetailsModel(
+                      firstAccountingPeriodEndDate: Option[LocalDate],
+                      incomeSourceType: Option[String],
+                      tradingStartDate: Option[LocalDate]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,
     ContactDetailsModel.propertyContactDetails(email),
     PropertiesRentedModel.propertiesRented(uk, eea, nonEea, total),
     CessationModel.cessation(cessationDate, cessationReason),
     paperless,
-    firstAccountingPeriodEndDate
+    firstAccountingPeriodEndDate,
+    incomeSourceType,
+    tradingStartDate
   )
 
   implicit val writes: OWrites[PropertyDetailsModel] = Json.writes[PropertyDetailsModel]

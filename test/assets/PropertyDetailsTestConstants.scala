@@ -40,7 +40,9 @@ object PropertyDetailsTestConstants {
     propertiesRented = Some(testPropertiesRentedModel),
     cessation = Some(testCessationModel),
     paperless = Some(true),
-    firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1))
+    firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
+    incomeSourceType = Some("property-unspecified"),
+    tradingStartDate = Some(LocalDate.parse("2015-01-01"))
   )
 
   val testMinimumPropertyDetailsModel = PropertyDetailsModel(
@@ -50,7 +52,9 @@ object PropertyDetailsTestConstants {
     propertiesRented = None,
     cessation = None,
     paperless = None,
-    firstAccountingPeriodEndDate = None
+    firstAccountingPeriodEndDate = None,
+    incomeSourceType = None,
+    tradingStartDate = None
   )
 
 
@@ -88,7 +92,9 @@ object PropertyDetailsTestConstants {
     "cessationDate" -> "2017-06-01",
     "cessationReason" -> "Dummy reason",
     "paperLess" -> true,
-    "firstAccountingPeriodEndDate" -> "2016-01-01"
+    "firstAccountingPeriodEndDate" -> "2016-01-01",
+    "incomeSourceType" -> "property-unspecified",
+    "tradingStartDate" -> "2015-01-01"
   )
 
   val testPropertyDetailsJsonString = Json.obj(
@@ -103,7 +109,9 @@ object PropertyDetailsTestConstants {
     "cessationDate" -> "2017-06-01",
     "cessationReason" -> "Dummy reason",
     "paperLess" -> true,
-    "firstAccountingPeriodEndDate" -> "2016-01-01"
+    "firstAccountingPeriodEndDate" -> "2016-01-01",
+    "incomeSourceType" -> "property-unspecified",
+    "tradingStartDate" -> "2015-01-01"
   )
 
   val testPropertyDetailsToJson = Json.obj(
@@ -113,7 +121,9 @@ object PropertyDetailsTestConstants {
     "propertiesRented" -> testPropertiesRentedToJson,
     "cessation" -> testCessationToJson,
     "paperless" -> true,
-    "firstAccountingPeriodEndDate" -> "2016-01-01"
+    "firstAccountingPeriodEndDate" -> "2016-01-01",
+    "incomeSourceType" -> "property-unspecified",
+    "tradingStartDate" -> "2015-01-01"
   )
 
   val testMinimumPropertyDetailsJson = Json.obj(
