@@ -30,7 +30,7 @@ object IncomeSourceIntegrationTestConstants {
       mtdbsa = testMtdbsa,
       yearOfMigration = Some("2019"),
       businesses = testBusinessModel,
-      property = Some(testPropertyDetailsModel)
+      properties = List(testPropertyDetailsModel)
     )
 
   val incomeSourceDetailsError: IncomeSourceDetailsError = IncomeSourceDetailsError(500, ninoErrorJson.toString())

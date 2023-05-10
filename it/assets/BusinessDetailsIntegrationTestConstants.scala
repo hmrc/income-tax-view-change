@@ -152,7 +152,7 @@ object BusinessDetailsIntegrationTestConstants {
 				|   "paperless":true,
 				|   "firstAccountingPeriodEndDate":"2016-01-01"
 				| }],
-				| "property":{
+				| "properties":[{
 				| 	"incomeSourceId":"2222222222",
 				|  	"accountingPeriod":{
 				|  		"start":"2017-06-01",
@@ -160,7 +160,7 @@ object BusinessDetailsIntegrationTestConstants {
 				| 	},
 				| 	"paperless":true,
 				| 	"firstAccountingPeriodEndDate":"2017-06-01"
-				|	}
+				|	}]
 				|}
 |""".stripMargin)
   }
