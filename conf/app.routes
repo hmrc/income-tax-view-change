@@ -29,3 +29,5 @@ GET         /charge-history/:mtdBsa/docId/:docNumber 		 			 controllers.ChargeHi
 GET         /repayments/:nino/repaymentId/:repaymentId                   controllers.RepaymentHistoryController.getRepaymentHistoryById(nino, repaymentId)
 
 GET         /repayments/:nino                                            controllers.RepaymentHistoryController.getAllRepaymentHistory(nino)
+
+PUT         /update-income-source/update-cessation-date                  controllers.UpdateIncomeSourceController.updateCessationDate()

@@ -21,8 +21,11 @@ import org.scalatest._
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
+
+import java.time.LocalDate
 
 trait ComponentSpecBase extends TestSuite with CustomMatchers
   with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience with Matchers
@@ -113,6 +116,10 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getAllRepaymentHistory(nino: String): WSResponse = {
       get(s"/repayments/$nino")
+    }
+
+    def putUpdateCessationDate(body:JsValue): WSResponse = {
+        buildClient("/update-income-source/update-cessation-date").put(body).futureValue
     }
 
   }

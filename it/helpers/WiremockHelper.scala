@@ -38,6 +38,10 @@ object WiremockHelper extends Eventually with IntegrationPatience {
     verify(getRequestedFor(urlEqualTo(uri)))
   }
 
+  def verifyPut(uri: String, requestBody: String): Unit = {
+    verify(putRequestedFor(urlEqualTo(uri)).withRequestBody(equalToJson(requestBody)))
+  }
+
   def stubGet(url: String, status: Integer, body: String): StubMapping =
     stubFor(get(urlEqualTo(url))
       .willReturn(
@@ -58,6 +62,15 @@ object WiremockHelper extends Eventually with IntegrationPatience {
 
   def stubPut(url: String, status: Integer, responseBody: String): StubMapping =
     stubFor(put(urlMatching(url))
+      .willReturn(
+        aResponse().
+          withStatus(status).
+          withBody(responseBody)
+      )
+    )
+
+  def stubPut(url: String, status: Integer, requestBody: String, responseBody: String): StubMapping =
+    stubFor(put(urlMatching(url)).withRequestBody(equalToJson(requestBody))
       .willReturn(
         aResponse().
           withStatus(status).
