@@ -17,7 +17,7 @@
 package assets
 
 import assets.BaseTestConstants._
-import models.updateIncomeSource.request.{Cessation, TaxYearSpecific, UpdateIncomeSourceRequestModel}
+import models.updateIncomeSource.request.{Cessation, TaxYearSpecific, UpdateIncomeSourceRequestError, UpdateIncomeSourceRequestModel}
 import models.updateIncomeSource.{UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
@@ -53,12 +53,14 @@ object UpdateIncomeSourceTestConstants {
   )
 
   val badRequest = request.copy(cessation = None)
+  val badRequestError = UpdateIncomeSourceRequestError("Json validation error while parsing request")
 
   val errorBadResponse = UpdateIncomeSourceResponseError(Status.BAD_REQUEST, "Dummy Message")
   val failureResponse = UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
   val badJsonResponse = UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing IF Update Income Source")
   val successResponse = UpdateIncomeSourceResponseModel("2022-01-31T09:26:17Z")
   val successResponseJson = Json.obj("processingDate" -> "2022-01-31T09:26:17Z")
+  val invalidJsonResponse = Json.obj()
 
   val successHttpResponse = HttpResponse(Status.OK, Json.toJson(successResponse), Map.empty)
   val successInvalidJsonResponse = HttpResponse(Status.OK, Json.toJson(""), Map.empty)
