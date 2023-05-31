@@ -63,4 +63,12 @@ trait MockHttp extends WordSpecLike with Matchers with OptionValues with Mockito
   def setupMockHttpGetWithHeaderCarrier(url: String, headers: Seq[(String, String)])(response: HttpResponse): Unit =
     when(mockHttpGet.GET[HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.any(), ArgumentMatchers.eq(headers))
       (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
+
+  def setupMockHttpPutWithHeaderCarrier[R](url: String, headers: Seq[(String, String)])(body: R,response: HttpResponse): Unit =
+    when(mockHttpGet.PUT[R,HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(body), ArgumentMatchers.eq(headers))
+      (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(Future.successful(response))
+
+  def setupMockHttpPutFailed[R](url: String, headers: Seq[(String, String)])(body: R): Unit =
+    when(mockHttpGet.PUT[R,HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(body), ArgumentMatchers.eq(headers))
+      (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(Future.failed(new Exception("error")))
 }
