@@ -23,6 +23,11 @@ import helpers.ComponentSpecBase
 import helpers.servicemocks.DesBusinessDetailsCallWithNinoStub
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
+import play.api.mvc.{AnyContentAsEmpty, Result}
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{await, defaultAwaitTimeout, route, status, writeableOf_AnyContentAsEmpty}
+
+import scala.concurrent.Future
 
 class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
 
@@ -48,6 +53,24 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
             httpStatus(OK),
             jsonBodyMatching(jsonSuccessOutput())
           )
+        }
+        "return a valid IncomeSourceDetails model asdasdasds" in {
+
+          isAuthorised(true)
+
+          And("I wiremock stub a successful getIncomeSourceDetails response")
+          DesBusinessDetailsCallWithNinoStub.stubGetDesBusinessDetails(testNino, incomeSourceDetailsSuccess)
+
+          When(s"I call GET /get-business-details/nino/$testNino")
+          val request = FakeRequest(controllers.routes.GetBusinessDetailsController.getBusinessDetails(testNino)).withHeaders("Authorization" -> "Bearer123")
+          val res: Result = await(route(appWithSubmissionStub, request).get)
+
+          DesBusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+
+          Then("a successful response is returned with the correct business details")
+
+          res.header.status shouldBe OK
+
         }
       }
       "An error response is returned from DES" should {

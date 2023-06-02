@@ -31,7 +31,12 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
                                             )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   val getIncomeSourceDetailsUrl: String => String =
-    mtdRef => s"${appConfig.desUrl}/registration/business-details/mtdbsa/$mtdRef"
+    if (appConfig.useBusinessDetailsStub) {
+      mtdRef => s"${appConfig.incomeTaxSubmissionStubUrl}/registration/business-details/mtdbsa/$mtdRef"
+    }
+    else {
+      mtdRef => s"${appConfig.desUrl}/registration/business-details/mtdbsa/$mtdRef"
+    }
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
