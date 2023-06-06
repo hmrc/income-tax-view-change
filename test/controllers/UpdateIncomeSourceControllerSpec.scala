@@ -28,7 +28,7 @@ import uk.gov.hmrc.auth.core.MissingBearerToken
 import scala.concurrent.Future
 
 class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdateIncomeSourceConnector with MockMicroserviceAuthConnector {
-  def fakeRequestPut(payload:JsValue) = FakeRequest("PUT", "/").withJsonBody(payload)
+  def fakeRequestPut(payload: JsValue) = FakeRequest("PUT", "/").withJsonBody(payload)
 
   "The UpdateIncomeSourceController" when {
     lazy val mockCC = stubControllerComponents()
@@ -39,46 +39,51 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         connector = mockUpdateIncomeSourceConnector
       )
 
-      "UpdateIncomeSourceConnector gives a error response" should {
-        mockAuth()
-        mockUpdateIncomeSource(failureResponse)
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(failureResponse.status)
-        checkJsonBodyOf(result)(failureResponse)
+      "valid response" when {
+        "UpdateIncomeSourceConnector gives a valid response" should {
+          mockAuth()
+          mockUpdateIncomeSource(successResponse)
+          val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(OK)
+          checkJsonBodyOf(result)(successResponse)
+        }
       }
 
-      "UpdateIncomeSourceConnector gives a invalid json response" should {
-        mockAuth()
-        mockUpdateIncomeSource(badJsonResponse)
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(badJsonResponse.status)
-        checkJsonBodyOf(result)(badJsonResponse)
+      "error responses" when {
+        "UpdateIncomeSourceConnector gives a error response" should {
+          mockAuth()
+          mockUpdateIncomeSource(failureResponse)
+          lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(failureResponse.status)
+          checkJsonBodyOf(result)(failureResponse)
+        }
+
+        "UpdateIncomeSourceConnector gives a invalid json response" should {
+          mockAuth()
+          mockUpdateIncomeSource(badJsonResponse)
+          lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(badJsonResponse.status)
+          checkJsonBodyOf(result)(badJsonResponse)
+        }
+
+        "invoked with invalid request" should {
+          mockAuth()
+          lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(Json.obj()))
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(BAD_REQUEST)
+          checkJsonBodyOf(result)(badRequestError)
+        }
+
+        "called with an Unauthenticated user" should {
+          mockAuth(Future.failed(new MissingBearerToken))
+          lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+          checkStatusOf(result)(UNAUTHORIZED)
+        }
       }
 
-      "invoked with invalid request" should {
-        mockAuth()
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(Json.obj()))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(BAD_REQUEST)
-        checkJsonBodyOf(result)(badRequestError)
-      }
-
-      "called with an Unauthenticated user" should {
-        mockAuth(Future.failed(new MissingBearerToken))
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
-        checkStatusOf(result)(UNAUTHORIZED)
-      }
-
-      "UpdateIncomeSourceConnector gives a valid response" should {
-        mockAuth()
-        mockUpdateIncomeSource(successResponse)
-        val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(OK)
-        checkJsonBodyOf(result)(successResponse)
-      }
 
     }
   }
