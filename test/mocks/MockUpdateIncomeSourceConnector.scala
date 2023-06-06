@@ -16,10 +16,8 @@
 
 package mocks
 
-import connectors.{PaymentAllocationsConnector, UpdateIncomeSourceConnector}
-import connectors.httpParsers.PaymentAllocationsHttpParser.PaymentAllocationsResponse
+import connectors.UpdateIncomeSourceConnector
 import models.updateIncomeSource.UpdateIncomeSourceResponse
-import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
