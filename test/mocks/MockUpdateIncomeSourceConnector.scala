@@ -16,10 +16,8 @@
 
 package mocks
 
-import connectors.{PaymentAllocationsConnector, UpdateIncomeSourceConnector}
-import connectors.httpParsers.PaymentAllocationsHttpParser.PaymentAllocationsResponse
+import connectors.UpdateIncomeSourceConnector
 import models.updateIncomeSource.UpdateIncomeSourceResponse
-import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
@@ -36,9 +34,8 @@ trait MockUpdateIncomeSourceConnector extends WordSpecLike with Matchers with Op
     reset(mockUpdateIncomeSourceConnector)
   }
 
-  def mockUpdateIncomeSource(request:UpdateIncomeSourceRequestModel)
-                               (response: UpdateIncomeSourceResponse): Unit = {
-    when(mockUpdateIncomeSourceConnector.updateIncomeSource(ArgumentMatchers.eq(request))(ArgumentMatchers.any())) thenReturn Future.successful(response)
+  def mockUpdateIncomeSource(response: UpdateIncomeSourceResponse): Unit = {
+    when(mockUpdateIncomeSourceConnector.updateIncomeSource(ArgumentMatchers.any())(ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 
 }
