@@ -39,15 +39,6 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         connector = mockUpdateIncomeSourceConnector
       )
 
-      "UpdateIncomeSourceConnector gives a valid response" should {
-        mockAuth()
-        mockUpdateIncomeSource(successResponse)
-        val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(OK)
-        checkJsonBodyOf(result)(successResponse)
-      }
-
       "UpdateIncomeSourceConnector gives a error response" should {
         mockAuth()
         mockUpdateIncomeSource(failureResponse)
@@ -78,6 +69,15 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         mockAuth(Future.failed(new MissingBearerToken))
         lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
         checkStatusOf(result)(UNAUTHORIZED)
+      }
+
+      "UpdateIncomeSourceConnector gives a valid response" should {
+        mockAuth()
+        mockUpdateIncomeSource(successResponse)
+        val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+        checkContentTypeOf(result)("application/json")
+        checkStatusOf(result)(OK)
+        checkJsonBodyOf(result)(successResponse)
       }
 
     }
