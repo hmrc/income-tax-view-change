@@ -28,7 +28,6 @@ import uk.gov.hmrc.auth.core.MissingBearerToken
 import scala.concurrent.Future
 
 class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdateIncomeSourceConnector with MockMicroserviceAuthConnector {
-  //val fakeRequestPut = FakeRequest("Put", "", FakeHeaders(), requestJson.toString()).withHeaders(CONTENT_TYPE -> "application/json")
   def fakeRequestPut(payload:JsValue) = FakeRequest("PUT", "/").withJsonBody(payload)
 
   "The UpdateIncomeSourceController" when {
@@ -42,7 +41,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
 
       "UpdateIncomeSourceConnector gives a valid response" should {
         mockAuth()
-        mockUpdateIncomeSource(request)(successResponse)
+        mockUpdateIncomeSource(successResponse)
         lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
         checkContentTypeOf(result)("application/json")
         checkStatusOf(result)(OK)
@@ -51,7 +50,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
 
       "UpdateIncomeSourceConnector gives a error response" should {
         mockAuth()
-        mockUpdateIncomeSource(request)(failureResponse)
+        mockUpdateIncomeSource(failureResponse)
         lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
         checkContentTypeOf(result)("application/json")
         checkStatusOf(result)(failureResponse.status)
@@ -60,7 +59,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
 
       "UpdateIncomeSourceConnector gives a invalid json response" should {
         mockAuth()
-        mockUpdateIncomeSource(request)(badJsonResponse)
+        mockUpdateIncomeSource(badJsonResponse)
         lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
         checkContentTypeOf(result)("application/json")
         checkStatusOf(result)(badJsonResponse.status)

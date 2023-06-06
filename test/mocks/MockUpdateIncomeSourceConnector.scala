@@ -36,9 +36,8 @@ trait MockUpdateIncomeSourceConnector extends WordSpecLike with Matchers with Op
     reset(mockUpdateIncomeSourceConnector)
   }
 
-  def mockUpdateIncomeSource(request:UpdateIncomeSourceRequestModel)
-                               (response: UpdateIncomeSourceResponse): Unit = {
-    when(mockUpdateIncomeSourceConnector.updateIncomeSource(ArgumentMatchers.eq(request))(ArgumentMatchers.any())) thenReturn Future.successful(response)
+  def mockUpdateIncomeSource(response: UpdateIncomeSourceResponse): Unit = {
+    when(mockUpdateIncomeSourceConnector.updateIncomeSource(ArgumentMatchers.any())(ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 
 }
