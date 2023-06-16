@@ -1,0 +1,369 @@
+openapi: 3.0.3
+info:
+  title: 'API#1776 Update Income Source'
+  description: 'This API enable the functionality to add and amend the income sources.'
+  version: 9.9.3
+  contact:
+    name: Irfan Siddique Siddique
+    email: irfan.siddique@hmrc.gov.uk
+  x-integration-catalogue:
+    reviewed-date: 2023-04-14
+    platform: CORE_IF
+    publisher-reference: API#1776
+    short-description: This API enable the functionality to add and amend the income sources.
+    status: LIVE
+    backends:
+      - ETMP
+servers:
+  - url: 'https://{hostname}:{port}'    
+    description: Actual environment values can be obtained from IF platforms team for each environment
+    variables:
+      hostname:
+        default: 'ifs.ws.ibt.hmrc.gov.uk'
+        description: 'The hostname for ISIT'
+      port:
+        default: '443'
+        description: 'The port for ISIT'
+tags:
+  - name: 'API#1776'
+    description: This API enable the functionality to add and amend the income sources.
+paths:
+  '/income-tax/business-detail/income-source':
+    put:
+      summary: 'API#1776 Update Income Source'
+      description: >
+        This API enable the functionality to add and amend the income sources. <br>
+        /income-tax/business-detail/income-source
+        <br>        
+
+        Example1  /income-tax/business-detail/income-source <br>
+        
+        ```
+
+        Change Log
+
+        ```
+
+          | Version | Date | Author | Description |
+          |---|-----|------|-----|
+          | 9.9.0   | 14-04-2023 | Irfan Siddique Siddique | Initial draft |
+          | 9.9.1   | 26-04-2023 | Irfan Siddique Siddique | Added threee example, Update the name of API, Update te request schema according to EPID 0.3 |
+          | 9.9.2   | 28-04-2023 | Irfan Siddique Siddique | Added correct example for tax year. Changed HTTP method from post to put  |
+          | 9.9.3   | 16-05-2023 | Irfan Siddique Siddique | Correct the example. taxableEntityId changed with nino   |
+          
+      tags:
+        - 'API#1776'
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/environment'
+        - $ref: '#/components/parameters/correlationId'
+
+      requestBody:
+        required: true
+        description: Update Income Source
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: '#/components/schemas/requestSchema'
+            examples:
+              Example1:
+                summary: Sample message to add-update cessation date
+                value:
+                  nino : ZT123456D
+                  incomeSourceID : XH000010045679T
+                  cessation :              
+                    cessationIndicator : true,
+                    cessationDate : 2023-02-01               
+              Example2:
+                summary: Sample message to remove cessatoion date
+                value:
+                  nino : ZT123456D
+                  incomeSourceID : XH000010045679T
+                  cessation :              
+                    cessationIndicator : true
+              Example3:
+                summary: Sample message for ta specific
+                value:
+                  nino : ZT123456D
+                  incomeSourceID : XH000010045679T
+                  taxYearSpecific :              
+                    - taxYear : 2022
+                      latencyIndicator : true
+                    - taxYear : 2023
+                      latencyIndicator : true
+      responses:
+        '200':
+          description: Success
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/responseSchema'
+                    
+        '400':
+          description: |-
+            Bad request
+            ```
+            A bad request has been made, this could be due to one or more issues with the request
+            
+            "code"                          "reason"
+            INVALID_PAYLOAD                   Submission has not passed validation. Invalid payload.
+            INVALID_CORRELATION_ID            Submission has not passed validation. Invalid Header parameter CorrelationId.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                Error_InvalidPayload:  
+                  value:
+                    failures:
+                      - code: INVALID_PAYLOAD
+                        reason: Submission has not passed validation. Invalid payload.
+                Error_InvalidCorrelationId:  
+                  value:
+                    failures:
+                      - code: INVALID_CORRELATION_ID
+                        reason: Submission has not passed validation. Invalid Header parameter CorrelationId.
+        '409':
+          description: >-
+            Unprocessable Entity
+
+            ```
+
+            "code"                         "reason"
+
+            DUPLICATE_SUBMISSION           The remote endpoint has indicated that Duplicate submission.
+            
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                Example_REQUEST_NOT_PROCESSED:
+                  value:
+                    failures:
+                      - code: REQUEST_NOT_PROCESSED
+                        reason: >-
+                          The remote endpoint has indicated that request could not be processed.z
+        '422':
+          description: >-
+            Unprocessable Entity
+
+            ```
+
+            "code"                            "reason"
+
+            REQUEST_NOT_PROCESSED             The remote endpoint has indicated that request could not be processed.
+            
+            EARLIER_CESSATION_DATE            The remote endpoint has indicated that Date is earlier than Commencement Date.
+            
+            FUTURE_CESSATION_DATE             The remote endpoint has indicated that Cessation date is in future.
+            
+            WRONG_AMENDMENT_CRYSTALLIZATION   The remote endpoint has indicated that No amendment after Crystallization.
+            
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                Example_REQUEST_NOT_PROCESSED:
+                  value:
+                    failures:
+                      - code: REQUEST_NOT_PROCESSED
+                        reason: >-
+                          The remote endpoint has indicated that request could not be processed.z
+                                 
+        '500':
+          description: |-
+            Server Error
+            ```
+            "code"         "reason"
+            SERVER_ERROR   IF is currently experiencing problems that require live service intervention.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                ServerError:
+                  value:
+                    failures:
+                      - code: SERVER_ERROR
+                        reason: IF is currently experiencing problems that require live service intervention.
+        '503':
+          description: |-
+            Service unavailable
+            ```
+            "code"         "reason"
+            SERVICE_UNAVAILABLE   Dependent systems are currently not responding.
+          headers:
+            CorrelationId:
+              $ref: '#/components/headers/CorrelationId'
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/failureResponse'
+              examples:
+                ServiceUnavailable:
+                  value:
+                    failures:
+                      - code: SERVICE_UNAVAILABLE
+                        reason: Dependent systems are currently not responding.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  headers:
+    CorrelationId:
+      description: CorrelationID - Used for traceability purposes when present
+      required: true
+      schema:
+        type: string
+        pattern: >-
+          ^[0-9a-fA-F]{8}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{12}$
+    Content-Type:
+      description: >-
+        Indicates the client what the content type of the returned content
+        actually is
+      required: true
+      schema:
+        type: string
+        enum:
+          - application/json
+  parameters:
+    environment:
+      in: header
+      name: Environment
+      description: Mandatory. The environment in use.
+      required: true
+      schema:
+        type: string
+        enum:
+          - ist0
+          - clone
+          - live
+    correlationId:
+      in: header
+      name: CorrelationId
+      description: >-
+        Optional. A UUID format string for the transaction. If not specified the
+        IF will create a UUID value to be used
+      required: false
+      schema:
+        type: string
+        pattern: >-
+          ^[0-9a-fA-F]{8}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{4}[-][0-9a-fA-F]{12}$
+          
+  schemas:
+    failureResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - failures
+      properties:
+        failures:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - code
+              - reason
+            properties:
+              code:
+                description: Keys for all the errors returned
+                type: string
+                pattern: '^[A-Z0-9_-]{1,160}$'
+              reason:
+                description: A simple description for the failure
+                type: string
+                minLength: 1
+                maxLength: 160
+    
+    requestSchema:
+     type: object
+     title: API#1776 Update Income Source
+     description: Update Income Source API
+     additionalProperties: false
+     properties:
+      nino:
+        description: NINO This will be the unique Customer ID
+        type: string
+        pattern: ^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]$
+        example: 'AA123456A'
+      incomeSourceID:
+        type: string
+        description: incomeSourceID
+        pattern: '^[A-Z]{4}[0-9]{11}$'        
+      cessation:
+        description: Either cessation or taxYearSpecific can be populated; sending both is not allowed.
+        $ref: '#/components/schemas/cessationType'
+      taxYearSpecific:
+        description: Either taxYearSpecific or cessation can be populated; sending both is not allowed.
+        $ref: '#/components/schemas/taxYearSpecificType'
+     required:
+       - nino
+       - incomeSourceID
+    taxYearSpecificType: 
+      type: array        
+      minItems: 0
+      maxItems: 2
+      items:
+        type: object
+        additionalProperties: false
+        required: 
+          - taxYear
+          - latencyIndicator
+        properties:
+          taxYear:
+            type: string
+            pattern: '^(\d{4})$'
+            description: 'Format: YYYY'
+          latencyIndicator:
+            type: boolean
+            description: true for Opt in to latency ; false for Opt out to latency
+    cessationType: 
+      type: object        
+      minItems: 0
+      maxItems: 1
+      additionalProperties: false
+      required: 
+          - cessationIndicator 
+      properties:
+        cessationIndicator:
+          type: boolean
+          description: If boolean value is true - update the cessation date / To remove the cessation date send boolean false
+        cessationDate:
+          type: string
+          description: Cessation date is Mandatory if Cessation indicator is true  / Cessation date should not be sent if Cessation indicator is false
+          pattern: '^[0-9]{4}-([0][1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1])$'
+            
+    responseSchema:
+      title: 'API#1776 Update Income Source'
+      type: object
+      additionalProperties: false
+      required:
+        - processingDate
+      properties:
+        processingDate:
+          type: string
+          description: 'The date the message was processed'
+          pattern: '^[0-9]{4}-([0][1-9]|[1][0-2])-([0][1-9]|[1-2][0-9]|[3][0-1])T([0-1][0-9]|[2][0-3]):[0-5][0-9]:[0-5][0-9]Z$'
+          example: '2022-01-31T09:26:17Z'
