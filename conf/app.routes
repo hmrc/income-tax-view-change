@@ -31,3 +31,5 @@ GET         /repayments/:nino/repaymentId/:repaymentId                   control
 GET         /repayments/:nino                                            controllers.RepaymentHistoryController.getAllRepaymentHistory(nino)
 
 PUT         /update-income-source/update-cessation-date                  controllers.UpdateIncomeSourceController.updateCessationDate()
+
+GET         /itsa-status/status/:nino/:year                              controllers.ITSAStatusController.getITSAStatus(nino,year,futureYears:Boolean,history:Boolean)
