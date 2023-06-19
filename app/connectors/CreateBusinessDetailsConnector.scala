@@ -22,8 +22,9 @@ import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusi
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,11 +33,9 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
                                                val appConfig: MicroserviceAppConfig)
                                               (implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def create(mtdbsaRef: String)(implicit headerCarrier: HeaderCarrier): Future[CreateBusinessDetailsResponseModel] = {
+  def create(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[CreateBusinessDetailsResponseModel] = {
 
     val url = s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
-
-    val body = Json.toJson("")
 
     logger.debug(s"[CreateBusinessDetailsConnector][create] - " +
       s"Calling POST $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
