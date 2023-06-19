@@ -26,10 +26,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class CreateBusinessDetailsService @Inject()(val createBusinessDetailsConnector: CreateBusinessDetailsConnector) extends Logging {
+class CreateBusinessDetailsService @Inject()(createBusinessDetailsConnector: CreateBusinessDetailsConnector) extends Logging {
 
-  def getBusinessDetails(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[CreateBusinessDetailsResponseModel] = {
-    logger.debug("[getBusinessDetailsService][getBusinessDetails] - Requesting Income Source Details from Connector")
+  def createBusinessDetails(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[CreateBusinessDetailsResponseModel] = {
     createBusinessDetailsConnector.create(mtdbsaRef, body)
   }
 }

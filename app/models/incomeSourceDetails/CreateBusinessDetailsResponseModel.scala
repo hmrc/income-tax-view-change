@@ -41,4 +41,9 @@ object CreateBusinessDetailsResponseModel {
   }
 
   final case class CreateBusinessDetailsErrorResponse(status: Int, message: String) extends CreateBusinessDetailsResponseModel
+
+  object CreateBusinessDetailsErrorResponse {
+    implicit val formats: OFormat[CreateBusinessDetailsErrorResponse] = Json.format[CreateBusinessDetailsErrorResponse]
+  }
+
 }

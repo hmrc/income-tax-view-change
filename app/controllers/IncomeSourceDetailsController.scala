@@ -55,5 +55,4 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
         Ok(Json.toJson(success))
     }
   }
-
 }
