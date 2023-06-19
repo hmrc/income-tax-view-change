@@ -31,3 +31,5 @@ GET         /repayments/:nino/repaymentId/:repaymentId                   control
 GET         /repayments/:nino                                            controllers.RepaymentHistoryController.getAllRepaymentHistory(nino)
 
 PUT         /update-income-source/update-cessation-date                  controllers.UpdateIncomeSourceController.updateCessationDate()
+
+POST        /create-income-source/business/:mtdbsaRef                    controllers.CreateBusinessDetailsController.createBusinessDetails(mtdbsaRef: String)

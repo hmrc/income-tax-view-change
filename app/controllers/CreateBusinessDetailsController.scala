@@ -18,7 +18,7 @@ package controllers
 
 import controllers.predicates.AuthenticationPredicate
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, CreateBusinessDetailsModel}
-import play.api.Logging
+import play.api.{Logger, Logging}
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.CreateBusinessDetailsService
@@ -41,11 +41,11 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
           case success: CreateBusinessDetailsModel =>
             Ok(Json.toJson(success))
           case error: CreateBusinessDetailsErrorResponse =>
-            logger.error(s"[CreateBusinessDetailsController][createBusinessDetails] - Error Response: $error")
+            Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - Error Response: $error")
             Status(error.status)(Json.toJson(error))
           case _ =>
-            logger.error(s"[GetBusinessDetailsController][createBusinessDetails] - Unexpected Response")
-            InternalServerError("Unexpected response received from CreateBusinessDetailsService")
+            Logger("application").error(s"Unexpected response received from CreateBusinessDetailsService")
+            InternalServerError("Unexpected response")
         }
       case _ =>
         Future {
