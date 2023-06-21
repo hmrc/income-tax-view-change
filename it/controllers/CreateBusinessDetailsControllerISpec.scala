@@ -54,6 +54,9 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
         val invalidRequest = Json.obj()
 
+        And("I wiremock stub a FAIL createBusinessDetails response")
+        DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(testMtdbsa, invalidRequest.toString, successResponse.toString)
+
         When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
         val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, invalidRequest)
 
@@ -63,25 +66,5 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           httpStatus(BAD_REQUEST))
       }
     }
-//    "An error response is returned from DES" should {
-//      "return an Error Response model" in {
-//        isAuthorised(true)
-//
-//        And("I wiremock stub an error response")
-//        IfUpdateIncomeSourceStub.stubPutIfUpdateCessationDateError()
-//
-//        When(s"I call PUT /update-income-source/update-cessation-date")
-//        val res = IncomeTaxViewChange.putUpdateCessationDate(requestJson)
-//
-//        IfUpdateIncomeSourceStub.verifyPutIfUpdateCessationDate(requestJson.toString())
-//
-//        Then("an error response is returned")
-//
-//        res should have(
-//          httpStatus(INTERNAL_SERVER_ERROR),
-//          jsonBodyAs[UpdateIncomeSourceResponseError](failureResponse)
-//        )
-//      }
-//    }
   }
 }
