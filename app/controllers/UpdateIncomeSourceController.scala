@@ -34,28 +34,28 @@ class UpdateIncomeSourceController @Inject()(authentication: AuthenticationPredi
                                             (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
 
-  def updateCessationDate(): Action[AnyContent] =
+  def updateIncomeSource(): Action[AnyContent] =
     authentication.async {
       implicit request =>
         request.body.asJson.getOrElse(Json.obj()).validate[UpdateIncomeSourceRequestModel] fold(
           invalid => {
-            logger.error(s"[UpdateIncomeSourceController][updateCessationDate] - Validation Errors: $invalid")
+            logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Validation Errors: $invalid")
             UpdateIncomeSourceRequestError("Json validation error while parsing request")
           },
           valid => {
-            logger.info(s"[UpdateIncomeSourceController][updateCessationDate] - successfully parsed response to UpdateIncomeSourceRequestModel")
+            logger.info(s"[UpdateIncomeSourceController][updateIncomeSource] - successfully parsed response to UpdateIncomeSourceRequestModel")
             valid
           }
         ) match {
           case x: UpdateIncomeSourceRequestError =>
-            logger.error(s"[UpdateIncomeSourceController][updateCessationDate] - Bad Request")
+            logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Bad Request")
             Future(BadRequest(Json.toJson(x)))
           case x: UpdateIncomeSourceRequestModel => connector.updateIncomeSource(x).map {
             case error: UpdateIncomeSourceResponseError =>
-              logger.error(s"[UpdateIncomeSourceController][updateCessationDate] - Error Response: $error")
+              logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Error Response: $error")
               Status(error.status)(Json.toJson(error))
             case success: UpdateIncomeSourceResponseModel =>
-              logger.debug(s"[UpdateIncomeSourceController][updateCessationDate] - Successful Response: $success")
+              logger.debug(s"[UpdateIncomeSourceController][updateIncomeSource] - Successful Response: $success")
               Ok(Json.toJson(success))
           }
         }

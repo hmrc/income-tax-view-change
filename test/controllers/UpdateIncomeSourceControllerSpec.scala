@@ -39,19 +39,19 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         connector = mockUpdateIncomeSourceConnector
       )
       // TODO: Fix failing test case - passes locally but fails on PR builds
-     /* "UpdateIncomeSourceConnector gives a valid response" should {
+     "UpdateIncomeSourceConnector gives a valid response" should {
         mockAuth()
         mockUpdateIncomeSource(successResponse)
-        val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+        val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         checkContentTypeOf(result)("application/json")
         checkStatusOf(result)(OK)
         checkJsonBodyOf(result)(successResponse)
-      }*/
+      }
 
       "UpdateIncomeSourceConnector gives a error response" should {
         mockAuth()
         mockUpdateIncomeSource(failureResponse)
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         checkContentTypeOf(result)("application/json")
         checkStatusOf(result)(failureResponse.status)
         checkJsonBodyOf(result)(failureResponse)
@@ -60,7 +60,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
       "UpdateIncomeSourceConnector gives a invalid json response" should {
         mockAuth()
         mockUpdateIncomeSource(badJsonResponse)
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         checkContentTypeOf(result)("application/json")
         checkStatusOf(result)(badJsonResponse.status)
         checkJsonBodyOf(result)(badJsonResponse)
@@ -68,7 +68,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
 
       "invoked with invalid request" should {
         mockAuth()
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(Json.obj()))
+        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(Json.obj()))
         checkContentTypeOf(result)("application/json")
         checkStatusOf(result)(BAD_REQUEST)
         checkJsonBodyOf(result)(badRequestError)
@@ -76,7 +76,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
 
       "called with an Unauthenticated user" should {
         mockAuth(Future.failed(new MissingBearerToken))
-        lazy val result = TestUpdateIncomeSourceController.updateCessationDate()(fakeRequestPut(requestJson))
+        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         checkStatusOf(result)(UNAUTHORIZED)
       }
 

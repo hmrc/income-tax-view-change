@@ -30,4 +30,4 @@ GET         /repayments/:nino/repaymentId/:repaymentId                   control
 
 GET         /repayments/:nino                                            controllers.RepaymentHistoryController.getAllRepaymentHistory(nino)
 
-PUT         /update-income-source/update-cessation-date                  controllers.UpdateIncomeSourceController.updateCessationDate()
+PUT         /update-income-source                                        controllers.UpdateIncomeSourceController.updateIncomeSource()

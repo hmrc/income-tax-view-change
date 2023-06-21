@@ -132,8 +132,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
       get(s"/repayments/$nino")
     }
 
-    def putUpdateCessationDate(body:JsValue): WSResponse = {
-        buildClient("/update-income-source/update-cessation-date").put(body).futureValue
+    def putUpdateIncomeSource(body:JsValue): WSResponse = {
+        buildClient("/update-income-source").put(body).futureValue
     }
 
   }
