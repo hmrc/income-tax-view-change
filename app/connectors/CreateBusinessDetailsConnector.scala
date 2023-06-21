@@ -17,12 +17,11 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.incomeSourceDetails.CreateBusinessDetailsResponseModel
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, CreateBusinessDetailsModel}
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
@@ -33,7 +32,7 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
                                                val appConfig: MicroserviceAppConfig)
                                               (implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def create(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[CreateBusinessDetailsResponseModel] = {
+  def create(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, String]] = {
 
     val url = s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
 
@@ -45,17 +44,17 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
         response.json.validate[CreateBusinessDetailsModel].fold(
           invalidJson => {
             Logger("application").error(s"Invalid Json with $invalidJson")
-            CreateBusinessDetailsErrorResponse(response.status, response.body)
+            Left(CreateBusinessDetailsErrorResponse(response.status, response.body))
           },
-          (valid: CreateBusinessDetailsModel) => valid
+          (_: CreateBusinessDetailsModel) => Right(response.body)
         )
       case errorResponse =>
         Logger("application").error(s"[CreateBusinessDetailsConnector][create] - Error with response code: ${errorResponse.status} and body: ${errorResponse.body}")
-        CreateBusinessDetailsErrorResponse(errorResponse.status, errorResponse.body)
+        Left(CreateBusinessDetailsErrorResponse(errorResponse.status, errorResponse.body))
     } recover {
       case ex =>
-        logger.error(s"[CreateBusinessDetailsConnector][create] - Unexpected failed future, ${ex.getMessage}")
-        CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
+        logger.error(s"[CreateBusinessDetailsConnector][create] - ${ex.getMessage}")
+        Left(CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, s"${ex.getMessage}"))
     }
   }
 }

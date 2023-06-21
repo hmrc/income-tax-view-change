@@ -30,8 +30,8 @@ object WiremockHelper extends Eventually with IntegrationPatience {
   val wiremockHost = "localhost"
   val url = s"http://$wiremockHost:$wiremockPort"
 
-  def verifyPost(uri: String, xmlBody: String): Unit = {
-    verify(postRequestedFor(urlEqualTo(uri)).withRequestBody(equalToXml(xmlBody)))
+  def verifyPost(uri: String, body: String): Unit = {
+    verify(postRequestedFor(urlEqualTo(uri)).withRequestBody(equalToJson(body)))
   }
 
   def verifyGet(uri: String): Unit = {
@@ -60,6 +60,27 @@ object WiremockHelper extends Eventually with IntegrationPatience {
       )
     )
 
+  def stubPost(url: String, status: Integer, requestBody: String, responseBody: String): StubMapping = {
+
+    val x = stubFor(post(urlMatching(url)).withRequestBody(equalToJson(requestBody))
+      .willReturn(
+        aResponse().
+          withStatus(status).
+          withBody(responseBody)
+      )
+    )
+
+    println(s"\nStubPost returning: $x\n")
+
+    stubFor(post(urlMatching(url)).withRequestBody(equalToJson(requestBody))
+      .willReturn(
+        aResponse().
+          withStatus(status).
+          withBody(responseBody)
+      )
+    )
+  }
+
   def stubPut(url: String, status: Integer, responseBody: String): StubMapping =
     stubFor(put(urlMatching(url))
       .willReturn(
@@ -69,7 +90,18 @@ object WiremockHelper extends Eventually with IntegrationPatience {
       )
     )
 
-  def stubPut(url: String, status: Integer, requestBody: String, responseBody: String): StubMapping =
+  def stubPut(url: String, status: Integer, requestBody: String, responseBody: String): StubMapping = {
+
+    val x = stubFor(put(urlMatching(url)).withRequestBody(equalToJson(requestBody))
+      .willReturn(
+        aResponse().
+          withStatus(status).
+          withBody(responseBody)
+      )
+    )
+
+    println(s"\nStubPut returning: $x\n")
+
     stubFor(put(urlMatching(url)).withRequestBody(equalToJson(requestBody))
       .willReturn(
         aResponse().
@@ -77,6 +109,7 @@ object WiremockHelper extends Eventually with IntegrationPatience {
           withBody(responseBody)
       )
     )
+  }
 
   def stubPatch(url: String, status: Integer, responseBody: String): StubMapping =
     stubFor(patch(urlMatching(url))
@@ -116,10 +149,11 @@ trait WiremockHelper {
 
   def resetWiremock(): Unit = WireMock.reset()
 
-  def buildClient(path: String): WSRequest =
+  def buildClient(path: String): WSRequest = {
     ws
       .url(s"http://localhost:$port/income-tax-view-change$path")
       .withHttpHeaders("Authorization" -> "Bearer123")
       .withFollowRedirects(false)
+  }
 }
 
