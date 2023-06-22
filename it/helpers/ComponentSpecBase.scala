@@ -41,6 +41,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.if.url" -> mockUrl,
     "microservice.services.des.url" -> mockUrl
   )
+
   def configWIthSubmissionStub: Map[String, String] = Map(
     "microservice.services.auth.host" -> mockHost,
     "microservice.services.auth.port" -> mockPort,
@@ -132,8 +133,12 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
       get(s"/repayments/$nino")
     }
 
-    def putUpdateCessationDate(body:JsValue): WSResponse = {
-        buildClient("/update-income-source/update-cessation-date").put(body).futureValue
+    def putUpdateCessationDate(body: JsValue): WSResponse = {
+      buildClient("/update-income-source/update-cessation-date").put(body).futureValue
+    }
+
+    def getITSAStatus(taxableEntityId:String,taxYear: String, futureYears: Boolean = true, history: Boolean = true): WSResponse = {
+      get(s"/itsa-status/status/$taxableEntityId/$taxYear?futureYears=$futureYears&history=$history")
     }
 
   }
