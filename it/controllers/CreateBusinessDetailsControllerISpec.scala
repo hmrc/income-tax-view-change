@@ -34,7 +34,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful createBusinessDetails response")
-          DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(testMtdbsa, testBusinessDetails.toString, successResponse.toString)
+          DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(testMtdbsa, OK, testBusinessDetails.toString, successResponse.toString)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testBusinessDetails)
@@ -55,7 +55,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
         val invalidRequest = Json.obj()
 
         And("I wiremock stub a FAIL createBusinessDetails response")
-        DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(testMtdbsa, invalidRequest.toString, successResponse.toString)
+        DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(testMtdbsa, BAD_REQUEST, invalidRequest.toString, successResponse.toString)
 
         When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
         val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, invalidRequest)
