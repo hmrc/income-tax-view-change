@@ -20,6 +20,7 @@ import utils.TestSupport
 import play.api.http.Status
 import play.api.libs.json.Json
 import assets.PreviousCalculationTestConstants._
+import models.errors.{Error, ForbiddenError, InvalidJsonResponse, InvalidNino, MultiError, UnauthenticatedError, UnexpectedJsonFormat, UnexpectedResponse}
 
 class ErrorsSpec extends TestSupport {
 

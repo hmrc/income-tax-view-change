@@ -18,10 +18,13 @@ package controllers
 
 import controllers.predicates.AuthenticationPredicate
 import models.PreviousCalculation._
+import models.errors
+import models.errors.{InvalidNino, MultiError}
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.CalculationService
+import services.PreviousCalculationService
+import utils.urlUtils.isInvalidNino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -31,7 +34,7 @@ import scala.concurrent.Future
 
 @Singleton
 class PreviousCalculationController @Inject()(val authentication: AuthenticationPredicate,
-                                              val calculationService: CalculationService,
+                                              val calculationService: PreviousCalculationService,
                                               cc: ControllerComponents
                                              ) extends BackendController(cc) with Logging {
 
@@ -40,7 +43,7 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
       implicit request =>
         if (isInvalidNino(nino)) {
           logger.error(s"[PreviousCalculationController][getPreviousCalculation] Invalid Nino '$nino' received in request.")
-          Future.successful(BadRequest(Json.toJson[Error](InvalidNino)))
+          Future.successful(BadRequest(Json.toJson[errors.Error](InvalidNino)))
         } else {
           getPreviousCalculation(nino, year)
         }
@@ -51,7 +54,7 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
     calculationService.getPreviousCalculation(nino, year).map {
       case _@Right(previousCalculation) => Ok(Json.toJson(previousCalculation))
       case _@Left(error) => error.error match {
-        case singleError: Error =>
+        case singleError: errors.Error =>
           logger.error(s"[PreviousCalculationController][getPreviousCalculation] returned a single error ${singleError.reason}")
           Status(error.status)(Json.toJson(singleError))
         case multiError: MultiError =>
@@ -60,11 +63,6 @@ class PreviousCalculationController @Inject()(val authentication: Authentication
           Status(error.status)(Json.toJson(multiError))
       }
     }
-  }
-
-  private def isInvalidNino(nino: String): Boolean = {
-    val desNinoRegex = "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"
-    !nino.matches(desNinoRegex)
   }
 
 }

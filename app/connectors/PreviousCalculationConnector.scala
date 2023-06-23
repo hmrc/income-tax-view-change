@@ -17,7 +17,7 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import connectors.httpParsers.CalculationHttpParser._
+import connectors.httpParsers.PreviousCalculationHttpParser._
 import models.PreviousCalculation.PreviousCalculationModel
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -26,7 +26,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) extends Logging {
+class PreviousCalculationConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) extends Logging {
 
   private[connectors] def getPreviousCalculationUrl(nino: String, year: String): String =
     s"${appConfig.desUrl}/income-tax/previous-calculation/$nino?year=$year"
