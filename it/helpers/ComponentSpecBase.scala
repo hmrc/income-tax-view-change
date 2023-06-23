@@ -139,6 +139,11 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def putUpdateCessationDate(body: JsValue): WSResponse = {
       buildClient("/update-income-source/update-cessation-date").put(body).futureValue
+
+    }
+
+    def getITSAStatus(taxableEntityId:String,taxYear: String, futureYears: Boolean = true, history: Boolean = true): WSResponse = {
+      get(s"/itsa-status/status/$taxableEntityId/$taxYear?futureYears=$futureYears&history=$history")
     }
 
   }
