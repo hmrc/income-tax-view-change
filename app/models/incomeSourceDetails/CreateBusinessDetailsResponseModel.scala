@@ -23,24 +23,18 @@ trait CreateBusinessDetailsResponseModel
 
 object CreateBusinessDetailsResponseModel {
 
-  final case class CreateBusinessDetailsModel(tradingName: Option[String],
-                                              tradingStartDate: Option[LocalDate],
-                                              typeOfBusiness: Option[String],
-                                              addressLine1: Option[String],
-                                              addressLine2: Option[String],
-                                              addressLine3: Option[String],
-                                              addressLine4: Option[String],
-                                              postalCode: Option[String],
-                                              countryCode: Option[String],
-                                              cashOrAccrualsFlag: Boolean,
-                                              accountingPeriodStartDate: Option[LocalDate],
-                                              accountingPeriodEndDate: Option[LocalDate]) extends CreateBusinessDetailsResponseModel
+final case class IncomeSource(incomeSourceId: String)
+final case class CreateBusinessDetailsModel(response: List[IncomeSource])
+
+  object IncomeSource {
+    implicit val formats: OFormat[IncomeSource] = Json.format[IncomeSource]
+  }
 
   object CreateBusinessDetailsModel {
     implicit val formats: OFormat[CreateBusinessDetailsModel] = Json.format[CreateBusinessDetailsModel]
   }
 
-  final case class CreateBusinessDetailsErrorResponse(status: Int, message: String) extends CreateBusinessDetailsResponseModel
+  final case class CreateBusinessDetailsErrorResponse(status: Int, reason: String) extends CreateBusinessDetailsResponseModel
 
   object CreateBusinessDetailsErrorResponse {
     implicit val formats: OFormat[CreateBusinessDetailsErrorResponse] = Json.format[CreateBusinessDetailsErrorResponse]

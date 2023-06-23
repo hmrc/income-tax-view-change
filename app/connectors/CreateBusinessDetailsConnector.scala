@@ -17,7 +17,7 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, CreateBusinessDetailsModel}
+import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, CreateBusinessDetailsModel, IncomeSource}
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
@@ -32,7 +32,7 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
                                                val appConfig: MicroserviceAppConfig)
                                               (implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def create(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, String]] = {
+  def create(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
     val url = s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
 
@@ -41,12 +41,13 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
 
     http.POST(url, body, appConfig.desAuthHeaders) map {
       case response if response.status == OK =>
-        response.json.validate[CreateBusinessDetailsModel].fold(
+        Logger("application").info(s"[CreateBusinessDetailsConnector][create] - SUCCESS - ${response.json}")
+        response.json.validate[List[IncomeSource]].fold(
           invalidJson => {
             Logger("application").error(s"Invalid Json with $invalidJson")
             Left(CreateBusinessDetailsErrorResponse(response.status, response.body))
           },
-          (_: CreateBusinessDetailsModel) => Right(response.body)
+          (res: List[IncomeSource]) => Right(res)
         )
       case errorResponse =>
         Logger("application").error(s"[CreateBusinessDetailsConnector][create] - Error with response code: ${errorResponse.status} and body: ${errorResponse.body}")

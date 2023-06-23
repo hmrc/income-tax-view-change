@@ -17,7 +17,7 @@
 package services
 
 import connectors.CreateBusinessDetailsConnector
-import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.CreateBusinessDetailsErrorResponse
+import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, IncomeSource}
 import play.api.Logging
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class CreateBusinessDetailsService @Inject()(createBusinessDetailsConnector: CreateBusinessDetailsConnector) extends Logging {
 
   def createBusinessDetails(mtdbsaRef: String, body: JsValue)
-                           (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, String]] = {
+                           (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
     createBusinessDetailsConnector.create(mtdbsaRef, body)
   }
 }
