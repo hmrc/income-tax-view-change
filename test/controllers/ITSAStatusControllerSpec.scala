@@ -16,65 +16,79 @@
 
 package controllers
 
+import assets.BaseTestConstants.{testNino, testTaxYearRange}
 import assets.ITSAStatusTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockITSAStatusConnector, MockMicroserviceAuthConnector}
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.stubControllerComponents
+import play.api.test.Helpers.{contentAsJson, contentType, defaultAwaitTimeout, status, stubControllerComponents}
 import uk.gov.hmrc.auth.core.MissingBearerToken
 
 import scala.concurrent.Future
 
 class ITSAStatusControllerSpec extends ControllerBaseSpec with MockITSAStatusConnector with MockMicroserviceAuthConnector {
+
+  object TestITSAStatusController extends ITSAStatusController(
+    authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig), mockCC,
+    connector = mockITSAStatusConnector
+  )
+
+  lazy val mockCC: ControllerComponents = stubControllerComponents()
+
   def fakeGetRequest(): FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 
-  "The ITSAStatusController" when {
-    lazy val mockCC = stubControllerComponents()
-    "called with an Authenticated user" when {
+  def callGetITSAStatus: Future[Result] = {
+    TestITSAStatusController.getITSAStatus(testNino, testTaxYearRange, futureYears = true, history = true)(fakeGetRequest())
+  }
 
-      object TestITSAStatusController extends ITSAStatusController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig), mockCC,
-        connector = mockITSAStatusConnector
-      )
+  "The ITSAStatusController" should {
 
-      def callGetITSAStatus = TestITSAStatusController.getITSAStatus("", "", true, true)(fakeGetRequest())
+    "return a valid ITSA status response" when {
 
-      "ITSAStatusConnector gives a valid response" should {
+      "called by an authenticated user and ITSAStatusConnector gives a valid response" in {
         mockAuth()
         mockGetITSAStatus(Right(List(successITSAStatusResponseModel)))
-        val result = callGetITSAStatus
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(OK)
-        checkJsonBodyOf(result)(successITSAStatusListResponseJson)
+        lazy val result = callGetITSAStatus
+
+        contentType(result) shouldBe Some("application/json")
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.toJson(successITSAStatusListResponseJson)
+
       }
 
-      "ITSAStatusConnector gives a error response" should {
+      "called by an authenticated user and ITSAStatusConnector gives an error response" in {
         mockAuth()
         mockGetITSAStatus(Left(errorITSAStatusNotFoundError))
-        val result = callGetITSAStatus
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(errorITSAStatusNotFoundError.status)
-        checkJsonBodyOf(result)(Json.toJson(errorITSAStatusNotFoundError))
+        lazy val result = callGetITSAStatus
+
+        contentType(result) shouldBe Some("application/json")
+        status(result) shouldBe errorITSAStatusNotFoundError.status
+        contentAsJson(result) shouldBe Json.toJson(errorITSAStatusNotFoundError)
       }
 
-      "ITSAStatusConnector gives a invalid json response" should {
+      "called by an authenticated user and ITSAStatusConnector gives an invalid JSON response" in {
         mockAuth()
         mockGetITSAStatus(Left(badJsonErrorITSAStatusError))
         lazy val result = callGetITSAStatus
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(badJsonErrorITSAStatusError.status)
-        checkJsonBodyOf(result)(badJsonErrorITSAStatusError)
-      }
 
-      "called with an Unauthenticated user" should {
+        contentType(result) shouldBe Some("application/json")
+        status(result) shouldBe badJsonErrorITSAStatusError.status
+        contentAsJson(result) shouldBe Json.toJson(badJsonErrorITSAStatusError)
+      }
+    }
+
+    "return an UNAUTHORIZED response" when {
+
+      "called by an unauthenticated user" in {
         mockAuth(Future.failed(new MissingBearerToken))
         lazy val result = callGetITSAStatus
-        checkStatusOf(result)(UNAUTHORIZED)
-      }
 
+        status(result) shouldBe UNAUTHORIZED
+      }
     }
   }
 }
+
