@@ -17,10 +17,9 @@
 package assets
 
 import java.time.LocalDate
-
 import assets.BaseIntegrationTestConstants.testMtdRef
 import models.core.{AccountingPeriodModel, AddressModel, ContactDetailsModel}
-import models.incomeSourceDetails.{BusinessDetailsModel, PropertyDetailsModel}
+import models.incomeSourceDetails.{BusinessDetailsModel, LatencyDetails, PropertyDetailsModel}
 import play.api.libs.json.{JsValue, Json}
 
 object BusinessDetailsIntegrationTestConstants {
@@ -49,7 +48,13 @@ object BusinessDetailsIntegrationTestConstants {
       seasonal = Some(true),
       cessation = None,
       paperless = Some(true),
-      firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1))
+      firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
+      latencyDetails = Some(LatencyDetails(
+        latencyEndDate = LocalDate.of(2022, 1, 1),
+        taxYear1 = "2022",
+        latencyIndicator1 = "A",
+        taxYear2 = "2023",
+        latencyIndicator2 = "Q"))
     )
   )
 
@@ -98,7 +103,13 @@ object BusinessDetailsIntegrationTestConstants {
           "cashOrAccruals" -> "cash",
           "seasonal" -> true,
           "paperLess" -> true,
-          "firstAccountingPeriodEndDate" -> "2016-01-01"
+          "firstAccountingPeriodEndDate" -> "2016-01-01",
+          "latencyDetails" -> Json.obj(
+            "latencyEndDate" -> "2022-01-01",
+            "taxYear1" -> "2022",
+            "latencyIndicator1" -> "A",
+            "taxYear2" -> "2023",
+            "latencyIndicator2" -> "Q")
         )
       ),
       "propertyData" -> Json.arr(
@@ -150,8 +161,14 @@ object BusinessDetailsIntegrationTestConstants {
 				|   "cashOrAccruals":"cash",
 				|   "seasonal":true,
 				|   "paperless":true,
-				|   "firstAccountingPeriodEndDate":"2016-01-01"
-				| }],
+				|   "firstAccountingPeriodEndDate":"2016-01-01",
+        |   "latencyDetails": {
+        |     "latencyEndDate": "2022-01-01",
+        |     "taxYear1": "2022",
+        |     "latencyIndicator1": "A",
+        |     "taxYear2": "2023",
+        |     "latencyIndicator2": "Q"
+        |  }}],
 				| "properties":[{
 				| 	"incomeSourceId":"2222222222",
 				|  	"accountingPeriod":{

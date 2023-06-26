@@ -17,12 +17,11 @@
 package assets
 
 import java.time.LocalDate
-
 import assets.AccountingPeriodTestConstants._
 import assets.AddressDetailsTestConstants._
 import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
-import models.incomeSourceDetails.BusinessDetailsModel
+import models.incomeSourceDetails.{BusinessDetailsModel, LatencyDetails}
 import play.api.libs.json.{JsObject, Json}
 
 object BusinessDetailsTestConstants {
@@ -39,7 +38,13 @@ object BusinessDetailsTestConstants {
       seasonal = Some(true),
       cessation = Some(testCessationModel),
       paperless = Some(true),
-      firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1))
+      firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
+      latencyDetails = Some(LatencyDetails(
+        latencyEndDate = LocalDate.of(2022, 1, 1),
+        taxYear1 =  "2022",
+        latencyIndicator1 = "A",
+        taxYear2 = "2023",
+        latencyIndicator2 = "Q"))
     )
 
 
@@ -54,7 +59,8 @@ object BusinessDetailsTestConstants {
     seasonal = None,
     cessation = None,
     paperless = None,
-    firstAccountingPeriodEndDate = None
+    firstAccountingPeriodEndDate = None,
+    latencyDetails = None
   )
 
   val testBusinessDetailsJson: JsObject = Json.obj(
@@ -70,7 +76,13 @@ object BusinessDetailsTestConstants {
     "cessationDate" -> "2017-06-01",
     "cessationReason" -> "Dummy reason",
     "paperLess" -> true,
-    "firstAccountingPeriodEndDate" -> "2016-01-01"
+    "firstAccountingPeriodEndDate" -> "2016-01-01",
+    "latencyDetails" -> Json.obj(
+      "latencyEndDate" -> "2022-01-01",
+      "taxYear1" ->  "2022",
+      "latencyIndicator1" -> "A",
+      "taxYear2" -> "2023",
+      "latencyIndicator2" -> "Q")
   )
 
   val testBusinessDetailsToJson: JsObject = Json.obj(
@@ -84,7 +96,13 @@ object BusinessDetailsTestConstants {
     "seasonal" -> true,
     "cessation" -> testCessationToJson,
     "paperless" -> true,
-    "firstAccountingPeriodEndDate" -> "2016-01-01"
+    "firstAccountingPeriodEndDate" -> "2016-01-01",
+    "latencyDetails" -> Json.obj(
+      "latencyEndDate" -> "2022-01-01",
+      "taxYear1" -> "2022",
+      "latencyIndicator1" -> "A",
+      "taxYear2" -> "2023",
+      "latencyIndicator2" -> "Q")
   )
 
   val testMinimumBusinessDetailsJson: JsObject = Json.obj(
