@@ -17,6 +17,7 @@
 package assets
 
 import models.PreviousCalculation._
+import models.errors.Error
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.mvc.Http.Status
 

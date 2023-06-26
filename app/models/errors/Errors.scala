@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.PreviousCalculation
+package models.errors
 
 import play.api.http.Status
 import play.api.libs.json.{Format, Json}
@@ -73,4 +73,9 @@ object UnexpectedResponse extends ErrorResponse(
 object InvalidNino extends Error(
   code = "ERROR_NINO_INVALID",
   reason = "The supplied NINO is invalid."
+)
+
+object InvalidTaxYear extends Error(
+  code = "ERROR_TAX_YEAR_INVALID",
+  reason = "The supplied Tax Year is invalid."
 )

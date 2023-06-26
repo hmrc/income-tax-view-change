@@ -16,24 +16,24 @@
 
 package services
 
-import connectors.CalculationConnector
+import connectors.PreviousCalculationConnector
 import javax.inject.{Inject, Singleton}
 import models.PreviousCalculation.PreviousCalculationModel
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
-import connectors.httpParsers.CalculationHttpParser.HttpGetResult
+import connectors.httpParsers.PreviousCalculationHttpParser.HttpGetResult
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationService @Inject()(val calculationConnector: CalculationConnector) extends Logging {
+class PreviousCalculationService @Inject()(val calculationConnector: PreviousCalculationConnector) extends Logging {
 
   def getPreviousCalculation(nino: String, year: String)
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[PreviousCalculationModel]] = {
 
-    logger.debug(s"[CalculationService][getPreviousCalculation] Calling calculationConnector with Nino: $nino\nYear: $year")
+    logger.debug(s"[PreviousCalculationService][getPreviousCalculation] Calling calculationConnector with Nino: $nino\nYear: $year")
     calculationConnector.getPreviousCalculation(nino, year).map {
       case success@Right(previousCalculationModel) =>
-        logger.debug(s"[CalculationService][getPreviousCalculation] - Retrieved Previous Calculation Data:\n\n$previousCalculationModel")
+        logger.debug(s"[PreviousCalculationService][getPreviousCalculation] - Retrieved Previous Calculation Data:\n\n$previousCalculationModel")
         success
       case error@Left(_) =>
         error
