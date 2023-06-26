@@ -35,6 +35,7 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
   private[connectors] def getCalculationList2324Url(nino: String, taxYearRange: String): String =
     s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
 
+
   def getCalculationList(nino: String, taxYear: String)
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationListUrl(nino, taxYear)
@@ -49,6 +50,7 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
 
     logger.debug(s"[CalculationListConnector][getCalculationList2324] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders}")
     http.GET(url = url, headers = appConfig.ifAuthHeaders)(CalculationListReads, headerCarrier, ec)
+
   }
 
 }

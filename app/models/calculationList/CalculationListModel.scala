@@ -24,6 +24,7 @@ case class CalculationListModel(calculationId: String,
                                 calculationType: String,
                                 crystallised: Option[Boolean])
 
+
 object CalculationListModel {
   implicit val writes: Writes[CalculationListModel] = Json.writes[CalculationListModel]
   implicit val reads: Reads[CalculationListModel] =
