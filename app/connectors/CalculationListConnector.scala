@@ -33,7 +33,7 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
     s"${appConfig.desUrl}/income-tax/list-of-calculation-results/$nino?taxYear=$taxYearEnd"
 
   private[connectors] def getCalculationList2324Url(nino: String, taxYearRange: String): String =
-    s"${appConfig.desUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
+    s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
 
   def getCalculationList(nino: String, taxYear: String)
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
@@ -47,8 +47,8 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationList2324Url(nino, taxYear)
 
-    logger.debug(s"[CalculationListConnector][getCalculationList2324] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
-    http.GET(url = url, headers = appConfig.desAuthHeaders)(CalculationListReads, headerCarrier, ec)
+    logger.debug(s"[CalculationListConnector][getCalculationList2324] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders}")
+    http.GET(url = url, headers = appConfig.ifAuthHeaders)(CalculationListReads, headerCarrier, ec)
   }
 
 }

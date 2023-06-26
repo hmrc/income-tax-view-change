@@ -22,7 +22,7 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 case class CalculationListModel(calculationId: String,
                                 calculationTimestamp: String,
                                 calculationType: String,
-                                finalDeclaration: Option[Boolean])
+                                crystallised: Option[Boolean])
 
 object CalculationListModel {
   implicit val writes: Writes[CalculationListModel] = Json.writes[CalculationListModel]
@@ -30,7 +30,7 @@ object CalculationListModel {
     ((JsPath \ "calculationId").read[String] and
       (JsPath \ "calculationTimestamp").read[String] and
       (JsPath \ "calculationType").read[String] and
-      (JsPath \ "finalDeclaration").readNullable[Boolean]
+      (JsPath \ "crystallised").readNullable[Boolean]
       ) (CalculationListModel.apply _)
 }
 
