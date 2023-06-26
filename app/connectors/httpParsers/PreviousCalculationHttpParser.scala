@@ -16,11 +16,12 @@
 
 package connectors.httpParsers
 
-import models.PreviousCalculation.{PreviousCalculationModel, UnexpectedJsonFormat, UnexpectedResponse}
+import models.PreviousCalculation.PreviousCalculationModel
+import models.errors.{UnexpectedJsonFormat, UnexpectedResponse}
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-object CalculationHttpParser extends ResponseHttpParsers {
+object PreviousCalculationHttpParser extends ResponseHttpParsers {
 
   implicit object PreviousCalculationReads extends HttpReads[HttpGetResult[PreviousCalculationModel]] {
     override def read(method: String, url: String, response: HttpResponse): HttpGetResult[PreviousCalculationModel] = {

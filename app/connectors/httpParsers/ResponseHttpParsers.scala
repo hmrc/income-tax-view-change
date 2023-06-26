@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import models.PreviousCalculation.{Error, ErrorResponse, InvalidJsonResponse, MultiError, UnexpectedJsonFormat}
+import models.errors.{Error, ErrorResponse, InvalidJsonResponse, MultiError, UnexpectedJsonFormat}
 import play.api.Logging
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse

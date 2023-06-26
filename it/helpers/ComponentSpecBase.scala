@@ -111,6 +111,10 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getPreviousCalculation(nino: String, year: String): WSResponse = get(s"/previous-tax-calculation/$nino/$year")
 
+    def getCalculationList(nino: String, taxYear: String): WSResponse = get(s"/list-of-calculation-results/$nino/$taxYear")
+
+    def getCalculationList2324(nino: String, taxYear: String): WSResponse = get(s"/calculation-list/$nino/$taxYear")
+
     def getNino(mtdRef: String): WSResponse = get(s"/nino-lookup/$mtdRef")
 
     def getIncomeSources(mtdRef: String): WSResponse = get(s"/income-sources/$mtdRef")
@@ -135,6 +139,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def putUpdateCessationDate(body: JsValue): WSResponse = {
       buildClient("/update-income-source/update-cessation-date").put(body).futureValue
+
     }
 
     def getITSAStatus(taxableEntityId:String,taxYear: String, futureYears: Boolean = true, history: Boolean = true): WSResponse = {
