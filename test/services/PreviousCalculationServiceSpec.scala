@@ -16,14 +16,15 @@
 
 package services
 
-import mocks.MockCalculationConnector
+import mocks.MockPreviousCalculationConnector
 import models.PreviousCalculation._
 import utils.TestSupport
 import assets.PreviousCalculationTestConstants._
+import models.errors.ErrorResponse
 
-class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
+class PreviousCalculationServiceSpec extends TestSupport with MockPreviousCalculationConnector {
 
-  object TestCalculationService extends CalculationService(mockCalculationConnector)
+  object TestPreviousCalculationService extends PreviousCalculationService(mockCalculationConnector)
 
   "The CalculationService.getPreviousCalculation method" should {
 
@@ -34,7 +35,7 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
       setupMockGetPreviousCalculation(testNino,
         testYear)(successResponse)
 
-      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestCalculationService.getPreviousCalculation(
+      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestPreviousCalculationService.getPreviousCalculation(
         testNino,
         testYear
       ).futureValue
@@ -46,7 +47,7 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
 
       setupMockGetPreviousCalculation(testNino, testYear)(badRequestSingleError)
 
-      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestCalculationService.getPreviousCalculation(
+      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestPreviousCalculationService.getPreviousCalculation(
         testNino,
         testYear
       ).futureValue
@@ -58,7 +59,7 @@ class CalculationServiceSpec extends TestSupport with MockCalculationConnector {
 
       setupMockGetPreviousCalculation(testNino, testYear)(badRequestMultiError)
 
-      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestCalculationService.getPreviousCalculation(
+      val actual: Either[ErrorResponse, PreviousCalculationModel] = TestPreviousCalculationService.getPreviousCalculation(
         testNino,
         testYear
       ).futureValue

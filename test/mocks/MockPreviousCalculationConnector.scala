@@ -16,31 +16,30 @@
 
 package mocks
 
-import connectors.httpParsers.CalculationHttpParser.HttpGetResult
+import connectors.PreviousCalculationConnector
+import connectors.httpParsers.PreviousCalculationHttpParser.HttpGetResult
 import models.PreviousCalculation.PreviousCalculationModel
-import org.mockito.stubbing.OngoingStubbing
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.{reset, when}
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import services.CalculationService
-import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 
 import scala.concurrent.Future
 
-trait MockCalculationService extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
+trait MockPreviousCalculationConnector extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
 
-  val mockCalculationService: CalculationService = mock[CalculationService]
+  val mockCalculationConnector: PreviousCalculationConnector = mock[PreviousCalculationConnector]
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockCalculationService)
+    reset(mockCalculationConnector)
   }
 
   def setupMockGetPreviousCalculation(nino: String, year: String)
-                                     (response: HttpGetResult[PreviousCalculationModel]):
-  OngoingStubbing[Future[HttpGetResult[PreviousCalculationModel]]] =
+                                     (response: HttpGetResult[PreviousCalculationModel]): OngoingStubbing[Future[HttpGetResult[PreviousCalculationModel]]] =
     when(
-      mockCalculationService.getPreviousCalculation(
+      mockCalculationConnector.getPreviousCalculation(
         ArgumentMatchers.eq(nino),
         ArgumentMatchers.eq(year)
       )(ArgumentMatchers.any(), ArgumentMatchers.any())

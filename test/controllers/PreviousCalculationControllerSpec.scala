@@ -18,8 +18,10 @@ package controllers
 
 import assets.PreviousCalculationTestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockCalculationService, MockMicroserviceAuthConnector}
+import mocks.{MockMicroserviceAuthConnector, MockPreviousCalculationService}
 import models.PreviousCalculation._
+import models.errors
+import models.errors.InvalidNino
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -29,7 +31,7 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalculationService with MockMicroserviceAuthConnector {
+class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockPreviousCalculationService with MockMicroserviceAuthConnector {
 
   val successResponse: Either[Nothing, PreviousCalculationModel] = Right(previousCalculationFull)
 
@@ -89,7 +91,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockCalc
           }
 
           "return a json body with the invalid nino error message" in {
-            contentAsJson(result) shouldBe Json.toJson[Error](InvalidNino)
+            contentAsJson(result) shouldBe Json.toJson[errors.Error](InvalidNino)
           }
         }
 
