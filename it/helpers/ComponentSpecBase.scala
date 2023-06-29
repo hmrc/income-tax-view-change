@@ -25,8 +25,6 @@ import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
 
-import java.time.LocalDate
-
 trait ComponentSpecBase extends TestSuite with CustomMatchers
   with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience with Matchers
   with WiremockHelper with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
@@ -146,5 +144,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
       get(s"/itsa-status/status/$taxableEntityId/$taxYear?futureYears=$futureYears&history=$history")
     }
 
+    def createBusinessDetails(mtdbsaRef: String, body: JsValue): WSResponse = {
+      buildClient(s"/create-income-source/business/$mtdbsaRef").post(body).futureValue
+    }
   }
 }
