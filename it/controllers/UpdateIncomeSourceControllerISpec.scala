@@ -3,8 +3,9 @@ package controllers
 import assets.UpdateIncomeSourceIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.IfUpdateIncomeSourceStub
-import models.updateIncomeSource.{UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
+import models.updateIncomeSource.UpdateIncomeSourceResponseError
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
+import play.api.libs.json.Json
 
 
 class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {
@@ -27,7 +28,7 @@ class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {
 
           res should have(
             httpStatus(OK),
-            jsonBodyAs[UpdateIncomeSourceResponseModel](successResponse)
+            jsonBodyAs(Json.toJson(successResponse))
           )
         }
       }
