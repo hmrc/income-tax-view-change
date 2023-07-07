@@ -9,14 +9,14 @@ object IfUpdateIncomeSourceStub {
 
   val url: String ="/income-tax/business-detail/income-source"
 
-  def stubPutIfUpdateCessationDate(request:String, response:String): Unit = {
+  def stubPutIfUpdateIncomeSource(request:String, response:String): Unit = {
     WiremockHelper.stubPut(url,Status.OK,request,response)
   }
 
-  def stubPutIfUpdateCessationDateError(): Unit = {
+  def stubPutIfUpdateIncomeSourceError(): Unit = {
     WiremockHelper.stubPut(url, Status.INTERNAL_SERVER_ERROR, failureResponse.reason )
   }
 
-  def verifyPutIfUpdateCessationDate(requestBody:String): Unit = WiremockHelper.verifyPut(url,requestBody)
+  def verifyPutIfUpdateIncomeSource(requestBody:String): Unit = WiremockHelper.verifyPut(url,requestBody)
 
 }
