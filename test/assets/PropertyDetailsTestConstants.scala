@@ -17,11 +17,10 @@
 package assets
 
 import java.time.LocalDate
-
 import assets.AccountingPeriodTestConstants._
 import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
-import models.incomeSourceDetails.{PropertiesRentedModel, PropertyDetailsModel}
+import models.incomeSourceDetails.{LatencyDetails, PropertiesRentedModel, PropertyDetailsModel}
 import play.api.libs.json.Json
 
 object PropertyDetailsTestConstants {
@@ -42,7 +41,13 @@ object PropertyDetailsTestConstants {
     paperless = Some(true),
     firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
     incomeSourceType = Some("property-unspecified"),
-    tradingStartDate = Some(LocalDate.parse("2015-01-01"))
+    tradingStartDate = Some(LocalDate.parse("2015-01-01")),
+    latencyDetails = Some(LatencyDetails(
+      latencyEndDate = LocalDate.of(2022, 1, 1),
+      taxYear1 = "2022",
+      latencyIndicator1 = "A",
+      taxYear2 = "2023",
+      latencyIndicator2 = "Q"))
   )
 
   val testMinimumPropertyDetailsModel = PropertyDetailsModel(
@@ -54,7 +59,8 @@ object PropertyDetailsTestConstants {
     paperless = None,
     firstAccountingPeriodEndDate = None,
     incomeSourceType = None,
-    tradingStartDate = None
+    tradingStartDate = None,
+    latencyDetails = None
   )
 
 
@@ -94,7 +100,13 @@ object PropertyDetailsTestConstants {
     "paperLess" -> true,
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "incomeSourceType" -> "property-unspecified",
-    "tradingStartDate" -> "2015-01-01"
+    "tradingStartDate" -> "2015-01-01",
+    "latencyDetails" -> Json.obj(
+      "latencyEndDate" -> "2022-01-01",
+      "taxYear1" -> "2022",
+      "latencyIndicator1" -> "A",
+      "taxYear2" -> "2023",
+      "latencyIndicator2" -> "Q")
   )
 
   val testPropertyDetailsJsonString = Json.obj(
@@ -111,7 +123,13 @@ object PropertyDetailsTestConstants {
     "paperLess" -> true,
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "incomeSourceType" -> "property-unspecified",
-    "tradingStartDate" -> "2015-01-01"
+    "tradingStartDate" -> "2015-01-01",
+    "latencyDetails" -> Json.obj(
+      "latencyEndDate" -> "2022-01-01",
+      "taxYear1" -> "2022",
+      "latencyIndicator1" -> "A",
+      "taxYear2" -> "2023",
+      "latencyIndicator2" -> "Q")
   )
 
   val testPropertyDetailsToJson = Json.obj(
@@ -123,7 +141,13 @@ object PropertyDetailsTestConstants {
     "paperless" -> true,
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "incomeSourceType" -> "property-unspecified",
-    "tradingStartDate" -> "2015-01-01"
+    "tradingStartDate" -> "2015-01-01",
+    "latencyDetails" -> Json.obj(
+      "latencyEndDate" -> "2022-01-01",
+      "taxYear1" -> "2022",
+      "latencyIndicator1" -> "A",
+      "taxYear2" -> "2023",
+      "latencyIndicator2" -> "Q")
   )
 
   val testMinimumPropertyDetailsJson = Json.obj(
