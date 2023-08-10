@@ -69,6 +69,7 @@ object BusinessDetailsIntegrationTestConstants {
     Some(true),
     Some(LocalDate.parse("2017-06-01")),
     None,
+    None,
     None
   )
 

@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 
 
 class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {
-  "Calling the UpdateIncomeSourceController.updateCessationDate method" when {
+  "Calling the UpdateIncomeSourceController.updateIncomeSource method" when {
     "authorised with a valid request" when {
       "a success response is returned from IF" should {
         "return a timestamp of update" in {
@@ -17,12 +17,12 @@ class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful UpdateCessationDate response")
-          IfUpdateIncomeSourceStub.stubPutIfUpdateCessationDate(requestJson.toString(), successResponseJson.toString())
+          IfUpdateIncomeSourceStub.stubPutIfUpdateIncomeSource(requestJson.toString(), successResponseJson.toString())
 
-          When(s"I call PUT /update-income-source/update-cessation-date")
-          val res = IncomeTaxViewChange.putUpdateCessationDate(requestJson)
+          When(s"I call PUT /update-income-source")
+          val res = IncomeTaxViewChange.putUpdateIncomeSource(requestJson)
 
-          IfUpdateIncomeSourceStub.verifyPutIfUpdateCessationDate(requestJson.toString())
+          IfUpdateIncomeSourceStub.verifyPutIfUpdateIncomeSource(requestJson.toString())
 
           Then("a successful response is returned with a timestamp")
 
@@ -36,8 +36,8 @@ class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {
         s"return ${BAD_REQUEST}" in {
           isAuthorised(true)
 
-          When(s"I call PUT /update-income-source/update-cessation-date with invalid request")
-          val res = IncomeTaxViewChange.putUpdateCessationDate(invalidRequestJson)
+          When(s"I call PUT /update-income-source with invalid request")
+          val res = IncomeTaxViewChange.putUpdateIncomeSource(invalidRequestJson)
 
           Then(s"a status of ${BAD_REQUEST} is returned ")
 
@@ -50,12 +50,12 @@ class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub an error response")
-          IfUpdateIncomeSourceStub.stubPutIfUpdateCessationDateError()
+          IfUpdateIncomeSourceStub.stubPutIfUpdateIncomeSourceError()
 
-          When(s"I call PUT /update-income-source/update-cessation-date")
-          val res = IncomeTaxViewChange.putUpdateCessationDate(requestJson)
+          When(s"I call PUT /update-income-source")
+          val res = IncomeTaxViewChange.putUpdateIncomeSource(requestJson)
 
-          IfUpdateIncomeSourceStub.verifyPutIfUpdateCessationDate(requestJson.toString())
+          IfUpdateIncomeSourceStub.verifyPutIfUpdateIncomeSource(requestJson.toString())
 
           Then("an error response is returned")
 
@@ -71,8 +71,8 @@ class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {
 
           isAuthorised(false)
 
-          When(s"I call PUT /update-income-source/update-cessation-date")
-          val res = IncomeTaxViewChange.putUpdateCessationDate(requestJson)
+          When(s"I call PUT /update-income-source")
+          val res = IncomeTaxViewChange.putUpdateIncomeSource(requestJson)
 
           res should have(
             httpStatus(UNAUTHORIZED),
