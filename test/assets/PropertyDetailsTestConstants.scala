@@ -48,7 +48,7 @@ object PropertyDetailsTestConstants {
       latencyIndicator1 = "A",
       taxYear2 = "2023",
       latencyIndicator2 = "Q")),
-    cashOrAccrualsFlag = Some(true)
+    cashOrAccrualsFlag = None
   )
 
   val testMinimumPropertyDetailsModel = PropertyDetailsModel(
