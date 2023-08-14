@@ -44,7 +44,7 @@ object BusinessDetailsIntegrationTestConstants {
         faxNumber = Some("01332754256"),
         emailAddress = Some("stephen@manncorpone.co.uk"))),
       tradingStartDate = Some(LocalDate.parse("2017-01-01")),
-      cashOrAccruals = Some("cash"),
+      cashOrAccrualsFlag = Some(false),
       seasonal = Some(true),
       cessation = None,
       paperless = Some(true),
@@ -102,7 +102,7 @@ object BusinessDetailsIntegrationTestConstants {
             "emailAddress" -> "stephen@manncorpone.co.uk"
           ),
           "tradingStartDate" -> "2017-01-01",
-          "cashOrAccruals" -> "cash",
+          "cashOrAccrualsFlag" -> false,
           "seasonal" -> true,
           "paperLess" -> true,
           "firstAccountingPeriodEndDate" -> "2016-01-01",
@@ -160,7 +160,7 @@ object BusinessDetailsIntegrationTestConstants {
 				|     "emailAddress":"stephen@manncorpone.co.uk"
 				|   },
 				|   "tradingStartDate":"2017-01-01",
-				|   "cashOrAccruals":"cash",
+				|   "cashOrAccrualsFlag":false,
 				|   "seasonal":true,
 				|   "paperless":true,
 				|   "firstAccountingPeriodEndDate":"2016-01-01",
