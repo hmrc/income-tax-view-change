@@ -102,7 +102,7 @@ object BusinessDetailsIntegrationTestConstants {
             "emailAddress" -> "stephen@manncorpone.co.uk"
           ),
           "tradingStartDate" -> "2017-01-01",
-          "cashOrAccrualsFlag" -> false,
+          "cashOrAccrualsFlag" -> falseZ,
           "seasonal" -> true,
           "paperLess" -> true,
           "firstAccountingPeriodEndDate" -> "2016-01-01",
