@@ -62,7 +62,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
       }
     }
 
-    "called with an Unauthenticated user" should {
+    "called with an unauthenticated user" should {
 
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
