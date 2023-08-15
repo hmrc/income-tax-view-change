@@ -32,7 +32,7 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 incomeSourceType: Option[String],
                                 tradingStartDate: Option[LocalDate],
                                 latencyDetails: Option[LatencyDetails],
-                                cashOrAccrualsFlag: Option[Boolean])
+                                cashOrAccruals: Option[Boolean])
 
 object PropertyDetailsModel extends CustomReads {
 
@@ -51,7 +51,7 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "incomeSourceType").readNullable[String] and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "latencyDetails").readNullable[LatencyDetails] and
-      (__ \ "cashOrAccrualsFlag").readNullable[Boolean]
+      (__ \ "cashOrAccruals").readNullable[Boolean]
     ) (PropertyDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
@@ -68,7 +68,7 @@ object PropertyDetailsModel extends CustomReads {
                       incomeSourceType: Option[String],
                       tradingStartDate: Option[LocalDate],
                       latencyDetails: Option[LatencyDetails],
-                      cashOrAccrualsFlag: Option[Boolean]): PropertyDetailsModel = PropertyDetailsModel(
+                      cashOrAccruals: Option[Boolean]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,
     ContactDetailsModel.propertyContactDetails(email),
@@ -79,7 +79,7 @@ object PropertyDetailsModel extends CustomReads {
     incomeSourceType,
     tradingStartDate,
     latencyDetails,
-    cashOrAccrualsFlag
+    cashOrAccruals
   )
 
   implicit val writes: OWrites[PropertyDetailsModel] = Json.writes[PropertyDetailsModel]

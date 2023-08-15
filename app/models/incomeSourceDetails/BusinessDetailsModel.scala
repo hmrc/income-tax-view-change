@@ -28,7 +28,7 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 address: Option[AddressModel],
                                 contactDetails: Option[ContactDetailsModel],
                                 tradingStartDate: Option[LocalDate],
-                                cashOrAccrualsFlag: Option[Boolean],
+                                cashOrAccruals: Option[Boolean],
                                 seasonal: Option[Boolean],
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean],
@@ -45,7 +45,7 @@ object BusinessDetailsModel {
       (__ \ "businessAddressDetails").readNullable(AddressModel.desReads) and
       (__ \ "businessContactDetails").readNullable(ContactDetailsModel.desReads) and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
-      (__ \ "cashOrAccrualsFlag").readNullable[Boolean] and
+      (__ \ "cashOrAccruals").readNullable[Boolean] and
       (__ \ "seasonal").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
@@ -60,7 +60,7 @@ object BusinessDetailsModel {
                       address: Option[AddressModel],
                       contactDetails: Option[ContactDetailsModel],
                       tradingStartDate: Option[LocalDate],
-                      cashOrAccrualsFlag: Option[Boolean],
+                      cashOrAccruals: Option[Boolean],
                       seasonal: Option[Boolean],
                       cessationDate: Option[LocalDate],
                       cessationReason: Option[String],
@@ -74,7 +74,7 @@ object BusinessDetailsModel {
       address,
       contactDetails,
       tradingStartDate,
-      cashOrAccrualsFlag,
+      cashOrAccruals,
       seasonal,
       CessationModel.cessation(cessationDate, cessationReason),
       paperless,
