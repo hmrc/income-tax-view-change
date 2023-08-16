@@ -48,7 +48,7 @@ object PropertyDetailsTestConstants {
       latencyIndicator1 = "A",
       taxYear2 = "2023",
       latencyIndicator2 = "Q")),
-    cashOrAccrualsFlag = Some(true)
+    cashOrAccruals = Some(true)
   )
 
   val testMinimumPropertyDetailsModel = PropertyDetailsModel(
@@ -62,7 +62,7 @@ object PropertyDetailsTestConstants {
     incomeSourceType = None,
     tradingStartDate = None,
     latencyDetails = None,
-    cashOrAccrualsFlag = None
+    cashOrAccruals = None
   )
 
 
@@ -109,7 +109,7 @@ object PropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccrualsFlag" -> true
+    "cashOrAccruals" -> true
   )
 
   val testPropertyDetailsJsonString = Json.obj(
@@ -133,7 +133,7 @@ object PropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccrualsFlag" -> true
+    "cashOrAccruals" -> true
   )
 
   val testPropertyDetailsToJson = Json.obj(
@@ -152,7 +152,7 @@ object PropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccrualsFlag" -> true
+    "cashOrAccruals" -> true
   )
 
   val testMinimumPropertyDetailsJson = Json.obj(
