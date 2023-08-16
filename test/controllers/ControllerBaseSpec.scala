@@ -16,15 +16,16 @@
 
 package controllers
 
+
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Result
-import utils.TestSupport
 import play.api.test.Helpers._
-
+import utils.TestSupport
 import scala.concurrent.Future
 
 
 class ControllerBaseSpec extends TestSupport {
+
 
   def checkStatusOf(result: Future[Result])(expectedStatus: Int): Unit = {
     s"return status ($expectedStatus)" in {
