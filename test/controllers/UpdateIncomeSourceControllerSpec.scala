@@ -21,32 +21,40 @@ import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockUpdateIncomeSourceConnector}
 import play.api.http.Status.{BAD_REQUEST, OK, UNAUTHORIZED}
 import play.api.libs.json.{JsValue, Json}
-import play.api.test.Helpers.{CONTENT_TYPE, stubControllerComponents}
-import play.api.test.{FakeHeaders, FakeRequest}
+import play.api.test.FakeRequest
+import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.auth.core.MissingBearerToken
 
 import scala.concurrent.Future
 
 class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdateIncomeSourceConnector with MockMicroserviceAuthConnector {
+
   def fakeRequestPut(payload:JsValue) = FakeRequest("PUT", "/").withJsonBody(payload)
 
   "The UpdateIncomeSourceController" when {
     lazy val mockCC = stubControllerComponents()
+
     "called with an Authenticated user" when {
 
       object TestUpdateIncomeSourceController extends UpdateIncomeSourceController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig), mockCC,
         connector = mockUpdateIncomeSourceConnector
       )
-      // TODO: Fix failing test case - passes locally but fails on PR builds
-      /* "UpdateIncomeSourceConnector gives a valid response" should {
+
+      "UpdateIncomeSourceConnector gives a valid response" should {
           mockAuth()
           mockUpdateIncomeSource(successResponse)
-          val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
-          checkContentTypeOf(result)("application/json")
-          checkStatusOf(result)(OK)
-          checkJsonBodyOf(result)(successResponse)
-        }*/
+          val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
+          // use of whenReady for some reason resolving sporadic test failure in the section below
+          whenReady(futureResult){ result =>
+            "return status OK" in {
+              result.header.status shouldBe OK
+            }
+            "return contentType application/json" in {
+              result.body.contentType shouldBe Some("application/json")
+            }
+          }
+        }
 
       "UpdateIncomeSourceConnector gives a error response" should {
         mockAuth()

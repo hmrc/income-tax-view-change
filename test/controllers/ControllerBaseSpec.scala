@@ -16,15 +16,21 @@
 
 package controllers
 
+
+import akka.util.Timeout
+import org.scalatest.concurrent.PatienceConfiguration
+import org.scalatest.time.Span
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Result
 import utils.TestSupport
 import play.api.test.Helpers._
 
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 
 
 class ControllerBaseSpec extends TestSupport {
+
 
   def checkStatusOf(result: Future[Result])(expectedStatus: Int): Unit = {
     s"return status ($expectedStatus)" in {
