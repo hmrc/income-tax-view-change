@@ -17,16 +17,11 @@
 package controllers
 
 
-import akka.util.Timeout
-import org.scalatest.concurrent.PatienceConfiguration
-import org.scalatest.time.Span
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.Result
-import utils.TestSupport
 import play.api.test.Helpers._
-
+import utils.TestSupport
 import scala.concurrent.Future
-import scala.concurrent.duration.DurationInt
 
 
 class ControllerBaseSpec extends TestSupport {
