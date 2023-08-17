@@ -34,47 +34,46 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
 
     "getBusinessDetails called with an Authenticated user" when {
       val mockCC = stubControllerComponents()
-
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
         getBusinessDetailsService = mockGetBusinessDetailsService, mockCC
       )
 
       "a valid response from the GetBusinessDetailsService" should {
-
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
         mockAuth()
-        val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
-
-        checkStatusOf(result)(Status.OK)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testIncomeSourceDetailsModel)
+        val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOfV2(result)(Status.OK)
+          checkContentTypeOfV2(result)("application/json")
+          checkJsonBodyOfV2(result)(testIncomeSourceDetailsModel)
+        }
       }
 
       "an invalid response from the IncomeSourceDetailsService" should {
-
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
         mockAuth()
-        val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
-
-        checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testIncomeSourceDetailsError)
+        val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOfV2(result)(Status.INTERNAL_SERVER_ERROR)
+          checkContentTypeOfV2(result)("application/json")
+          checkJsonBodyOfV2(result)(testIncomeSourceDetailsError)
+        }
       }
     }
 
     "called with an unauthenticated user" should {
       val mockCC = stubControllerComponents()
-
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
         getBusinessDetailsService = mockGetBusinessDetailsService, mockCC
       )
 
       mockAuth(Future.failed(new MissingBearerToken))
-      val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
-
-      checkStatusOf(result)(Status.UNAUTHORIZED)
+      val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+      whenReady(futureResult) { result =>
+        checkStatusOfV2(result)(Status.UNAUTHORIZED)
+      }
     }
   }
 }
