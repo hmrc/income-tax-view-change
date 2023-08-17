@@ -30,8 +30,9 @@ import scala.concurrent.Future
 class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockIncomeSourceDetailsService with MockMicroserviceAuthConnector {
 
   "The IncomeSourceDetailsController" when {
-    lazy val mockCC = stubControllerComponents()
+
     "getNino called with an Authenticated user" when {
+      val mockCC = stubControllerComponents()
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -62,6 +63,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     }
 
     "getIncomeSourceDetails called with an Authenticated user" when {
+      val mockCC = stubControllerComponents()
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -92,7 +94,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
     }
 
     "called with an Unauthenticated user" should {
-
+      val mockCC = stubControllerComponents()
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC

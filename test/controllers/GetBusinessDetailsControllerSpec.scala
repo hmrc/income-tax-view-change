@@ -30,9 +30,10 @@ import scala.concurrent.Future
 class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBusinessDetailsService with MockMicroserviceAuthConnector {
 
   "The GetBusinessDetailsController" when {
-    lazy val mockCC = stubControllerComponents()
+
 
     "getBusinessDetails called with an Authenticated user" when {
+      lazy val mockCC = stubControllerComponents()
 
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -63,6 +64,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
     }
 
     "called with an unauthenticated user" should {
+      lazy val mockCC = stubControllerComponents()
 
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
