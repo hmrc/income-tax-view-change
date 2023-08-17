@@ -16,8 +16,9 @@
 
 package controllers
 
-import play.api.libs.json.{Format, Json}
-import play.api.mvc.Result
+import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.{AnyContentAsJson, Result}
+import play.api.test.FakeRequest
 import utils.TestSupport
 import play.api.test.Helpers._
 
@@ -41,6 +42,33 @@ class ControllerBaseSpec extends TestSupport {
   def checkJsonBodyOf[A](result: Future[Result])(expectedBody: A)(implicit format: Format[A]): Unit = {
     s"return the response body $expectedBody" in {
       contentAsJson(result) shouldBe Json.toJson(expectedBody)
+    }
+  }
+
+  def fakeRequestPut(payload: JsValue): FakeRequest[AnyContentAsJson] = FakeRequest("PUT", "/")
+    .withJsonBody {
+      payload
+    }
+
+  // same set of methods to assert test condition using Future result/assuming Future is complete
+  def checkContentTypeOfV2(result: Result)(expectedContentType: String): Unit = {
+    s"Content Type of result should be $expectedContentType" in {
+      result.body.contentType shouldBe Some(expectedContentType)
+    }
+  }
+
+  def checkStatusOfV2(result: Result)(expectedStatus: Int): Unit = {
+    s"return status ($expectedStatus)" in {
+      result.header.status shouldBe expectedStatus
+    }
+  }
+
+  def checkJsonBodyOfV2[A](result: Result)(expectedBody: A)(implicit format: Format[A]): Unit = {
+    s"return the response body $expectedBody" in {
+      val data = result.body.consumeData
+      val dataString: String = data.futureValue.decodeString("utf-8")
+      val jsonResult = Json.parse(dataString)
+      jsonResult shouldBe Json.toJson(expectedBody)
     }
   }
 }

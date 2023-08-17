@@ -43,7 +43,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
         mockNinoResponse(testNinoModel)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
+        val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
         checkContentTypeOf(result)("application/json")
@@ -54,7 +54,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
         mockNinoResponse(testNinoError)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
+       val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
@@ -74,7 +74,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
+        val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
         checkContentTypeOf(result)("application/json")
@@ -85,7 +85,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
+        val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
@@ -101,7 +101,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       )
 
       mockAuth(Future.failed(new MissingBearerToken))
-      lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
+      val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
 
       checkStatusOf(result)(Status.UNAUTHORIZED)
     }

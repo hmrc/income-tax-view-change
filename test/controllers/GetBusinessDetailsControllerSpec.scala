@@ -33,7 +33,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
 
 
     "getBusinessDetails called with an Authenticated user" when {
-      lazy val mockCC = stubControllerComponents()
+      val mockCC = stubControllerComponents()
 
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -44,7 +44,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
         mockAuth()
-        lazy val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+        val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
 
         checkStatusOf(result)(Status.OK)
         checkContentTypeOf(result)("application/json")
@@ -55,7 +55,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
         mockAuth()
-        lazy val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+        val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
 
         checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
         checkContentTypeOf(result)("application/json")
@@ -64,7 +64,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
     }
 
     "called with an unauthenticated user" should {
-      lazy val mockCC = stubControllerComponents()
+      val mockCC = stubControllerComponents()
 
       object TestGetBusinessDetailsController extends GetBusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -72,7 +72,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
       )
 
       mockAuth(Future.failed(new MissingBearerToken))
-      lazy val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+      val result = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
 
       checkStatusOf(result)(Status.UNAUTHORIZED)
     }

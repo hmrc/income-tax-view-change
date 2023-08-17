@@ -20,20 +20,13 @@ import assets.UpdateIncomeSourceTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockUpdateIncomeSourceConnector}
 import play.api.http.Status.{BAD_REQUEST, OK, UNAUTHORIZED}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.AnyContentAsJson
-import play.api.test.FakeRequest
+import play.api.libs.json.Json
 import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.auth.core.MissingBearerToken
 
 import scala.concurrent.Future
 
 class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdateIncomeSourceConnector with MockMicroserviceAuthConnector {
-
-  def fakeRequestPut(payload: JsValue): FakeRequest[AnyContentAsJson] = FakeRequest("PUT", "/")
-    .withJsonBody {
-      payload
-  }
 
   "The UpdateIncomeSourceController" when {
 
@@ -49,42 +42,52 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
       "UpdateIncomeSourceConnector gives a valid response" should {
         mockAuth()
         mockUpdateIncomeSource(successResponse)
-        val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(OK)
-        checkJsonBodyOf(result)(successResponse)
+        val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
+        whenReady(futureResult){ result =>
+          checkContentTypeOfV2(result)("application/json")
+          checkStatusOfV2(result)(OK)
+          checkJsonBodyOfV2(result)(successResponse)
+        }
       }
 
       "UpdateIncomeSourceConnector gives a error response" should {
         mockAuth()
         mockUpdateIncomeSource(failureResponse)
-        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(failureResponse.status)
-        checkJsonBodyOf(result)(failureResponse)
+        val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
+        whenReady(futureResult) { result =>
+          checkContentTypeOfV2(result)("application/json")
+          checkStatusOfV2(result)(failureResponse.status)
+          checkJsonBodyOfV2(result)(failureResponse)
+        }
       }
 
       "UpdateIncomeSourceConnector gives a invalid json response" should {
         mockAuth()
         mockUpdateIncomeSource(badJsonResponse)
-        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(badJsonResponse.status)
-        checkJsonBodyOf(result)(badJsonResponse)
+        val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
+        whenReady(futureResult) { result =>
+          checkContentTypeOfV2(result)("application/json")
+          checkStatusOfV2(result)(badJsonResponse.status)
+          checkJsonBodyOfV2(result)(badJsonResponse)
+        }
       }
 
       "invoked with invalid request" should {
         mockAuth()
-        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(Json.obj()))
-        checkContentTypeOf(result)("application/json")
-        checkStatusOf(result)(BAD_REQUEST)
-        checkJsonBodyOf(result)(badRequestError)
+        val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(Json.obj()))
+        whenReady(futureResult) { result =>
+          checkContentTypeOfV2(result)("application/json")
+          checkStatusOfV2(result)(BAD_REQUEST)
+          checkJsonBodyOfV2(result)(badRequestError)
+        }
       }
 
       "called with an Unauthenticated user" should {
         mockAuth(Future.failed(new MissingBearerToken))
-        lazy val result = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
-        checkStatusOf(result)(UNAUTHORIZED)
+        val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
+        whenReady(futureResult) { result =>
+          checkStatusOfV2(result)(UNAUTHORIZED)
+        }
       }
 
     }
