@@ -26,7 +26,7 @@ object UpdateIncomeSourceIntegrationTestConstants {
   val requestTaxYearSpecific: UpdateIncomeSourceRequestModel = UpdateIncomeSourceRequestModel(
     nino = testNino,
     incomeSourceId = incomeSourceId,
-    taxYearSpecific = Some(List(TaxYearSpecific("2022", true)))
+    taxYearSpecific = Some(TaxYearSpecific("2022", true))
   )
 
 
