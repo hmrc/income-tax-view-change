@@ -74,22 +74,24 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
         mockAuth()
-        val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
-
-        checkStatusOf(result)(Status.OK)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testIncomeSourceDetailsModel)
+        val futureResult = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOfV2(result)(Status.OK)
+          checkContentTypeOfV2(result)("application/json")
+          checkJsonBodyOfV2(result)(testIncomeSourceDetailsModel)
+        }
       }
 
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
         mockAuth()
-        val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
-
-        checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testIncomeSourceDetailsError)
+        val futureResult = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOfV2(result)(Status.INTERNAL_SERVER_ERROR)
+          checkContentTypeOfV2(result)("application/json")
+          checkJsonBodyOfV2(result)(testIncomeSourceDetailsError)
+        }
       }
     }
 

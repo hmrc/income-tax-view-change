@@ -33,18 +33,6 @@ class ControllerBaseSpec extends TestSupport {
     }
   }
 
-  def checkContentTypeOf(result: Future[Result])(expectedContentType: String): Unit = {
-    s"Content Type of result should be $expectedContentType" in {
-      contentType(result) shouldBe Some(expectedContentType)
-    }
-  }
-
-  def checkJsonBodyOf[A](result: Future[Result])(expectedBody: A)(implicit format: Format[A]): Unit = {
-    s"return the response body $expectedBody" in {
-      contentAsJson(result) shouldBe Json.toJson(expectedBody)
-    }
-  }
-
   def fakeRequestPut(payload: JsValue): FakeRequest[AnyContentAsJson] = FakeRequest("PUT", "/")
     .withJsonBody {
       payload
