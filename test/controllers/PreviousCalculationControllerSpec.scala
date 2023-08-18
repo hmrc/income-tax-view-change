@@ -114,7 +114,7 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockPrev
       }
 
       "for a bad request with single error from the CalculationService," should {
-        lazy val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino, testYear)(fakeRequest)
+        val result: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino, testYear)(fakeRequest)
 
         "return a status of 400 (BAD_REQUEST)" in {
           mockAuth()
@@ -138,11 +138,12 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockPrev
         calculationService = mockCalculationService, mockCC
       )
       mockAuth(Future.failed(new MissingBearerToken))
-      lazy val result = PreviousCalculationController.getPreviousCalculation(testNino,
+      val futureResult = PreviousCalculationController.getPreviousCalculation(testNino,
         testYear)(fakeRequest)
 
-
-      checkStatusOf(result)(Status.UNAUTHORIZED)
+      whenReady(futureResult) { result =>
+        checkStatusOf(result)(Status.UNAUTHORIZED)
+      }
     }
 
   }
