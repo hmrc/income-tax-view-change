@@ -44,9 +44,9 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
         mockAuth()
         val futureResult = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
         whenReady(futureResult) { result =>
-          checkStatusOfV2(result)(Status.OK)
-          checkContentTypeOfV2(result)("application/json")
-          checkJsonBodyOfV2(result)(testNinoModel)
+          checkStatusOf(result)(Status.OK)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testNinoModel)
         }
       }
 
@@ -55,9 +55,9 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
         mockAuth()
         val futureResult = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
         whenReady(futureResult) { result =>
-          checkStatusOfV2(result)(Status.INTERNAL_SERVER_ERROR)
-          checkContentTypeOfV2(result)("application/json")
-          checkJsonBodyOfV2(result)(testNinoError)
+          checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testNinoError)
         }
       }
     }
@@ -76,9 +76,9 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
         mockAuth()
         val futureResult = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
         whenReady(futureResult) { result =>
-          checkStatusOfV2(result)(Status.OK)
-          checkContentTypeOfV2(result)("application/json")
-          checkJsonBodyOfV2(result)(testIncomeSourceDetailsModel)
+          checkStatusOf(result)(Status.OK)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testIncomeSourceDetailsModel)
         }
       }
 
@@ -88,9 +88,9 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
         mockAuth()
         val futureResult = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
         whenReady(futureResult) { result =>
-          checkStatusOfV2(result)(Status.INTERNAL_SERVER_ERROR)
-          checkContentTypeOfV2(result)("application/json")
-          checkJsonBodyOfV2(result)(testIncomeSourceDetailsError)
+          checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testIncomeSourceDetailsError)
         }
       }
     }
@@ -105,7 +105,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       mockAuth(Future.failed(new MissingBearerToken))
       val futureResult = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
       whenReady(futureResult) { result =>
-        checkStatusOfV2(result)(Status.UNAUTHORIZED)
+        checkStatusOf(result)(Status.UNAUTHORIZED)
       }
     }
   }

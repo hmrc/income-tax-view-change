@@ -44,9 +44,9 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
         mockAuth()
         val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
         whenReady(futureResult) { result =>
-          checkStatusOfV2(result)(Status.OK)
-          checkContentTypeOfV2(result)("application/json")
-          checkJsonBodyOfV2(result)(testIncomeSourceDetailsModel)
+          checkStatusOf(result)(Status.OK)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testIncomeSourceDetailsModel)
         }
       }
 
@@ -55,9 +55,9 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
         mockAuth()
         val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
         whenReady(futureResult) { result =>
-          checkStatusOfV2(result)(Status.INTERNAL_SERVER_ERROR)
-          checkContentTypeOfV2(result)("application/json")
-          checkJsonBodyOfV2(result)(testIncomeSourceDetailsError)
+          checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testIncomeSourceDetailsError)
         }
       }
     }
@@ -72,7 +72,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
       mockAuth(Future.failed(new MissingBearerToken))
       val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
       whenReady(futureResult) { result =>
-        checkStatusOfV2(result)(Status.UNAUTHORIZED)
+        checkStatusOf(result)(Status.UNAUTHORIZED)
       }
     }
   }

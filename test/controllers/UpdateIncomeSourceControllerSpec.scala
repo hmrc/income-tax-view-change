@@ -44,9 +44,9 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         mockUpdateIncomeSource(successResponse)
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         whenReady(futureResult){ result =>
-          checkContentTypeOfV2(result)("application/json")
-          checkStatusOfV2(result)(OK)
-          checkJsonBodyOfV2(result)(successResponse)
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(OK)
+          checkJsonBodyOf(result)(successResponse)
         }
       }
 
@@ -55,9 +55,9 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         mockUpdateIncomeSource(failureResponse)
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         whenReady(futureResult) { result =>
-          checkContentTypeOfV2(result)("application/json")
-          checkStatusOfV2(result)(failureResponse.status)
-          checkJsonBodyOfV2(result)(failureResponse)
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(failureResponse.status)
+          checkJsonBodyOf(result)(failureResponse)
         }
       }
 
@@ -66,9 +66,9 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         mockUpdateIncomeSource(badJsonResponse)
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         whenReady(futureResult) { result =>
-          checkContentTypeOfV2(result)("application/json")
-          checkStatusOfV2(result)(badJsonResponse.status)
-          checkJsonBodyOfV2(result)(badJsonResponse)
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(badJsonResponse.status)
+          checkJsonBodyOf(result)(badJsonResponse)
         }
       }
 
@@ -76,9 +76,9 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         mockAuth()
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(Json.obj()))
         whenReady(futureResult) { result =>
-          checkContentTypeOfV2(result)("application/json")
-          checkStatusOfV2(result)(BAD_REQUEST)
-          checkJsonBodyOfV2(result)(badRequestError)
+          checkContentTypeOf(result)("application/json")
+          checkStatusOf(result)(BAD_REQUEST)
+          checkJsonBodyOf(result)(badRequestError)
         }
       }
 
@@ -86,7 +86,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
         mockAuth(Future.failed(new MissingBearerToken))
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         whenReady(futureResult) { result =>
-          checkStatusOfV2(result)(UNAUTHORIZED)
+          checkStatusOf(result)(UNAUTHORIZED)
         }
       }
 
