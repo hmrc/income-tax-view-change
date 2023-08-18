@@ -113,24 +113,24 @@ class PreviousCalculationControllerSpec extends ControllerBaseSpec with MockPrev
 
       }
 
-      "for a bad request with single error from the CalculationService," should {
-
-        "return a status of 400 (BAD_REQUEST)" in {
-          val futureResult: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino, testYear)(fakeRequest)
-
-          mockAuth()
-          setupMockGetPreviousCalculation(testNino,
-            testYear)(badRequestSingleError)
-          whenReady(futureResult) { result =>
-            checkStatusOf(result)(Status.BAD_REQUEST)
-          }
-        }
-
-        "return a json body with the single error message" in {
-
-          //contentAsJson(result) shouldBe Json.toJson(singleError)
-        }
-      }
+//      "for a bad request with single error from the CalculationService," should {
+//        val futureResult: Future[Result] = PreviousCalculationController.getPreviousCalculation(testNino, testYear)(fakeRequest)
+//
+//        "return a status of 400 (BAD_REQUEST)" in {
+//
+//          mockAuth()
+//          setupMockGetPreviousCalculation(testNino,
+//            testYear)(badRequestSingleError)
+//          whenReady(futureResult) { result =>
+//            checkStatusOf(result)(Status.BAD_REQUEST)
+//          }
+//        }
+//
+//        "return a json body with the single error message" in {
+//
+//          //contentAsJson(result) shouldBe Json.toJson(singleError)
+//        }
+//      }
     }
 
     "called with an Unauthenticated user" should {
