@@ -43,22 +43,34 @@ class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroservi
 
     "called with an Unauthenticated user (No Bearer Token in Header)" when {
       mockAuth(Future.failed(new MissingBearerToken))
-      checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
+      val futureResult = result(TestAuthenticationPredicate)
+      whenReady(futureResult){ res =>
+        checkStatusOf(res)(Status.UNAUTHORIZED)
+      }
     }
 
     "called with an authenticated user (Some Bearer Token in Header)" when {
       mockAuth()
-      checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
+      val futureRes = result(TestAuthenticationPredicate)
+      whenReady(futureRes){ res =>
+        checkStatusOf(res)(Status.OK)
+      }
     }
 
     "called with low confidence level" when {
       mockAuth(Future.successful(Some(AffinityGroup.Individual) and ConfidenceLevel.L50))
-      checkStatusOf(result(TestAuthenticationPredicate))(Status.UNAUTHORIZED)
+      val futureResult = result(TestAuthenticationPredicate)
+      whenReady(futureResult){  res =>
+        checkStatusOf(res)(Status.UNAUTHORIZED)
+      }
     }
 
     "agent called with low confidence level" when {
       mockAuth(Future.successful(Some(AffinityGroup.Agent) and ConfidenceLevel.L50))
-      checkStatusOf(result(TestAuthenticationPredicate))(Status.OK)
+      val futureResult = result(TestAuthenticationPredicate)
+      whenReady(futureResult){ res =>
+        checkStatusOf(res)(Status.OK)
+      }
     }
   }
 }

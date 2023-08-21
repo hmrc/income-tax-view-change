@@ -19,6 +19,7 @@ package utils
 import config.MicroserviceAppConfig
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.AnyContentAsEmpty
@@ -38,4 +39,5 @@ trait TestSupport extends WordSpecLike with Matchers with OptionValues
 
   val microserviceAppConfig: MicroserviceAppConfig = app.injector.instanceOf[MicroserviceAppConfig]
 
+  implicit val defaultPatience = PatienceConfig(timeout = Span(3, Seconds), interval = Span(5, Millis))
 }

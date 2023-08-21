@@ -30,8 +30,9 @@ import scala.concurrent.Future
 class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockIncomeSourceDetailsService with MockMicroserviceAuthConnector {
 
   "The IncomeSourceDetailsController" when {
-    lazy val mockCC = stubControllerComponents()
+
     "getNino called with an Authenticated user" when {
+      val mockCC = stubControllerComponents()
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -39,29 +40,30 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       )
 
       "a valid response from the IncomeSourceDetailsService" should {
-
         mockNinoResponse(testNinoModel)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
-
-        checkStatusOf(result)(Status.OK)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testNinoModel)
+        val futureResult = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOf(result)(Status.OK)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testNinoModel)
+        }
       }
 
       "an invalid response from the IncomeSourceDetailsService" should {
-
         mockNinoResponse(testNinoError)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
-
-        checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testNinoError)
+        val futureResult = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testNinoError)
+        }
       }
     }
 
     "getIncomeSourceDetails called with an Authenticated user" when {
+      val mockCC = stubControllerComponents()
 
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -72,36 +74,39 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
-
-        checkStatusOf(result)(Status.OK)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testIncomeSourceDetailsModel)
+        val futureResult = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOf(result)(Status.OK)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testIncomeSourceDetailsModel)
+        }
       }
 
       "an invalid response from the IncomeSourceDetailsService" should {
 
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
         mockAuth()
-        lazy val result = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
-
-        checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
-        checkContentTypeOf(result)("application/json")
-        checkJsonBodyOf(result)(testIncomeSourceDetailsError)
+        val futureResult = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
+        whenReady(futureResult) { result =>
+          checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
+          checkContentTypeOf(result)("application/json")
+          checkJsonBodyOf(result)(testIncomeSourceDetailsError)
+        }
       }
     }
 
     "called with an Unauthenticated user" should {
-
+      val mockCC = stubControllerComponents()
       object TestIncomeSourceDetailsController extends IncomeSourceDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
         incomeSourceDetailsService = mockIncomeSourceDetailsService, mockCC
       )
 
       mockAuth(Future.failed(new MissingBearerToken))
-      lazy val result = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
-
-      checkStatusOf(result)(Status.UNAUTHORIZED)
+      val futureResult = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
+      whenReady(futureResult) { result =>
+        checkStatusOf(result)(Status.UNAUTHORIZED)
+      }
     }
   }
 }
