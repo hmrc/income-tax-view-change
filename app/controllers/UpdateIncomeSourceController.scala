@@ -37,7 +37,7 @@ class UpdateIncomeSourceController @Inject()(authentication: AuthenticationPredi
   def updateIncomeSource(): Action[AnyContent] =
     authentication.async {
       implicit request =>
-        request.body.asJson.getOrElse(Json.obj()).validate[UpdateIncomeSourceRequestModel] fold(
+        request.body.asJson.getOrElse(Json.obj()).validate[UpdateIncomeSourceRequestModel].fold(
           invalid => {
             logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Validation Errors: $invalid")
             UpdateIncomeSourceRequestError("Json validation error while parsing request")

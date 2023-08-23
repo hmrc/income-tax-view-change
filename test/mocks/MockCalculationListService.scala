@@ -16,7 +16,7 @@
 
 package mocks
 
-import connectors.httpParsers.PreviousCalculationHttpParser.HttpGetResult
+import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
 import org.mockito.stubbing.OngoingStubbing
 import org.mockito.ArgumentMatchers

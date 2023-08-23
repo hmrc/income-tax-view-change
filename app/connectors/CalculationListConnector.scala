@@ -18,7 +18,7 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
-import connectors.httpParsers.PreviousCalculationHttpParser.HttpGetResult
+import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -32,7 +32,7 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
   private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String =
     s"${appConfig.desUrl}/income-tax/list-of-calculation-results/$nino?taxYear=$taxYearEnd"
 
-  private[connectors] def getCalculationList2324Url(nino: String, taxYearRange: String): String =
+  private[connectors] def getCalculationListTYSUrl(nino: String, taxYearRange: String): String =
     s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
 
 
@@ -44,9 +44,9 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
     http.GET(url = url, headers = appConfig.desAuthHeaders)(CalculationListReads, headerCarrier, ec)
   }
 
-  def getCalculationList2324(nino: String, taxYear: String)
-                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
-    val url = getCalculationList2324Url(nino, taxYear)
+  def getCalculationListTYS(nino: String, taxYear: String)
+                           (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
+    val url = getCalculationListTYSUrl(nino, taxYear)
 
     logger.debug(s"[CalculationListConnector][getCalculationList2324] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders}")
     http.GET(url = url, headers = appConfig.ifAuthHeaders)(CalculationListReads, headerCarrier, ec)

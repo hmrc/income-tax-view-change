@@ -21,7 +21,6 @@ import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
 import models.updateIncomeSource.{UpdateIncomeSourceResponse, UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
 import play.api.http.Status
 import play.api.http.Status.OK
-import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject

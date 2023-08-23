@@ -10,8 +10,6 @@ GET        /:nino/report-deadlines                                       control
 GET        /:nino/fulfilled-report-deadlines                             controllers.ReportDeadlinesController.getFulfilledObligations(nino)
 GET        /:nino/fulfilled-report-deadlines/from/:from/to/:to           controllers.ReportDeadlinesController.getPreviousObligations(nino, from, to)
 
-GET        /previous-tax-calculation/:nino/:year                         controllers.PreviousCalculationController.getPreviousCalculation(nino, year)
-
 GET        /list-of-calculation-results/:nino/:taxYear                  controllers.CalculationListController.getCalculationList(nino, taxYear)
 
 GET        /calculation-list/:nino/:taxYear                             controllers.CalculationListController.getCalculationList2324(nino, taxYear)

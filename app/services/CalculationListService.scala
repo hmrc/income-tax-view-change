@@ -17,7 +17,7 @@
 package services
 
 import connectors.CalculationListConnector
-import connectors.httpParsers.PreviousCalculationHttpParser.HttpGetResult
+import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
@@ -45,7 +45,7 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
     logger.debug(s"[CalculationListService][getCalculationList] Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearRange")
-    calculationListConnector.getCalculationList2324(nino, taxYearRange).map {
+    calculationListConnector.getCalculationListTYS(nino, taxYearRange).map {
       case success@Right(calculationListResponse: CalculationListResponseModel) =>
         logger.debug(s"[CalculationListService][getCalculationList] - Retrieved Calculation List TYS Data:\n\n$calculationListResponse")
         success
