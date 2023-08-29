@@ -50,7 +50,7 @@ trait MockCalculationListConnector extends WordSpecLike with Matchers with Optio
   def setupMockGetCalculationList2324(nino: String, taxYear: String)
                                      (response: HttpGetResult[CalculationListResponseModel]): OngoingStubbing[Future[HttpGetResult[CalculationListResponseModel]]] = {
     when(
-      mockCalculationListConnector.getCalculationList2324(
+      mockCalculationListConnector.getCalculationListTYS(
         ArgumentMatchers.eq(nino),
         ArgumentMatchers.eq(taxYear)
       )(ArgumentMatchers.any(), ArgumentMatchers.any())

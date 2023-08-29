@@ -16,7 +16,6 @@
 
 package connectors
 
-import assets.PreviousCalculationTestConstants._
 import connectors.httpParsers.PaymentAllocationsHttpParser.{NotFoundResponse, PaymentAllocationsError, UnexpectedResponse}
 import mocks.MockHttp
 import models.paymentAllocations.{PaymentAllocations, paymentAllocationsFull}
@@ -28,6 +27,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
 
   object TestPaymentAllocationsConnector extends PaymentAllocationsConnector(mockHttpGet, microserviceAppConfig)
 
+  val testNino: String = "AA000000B"
   val testPaymentLot: String = "testPaymentLot"
   val testPaymentLotItem: String = "testPaymentLotItem"
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
