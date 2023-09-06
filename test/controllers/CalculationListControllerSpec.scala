@@ -80,7 +80,7 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
         mockAuth()
         setupMockGetCalculationList(testNino, invalidTaxYear)(badRequestSingleError)
 
-        val result = TestCalculationListController.getCalculationList2324(testNino, invalidTaxYear)(fakeRequest)
+        val result = TestCalculationListController.getCalculationListTYS(testNino, invalidTaxYear)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson[errors.Error](InvalidTaxYear)
       }
@@ -95,13 +95,13 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
     }
   }
 
-  "CalculationListController.getCalculationList2324" should {
+  "CalculationListController.getCalculationListTYS" should {
     "return 200 OK" when {
       "user is authenticated and CalculationListService returns a success response" in {
         mockAuth()
-        setupMockGetCalculationList2324(testNino, testTaxYearRange)(successResponse)
+        setupMockGetCalculationListTYS(testNino, testTaxYearRange)(successResponse)
 
-        val result = TestCalculationListController.getCalculationList2324(testNino, testTaxYearRange)(fakeRequest)
+        val result = TestCalculationListController.getCalculationListTYS(testNino, testTaxYearRange)(fakeRequest)
         status(result) shouldBe Status.OK
         contentAsJson(result) shouldBe Json.toJson(calculationListFull.calculations.head)
       }
@@ -109,35 +109,35 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
     "return 400 BAD_REQUEST" when {
       "CalculationListService returns a single 400 BAD_REQUEST error" in {
         mockAuth()
-        setupMockGetCalculationList2324(testNino, testTaxYearRange)(badRequestSingleError)
+        setupMockGetCalculationListTYS(testNino, testTaxYearRange)(badRequestSingleError)
 
-        val result = TestCalculationListController.getCalculationList2324(testNino, testTaxYearRange)(fakeRequest)
+        val result = TestCalculationListController.getCalculationListTYS(testNino, testTaxYearRange)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(singleError)
       }
       "CalculationListService returns multiple errors" in {
         mockAuth()
-        setupMockGetCalculationList2324(testNino, testTaxYearRange)(badRequestMultiError)
+        setupMockGetCalculationListTYS(testNino, testTaxYearRange)(badRequestMultiError)
 
-        val result = TestCalculationListController.getCalculationList2324(testNino, testTaxYearRange)(fakeRequest)
+        val result = TestCalculationListController.getCalculationListTYS(testNino, testTaxYearRange)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(multiError)
       }
       "NINO is invalid" in {
         val invalidNino = "GB123456E"
         mockAuth()
-        setupMockGetCalculationList2324(invalidNino, testTaxYearRange)(badRequestSingleError)
+        setupMockGetCalculationListTYS(invalidNino, testTaxYearRange)(badRequestSingleError)
 
-        val result = TestCalculationListController.getCalculationList2324(invalidNino, testTaxYearRange)(fakeRequest)
+        val result = TestCalculationListController.getCalculationListTYS(invalidNino, testTaxYearRange)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson[errors.Error](InvalidNino)
       }
       "tax year is invalid" in {
         val invalidTaxYear = "23-25"
         mockAuth()
-        setupMockGetCalculationList2324(testNino, invalidTaxYear)(badRequestSingleError)
+        setupMockGetCalculationListTYS(testNino, invalidTaxYear)(badRequestSingleError)
 
-        val result = TestCalculationListController.getCalculationList2324(testNino, invalidTaxYear)(fakeRequest)
+        val result = TestCalculationListController.getCalculationListTYS(testNino, invalidTaxYear)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson[errors.Error](InvalidTaxYear)
       }
@@ -146,7 +146,7 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
       "called with an unauthenticated user" in {
         mockAuth(Future.failed(new MissingBearerToken))
 
-        val result = TestCalculationListController.getCalculationList2324(testNino, testTaxYearRange)(fakeRequest)
+        val result = TestCalculationListController.getCalculationListTYS(testNino, testTaxYearRange)(fakeRequest)
         status(result) shouldBe Status.UNAUTHORIZED
       }
     }

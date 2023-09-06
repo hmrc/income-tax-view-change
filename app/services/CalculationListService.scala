@@ -41,8 +41,8 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
     }
   }
 
-  def getCalculationList2324(nino: String, taxYearRange: String)
-                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
+  def getCalculationListTYS(nino: String, taxYearRange: String)
+                           (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
     logger.debug(s"[CalculationListService][getCalculationList] Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearRange")
     calculationListConnector.getCalculationListTYS(nino, taxYearRange).map {

@@ -47,11 +47,11 @@ trait MockCalculationListService extends WordSpecLike with Matchers with OptionV
     ).thenReturn(Future.successful(response))
   }
 
-  def setupMockGetCalculationList2324(nino: String, taxYear: String)
+  def setupMockGetCalculationListTYS(nino: String, taxYear: String)
                                  (response: HttpGetResult[CalculationListResponseModel]):
   OngoingStubbing[Future[HttpGetResult[CalculationListResponseModel]]] = {
     when(
-      mockCalculationListService.getCalculationList2324(
+      mockCalculationListService.getCalculationListTYS(
         ArgumentMatchers.eq(nino),
         ArgumentMatchers.eq(taxYear)
       )(ArgumentMatchers.any(), ArgumentMatchers.any())

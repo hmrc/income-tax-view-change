@@ -85,18 +85,18 @@ class CalculationListControllerISpec extends ComponentSpecBase {
     }
   }
 
-  "CalculationListController.getCalculationList2324" should {
+  "CalculationListController.getCalculationListTYS" should {
     "return 200 OK" when {
       "user is authorised and sends a valid request" in {
         Given("I am an authorised user")
         isAuthorised(true)
 
         And("I wiremock stub a 1896 Get Calculation List response")
-        DesCalculationListStub.stubGetDesCalculationList2324(testNino, testTaxYearRange)
+        DesCalculationListStub.stubGetDesCalculationListTYS(testNino, testTaxYearRange)
 
         When(s"I call /calculation-list/$testNino/$testTaxYearRange")
-        val result: WSResponse = IncomeTaxViewChange.getCalculationList2324(testNino, testTaxYearRange)
-        DesCalculationListStub.verifyGetCalculationList2324(testNino, testTaxYearRange)
+        val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, testTaxYearRange)
+        DesCalculationListStub.verifyGetCalculationListTYS(testNino, testTaxYearRange)
 
         Then("A success response is received")
         result should have(
@@ -111,11 +111,11 @@ class CalculationListControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         And("I wiremock stub an error response from 1896 Get Calculation List")
-        DesCalculationListStub.stubGetCalculationList2324Error(testNino, testTaxYearRange)
+        DesCalculationListStub.stubGetCalculationListTYSError(testNino, testTaxYearRange)
 
         When(s"I call /calculation-list/$testNino/$testTaxYearRange")
-        val result: WSResponse = IncomeTaxViewChange.getCalculationList2324(testNino, testTaxYearRange)
-        DesCalculationListStub.verifyGetCalculationList2324(testNino, testTaxYearRange)
+        val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, testTaxYearRange)
+        DesCalculationListStub.verifyGetCalculationListTYS(testNino, testTaxYearRange)
 
         Then("A 500 Internal Server Error response is received")
         result should have(
@@ -129,11 +129,11 @@ class CalculationListControllerISpec extends ComponentSpecBase {
         isAuthorised(false)
 
         And("I wiremock stub a 1896 Get Calculation List response")
-        DesCalculationListStub.stubGetDesCalculationList2324(testNino, testTaxYearRange)
+        DesCalculationListStub.stubGetDesCalculationListTYS(testNino, testTaxYearRange)
 
         When(s"I call /calculation-list/$testNino/$testTaxYearRange")
-        val result: WSResponse = IncomeTaxViewChange.getCalculationList2324(testNino, testTaxYearRange)
-        DesCalculationListStub.verifyGetCalculationList2324(testNino, testTaxYearRange)
+        val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, testTaxYearRange)
+        DesCalculationListStub.verifyGetCalculationListTYS(testNino, testTaxYearRange)
 
         Then("An unauthorized response is received")
         result should have(

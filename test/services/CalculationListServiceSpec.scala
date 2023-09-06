@@ -66,14 +66,14 @@ class CalculationListServiceSpec extends TestSupport with MockCalculationListCon
       }
     }
   }
-  "CalculationListService.getCalculationList2324" should {
+  "CalculationListService.getCalculationListTYS" should {
     "return a CalculationListResponseModel" when {
       "a success response is received from the Connector" in {
         val successResponse: Either[Nothing, CalculationListResponseModel] = Right(calculationListFull)
 
-        setupMockGetCalculationList2324(testNino, testTaxYearRange)(successResponse)
+        setupMockGetCalculationListTYS(testNino, testTaxYearRange)(successResponse)
 
-        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationList2324(
+        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
           testNino,
           testTaxYearRange
         ).futureValue
@@ -83,9 +83,9 @@ class CalculationListServiceSpec extends TestSupport with MockCalculationListCon
     }
     "return a single error" when {
       "a single error response is received from the Connector" in {
-        setupMockGetCalculationList2324(testNino, testTaxYearRange)(badRequestSingleError)
+        setupMockGetCalculationListTYS(testNino, testTaxYearRange)(badRequestSingleError)
 
-        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationList2324(
+        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
           testNino,
           testTaxYearRange
         ).futureValue
@@ -95,9 +95,9 @@ class CalculationListServiceSpec extends TestSupport with MockCalculationListCon
     }
     "return a multi error" when {
       "multiple error responses are received from the Connector" in {
-        setupMockGetCalculationList2324(testNino, testTaxYearRange)(badRequestMultiError)
+        setupMockGetCalculationListTYS(testNino, testTaxYearRange)(badRequestMultiError)
 
-        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationList2324(
+        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
           testNino,
           testTaxYearRange
         ).futureValue
