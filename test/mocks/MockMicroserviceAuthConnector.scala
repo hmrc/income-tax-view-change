@@ -16,7 +16,7 @@
 
 package mocks
 
-import config.MicroserviceAuthConnector
+import connectors.MicroserviceAuthConnector
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.doReturn
 import org.scalatest.BeforeAndAfterEach
@@ -24,7 +24,6 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, ConfidenceLevel}
 import utils.TestSupport
 
 import scala.concurrent.Future
-
 import uk.gov.hmrc.auth.core.syntax.retrieved.authSyntaxForRetrieved
 
 trait MockMicroserviceAuthConnector extends TestSupport with BeforeAndAfterEach {

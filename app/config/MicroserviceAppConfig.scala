@@ -48,6 +48,5 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
   val confidenceLevel:Int = servicesConfig.getInt("auth.confidenceLevel")
 
   val incomeTaxSubmissionStubUrl: String = loadConfig("submissionStubUrl")
-  val useBusinessDetailsStub: Boolean = servicesConfig.getBoolean("useBusinessDetailsStub")
-
+  val useBusinessDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useBusinessDetailsIFPlatform")
 }

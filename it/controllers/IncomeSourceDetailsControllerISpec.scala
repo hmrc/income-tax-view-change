@@ -58,13 +58,13 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          DesBusinessDetailsStub.stubGetDesBusinessDetails(testMtdRef, incomeSourceDetailsSuccess)
+          DesBusinessDetailsStub.stubGetIfBusinessDetails(testMtdRef, incomeSourceDetailsSuccess)
 
           When(s"I call GET income-tax-view-change/nino-lookup/$testMtdRef")
           val request = FakeRequest(controllers.routes.IncomeSourceDetailsController.getIncomeSourceDetails(testMtdRef)).withHeaders("Authorization" -> "Bearer123")
-          val res: Result = await(route(appWithSubmissionStub, request).get)
+          val res: Result = await(route(appWithBusinessDetailsOnIf, request).get)
 
-          DesBusinessDetailsStub.verifyGetDesBusinessDetails(testMtdRef)
+          DesBusinessDetailsStub.verifyGetIfBusinessDetails(testMtdRef)
 
           Then("a successful response is returned with the correct NINO")
 
