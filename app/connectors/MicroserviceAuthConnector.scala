@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package config
+package connectors
 
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.http.HttpClient

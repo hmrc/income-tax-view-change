@@ -37,16 +37,17 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.auth.host" -> mockHost,
     "microservice.services.auth.port" -> mockPort,
     "microservice.services.if.url" -> mockUrl,
-    "microservice.services.des.url" -> mockUrl
+    "microservice.services.des.url" -> mockUrl,
+    "useBusinessDetailsIFPlatform" -> "true"
   )
 
-  def configWIthSubmissionStub: Map[String, String] = Map(
+  def configWithBusinessDetailsOnIf: Map[String, String] = Map(
     "microservice.services.auth.host" -> mockHost,
     "microservice.services.auth.port" -> mockPort,
-    "microservice.services.if.url" -> mockUrl,
-    "microservice.services.des.url" -> mockUrl,
+    "microservice.services.if.url" -> s"$mockUrl/if",
+    "microservice.services.des.url" -> s"$mockUrl/des",
     "submissionStubUrl" -> mockUrl,
-    "useBusinessDetailsStub" -> "true",
+    "useBusinessDetailsIFPlatform" -> "true",
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
@@ -54,9 +55,9 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     .configure(config)
     .build()
 
-  implicit lazy val appWithSubmissionStub: Application = new GuiceApplicationBuilder()
+  implicit lazy val appWithBusinessDetailsOnIf: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
-    .configure(configWIthSubmissionStub)
+    .configure(configWithBusinessDetailsOnIf)
     .build()
 
 

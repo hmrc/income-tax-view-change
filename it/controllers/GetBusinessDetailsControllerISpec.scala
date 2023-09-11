@@ -54,18 +54,18 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
             jsonBodyMatching(jsonSuccessOutput())
           )
         }
-        "return a valid IncomeSourceDetails model asdasdasds" in {
+        "return a valid IncomeSourceDetails model using IF platform" in {
 
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          DesBusinessDetailsCallWithNinoStub.stubGetDesBusinessDetails(testNino, incomeSourceDetailsSuccess)
+          DesBusinessDetailsCallWithNinoStub.stubGetIfBusinessDetails(testNino, incomeSourceDetailsSuccess)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val request = FakeRequest(controllers.routes.GetBusinessDetailsController.getBusinessDetails(testNino)).withHeaders("Authorization" -> "Bearer123")
-          val res: Result = await(route(appWithSubmissionStub, request).get)
+          val res: Result = await(route(appWithBusinessDetailsOnIf, request).get)
 
-          DesBusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+          DesBusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("a successful response is returned with the correct business details")
 

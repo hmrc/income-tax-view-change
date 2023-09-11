@@ -16,7 +16,8 @@
 
 package controllers.predicates
 
-import config.{MicroserviceAppConfig, MicroserviceAuthConnector}
+import config.MicroserviceAppConfig
+import connectors.MicroserviceAuthConnector
 
 import javax.inject.{Inject, Singleton}
 import play.api.Logging
