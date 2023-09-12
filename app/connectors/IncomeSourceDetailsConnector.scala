@@ -35,13 +35,17 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
     s"$platformUrl/registration/business-details/mtdbsa/$mtdRef"
   }
 
+  def headers: Seq[(String, String)] = {
+    if (appConfig.useBusinessDetailsIFPlatform) appConfig.ifAuthHeaders else appConfig.desAuthHeaders
+  }
+
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = getIncomeSourceDetailsUrl(mtdRef)
 
     logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - " +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
-    http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
+    http.GET[HttpResponse](url = url, headers = headers)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>
