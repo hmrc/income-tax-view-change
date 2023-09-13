@@ -38,7 +38,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.auth.port" -> mockPort,
     "microservice.services.if.url" -> mockUrl,
     "microservice.services.des.url" -> mockUrl,
-    "useBusinessDetailsIFPlatform" -> "true"
+    "useBusinessDetailsIFPlatform" -> "false"
   )
 
   def configWithBusinessDetailsOnIf: Map[String, String] = Map(
