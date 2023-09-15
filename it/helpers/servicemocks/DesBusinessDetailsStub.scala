@@ -24,7 +24,7 @@ import play.api.http.Status
 object DesBusinessDetailsStub {
 
   val url: (String) => String = (mtdRef) => s"""/registration/business-details/mtdbsa/$mtdRef"""
-  val ifurl: (String) => String = (mtdRef) => s"""/if/registration/business-details/mtdbsa/$mtdRef"""
+  val ifurl: (String) => String = (mtdRef) => s"""/if/registration/business-details/mtdId/$mtdRef"""
 
   def stubGetDesBusinessDetails(mtdRef: String, response: IncomeSourceDetailsModel): Unit = {
     val desBusinessDetailsResponse = successResponse(response.nino).toString
@@ -44,6 +44,6 @@ object DesBusinessDetailsStub {
     WiremockHelper.verifyGet(url(mtdRef))
 
   def verifyGetIfBusinessDetails(mtdRef: String): Unit =
-    WiremockHelper.verifyGet(url(mtdRef))
+    WiremockHelper.verifyGet(ifurl(mtdRef))
 
 }

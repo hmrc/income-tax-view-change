@@ -32,7 +32,8 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
 
   def getIncomeSourceDetailsUrl(mtdRef: String): String = {
     val platformUrl = if (appConfig.useBusinessDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
-    s"$platformUrl/registration/business-details/mtdbsa/$mtdRef"
+    val idtype = if (appConfig.useBusinessDetailsIFPlatform) "mtdId" else "mtdbsa"
+    s"$platformUrl/registration/business-details/$idtype/$mtdRef"
   }
 
   def headers: Seq[(String, String)] = {
