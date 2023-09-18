@@ -43,7 +43,15 @@ object IncomeSourceDetailsTestConstants {
     properties = List()
   )
 
-  val testIncomeSourceDetailsJson = Json.obj(
+  val testIfIncomeSourceDetailsJson = Json.obj(
+    "safeId" -> "XAIT12345678908",
+    "nino" -> testNino,
+    "mtdId" -> testMtdId,
+    "yearOfMigration" -> "2019",
+    "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
+    "propertyData" -> Json.arr(testPropertyDetailsJson)
+  )
+  val testDesIncomeSourceDetailsJson = Json.obj(
     "safeId" -> "XAIT12345678908",
     "nino" -> testNino,
     "mtdbsa" -> testMtdId,
@@ -63,7 +71,12 @@ object IncomeSourceDetailsTestConstants {
       testPropertyDetailsToJson)
   )
 
-  val testMinimumIncomeSourceDetailsJson = Json.obj(
+  val testIfMinimumIncomeSourceDetailsJson = Json.obj(
+    "nino" -> testNino,
+    "mtdId" -> testMtdId
+  )
+
+  val testDesMinimumIncomeSourceDetailsJson = Json.obj(
     "nino" -> testNino,
     "mtdbsa" -> testMtdId
   )
@@ -73,7 +86,7 @@ object IncomeSourceDetailsTestConstants {
   val testIncomeSourceDetailsError = IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
   val testNinoError = NinoErrorModel(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
 
-  val successResponse = HttpResponse(Status.OK, testIncomeSourceDetailsJson, Map.empty)
+  val successResponse = HttpResponse(Status.OK, testIfIncomeSourceDetailsJson, Map.empty)
   val badJson = HttpResponse(Status.OK, Json.toJson("{}"), Map.empty)
   val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
   val notFoundBadResponse = HttpResponse(Status.NOT_FOUND, "Dummy error message")

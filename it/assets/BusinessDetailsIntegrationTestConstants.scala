@@ -80,6 +80,7 @@ object BusinessDetailsIntegrationTestConstants {
       "safeId" -> "XAIT12345678908",
       "nino" -> nino,
       "mtdbsa" -> testMtdRef,
+      "mtdId" -> testMtdRef,
       "propertyIncome" -> true,
       "businessData" -> Json.arr(
         Json.obj(

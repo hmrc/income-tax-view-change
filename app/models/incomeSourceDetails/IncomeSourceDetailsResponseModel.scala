@@ -62,6 +62,14 @@ object IncomeSourceDetailsModel {
       (__ \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.desReads))
     ) (IncomeSourceDetailsModel.applyWithFields _)
 
+  val ifReads: Reads[IncomeSourceDetailsModel] = (
+    (__ \ "nino").read[String] and
+      (__ \ "mtdId").read[String] and
+      (__ \ "yearOfMigration").readNullable[String] and
+      (__ \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
+      (__ \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.desReads))
+    ) (IncomeSourceDetailsModel.applyWithFields _)
+
   implicit val format: Format[IncomeSourceDetailsModel] = Json.format[IncomeSourceDetailsModel]
 
 }
