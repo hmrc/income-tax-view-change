@@ -28,6 +28,7 @@ case class IncomeSourceDetailsModel(nino: String,
                                     properties: List[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
+
 case class IncomeSourceDetailsNotFound(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
 
 object IncomeSourceDetailsModel {
@@ -54,9 +55,9 @@ object IncomeSourceDetailsModel {
     )
   }
 
-  val desReads: Reads[IncomeSourceDetailsModel] = (
+  val combinedReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "nino").read[String] and
-      (__ \ "mtdbsa").read[String] and
+      (__ \ "mtdbsa").read[String].orElse((__ \ "mtdId").read[String]) and
       (__ \ "yearOfMigration").readNullable[String] and
       (__ \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
       (__ \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.desReads))
