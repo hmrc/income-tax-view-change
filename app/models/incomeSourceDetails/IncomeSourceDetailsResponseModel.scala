@@ -65,7 +65,7 @@ object IncomeSourceDetailsModel {
 
   val ifReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "nino").read[String] and
-      (__ \ "mtdId").read[String] and
+      (__ \ "mtdbsa").read[String].orElse((__ \ "mtdId").read[String]) and
       (__ \ "yearOfMigration").readNullable[String] and
       (__ \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
       (__ \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.desReads))
