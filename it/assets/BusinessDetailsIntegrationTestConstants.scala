@@ -74,7 +74,13 @@ object BusinessDetailsIntegrationTestConstants {
     None
   )
 
-  def successResponse(nino: String): JsValue = {
+  def successResponseIf(nino: String): JsValue = {
+    Json.obj(
+      "taxPayerDisplayResponse" -> successResponseDes(nino)
+    )
+  }
+
+  def successResponseDes(nino: String): JsValue = {
 
     Json.obj(
       "safeId" -> "XAIT12345678908",

@@ -20,7 +20,7 @@ import assets.BaseIntegrationTestConstants._
 import assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
 import assets.IncomeSourceIntegrationTestConstants._
 import helpers.ComponentSpecBase
-import helpers.servicemocks.DesBusinessDetailsCallWithNinoStub
+import helpers.servicemocks.BusinessDetailsCallWithNinoStub
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
 import play.api.mvc.{AnyContentAsEmpty, Result}
@@ -40,12 +40,12 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          DesBusinessDetailsCallWithNinoStub.stubGetDesBusinessDetails(testNino, incomeSourceDetailsSuccess)
+          BusinessDetailsCallWithNinoStub.stubGetDesBusinessDetails(testNino, incomeSourceDetailsSuccess)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          DesBusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
 
           Then("a successful response is returned with the correct business details")
 
@@ -59,13 +59,13 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          DesBusinessDetailsCallWithNinoStub.stubGetIfBusinessDetails(testNino, incomeSourceDetailsSuccess)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetails(testNino, incomeSourceDetailsSuccess)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val request = FakeRequest(controllers.routes.GetBusinessDetailsController.getBusinessDetails(testNino)).withHeaders("Authorization" -> "Bearer123")
           val res: Result = await(route(appWithBusinessDetailsOnIf, request).get)
 
-          DesBusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("a successful response is returned with the correct business details")
 
@@ -78,12 +78,12 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub an error response")
-          DesBusinessDetailsCallWithNinoStub.stubGetDesBusinessDetailsError(testNino)
+          BusinessDetailsCallWithNinoStub.stubGetDesBusinessDetailsError(testNino)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          DesBusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
 
           Then("an error response is returned")
 

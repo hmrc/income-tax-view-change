@@ -43,6 +43,7 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = getIncomeSourceDetailsUrl(mtdRef)
+    val jsonReads = if (appConfig.useBusinessDetailsIFPlatform) IncomeSourceDetailsModel.ifReads else IncomeSourceDetailsModel.desReads
 
     logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - " +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
@@ -51,7 +52,7 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
         response.status match {
           case OK =>
             logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - RESPONSE status:${response.status}, body:${response.body}")
-            response.json.validate[IncomeSourceDetailsModel](IncomeSourceDetailsModel.combinedReads) fold(
+            response.json.validate[IncomeSourceDetailsModel](jsonReads) fold(
               invalid => {
                 logger.error(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - Validation Errors: $invalid")
                 IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
