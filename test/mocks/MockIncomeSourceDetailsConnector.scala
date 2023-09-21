@@ -23,14 +23,13 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import org.scalatestplus.mockito.MockitoSugar
-
+import org.mockito.Mockito.mock
 import scala.concurrent.Future
 
 
-trait MockIncomeSourceDetailsConnector extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
+trait MockIncomeSourceDetailsConnector extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockIncomeSourceDetailsConnector: IncomeSourceDetailsConnector = mock[IncomeSourceDetailsConnector]
+  val mockIncomeSourceDetailsConnector: IncomeSourceDetailsConnector = mock(classOf[IncomeSourceDetailsConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()

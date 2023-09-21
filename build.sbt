@@ -2,23 +2,34 @@ import play.core.PlayVersion
 import play.sbt.routes.RoutesKeys
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings._
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "income-tax-view-change"
 
+val bootstrapPlayVersion = "5.21.0"
+val bootstrapBackEndPlayVersion = "5.21.0"
+val mockitoVersion = "3.12.4"
+val wiremockVersion = "2.26.3"
+val scalaMockVersion = "5.2.0"
+val pegdownVersion = "1.6.0"
+val jsoupVersion = "1.11.3"
+val scalaTestPlusVersion = "5.0.0"
+
 val compile: Seq[ModuleID] = Seq(
   ws,
-  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % "5.24.0"
+  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % bootstrapPlayVersion
 )
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % scope,
-  "org.pegdown" % "pegdown" % "1.6.0" % scope,
-  "org.jsoup" % "jsoup" % "1.11.3" % scope,
+  "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
+  "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
+  "org.pegdown" % "pegdown" % pegdownVersion % scope,
+  "org.jsoup" % "jsoup" % jsoupVersion % scope,
   "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-  "org.mockito" % "mockito-core" % "2.24.5" % scope,
-  "com.github.tomakehurst" % "wiremock-jre8" % "2.21.0" % scope
+  "org.mockito" % "mockito-core" % mockitoVersion % scope,
+  "com.github.tomakehurst" % "wiremock-jre8" % wiremockVersion % scope,
+  "uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapPlayVersion % scope,
+  caffeine
 )
 
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
@@ -41,7 +52,6 @@ lazy val microservice = Project(appName, file("."))
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(playSettings: _*)
   .settings(scalaSettings: _*)
-  .settings(publishingSettings: _*)
   .settings(scoverageSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(majorVersion := 1)

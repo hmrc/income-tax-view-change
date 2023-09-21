@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.MissingBearerToken
 import utils.TestSupport
-
+import org.mockito.Mockito.mock
 import scala.concurrent.Future
 
 
@@ -38,7 +38,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
 
   trait Setup {
     val cc: ControllerComponents = stubControllerComponents()
-    val reportDeadlinesConnector: ReportDeadlinesConnector = mock[ReportDeadlinesConnector]
+    val reportDeadlinesConnector: ReportDeadlinesConnector = mock(classOf[ReportDeadlinesConnector])
     val authenticationPredicate: AuthenticationPredicate = new AuthenticationPredicate(mockMicroserviceAuthConnector, cc, microserviceAppConfig)
 
     val controller = new ReportDeadlinesController(

@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class ReportDeadlinesConnectorSpec extends TestSupport {
 
   trait Setup {
-    val httpClient: HttpClient = mock[HttpClient]
+    val httpClient: HttpClient = mock(classOf[HttpClient])
     val dateService = new DateService()
 
     val connector: ReportDeadlinesConnector = new ReportDeadlinesConnector(
