@@ -41,6 +41,7 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     val ifEnvironment: String = loadConfig("microservice.services.if.environment")
     val ifToken: String = loadConfig("microservice.services.if.authorization-token")
     Seq(
+      "Gov-Test-Scenario" -> "businessDetailsIf",
       "Environment" -> ifEnvironment,
       "Authorization" -> s"Bearer $ifToken"
     )
