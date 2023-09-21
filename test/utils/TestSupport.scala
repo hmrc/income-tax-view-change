@@ -20,7 +20,6 @@ import config.MicroserviceAppConfig
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -29,7 +28,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext
 
 trait TestSupport extends WordSpecLike with Matchers with OptionValues
-  with GuiceOneServerPerSuite with BeforeAndAfterAll with MockitoSugar with MaterializerSupport with ScalaFutures {
+  with GuiceOneServerPerSuite with BeforeAndAfterAll  with MaterializerSupport with ScalaFutures {
   this: Suite =>
 
   def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("", "")

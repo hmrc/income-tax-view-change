@@ -23,13 +23,12 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import org.scalatestplus.mockito.MockitoSugar
-
+import org.mockito.Mockito.mock
 import scala.concurrent.Future
 
-trait MockCalculationListConnector extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
+trait MockCalculationListConnector extends WordSpecLike with Matchers with OptionValues  with BeforeAndAfterEach {
 
-  val mockCalculationListConnector: CalculationListConnector = mock[CalculationListConnector]
+  val mockCalculationListConnector: CalculationListConnector = mock(classOf[CalculationListConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()

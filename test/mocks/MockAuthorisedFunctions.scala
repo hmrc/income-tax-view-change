@@ -17,15 +17,15 @@
 package mocks
 
 import connectors.MicroserviceAuthConnector
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito.mock
 import uk.gov.hmrc.auth.core.authorise.EmptyPredicate
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, MissingBearerToken}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAuthorisedFunctions extends AuthorisedFunctions with MockitoSugar {
-  override val authConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
+trait MockAuthorisedFunctions extends AuthorisedFunctions {
+  override val authConnector: MicroserviceAuthConnector = mock(classOf[MicroserviceAuthConnector])
 }
 
 

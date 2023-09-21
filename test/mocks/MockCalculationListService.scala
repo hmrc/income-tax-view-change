@@ -23,13 +23,12 @@ import org.mockito.ArgumentMatchers
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
 import services.CalculationListService
 import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
-
+import org.mockito.Mockito.mock
 import scala.concurrent.Future
 
-trait MockCalculationListService extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
+trait MockCalculationListService extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockCalculationListService: CalculationListService = mock[CalculationListService]
+  val mockCalculationListService: CalculationListService = mock(classOf[CalculationListService])
 
   override def beforeEach(): Unit = {
     super.beforeEach()

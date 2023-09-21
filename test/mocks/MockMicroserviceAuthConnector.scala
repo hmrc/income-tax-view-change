@@ -22,13 +22,13 @@ import org.mockito.Mockito.doReturn
 import org.scalatest.BeforeAndAfterEach
 import uk.gov.hmrc.auth.core.{AffinityGroup, ConfidenceLevel}
 import utils.TestSupport
-
+import org.mockito.Mockito.mock
 import scala.concurrent.Future
 import uk.gov.hmrc.auth.core.syntax.retrieved.authSyntaxForRetrieved
 
 trait MockMicroserviceAuthConnector extends TestSupport with BeforeAndAfterEach {
 
-  val mockMicroserviceAuthConnector: MicroserviceAuthConnector = mock[MicroserviceAuthConnector]
+  val mockMicroserviceAuthConnector: MicroserviceAuthConnector = mock(classOf[MicroserviceAuthConnector])
 
   def mockAuth(response: Future[Any] = Future.successful(Some(AffinityGroup.Individual) and ConfidenceLevel.L250)): Future[Nothing] = {
     doReturn(response, Nil: _*).when(mockMicroserviceAuthConnector)

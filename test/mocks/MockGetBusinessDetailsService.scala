@@ -22,15 +22,15 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito.mock
 import services.GetBusinessDetailsService
 
 import scala.concurrent.Future
 
 
-trait MockGetBusinessDetailsService extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
+trait MockGetBusinessDetailsService extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockGetBusinessDetailsService: GetBusinessDetailsService = mock[GetBusinessDetailsService]
+  val mockGetBusinessDetailsService: GetBusinessDetailsService = mock(classOf[GetBusinessDetailsService])
 
   override def beforeEach(): Unit = {
     super.beforeEach()

@@ -21,13 +21,12 @@ import connectors.httpParsers.ChargeHttpParser.ChargeResponse
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import org.scalatestplus.mockito.MockitoSugar
-
 import scala.concurrent.Future
+import org.mockito.Mockito.mock
 
-trait MockFinancialDetailsConnector extends WordSpecLike with Matchers with OptionValues with MockitoSugar with BeforeAndAfterEach {
+trait MockFinancialDetailsConnector extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockFinancialDetailsConnector: FinancialDetailsConnector = mock[FinancialDetailsConnector]
+  val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()
