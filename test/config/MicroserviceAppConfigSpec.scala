@@ -46,6 +46,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
 
       "has a correct HTTP headers for IF" in {
         microserviceAppConfig.ifAuthHeaders shouldBe Seq(
+          "Gov-Test-Scenario" -> "businessDetailsIf",
           "Environment" -> "localIFEnvironment",
           "Authorization" -> "Bearer localIFToken"
         )

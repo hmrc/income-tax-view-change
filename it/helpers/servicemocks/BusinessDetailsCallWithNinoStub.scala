@@ -21,17 +21,17 @@ import helpers.WiremockHelper
 import models.incomeSourceDetails.IncomeSourceDetailsModel
 import play.api.http.Status
 
-object DesBusinessDetailsCallWithNinoStub {
+object BusinessDetailsCallWithNinoStub {
 
   val url: (String) => String = (nino) => s"""/registration/business-details/nino/$nino"""
   val ifurl: (String) => String = (nino) => s"""/if/registration/business-details/nino/$nino"""
 
   def stubGetDesBusinessDetails(nino: String, response: IncomeSourceDetailsModel): Unit = {
-    val desBusinessDetailsResponse = successResponse(response.nino).toString
+    val desBusinessDetailsResponse = successResponseDes(response.nino).toString
     WiremockHelper.stubGet(url(nino), Status.OK, desBusinessDetailsResponse)
   }
   def stubGetIfBusinessDetails(nino: String, response: IncomeSourceDetailsModel): Unit = {
-    val ifBusinessDetailsResponse = successResponse(response.nino).toString
+    val ifBusinessDetailsResponse = successResponseIf(response.nino).toString
     WiremockHelper.stubGet(ifurl(nino), Status.OK, ifBusinessDetailsResponse)
   }
 

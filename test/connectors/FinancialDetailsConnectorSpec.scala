@@ -45,6 +45,7 @@ class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[
   override val expectedBaseUrl: String = microserviceAppConfig.ifUrl
 
   override val expectedApiHeaders = Seq(
+    "Gov-Test-Scenario" -> "businessDetailsIf",
     "Environment" -> "localIFEnvironment",
     "Authorization" -> "Bearer localIFToken"
   )

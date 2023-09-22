@@ -44,12 +44,13 @@ object IncomeSourceDetailsTestConstants {
   )
 
   val testIfIncomeSourceDetailsJson = Json.obj(
-    "safeId" -> "XAIT12345678908",
-    "nino" -> testNino,
-    "mtdId" -> testMtdId,
-    "yearOfMigration" -> "2019",
-    "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
-    "propertyData" -> Json.arr(testPropertyDetailsJson)
+    "taxPayerDisplayResponse" -> Json.obj(
+      "safeId" -> "XAIT12345678908",
+      "nino" -> testNino,
+      "mtdId" -> testMtdId,
+      "yearOfMigration" -> "2019",
+      "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
+      "propertyData" -> Json.arr(testPropertyDetailsJson))
   )
   val testDesIncomeSourceDetailsJson = Json.obj(
     "safeId" -> "XAIT12345678908",
@@ -72,8 +73,10 @@ object IncomeSourceDetailsTestConstants {
   )
 
   val testIfMinimumIncomeSourceDetailsJson = Json.obj(
-    "nino" -> testNino,
-    "mtdId" -> testMtdId
+    "taxPayerDisplayResponse" -> Json.obj(
+      "nino" -> testNino,
+      "mtdId" -> testMtdId
+    )
   )
 
   val testDesMinimumIncomeSourceDetailsJson = Json.obj(

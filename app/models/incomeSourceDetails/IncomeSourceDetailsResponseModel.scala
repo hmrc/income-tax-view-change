@@ -54,8 +54,15 @@ object IncomeSourceDetailsModel {
       propertyDetails
     )
   }
+  val ifReads: Reads[IncomeSourceDetailsModel] = (
+    (__ \ "taxPayerDisplayResponse" \ "nino").read[String] and
+      (__ \ "taxPayerDisplayResponse" \ "mtdId").read[String] and
+      (__ \ "taxPayerDisplayResponse" \ "yearOfMigration").readNullable[String] and
+      (__ \ "taxPayerDisplayResponse" \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
+      (__ \ "taxPayerDisplayResponse" \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.desReads))
+    ) (IncomeSourceDetailsModel.applyWithFields _)
 
-  val combinedReads: Reads[IncomeSourceDetailsModel] = (
+  val desReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "nino").read[String] and
       (__ \ "mtdbsa").read[String].orElse((__ \ "mtdId").read[String]) and
       (__ \ "yearOfMigration").readNullable[String] and
