@@ -16,6 +16,7 @@
 
 package models.incomeSourceDetails
 
+import assets.AccountingPeriodTestConstants.testAccountingPeriodModel
 import assets.BusinessDetailsTestConstants._
 import org.scalatest.Matchers
 import play.api.libs.json._
@@ -23,7 +24,7 @@ import utils.TestSupport
 
 class BusinessDetailsModelSpec extends TestSupport with Matchers {
 
-  "The BusinessDetailsaModel" should {
+  "The BusinessDetailsModel" should {
 
     "read from DES Json with all fields" in {
       Json.fromJson(testBusinessDetailsJson)(BusinessDetailsModel.desReads) shouldBe JsSuccess(testBusinessDetailsModel)
@@ -35,6 +36,106 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
 
     "write to Json" in {
       Json.toJson(testBusinessDetailsModel) shouldBe testBusinessDetailsToJson
+    }
+
+    "write cashOrAccruals `cash` (pre-R10 value) to Some(false) (post-R10 value)" in {
+      val businessDetailsJsonBeforeR10: JsObject = Json.obj(
+        "incomeSourceId" -> "111111111111111",
+        "accountingPeriodStartDate" -> "2017-06-01",
+        "accountingPeriodEndDate" -> "2018-05-31",
+        "cashOrAccruals" -> "cash")
+
+      val businessDetailsModelBeforeR10 = BusinessDetailsModel(
+        incomeSourceId = "111111111111111",
+        accountingPeriod = testAccountingPeriodModel,
+        tradingName = None,
+        address = None,
+        contactDetails = None,
+        tradingStartDate = None,
+        cashOrAccruals = Some(false),
+        seasonal = None,
+        cessation = None,
+        paperless = None,
+        firstAccountingPeriodEndDate = None,
+        latencyDetails = None
+      )
+
+      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
+    }
+
+    "write cashOrAccruals `accruals` (pre-R10 value) to Some(false) (post-R10 value)" in {
+      val businessDetailsJsonBeforeR10: JsObject = Json.obj(
+        "incomeSourceId" -> "111111111111111",
+        "accountingPeriodStartDate" -> "2017-06-01",
+        "accountingPeriodEndDate" -> "2018-05-31",
+        "cashOrAccruals" -> "accruals")
+
+      val businessDetailsModelBeforeR10 = BusinessDetailsModel(
+        incomeSourceId = "111111111111111",
+        accountingPeriod = testAccountingPeriodModel,
+        tradingName = None,
+        address = None,
+        contactDetails = None,
+        tradingStartDate = None,
+        cashOrAccruals = Some(true),
+        seasonal = None,
+        cessation = None,
+        paperless = None,
+        firstAccountingPeriodEndDate = None,
+        latencyDetails = None
+      )
+
+      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
+    }
+
+    "write cashOrAccruals true (post-R10 value) to Some(true) (post-R10 value)" in {
+      val businessDetailsJsonAfterR10: JsObject = Json.obj(
+        "incomeSourceId" -> "111111111111111",
+        "accountingPeriodStartDate" -> "2017-06-01",
+        "accountingPeriodEndDate" -> "2018-05-31",
+        "cashOrAccruals" -> true)
+
+      val businessDetailsModelAfterR10 = BusinessDetailsModel(
+        incomeSourceId = "111111111111111",
+        accountingPeriod = testAccountingPeriodModel,
+        tradingName = None,
+        address = None,
+        contactDetails = None,
+        tradingStartDate = None,
+        cashOrAccruals = Some(true),
+        seasonal = None,
+        cessation = None,
+        paperless = None,
+        firstAccountingPeriodEndDate = None,
+        latencyDetails = None
+      )
+
+      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelAfterR10)
+    }
+
+    "write cashOrAccruals false (post-R10 value) to Some(false) (post-R10 value)" in {
+      val businessDetailsJsonAfterR10: JsObject = Json.obj(
+        "incomeSourceId" -> "111111111111111",
+        "accountingPeriodStartDate" -> "2017-06-01",
+        "accountingPeriodEndDate" -> "2018-05-31",
+        "cashOrAccruals" -> false)
+
+      val businessDetailsModelAfterR10 = BusinessDetailsModel(
+        incomeSourceId = "111111111111111",
+        accountingPeriod = testAccountingPeriodModel,
+        tradingName = None,
+        address = None,
+        contactDetails = None,
+        tradingStartDate = None,
+        cashOrAccruals = Some(false),
+        seasonal = None,
+        cessation = None,
+        paperless = None,
+        firstAccountingPeriodEndDate = None,
+        latencyDetails = None
+      )
+
+      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelAfterR10)
     }
 
   }

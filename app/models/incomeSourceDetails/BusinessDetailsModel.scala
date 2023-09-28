@@ -45,14 +45,20 @@ object BusinessDetailsModel {
       (__ \ "businessAddressDetails").readNullable(AddressModel.desReads) and
       (__ \ "businessContactDetails").readNullable(ContactDetailsModel.desReads) and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
-      (__ \ "cashOrAccruals").readNullable[Boolean] and
+      (__ \ "cashOrAccruals").readNullable[Boolean].orElse(
+        (__ \ "cashOrAccruals").read[String].map {
+          case "cash" => Some(false)
+          case "accruals" => Some(true)
+          case _ => throw new RuntimeException("Invalid value for cashOrAccruals")
+        }
+      ) and
       (__ \ "seasonal").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
       (__ \ "paperLess").readNullable[Boolean] and
       (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
       (__ \ "latencyDetails").readNullable[LatencyDetails]
-    ) (BusinessDetailsModel.applyWithFields _)
+    )(BusinessDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
                       accountingPeriodModel: AccountingPeriodModel,
