@@ -63,7 +63,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
       Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
     }
 
-    "write cashOrAccruals `accruals` (pre-R10 value) to Some(false) (post-R10 value)" in {
+    "write cashOrAccruals `accruals` (pre-R10 value) to Some(true) (post-R10 value)" in {
       val businessDetailsJsonBeforeR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
         "accountingPeriodStartDate" -> "2017-06-01",
