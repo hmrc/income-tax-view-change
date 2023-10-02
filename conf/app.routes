@@ -12,7 +12,7 @@ GET        /:nino/fulfilled-report-deadlines/from/:from/to/:to           control
 
 GET        /list-of-calculation-results/:nino/:taxYear                  controllers.CalculationListController.getCalculationList(nino, taxYear)
 
-GET        /calculation-list/:nino/:taxYear                             controllers.CalculationListController.getCalculationList2324(nino, taxYear)
+GET        /calculation-list/:nino/:taxYear                             controllers.CalculationListController.getCalculationListTYS(nino, taxYear)
 
 GET        /:nino/payment-allocations/:paymentLot/:paymentLotItem        controllers.PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)
 

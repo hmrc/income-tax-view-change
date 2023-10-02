@@ -23,7 +23,7 @@ import play.api.http.Status
 object DesCalculationListStub {
   def url(nino: String, taxYear: String): String = s"""/income-tax/list-of-calculation-results/$nino?taxYear=$taxYear"""
 
-  def url2324(nino: String, taxYear: String): String = s"""/income-tax/view/calculations/liability/$taxYear/$nino"""
+  def urlTYS(nino: String, taxYear: String): String = s"""/income-tax/view/calculations/liability/$taxYear/$nino"""
 
 
   def stubGetDesCalculationList(nino: String, taxYear: String): Unit = {
@@ -32,10 +32,10 @@ object DesCalculationListStub {
     WiremockHelper.stubGet(url(nino, taxYear), Status.OK, calculationListResponse)
   }
 
-  def stubGetDesCalculationList2324(nino: String, taxYear: String): Unit = {
+  def stubGetDesCalculationListTYS(nino: String, taxYear: String): Unit = {
     val calculationListResponse = successResponse.toString
 
-    WiremockHelper.stubGet(url2324(nino, taxYear), Status.OK, calculationListResponse)
+    WiremockHelper.stubGet(urlTYS(nino, taxYear), Status.OK, calculationListResponse)
   }
 
   def stubGetCalculationListError(nino: String, taxYear: String): Unit = {
@@ -43,14 +43,14 @@ object DesCalculationListStub {
     WiremockHelper.stubGet(url(nino, taxYear), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
 
-  def stubGetCalculationList2324Error(nino: String, taxYear: String): Unit = {
+  def stubGetCalculationListTYSError(nino: String, taxYear: String): Unit = {
     val errorResponse = failureResponse("500", "ISE")
-    WiremockHelper.stubGet(url2324(nino, taxYear), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
+    WiremockHelper.stubGet(urlTYS(nino, taxYear), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
 
   def verifyGetCalculationList(nino: String, taxYear: String): Unit =
     WiremockHelper.verifyGet(url(nino, taxYear))
 
-  def verifyGetCalculationList2324(nino: String, taxYear: String): Unit =
-    WiremockHelper.verifyGet(url2324(nino, taxYear))
+  def verifyGetCalculationListTYS(nino: String, taxYear: String): Unit =
+    WiremockHelper.verifyGet(urlTYS(nino, taxYear))
 }

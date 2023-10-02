@@ -46,17 +46,17 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
       }
   }
 
-  // 1896
-  def getCalculationList2324(nino: String, taxYearRange: String): Action[AnyContent] = authentication.async {
+  // TYS - 1896 and beyond
+  def getCalculationListTYS(nino: String, taxYearRange: String): Action[AnyContent] = authentication.async {
     implicit request =>
       if (isInvalidNino(nino)) {
-        logger.error(s"[CalculationListController][getCalculationList2324] Invalid Nino '$nino' received in request.")
+        logger.error(s"[CalculationListController][getCalculationListTYS] Invalid Nino '$nino' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidNino)))
       } else if (isInvalidTaxYearRange(taxYearRange)) {
-        logger.error(s"[CalculationListController][getCalculationList2324] Invalid Tax Year '$taxYearRange' received in request.")
+        logger.error(s"[CalculationListController][getCalculationListTYS] Invalid Tax Year '$taxYearRange' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
-        getCalculationList2324(nino, taxYearRange)
+        getCalculationListTYS(nino, taxYearRange)
       }
   }
 
@@ -78,9 +78,9 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
     }
   }
 
-  private def getCalculationList2324(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
+  private def getCalculationListTYS(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
     logger.debug(s"[CalculationListController][getCalculationList] Calling CalculationListService.getCalculationList")
-    calculationListService.getCalculationList2324(nino, taxYear).map {
+    calculationListService.getCalculationListTYS(nino, taxYear).map {
       case Right(calculationList) =>
         val calculation = calculationList.calculations.head
         Ok(Json.toJson(calculation))

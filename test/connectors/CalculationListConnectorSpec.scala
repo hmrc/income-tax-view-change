@@ -40,7 +40,7 @@ class CalculationListConnectorSpec extends TestSupport with MockHttp {
       "getCalculationListUrl is called" in {
         TestCalculationListConnector.getCalculationListUrl(testNino, testTaxYearEnd) shouldBe url1404
       }
-      "getCalculationList2324Url is called" in {
+      "getCalculationListTYSUrl is called" in {
         TestCalculationListConnector.getCalculationListTYSUrl(testNino, testTaxYearRange) shouldBe url1896
       }
     }
@@ -53,7 +53,7 @@ class CalculationListConnectorSpec extends TestSupport with MockHttp {
 
         TestCalculationListConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe successResponse
       }
-      "calling getCalculationList2324 with a valid NINO and tax year" in {
+      "calling getCalculationListTYS with a valid NINO and tax year" in {
         when(mockHttpGet.GET[CalculationListHttpParser.HttpGetResult[CalculationListResponseModel]](contains(url1896),
           ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(successResponse))
 
@@ -67,7 +67,7 @@ class CalculationListConnectorSpec extends TestSupport with MockHttp {
 
         TestCalculationListConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe badRequestSingleError
       }
-      "calling getCalculationList2324 and a non-success response is received" in {
+      "calling getCalculationListTYS and a non-success response is received" in {
         when(mockHttpGet.GET[Either[ErrorResponse, Nothing]](contains(url1896),
           ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(badRequestSingleError))
         val result = TestCalculationListConnector.getCalculationListTYS(testNino, testTaxYearRange)

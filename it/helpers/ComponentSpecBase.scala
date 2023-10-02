@@ -112,7 +112,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getCalculationList(nino: String, taxYear: String): WSResponse = get(s"/list-of-calculation-results/$nino/$taxYear")
 
-    def getCalculationList2324(nino: String, taxYear: String): WSResponse = get(s"/calculation-list/$nino/$taxYear")
+    def getCalculationListTYS(nino: String, taxYear: String): WSResponse = get(s"/calculation-list/$nino/$taxYear")
 
     def getNino(mtdRef: String): WSResponse = get(s"/nino-lookup/$mtdRef")
 
