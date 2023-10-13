@@ -36,6 +36,7 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
   def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
     request.body.asJson match {
       case Some(body) =>
+        Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: " + body)
         createBusinessDetailsService.createBusinessDetails(mtdbsaRef, body) map {
           case Right(successResponse) =>
             Ok(Json.toJson(successResponse))
@@ -45,7 +46,7 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
         }
       case _ =>
         Future {
-          BadRequest("[CreateBusinessDetailsController][getBusinessDetails]: Error - no payload found")
+          BadRequest("[CreateBusinessDetailsController][createBusinessDetails]: Error - no payload found")
         }
     }
   }
