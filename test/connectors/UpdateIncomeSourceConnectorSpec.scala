@@ -30,25 +30,25 @@ class UpdateIncomeSourceConnectorSpec extends TestSupport with MockHttp {
 
     import TestUpdateIncomeSourceConnector._
 
-    lazy val mock: (UpdateIncomeSourceRequestModel,HttpResponse) => Unit = setupMockHttpPutWithHeaderCarrier[UpdateIncomeSourceRequestModel](updateIncomeSourceUrl, microserviceAppConfig.ifAuthHeaders)
+    lazy val mock: (UpdateIncomeSourceRequestModel, HttpResponse) => Unit = setupMockHttpPutWithHeaderCarrier[UpdateIncomeSourceRequestModel](updateIncomeSourceUrl, microserviceAppConfig.ifAuthHeaders)
 
     "return Status (OK) and a JSON body when successful" in {
-      mock(request,successHttpResponse)
+      mock(request, successHttpResponse)
       updateIncomeSource(request).futureValue shouldBe successResponse
     }
 
     "return UpdateIncomeSourceResponseError model in case of failure" in {
-      mock(badRequest,badHttpResponse)
+      mock(badRequest, badHttpResponse)
       updateIncomeSource(badRequest).futureValue shouldBe errorBadResponse
     }
 
     "return UpdateIncomeSourceResponseError model in case of bad JSON" in {
-      mock(badRequest,successInvalidJsonResponse)
+      mock(badRequest, successInvalidJsonResponse)
       updateIncomeSource(badRequest).futureValue shouldBe badJsonResponse
     }
 
     "return UpdateIncomeSourceResponseError model in case of failed future" in {
-      setupMockHttpPutFailed(updateIncomeSourceUrl,microserviceAppConfig.ifAuthHeaders)(badRequest)
+      setupMockHttpPutFailed(updateIncomeSourceUrl, microserviceAppConfig.ifAuthHeaders)(badRequest)
       updateIncomeSource(badRequest).futureValue shouldBe failureResponse
     }
   }
