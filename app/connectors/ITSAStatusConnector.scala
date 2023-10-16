@@ -35,8 +35,8 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
 
     val url = getITSAStatusUrl(taxableEntityId, taxYear)
 
-    logger.debug(s"[ITSAStatusConnector][getITSAStatus] - " +
-      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    logger.info(s"[ITSAStatusConnector][getITSAStatus] - " +
+      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders}")
 
     val queryParams: Seq[(String, String)] = Seq(("futureYears", futureYears.toString), ("history", history.toString))
 
@@ -59,7 +59,7 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
             logger.warn(s"[ITSAStatusConnector][getITSAStatus] -  RESPONSE status: ${response.status}, body: ${response.body}")
             Left(ITSAStatusResponseNotFound(response.status, response.body))
           case _ =>
-            logger.error(s"[ITSAStatusConnector][getITSAStatus] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.error(s"[ITSAStatusConnector][getITSAStatus] - RESPONSE status: ${response.status}, body: ${response.body}, hc: ${headerCarrier}")
             Left(ITSAStatusResponseError(response.status, response.body))
         }
     } recover {
