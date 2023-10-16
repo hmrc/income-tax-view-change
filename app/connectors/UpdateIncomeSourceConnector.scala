@@ -42,7 +42,7 @@ class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
         response.status match {
           case OK =>
             logger.debug(s"[UpdateIncomeSourceConnector][updateIncomeSource] - RESPONSE status:${response.status}, body:${response.body}")
-            response.json.validate[UpdateIncomeSourceResponseModel] fold(
+            response.json.validate[UpdateIncomeSourceResponseModel].fold(
               invalid => {
                 logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - Validation Errors: $invalid")
                 UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing IF Update Income Source")
