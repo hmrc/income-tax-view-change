@@ -34,7 +34,7 @@ class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
 
   def updateIncomeSource(body: UpdateIncomeSourceRequestModel)(implicit headerCarrier: HeaderCarrier): Future[UpdateIncomeSourceResponse] = {
     val url = updateIncomeSourceUrl
-    logger.debug(s"[UpdateIncomeSourceConnector][updateIncomeSource] - " +
+    logger.info(s"[UpdateIncomeSourceConnector][updateIncomeSource] - INFO " +
       s"Calling PUT $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders} \nBody:$body")
 
     http.PUT[UpdateIncomeSourceRequestModel, HttpResponse](url = url, body = body, headers = appConfig.ifAuthHeaders) map {
