@@ -31,7 +31,7 @@ class ITSAStatusConnectorSpec extends TestSupport with MockHttp {
 
     import TestITSAStatusConnector._
 
-    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getITSAStatusUrl("", ""), microserviceAppConfig.ifAuthHeaders)
+    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getITSAStatusUrl("", ""), microserviceAppConfig.ifAuthHeaders1878)
 
     def getITSAStatusCall: Future[Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]] = getITSAStatus("", "", true, true)
 

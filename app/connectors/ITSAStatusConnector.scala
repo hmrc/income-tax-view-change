@@ -36,11 +36,11 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
     val url = getITSAStatusUrl(taxableEntityId, taxYear)
 
     logger.info(s"[ITSAStatusConnector][getITSAStatus] - " +
-      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders}")
+      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders1878}")
 
     val queryParams: Seq[(String, String)] = Seq(("futureYears", futureYears.toString), ("history", history.toString))
 
-    http.GET[HttpResponse](url = url, queryParams = queryParams, headers = appConfig.ifAuthHeaders)(httpReads, headerCarrier, implicitly) map {
+    http.GET[HttpResponse](url = url, queryParams = queryParams, headers = appConfig.ifAuthHeaders1878)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>
