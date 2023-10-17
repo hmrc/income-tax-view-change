@@ -37,13 +37,12 @@ class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
     logger.info(s"[UpdateIncomeSourceConnector][updateIncomeSource] - INFO " +
       s"Calling PUT $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders} \nBody:$body")
 
-    http.PUT[UpdateIncomeSourceRequestModel, HttpResponse](url = url, body = body, headers = appConfig.ifAuthHeaders)(
-      UpdateIncomeSourceRequestModel.format, implicitly, implicitly, implicitly) map {
+    http.PUT[UpdateIncomeSourceRequestModel, HttpResponse](url = url, body = body, headers = appConfig.ifAuthHeaders) map {
       response =>
         response.status match {
           case OK =>
             logger.debug(s"[UpdateIncomeSourceConnector][updateIncomeSource] - RESPONSE status:${response.status}, body:${response.body}")
-            response.json.validate[UpdateIncomeSourceResponseModel] fold(
+            response.json.validate[UpdateIncomeSourceResponseModel].fold(
               invalid => {
                 logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - Validation Errors: $invalid")
                 UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing IF Update Income Source")

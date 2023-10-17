@@ -19,20 +19,20 @@ object UpdateIncomeSourceIntegrationTestConstants {
 
   val requestCessation: UpdateIncomeSourceRequestModel = UpdateIncomeSourceRequestModel(
     nino = testNino,
-    incomeSourceId = incomeSourceId,
+    incomeSourceID = incomeSourceId,
     cessation = Some(Cessation(cessationIndicator, Some(LocalDate.parse(cessationDate))))
   )
 
   val requestTaxYearSpecific: UpdateIncomeSourceRequestModel = UpdateIncomeSourceRequestModel(
     nino = testNino,
-    incomeSourceId = incomeSourceId,
+    incomeSourceID = incomeSourceId,
     taxYearSpecific = Some(TaxYearSpecific("2022", true))
   )
 
 
   val requestJson = Json.obj(
     "nino" -> testNino,
-    "incomeSourceId" -> incomeSourceId,
+    "incomeSourceID" -> incomeSourceId,
     "cessation" -> Json.obj(
       "cessationIndicator" -> cessationIndicator,
       "cessationDate" -> cessationDate)
