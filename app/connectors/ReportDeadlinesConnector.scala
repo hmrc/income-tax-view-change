@@ -49,12 +49,13 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                         (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
     val url = getReportDeadlinesUrl(nino, openObligations)
 
+    logger.info(s"[ReportDeadlinesConnector][getReportDeadlines] - URL - $url ")
     logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>
-            logger.debug(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.info(s"[ReportDeadlinesConnector][getReportDeadlines] - RESPONSE status: ${response.status}, body: ${response.body}")
             response.json.validate[ObligationsModel](ObligationsModel.desReadsApi1330).fold(
               invalid => {
                 logger.error(s"[ReportDeadlinesConnector][getReportDeadlines] - Json validation error: $invalid")
