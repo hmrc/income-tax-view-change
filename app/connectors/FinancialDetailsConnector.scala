@@ -18,6 +18,7 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 
@@ -41,7 +42,7 @@ class FinancialDetailsConnectorIF @Inject()(val http: HttpClient,
 }
 
 
-trait FinancialDetailsConnector extends RawResponseReads {
+trait FinancialDetailsConnector extends RawResponseReads with Logging {
 
   def http: HttpClient
 
@@ -95,7 +96,11 @@ trait FinancialDetailsConnector extends RawResponseReads {
   }
 
   private[connectors] def getCharge(nino: String, queryParameters: Seq[(String, String)])
-                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] =
-    http.GET(financialDetailsUrl(nino), queryParameters, headers)(ChargeReads, hc, ec)
+                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+    val url = financialDetailsUrl(nino)
+    // TODO: downgrade to debug after fix
+    logger.info(s"[FinancialDetailChargesController][getChargeDetails] - URL - $url")
+    http.GET(url, queryParameters, headers)(ChargeReads, hc, ec)
+  }
 
 }
