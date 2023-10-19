@@ -99,7 +99,7 @@ trait FinancialDetailsConnector extends RawResponseReads with Logging {
                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
     val url = financialDetailsUrl(nino)
     // TODO: downgrade to debug after fix
-    logger.info(s"[FinancialDetailChargesController][getChargeDetails] - URL - $url")
+    logger.info(s"[FinancialDetailChargesController][getChargeDetails] - URL - $url - ${queryParameters.mkString("-")}")
     http.GET(url, queryParameters, headers)(ChargeReads, hc, ec)
   }
 
