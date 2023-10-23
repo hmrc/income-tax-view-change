@@ -31,10 +31,10 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
   def getCalculationList(nino: String, taxYearEnd: String)
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
-    logger.debug(s"[CalculationListService][getCalculationList] Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearEnd")
+    logger.info(s"[CalculationListService][getCalculationList] Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearEnd")
     calculationListConnector.getCalculationList(nino, taxYearEnd).map {
       case success@Right(calculationListResponse: CalculationListResponseModel) =>
-        logger.debug(s"[CalculationListService][getCalculationList] - Retrieved Calculation List Data:\n\n$calculationListResponse")
+        logger.info(s"[CalculationListService][getCalculationList] - Retrieved Calculation List Data:\n\n$calculationListResponse")
         success
       case error@Left(_) =>
         error
@@ -44,10 +44,10 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
   def getCalculationListTYS(nino: String, taxYearRange: String)
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
-    logger.debug(s"[CalculationListService][getCalculationList] Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearRange")
+    logger.info(s"[CalculationListService][getCalculationListTYS] Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearRange")
     calculationListConnector.getCalculationListTYS(nino, taxYearRange).map {
       case success@Right(calculationListResponse: CalculationListResponseModel) =>
-        logger.debug(s"[CalculationListService][getCalculationList] - Retrieved Calculation List TYS Data:\n\n$calculationListResponse")
+        logger.info(s"[CalculationListService][getCalculationListTYS] - Retrieved Calculation List TYS Data:\n\n$calculationListResponse")
         success
       case error@Left(_) =>
         error
