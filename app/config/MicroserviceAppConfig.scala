@@ -46,7 +46,7 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
       "Authorization" -> s"Bearer $ifToken"
     )
   }
-  val ifAuthHeaders1878 = {
+  val ifAuthHeaders1878: Seq[(String, String)] = {
     val ifEnvironment: String = loadConfig("microservice.services.if.environment")
     val ifToken: String = loadConfig("microservice.services.if.authorization-token-1878")
     Seq(
@@ -54,6 +54,16 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
       "Authorization" -> s"Bearer $ifToken"
     )
   }
+
+  val ifAuthHeaders1896: Seq[(String, String)] = {
+    val ifEnvironment: String = loadConfig("microservice.services.if.environment")
+    val ifToken: String = loadConfig("microservice.services.if.authorization-token-1896")
+    Seq(
+      "Environment" -> ifEnvironment,
+      "Authorization" -> s"Bearer $ifToken"
+    )
+  }
+
   val confidenceLevel:Int = servicesConfig.getInt("auth.confidenceLevel")
 
   val incomeTaxSubmissionStubUrl: String = loadConfig("submissionStubUrl")
