@@ -18,11 +18,13 @@ package helpers
 
 import org.jsoup.Jsoup
 import org.scalatest._
-import org.scalatest.matchers._
+import org.scalatest.matchers.{HavePropertyMatchResult, HavePropertyMatcher}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.libs.json.{JsValue, Reads}
 import play.api.libs.ws.WSResponse
 
-trait CustomMatchers extends WordSpecLike with Matchers with OptionValues with GivenWhenThen {
+trait CustomMatchers extends AnyWordSpecLike with Matchers with OptionValues with GivenWhenThen {
   def httpStatus(expectedValue: Int): HavePropertyMatcher[WSResponse, Int] =
     new HavePropertyMatcher[WSResponse, Int] {
       def apply(response: WSResponse) = {

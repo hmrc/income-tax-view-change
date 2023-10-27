@@ -18,15 +18,17 @@ package mocks
 
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.matches
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import uk.gov.hmrc.http.{HttpClient, HttpReads, HttpResponse}
-import org.mockito.Mockito.mock
+
 import scala.concurrent.Future
 
 
-trait MockHttp extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockHttp extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockHttpGet: HttpClient = mock(classOf[HttpClient])
 

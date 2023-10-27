@@ -18,15 +18,17 @@ package mocks
 
 import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
-import org.mockito.stubbing.OngoingStubbing
 import org.mockito.ArgumentMatchers
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import services.CalculationListService
 import org.mockito.Mockito._
-import org.mockito.Mockito.mock
+import org.mockito.stubbing.OngoingStubbing
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import services.CalculationListService
+
 import scala.concurrent.Future
 
-trait MockCalculationListService extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockCalculationListService extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockCalculationListService: CalculationListService = mock(classOf[CalculationListService])
 

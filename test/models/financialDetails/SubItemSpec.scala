@@ -17,10 +17,11 @@
 package models.financialDetails
 
 import assets.FinancialDataTestConstants._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, JsPath, JsSuccess, Json}
 
-class SubItemSpec extends WordSpec with Matchers {
+class SubItemSpec extends AnyWordSpec with Matchers {
 
   val subItemEmpty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 

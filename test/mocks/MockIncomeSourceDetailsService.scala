@@ -20,15 +20,17 @@ import assets.BaseTestConstants.mtdRef
 import models.core.NinoResponse
 import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import services.IncomeSourceDetailsService
-import org.mockito.Mockito.mock
+
 import scala.concurrent.Future
 
 
-trait MockIncomeSourceDetailsService extends WordSpecLike with Matchers with OptionValues  with BeforeAndAfterEach {
+trait MockIncomeSourceDetailsService extends AnyWordSpecLike with Matchers with OptionValues  with BeforeAndAfterEach {
 
   val mockIncomeSourceDetailsService: IncomeSourceDetailsService = mock(classOf[IncomeSourceDetailsService])
 

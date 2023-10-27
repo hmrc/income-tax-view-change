@@ -20,11 +20,14 @@ import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.ChargeResponse
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+
 import scala.concurrent.Future
 import org.mockito.Mockito.mock
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-trait MockFinancialDetailsConnector extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
 

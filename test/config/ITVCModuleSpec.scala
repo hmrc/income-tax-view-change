@@ -17,13 +17,14 @@
 package config
 
 import connectors.{FinancialDetailsConnector, FinancialDetailsConnectorDES, FinancialDetailsConnectorIF}
-import org.scalatest.{Matchers, WordSpecLike}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
 import scala.reflect.ClassTag
 
-class ITVCModuleSpec extends WordSpecLike with Matchers {
+class ITVCModuleSpec extends AnyWordSpecLike with Matchers {
 
 
   "ITVCModule" should {

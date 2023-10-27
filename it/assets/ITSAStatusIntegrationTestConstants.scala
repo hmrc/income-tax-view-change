@@ -9,7 +9,6 @@ object ITSAStatusIntegrationTestConstants {
   val taxYear = "2020"
   val statusDetail = StatusDetail("2023-06-15T15:38:33.960Z", "No Status", "Sign up - return available", Some(8000.25))
   val successITSAStatusResponseModel = ITSAStatusResponseModel("2019-20", Some(List(statusDetail)))
-  val errorITSAStatusError = ITSAStatusResponseError(BAD_REQUEST, failureInvalidRequestResponse)
   val errorITSAStatusNotFoundError = ITSAStatusResponseNotFound(NOT_FOUND, "Dummy message")
   val failedFutureITSAStatusError = ITSAStatusResponseError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
 
@@ -22,6 +21,8 @@ object ITSAStatusIntegrationTestConstants {
       |    }
       |  ]
       |}""".stripMargin
+
+  val errorITSAStatusError = ITSAStatusResponseError(BAD_REQUEST, failureInvalidRequestResponse)
 
   val successITSAStatusListResponseJson = Json.parse(
     """

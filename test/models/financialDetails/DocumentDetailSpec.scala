@@ -17,12 +17,13 @@
 package models.financialDetails
 
 import assets.FinancialDataTestConstants._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
 
 import java.time.LocalDate
 
-class DocumentDetailSpec extends WordSpec with Matchers {
+class DocumentDetailSpec extends AnyWordSpec with Matchers {
 
   val documentDetailMin: DocumentDetail = DocumentDetail(2019, "id", None, None, None, None,
     LocalDate.parse("2018-03-29"), None, None, None, None, None, None, None, None, None,

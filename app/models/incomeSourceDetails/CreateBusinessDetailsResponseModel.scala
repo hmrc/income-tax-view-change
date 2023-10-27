@@ -17,7 +17,6 @@
 package models.incomeSourceDetails
 
 import play.api.libs.json._
-import java.time.LocalDate
 
 trait CreateBusinessDetailsResponseModel
 

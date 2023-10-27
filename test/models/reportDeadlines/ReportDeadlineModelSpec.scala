@@ -17,7 +17,7 @@
 package models.reportDeadlines
 
 import assets.ReportDeadlinesTestConstants._
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
 

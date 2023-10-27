@@ -17,7 +17,7 @@
 package models.updateIncomeSource
 
 import assets.UpdateIncomeSourceTestConstants.{errorBadResponse, successResponse, successResponseJson}
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import play.api.http.Status
 import play.api.libs.json.{JsSuccess, Json}
 import utils.TestSupport

@@ -20,14 +20,16 @@ import assets.BaseTestConstants.mtdRef
 import connectors.IncomeSourceDetailsConnector
 import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import org.mockito.Mockito.mock
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+
 import scala.concurrent.Future
 
 
-trait MockIncomeSourceDetailsConnector extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockIncomeSourceDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockIncomeSourceDetailsConnector: IncomeSourceDetailsConnector = mock(classOf[IncomeSourceDetailsConnector])
 

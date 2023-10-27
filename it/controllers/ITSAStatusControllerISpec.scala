@@ -21,7 +21,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           When(s"I call GET /itsa-status/status/$taxableEntityId/$taxYear")
           val res = IncomeTaxViewChange.getITSAStatus(taxableEntityId, taxYear)
 
-          IfITSAStatusStub.verifyGetIfITSAStatusDetails
+          IfITSAStatusStub.verifyGetIfITSAStatusDetails()
 
           Then("a successful response is returned with status details")
 
@@ -37,7 +37,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a badRequest ITSAStatusDetails response")
-          IfITSAStatusStub.stubGetIfITSAStatusDetailsBadRequest
+          IfITSAStatusStub.stubGetIfITSAStatusDetailsBadRequest()
 
 
           When(s"I call GET /itsa-status/status/$taxableEntityId/$taxYear")
@@ -60,7 +60,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           When(s"I call GET /itsa-status/status/$taxableEntityId/$taxYear")
           val res = IncomeTaxViewChange.getITSAStatus(taxableEntityId, taxYear)
 
-          IfITSAStatusStub.verifyGetIfITSAStatusDetails
+          IfITSAStatusStub.verifyGetIfITSAStatusDetails()
 
           Then("an error response is returned")
 

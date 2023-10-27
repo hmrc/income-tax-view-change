@@ -17,10 +17,11 @@
 package models.outStandingCharges
 
 import assets.OutStandingChargesConstant._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsSuccess, Json}
 
-class OutStandingChargeSpec extends WordSpec with Matchers {
+class OutStandingChargeSpec extends AnyWordSpec with Matchers {
 
 
   "OutStandingCharge" should {

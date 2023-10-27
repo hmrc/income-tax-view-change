@@ -19,16 +19,17 @@ package mocks
 import assets.BaseTestConstants.testNino
 import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
-import org.mockito.Mockito.mock
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import services.GetBusinessDetailsService
 
 import scala.concurrent.Future
 
 
-trait MockGetBusinessDetailsService extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockGetBusinessDetailsService extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockGetBusinessDetailsService: GetBusinessDetailsService = mock(classOf[GetBusinessDetailsService])
 

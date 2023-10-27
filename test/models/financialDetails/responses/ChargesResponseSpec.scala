@@ -18,12 +18,13 @@ package models.financialDetails.responses
 
 import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsSuccess, Json}
 
 import java.time.LocalDate
 
-class ChargesResponseSpec extends WordSpec with Matchers {
+class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
   val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, Some(400.00))
 
