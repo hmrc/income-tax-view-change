@@ -18,7 +18,7 @@ package controllers
 
 import connectors.ITSAStatusConnector
 import controllers.predicates.AuthenticationPredicate
-import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
+import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -43,7 +43,7 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
       case Left(error: ITSAStatusResponseError) =>
         logger.error(s"[ITSAStatusController][getITSAStatus] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
-      case Left(error: ITSAStatusResponseModel) =>
+      case Left(error) =>
         logger.error(s"[ITSAStatusController][getITSAStatus][ITSAStatusResponseModel] - Error fetching ITSA Status: $error")
         InternalServerError(s"[ITSAStatusController][getITSAStatus]")
       case Right(result) =>
