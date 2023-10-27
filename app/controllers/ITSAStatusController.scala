@@ -44,7 +44,7 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
         logger.error(s"[ITSAStatusController][getITSAStatus] - Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case Left(_) =>
-        logger.error(s"[ITSAStatusController][getITSAStatus][ITSAStatusResponseModel] - Error")
+        logger.error(s"[ITSAStatusController][getITSAStatus][ITSAStatusResponseModel] - Error fetching ITSA Status")
         InternalServerError(s"[ITSAStatusController][getITSAStatus]")
       case Right(result) =>
         logger.debug(s"[ITSAStatusController][getITSAStatus] - Successful Response: $result")
