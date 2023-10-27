@@ -37,7 +37,7 @@ class AuthenticationPredicateSpec extends ControllerBaseSpec with MockMicroservi
     object TestAuthenticationPredicate extends AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
 
     def result(authenticationPredicate: AuthenticationPredicate): Future[Result] = authenticationPredicate.async {
-      implicit request =>
+      request =>
         Future.successful(Ok)
     }.apply(FakeRequest())
 

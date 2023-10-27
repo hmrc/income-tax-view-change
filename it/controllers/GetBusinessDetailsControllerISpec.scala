@@ -23,11 +23,9 @@ import helpers.ComponentSpecBase
 import helpers.servicemocks.BusinessDetailsCallWithNinoStub
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
-import play.api.mvc.{AnyContentAsEmpty, Result}
+import play.api.mvc.Result
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{await, defaultAwaitTimeout, route, status, writeableOf_AnyContentAsEmpty}
-
-import scala.concurrent.Future
+import play.api.test.Helpers.{await, defaultAwaitTimeout, route, writeableOf_AnyContentAsEmpty}
 
 class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
 

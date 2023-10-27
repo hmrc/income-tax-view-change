@@ -16,10 +16,11 @@
 
 package models.paymentAllocations
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsSuccess, Json}
 
-class AllocationDetailSpec extends WordSpec with Matchers {
+class AllocationDetailSpec extends AnyWordSpec with Matchers {
 
   "AllocationDetail" should {
     "read from json" when {

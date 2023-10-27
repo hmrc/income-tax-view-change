@@ -18,7 +18,7 @@ package services
 
 import connectors.IncomeSourceDetailsConnector
 import models.core.{NinoErrorModel, NinoModel, NinoResponse}
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -39,6 +39,9 @@ class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: Inc
       case error: IncomeSourceDetailsError =>
         logger.error(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$error")
         IncomeSourceDetailsError(error.status, error.reason)
+      case notFound: IncomeSourceDetailsNotFound =>
+        logger.warn(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details: \n\n$notFound")
+        IncomeSourceDetailsNotFound(notFound.status, notFound.reason)
     }
   }
 
@@ -48,6 +51,9 @@ class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: Inc
         logger.debug(s"[IncomeSourceDetailsService][getNino] - Converting to Nino Model")
         NinoModel(success.nino)
       case error: IncomeSourceDetailsError => NinoErrorModel(error.status, error.reason)
+      case notFound: IncomeSourceDetailsNotFound =>
+        logger.warn(s"[IncomeSourceDetailsService][getNino] - Income tax details not found: $notFound")
+        NinoErrorModel(notFound.status, notFound.reason)
     }
   }
 

@@ -16,12 +16,13 @@
 
 package models.financialDetails
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, Json}
 
 import java.time.LocalDate
 
-class PaymentSpec extends WordSpec with Matchers {
+class PaymentSpec extends AnyWordSpec with Matchers {
 
   val paymentEmpty: Payment = Payment(None, None, None, None, None, None, None, None, LocalDate.parse("2022-06-23"), "DOCID01")
 

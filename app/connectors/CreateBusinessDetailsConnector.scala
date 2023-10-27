@@ -17,7 +17,7 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, CreateBusinessDetailsModel, IncomeSource}
+import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, IncomeSource}
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._

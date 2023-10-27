@@ -20,11 +20,13 @@ import connectors.OutStandingChargesConnector
 import connectors.httpParsers.OutStandingChargesHttpParser.OutStandingChargeResponse
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpecLike}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 
 import scala.concurrent.Future
 
-trait MockOutStandingChargesConnector extends WordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockOutStandingChargesConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockOutStandingChargesConnector: OutStandingChargesConnector = mock(classOf[OutStandingChargesConnector])
 

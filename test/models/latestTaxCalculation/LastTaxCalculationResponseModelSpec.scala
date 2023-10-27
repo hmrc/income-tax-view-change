@@ -16,7 +16,7 @@
 
 package models.latestTaxCalculation
 
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import play.api.http.Status
 import play.api.libs.json.Json
 import utils.TestSupport

@@ -17,10 +17,11 @@
 package models.chargeHistoryDetail
 
 import assets.ChargeHistoryTestConstants._
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsSuccess, Json}
 
-class ChargeHistorySuccessResponseSpec extends WordSpec with Matchers {
+class ChargeHistorySuccessResponseSpec extends AnyWordSpec with Matchers {
 
 
   "ChargeHistoryDetails" should {

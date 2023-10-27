@@ -16,12 +16,13 @@
 
 package models.repaymentHistory
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsSuccess, JsValue, Json}
 
 import java.time.LocalDate
 
-class RepaymentHistorySpec extends WordSpec with Matchers {
+class RepaymentHistorySpec extends AnyWordSpec with Matchers {
 
   val repaymentHistoryNoRSI: RepaymentHistory = RepaymentHistory(
     amountApprovedforRepayment = Some(705.2),
