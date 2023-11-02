@@ -16,11 +16,11 @@
 
 package models.incomeSourceDetails
 
-import java.time.LocalDate
-
 import models.core.{AccountingPeriodModel, AddressModel, CessationModel, ContactDetailsModel}
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+import play.api.libs.json._
+
+import java.time.LocalDate
 
 case class BusinessDetailsModel(incomeSourceId: String,
                                 accountingPeriod: AccountingPeriodModel,
@@ -38,6 +38,12 @@ case class BusinessDetailsModel(incomeSourceId: String,
 
 object BusinessDetailsModel {
 
+  private val cashOrAccrualsUntilRelease10: Reads[Option[Boolean]] = (__ \ "cashOrAccruals").readNullable[String].map {
+    case Some("cash") => Some(false)
+    case Some("accruals") => Some(true)
+    case _ => None
+  }
+
   val desReads: Reads[BusinessDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
       __.read(AccountingPeriodModel.desReads) and
@@ -46,11 +52,7 @@ object BusinessDetailsModel {
       (__ \ "businessContactDetails").readNullable(ContactDetailsModel.desReads) and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "cashOrAccruals").readNullable[Boolean].orElse(
-        (__ \ "cashOrAccruals").read[String].map {
-          case "cash" => Some(false)
-          case "accruals" => Some(true)
-          case _ => throw new RuntimeException("Invalid value for cashOrAccruals")
-        }
+        cashOrAccrualsUntilRelease10
       ) and
       (__ \ "seasonal").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
