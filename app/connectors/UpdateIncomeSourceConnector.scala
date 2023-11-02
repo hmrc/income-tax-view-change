@@ -18,9 +18,8 @@ package connectors
 
 import config.MicroserviceAppConfig
 import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
-import models.updateIncomeSource.{UpdateIncomeSourceResponse, UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
-import play.api.http.Status
-import play.api.http.Status.OK
+import models.updateIncomeSource.{UpdateIncomeSourceListResponseError, UpdateIncomeSourceResponse, UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject
@@ -32,7 +31,7 @@ class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
 
   val updateIncomeSourceUrl: String = s"${appConfig.ifUrl}/income-tax/business-detail/income-source"
 
-  def updateIncomeSource(body: UpdateIncomeSourceRequestModel)(implicit headerCarrier: HeaderCarrier): Future[UpdateIncomeSourceResponse] = {
+  def updateIncomeSource(body: UpdateIncomeSourceRequestModel)(implicit headerCarrier: HeaderCarrier): Future[(UpdateIncomeSourceResponse, Int)] = {
     val url = updateIncomeSourceUrl
     logger.info(s"[UpdateIncomeSourceConnector][updateIncomeSource] - INFO " +
       s"Calling PUT $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders} \nBody:$body")
@@ -42,24 +41,43 @@ class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
         response.status match {
           case OK =>
             logger.debug(s"[UpdateIncomeSourceConnector][updateIncomeSource] - RESPONSE status:${response.status}, body:${response.body}")
-            response.json.validate[UpdateIncomeSourceResponseModel].fold(
+            (response.json.validate[UpdateIncomeSourceResponseModel].fold(
               invalid => {
                 logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - Validation Errors: $invalid")
-                UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing IF Update Income Source")
+                UpdateIncomeSourceListResponseError(
+                  Seq(UpdateIncomeSourceResponseError(
+                    "INTERNAL_SERVER_ERROR",
+                    "Json Validation Error. Parsing IF Update Income Source")))
+
               },
               valid => {
                 logger.info(s"[UpdateIncomeSourceConnector][updateIncomeSource] successfully parsed response to UpdateIncomeSource")
                 valid
               }
-            )
+            ), response.status)
           case _ =>
             logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - RESPONSE status: ${response.status}, body: ${response.body}")
-            UpdateIncomeSourceResponseError(response.status, response.body)
+            (response.json.validate[UpdateIncomeSourceListResponseError].fold(
+              invalid => {
+                logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - Validation Errors: $invalid")
+                UpdateIncomeSourceListResponseError(
+                  Seq(UpdateIncomeSourceResponseError(
+                    "INTERNAL_SERVER_ERROR",
+                    "Json Validation Error. Parsing IF Update Income Source")))
+              },
+              valid => {
+                logger.info(s"[UpdateIncomeSourceConnector][updateIncomeSource] successfully parsed response to UpdateIncomeSource")
+                valid
+              }
+            ), response.status)
         }
     } recover {
       case ex =>
         logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - Unexpected failed future, ${ex.getMessage}")
-        UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
+        (UpdateIncomeSourceListResponseError(
+          Seq(UpdateIncomeSourceResponseError(
+            "INTERNAL_SERVER_ERROR",
+            s"Unexpected failed future, ${ex.getMessage}"))), INTERNAL_SERVER_ERROR)
     }
 
   }

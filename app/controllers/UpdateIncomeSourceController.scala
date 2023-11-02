@@ -19,7 +19,7 @@ package controllers
 import connectors.UpdateIncomeSourceConnector
 import controllers.predicates.AuthenticationPredicate
 import models.updateIncomeSource.request.{UpdateIncomeSourceRequestError, UpdateIncomeSourceRequestModel}
-import models.updateIncomeSource.{UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
+import models.updateIncomeSource.{UpdateIncomeSourceListResponseError, UpdateIncomeSourceResponseModel}
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -51,12 +51,12 @@ class UpdateIncomeSourceController @Inject()(authentication: AuthenticationPredi
             logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Bad Request")
             Future(BadRequest(Json.toJson(x)))
           case x: UpdateIncomeSourceRequestModel => connector.updateIncomeSource(x).map {
-            case error: UpdateIncomeSourceResponseError =>
+            case (error: UpdateIncomeSourceListResponseError, status) =>
               logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Error Response: $error")
-              Status(error.status)(Json.toJson(error))
-            case success: UpdateIncomeSourceResponseModel =>
+              Status(status)(Json.toJson(error))
+            case (success: UpdateIncomeSourceResponseModel, status) =>
               logger.debug(s"[UpdateIncomeSourceController][updateIncomeSource] - Successful Response: $success")
-              Ok(Json.toJson(success))
+              Status(status)(Json.toJson(success))
           }
         }
 

@@ -19,7 +19,7 @@ package controllers
 import assets.UpdateIncomeSourceTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockUpdateIncomeSourceConnector}
-import play.api.http.Status.{BAD_REQUEST, OK, UNAUTHORIZED}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import play.api.libs.json.Json
 import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.auth.core.MissingBearerToken
@@ -41,7 +41,7 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
 
       "UpdateIncomeSourceConnector gives a valid response" should {
         mockAuth()
-        mockUpdateIncomeSource(successResponse)
+        mockUpdateIncomeSource(successResponse, OK)
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         whenReady(futureResult){ result =>
           checkContentTypeOf(result)("application/json")
@@ -52,22 +52,22 @@ class UpdateIncomeSourceControllerSpec extends ControllerBaseSpec with MockUpdat
 
       "UpdateIncomeSourceConnector gives a error response" should {
         mockAuth()
-        mockUpdateIncomeSource(failureResponse)
+        mockUpdateIncomeSource(failureResponse, INTERNAL_SERVER_ERROR)
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         whenReady(futureResult) { result =>
           checkContentTypeOf(result)("application/json")
-          checkStatusOf(result)(failureResponse.status)
+          checkStatusOf(result)(INTERNAL_SERVER_ERROR)
           checkJsonBodyOf(result)(failureResponse)
         }
       }
 
       "UpdateIncomeSourceConnector gives a invalid json response" should {
         mockAuth()
-        mockUpdateIncomeSource(badJsonResponse)
+        mockUpdateIncomeSource(badJsonResponse, INTERNAL_SERVER_ERROR)
         val futureResult = TestUpdateIncomeSourceController.updateIncomeSource()(fakeRequestPut(requestJson))
         whenReady(futureResult) { result =>
           checkContentTypeOf(result)("application/json")
-          checkStatusOf(result)(badJsonResponse.status)
+          checkStatusOf(result)(INTERNAL_SERVER_ERROR)
           checkJsonBodyOf(result)(badJsonResponse)
         }
       }

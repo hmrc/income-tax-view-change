@@ -3,9 +3,8 @@ package assets
 
 import assets.BaseIntegrationTestConstants.testNino
 import models.updateIncomeSource.request.{Cessation, TaxYearSpecific, UpdateIncomeSourceRequestModel}
-import models.updateIncomeSource.{UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
+import models.updateIncomeSource.{UpdateIncomeSourceListResponseError, UpdateIncomeSourceResponseError, UpdateIncomeSourceResponseModel}
 import play.api.libs.json.Json
-import play.mvc.Http.Status
 
 import java.time.LocalDate
 
@@ -39,5 +38,5 @@ object UpdateIncomeSourceIntegrationTestConstants {
   )
 
   val invalidRequestJson = Json.obj()
-  val failureResponse = UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
+  val failureResponse = UpdateIncomeSourceListResponseError(Seq(UpdateIncomeSourceResponseError("INTERNAL_SERVER_ERROR", s"Unexpected failed future, error")))
 }

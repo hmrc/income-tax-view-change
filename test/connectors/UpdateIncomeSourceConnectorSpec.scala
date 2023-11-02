@@ -19,6 +19,7 @@ package connectors
 import assets.UpdateIncomeSourceTestConstants._
 import mocks.MockHttp
 import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -34,22 +35,22 @@ class UpdateIncomeSourceConnectorSpec extends TestSupport with MockHttp {
 
     "return Status (OK) and a JSON body when successful" in {
       mock(request, successHttpResponse)
-      updateIncomeSource(request).futureValue shouldBe successResponse
+      updateIncomeSource(request).futureValue shouldBe(successResponse, OK)
     }
 
     "return UpdateIncomeSourceResponseError model in case of failure" in {
       mock(badRequest, badHttpResponse)
-      updateIncomeSource(badRequest).futureValue shouldBe errorBadResponse
+      updateIncomeSource(badRequest).futureValue shouldBe(errorBadResponse, BAD_REQUEST)
     }
 
     "return UpdateIncomeSourceResponseError model in case of bad JSON" in {
       mock(badRequest, successInvalidJsonResponse)
-      updateIncomeSource(badRequest).futureValue shouldBe badJsonResponse
+      updateIncomeSource(badRequest).futureValue shouldBe(badJsonResponse, OK)
     }
 
     "return UpdateIncomeSourceResponseError model in case of failed future" in {
       setupMockHttpPutFailed(updateIncomeSourceUrl, microserviceAppConfig.ifAuthHeaders)(badRequest)
-      updateIncomeSource(badRequest).futureValue shouldBe failureResponse
+      updateIncomeSource(badRequest).futureValue shouldBe(failureResponse, INTERNAL_SERVER_ERROR)
     }
   }
 }
