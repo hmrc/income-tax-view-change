@@ -18,11 +18,11 @@ package connectors
 
 import config.MicroserviceAppConfig
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, IncomeSource}
+import models.incomeSourceDetails.CreateIncomeSourceRequest
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,14 +32,14 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
                                                val appConfig: MicroserviceAppConfig)
                                               (implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def create(mtdbsaRef: String, body: JsValue)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
+  def create(mtdbsaRef: String, createIncomeSourceRequest: CreateIncomeSourceRequest)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
     val url = s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
 
     logger.debug(s"[CreateBusinessDetailsConnector][create] - " +
       s"Calling POST $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
 
-    http.POST(url, body, appConfig.desAuthHeaders) map {
+    http.POST[CreateIncomeSourceRequest, HttpResponse](url, createIncomeSourceRequest, appConfig.desAuthHeaders) map {
       case response if response.status == OK =>
         Logger("application").info(s"[CreateBusinessDetailsConnector][create] - SUCCESS - ${response.json}")
         response.json.validate[List[IncomeSource]].fold(
