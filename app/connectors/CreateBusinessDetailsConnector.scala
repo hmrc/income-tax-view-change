@@ -50,8 +50,8 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
           (res: List[IncomeSource]) => Right(res)
         )
       case errorResponse =>
-        Logger("application").error(s"[CreateBusinessDetailsConnector][create] - Error with response code: ${errorResponse.status} and body: ${errorResponse.body}")
-        Left(CreateBusinessDetailsErrorResponse(errorResponse.status, errorResponse.body))
+        Logger("application").error(s"[CreateBusinessDetailsConnector][create] - Error with response code: ${errorResponse.status} and body: ${errorResponse.json}")
+        Left(CreateBusinessDetailsErrorResponse(errorResponse.status, errorResponse.json.toString()))
     } recover {
       case ex =>
         logger.error(s"[CreateBusinessDetailsConnector][create] - ${ex.getMessage}")
