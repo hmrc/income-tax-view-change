@@ -31,6 +31,7 @@ class CreateBusinessDetailsService @Inject()(createBusinessDetailsConnector: Cre
   def createBusinessDetails(mtdbsaRef: String, createIncomeSourceRequest: CreateIncomeSourceRequest)
                            (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
     logger.debug(s"[CreateBusinessDetailsController][createBusinessDetails] - $createIncomeSourceRequest")
+    // TODO: do we need to validate response here? => We would expect always a single incomeSourceId to be returned
     createBusinessDetailsConnector.create(mtdbsaRef, createIncomeSourceRequest)
   }
 }

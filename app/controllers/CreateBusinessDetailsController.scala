@@ -39,12 +39,12 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
     request.body
       .asJson.getOrElse(Json.obj()).validate[CreateIncomeSourceRequest].fold(
         invalidRequest => {
-          Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - Error Response: ${invalidRequest}")
+          Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - invalid request: $invalidRequest")
           Future {
             BadRequest("[CreateBusinessDetailsController][createBusinessDetails]: Error - no payload found")
           }
         }, validRequest => {
-          Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: ")
+          Logger("application").info(s"[CreateBusinessDetailsController][createBusinessDetails] - creating business request: $validRequest")
           createBusinessDetailsService.createBusinessDetails(mtdbsaRef, validRequest) map {
             case Right(successResponse) =>
               Ok(Json.toJson(successResponse))
@@ -55,21 +55,4 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
         }
       )
   }
-
-  //    request.body.asJson match {
-  //      case Some(body) =>
-  //        Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: " + body)
-  //        createBusinessDetailsService.createBusinessDetails(mtdbsaRef, body) map {
-  //          case Right(successResponse) =>
-  //            Ok(Json.toJson(successResponse))
-  //          case Left(errorResponse) =>
-  //            Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - Error Response: $errorResponse")
-  //            Status(errorResponse.status)(Json.toJson(errorResponse))
-  //        }
-  //      case _ =>
-  //        Future {
-  //          BadRequest("[CreateBusinessDetailsController][createBusinessDetails]: Error - no payload found")
-  //        }
-  //    }
-  //  }
 }

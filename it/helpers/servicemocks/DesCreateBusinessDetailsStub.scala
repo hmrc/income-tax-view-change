@@ -27,6 +27,7 @@ object DesCreateBusinessDetailsStub {
   }
 
   def verifyCreateDesBusinessDetails(mtdbsaRef: String, requestBody: String): Unit = {
+    println(s"Here is request: $requestBody")
     WiremockHelper.verifyPost(url(mtdbsaRef), requestBody)
   }
 }
