@@ -91,7 +91,7 @@ trait FinancialDetailsConnector extends RawResponseReads with Logging {
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
       "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
+      "includeStatistical" -> "true"
     )
   }
 

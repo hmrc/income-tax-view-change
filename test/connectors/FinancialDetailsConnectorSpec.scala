@@ -85,7 +85,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
         "calculateAccruedInterest" -> "true",
         "removePOA" -> "false",
         "customerPaymentInformation" -> "true",
-        "includeStatistical" -> "false"
+        "includeStatistical" -> "true"
       )
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.chargeDetailsQuery(
         from = testFrom,
@@ -147,7 +147,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
         "calculateAccruedInterest" -> "true",
         "removePOA" -> "false",
         "customerPaymentInformation" -> "true",
-        "includeStatistical" -> "false"
+        "includeStatistical" -> "true"
       )
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.paymentAllocationQuery(
         documentId = documentId
@@ -210,7 +210,7 @@ abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector]
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
       "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
+      "includeStatistical" -> "true"
     )
 
     "have the correct formatted query parameters" in {
