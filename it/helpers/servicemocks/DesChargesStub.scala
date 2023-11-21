@@ -22,15 +22,15 @@ import play.api.libs.json.{JsValue, Json}
 object DesChargesStub {
 
   private def detailsUrl(nino: String, from: String, to: String): String = {
-    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?dateFrom=$from&dateTo=$to&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=true"
+    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?dateFrom=$from&dateTo=$to&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
   private def singleDocumentDetailsUrl(nino: String, documentId: String): String = {
-    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?docNumber=$documentId&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=true"
+    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?docNumber=$documentId&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
   private def onlyOpenItemsUrl(nino: String): String = {
-    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?onlyOpenItems=true&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=true"
+    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?onlyOpenItems=true&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
   private def historyUrl(mtdBsa: String, documentId: String): String = {
