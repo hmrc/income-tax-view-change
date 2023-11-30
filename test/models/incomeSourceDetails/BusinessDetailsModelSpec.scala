@@ -57,7 +57,8 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         cessation = None,
         paperless = None,
         firstAccountingPeriodEndDate = None,
-        latencyDetails = None
+        latencyDetails = None,
+        quarterTypeElection = None
       )
 
       Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
@@ -82,7 +83,8 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         cessation = None,
         paperless = None,
         firstAccountingPeriodEndDate = None,
-        latencyDetails = None
+        latencyDetails = None,
+        quarterTypeElection = None
       )
 
       Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
@@ -106,7 +108,8 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         cessation = None,
         paperless = None,
         firstAccountingPeriodEndDate = None,
-        latencyDetails = None
+        latencyDetails = None,
+        quarterTypeElection = None
       )
 
       Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
@@ -131,7 +134,8 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         cessation = None,
         paperless = None,
         firstAccountingPeriodEndDate = None,
-        latencyDetails = None
+        latencyDetails = None,
+        quarterTypeElection = None
       )
 
       Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelAfterR10)
@@ -156,7 +160,8 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         cessation = None,
         paperless = None,
         firstAccountingPeriodEndDate = None,
-        latencyDetails = None
+        latencyDetails = None,
+        quarterTypeElection = None
       )
 
       Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelAfterR10)

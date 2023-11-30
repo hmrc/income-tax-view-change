@@ -16,12 +16,13 @@
 
 package assets
 
-import java.time.LocalDate
 import assets.AccountingPeriodTestConstants._
 import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
-import models.incomeSourceDetails.{LatencyDetails, PropertiesRentedModel, PropertyDetailsModel}
+import models.incomeSourceDetails.{LatencyDetails, PropertiesRentedModel, PropertyDetailsModel, QuarterTypeElection}
 import play.api.libs.json.Json
+
+import java.time.LocalDate
 
 object PropertyDetailsTestConstants {
 
@@ -48,7 +49,8 @@ object PropertyDetailsTestConstants {
       latencyIndicator1 = "A",
       taxYear2 = "2023",
       latencyIndicator2 = "Q")),
-    cashOrAccruals = Some(true)
+    cashOrAccruals = Some(true),
+    quarterTypeElection = Some(QuarterTypeElection("STANDARD", "2021"))
   )
 
   val testMinimumPropertyDetailsModel = PropertyDetailsModel(
@@ -62,7 +64,8 @@ object PropertyDetailsTestConstants {
     incomeSourceType = None,
     tradingStartDate = None,
     latencyDetails = None,
-    cashOrAccruals = None
+    cashOrAccruals = None,
+    quarterTypeElection = None
   )
 
 
@@ -109,7 +112,11 @@ object PropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccruals" -> true
+    "cashOrAccruals" -> true,
+    "quarterTypeElection" -> Json.obj(
+      "quarterReportingType" -> "STANDARD",
+      "taxYearofElection" -> "2021"
+    )
   )
 
   val testPropertyDetailsJsonString = Json.obj(
@@ -133,7 +140,11 @@ object PropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccruals" -> true
+    "cashOrAccruals" -> true,
+    "quarterTypeElection" -> Json.obj(
+      "quarterReportingType" -> "STANDARD",
+      "taxYearofElection" -> "2021"
+    )
   )
 
   val testPropertyDetailsToJson = Json.obj(
@@ -152,7 +163,11 @@ object PropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccruals" -> true
+    "cashOrAccruals" -> true,
+    "quarterTypeElection" -> Json.obj(
+      "quarterReportingType" -> "STANDARD",
+      "taxYearofElection" -> "2021"
+    )
   )
 
   val testMinimumPropertyDetailsJson = Json.obj(
