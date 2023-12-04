@@ -144,53 +144,57 @@ object BusinessDetailsIntegrationTestConstants {
 
   def jsonSuccessOutput(): JsValue = {
     Json.parse(
-      """
-				|{
-				|	"nino":"BB123456A",
-				|	"mtdbsa":"123456789012345",
-				|	"businesses":[{
-				|		"incomeSourceId":"111111111111111",
-				|  	"accountingPeriod":{
-				|   	"start":"2017-06-01",
-				|    	"end":"2018-05-31"
-				|   },
-				|   "tradingName":"Test Business",
-				|   "address":{
-				|   	"addressLine1":"Test Lane",
-				|    	"addressLine2":"Test Unit",
-				|     "addressLine3":"Test Town",
-				|     "addressLine4":"Test City",
-				|     "postCode":"TE5 7TE","countryCode":"GB"
-				|   },
-				|   "contactDetails":{
-				|   	"phoneNumber":"01332752856",
-				|    	"mobileNumber":"07782565326",
-				|     "faxNumber":"01332754256",
-				|     "emailAddress":"stephen@manncorpone.co.uk"
-				|   },
-				|   "tradingStartDate":"2017-01-01",
-				|   "cashOrAccruals":false,
-				|   "seasonal":true,
-				|   "paperless":true,
-				|   "firstAccountingPeriodEndDate":"2016-01-01",
-|   "latencyDetails": {
-|     "latencyEndDate": "2022-01-01",
-|     "taxYear1": "2022",
-|     "latencyIndicator1": "A",
-|     "taxYear2": "2023",
-|     "latencyIndicator2": "Q"
-|  }}],
-				| "properties":[{
-				| 	"incomeSourceId":"2222222222",
-				|  	"accountingPeriod":{
-				|  		"start":"2017-06-01",
-				|   	"end":"2018-05-31"
-				| 	},
-				| 	"paperless":true,
-				| 	"firstAccountingPeriodEndDate":"2017-06-01"
-				|	}]
-				|}
-|""".stripMargin)
+      """{
+        |    "nino": "BB123456A",
+        |    "mtdbsa": "123456789012345",
+        |    "businesses": [
+        |        {
+        |            "incomeSourceId": "111111111111111",
+        |            "accountingPeriod": {
+        |                "start": "2017-06-01",
+        |                "end": "2018-05-31"
+        |            },
+        |            "tradingName": "Test Business",
+        |            "address": {
+        |                "addressLine1": "Test Lane",
+        |                "addressLine2": "Test Unit",
+        |                "addressLine3": "Test Town",
+        |                "addressLine4": "Test City",
+        |                "postCode": "TE5 7TE",
+        |                "countryCode": "GB"
+        |            },
+        |            "contactDetails": {
+        |                "phoneNumber": "01332752856",
+        |                "mobileNumber": "07782565326",
+        |                "faxNumber": "01332754256",
+        |                "emailAddress": "stephen@manncorpone.co.uk"
+        |            },
+        |            "tradingStartDate": "2017-01-01",
+        |            "cashOrAccruals": false,
+        |            "seasonal": true,
+        |            "paperless": true,
+        |            "firstAccountingPeriodEndDate": "2016-01-01",
+        |            "latencyDetails": {
+        |                "latencyEndDate": "2022-01-01",
+        |                "taxYear1": "2022",
+        |                "latencyIndicator1": "A",
+        |                "taxYear2": "2023",
+        |                "latencyIndicator2": "Q"
+        |            }
+        |        }
+        |    ],
+        |    "properties": [
+        |        {
+        |            "incomeSourceId": "2222222222",
+        |            "accountingPeriod": {
+        |                "start": "2017-06-01",
+        |                "end": "2018-05-31"
+        |            },
+        |            "paperless": true,
+        |            "firstAccountingPeriodEndDate": "2017-06-01"
+        |        }
+        |    ]
+        |}""".stripMargin)
   }
 
 }
