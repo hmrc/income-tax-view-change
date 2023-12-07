@@ -16,11 +16,12 @@
 
 package connectors.httpParsers
 
-import assets.CalculationListTestConstants.{badRequestSingleError, calculationListFull, calculationListMin, jsonResponseFull, jsonResponseMin, jsonSingleError}
+import assets.CalculationListTestConstants._
 import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
 import models.errors.{InvalidJsonResponse, UnexpectedResponse}
 import play.api.http.Status
+import play.api.libs.json.JsNull
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -39,6 +40,14 @@ class CalculationListHttpParserSpec extends TestSupport {
         val httpResponse: HttpResponse = HttpResponse(Status.OK, jsonResponseMin, Map.empty)
 
         val expected: Either[Nothing, CalculationListResponseModel] = Right(calculationListMin)
+        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
+
+        result shouldEqual expected
+      }
+      "HTTP response is 204" in {
+        val httpResponse: HttpResponse = HttpResponse(Status.NO_CONTENT, JsNull, Map.empty)
+
+        val expected: Either[Nothing, CalculationListResponseModel] = Right(CalculationListResponseModel(Seq.empty))
         val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
         result shouldEqual expected

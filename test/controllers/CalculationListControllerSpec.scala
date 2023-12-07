@@ -47,6 +47,16 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
         val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
         status(result) shouldBe Status.OK
         contentAsJson(result) shouldBe Json.toJson(calculationListFull.calculations.head)
+
+      }
+    }
+    "return 204 NO_CONTENT" when {
+      "user is authenticated and CalculationListService returns a empty list response" in {
+        mockAuth()
+        setupMockGetCalculationList(testNino, testTaxYearEnd)(Right(CalculationListResponseModel(Seq.empty)))
+
+        val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
+        status(result) shouldBe Status.NO_CONTENT
       }
     }
     "return 400 BAD_REQUEST" when {
@@ -104,6 +114,15 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
         val result = TestCalculationListController.getCalculationListTYS(testNino, testTaxYearRange)(fakeRequest)
         status(result) shouldBe Status.OK
         contentAsJson(result) shouldBe Json.toJson(calculationListFull.calculations.head)
+      }
+    }
+    "return 204 NO_CONTENT" when {
+      "user is authenticated and CalculationListService returns a empty list response" in {
+        mockAuth()
+        setupMockGetCalculationListTYS(testNino, testTaxYearRange)(Right(CalculationListResponseModel(Seq.empty)))
+
+        val result = TestCalculationListController.getCalculationListTYS(testNino, testTaxYearRange)(fakeRequest)
+        status(result) shouldBe Status.NO_CONTENT
       }
     }
     "return 400 BAD_REQUEST" when {

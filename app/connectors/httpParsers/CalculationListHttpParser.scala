@@ -18,7 +18,7 @@ package connectors.httpParsers
 
 import models.calculationList.{CalculationListModel, CalculationListResponseModel}
 import models.errors.{UnexpectedJsonFormat, UnexpectedResponse}
-import play.api.http.Status.OK
+import play.api.http.Status.{NO_CONTENT, OK}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object CalculationListHttpParser extends ResponseHttpParsers {
@@ -37,6 +37,10 @@ object CalculationListHttpParser extends ResponseHttpParsers {
               Right(CalculationListResponseModel(valid))
             }
           )
+        case NO_CONTENT =>
+          logger.info(s"[CalculationListReads][read] ${response.status} returned")
+          Right(CalculationListResponseModel(Seq.empty))
+
         case status if status >= 400 && status < 500 =>
           logger.warn(s"[CalculationListReads][read] $status returned from DES with body: ${response.body}")
           handleErrorResponse(response)

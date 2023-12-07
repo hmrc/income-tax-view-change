@@ -63,6 +63,9 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
   private def getCalculationList(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
     logger.debug(s"[CalculationListController][getCalculationList] Calling CalculationListService.getCalculationList")
     calculationListService.getCalculationList(nino, taxYear).map {
+      case Right(calculationList) if calculationList.calculations.isEmpty =>
+        logger.info("[CalculationListController][getCalculationList] no content")
+        Status(NO_CONTENT)
       case Right(calculationList) =>
         val calculation = calculationList.calculations.head
         Ok(Json.toJson(calculation))
@@ -81,6 +84,9 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
   private def getCalculationListTYS(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
     logger.debug(s"[CalculationListController][getCalculationList] Calling CalculationListService.getCalculationList")
     calculationListService.getCalculationListTYS(nino, taxYear).map {
+      case Right(calculationList) if calculationList.calculations.isEmpty =>
+        logger.info("[CalculationListController][getCalculationListTYS] no content")
+        Status(NO_CONTENT)
       case Right(calculationList) =>
         val calculation = calculationList.calculations.head
         Ok(Json.toJson(calculation))
