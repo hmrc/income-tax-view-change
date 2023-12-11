@@ -33,7 +33,8 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean],
                                 firstAccountingPeriodEndDate: Option[LocalDate],
-                                latencyDetails: Option[LatencyDetails])
+                                latencyDetails: Option[LatencyDetails],
+                                quarterTypeElection: Option[QuarterTypeElection])
 
 
 object BusinessDetailsModel {
@@ -59,8 +60,9 @@ object BusinessDetailsModel {
       (__ \ "cessationReason").readNullable[String] and
       (__ \ "paperLess").readNullable[Boolean] and
       (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
-      (__ \ "latencyDetails").readNullable[LatencyDetails]
-    )(BusinessDetailsModel.applyWithFields _)
+      (__ \ "latencyDetails").readNullable[LatencyDetails] and
+      (__ \ "quarterTypeElection").readNullable[QuarterTypeElection]
+    ) (BusinessDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
                       accountingPeriodModel: AccountingPeriodModel,
@@ -74,7 +76,8 @@ object BusinessDetailsModel {
                       cessationReason: Option[String],
                       paperless: Option[Boolean],
                       firstAccountingPeriodEndDate: Option[LocalDate],
-                      latencyDetails: Option[LatencyDetails]): BusinessDetailsModel =
+                      latencyDetails: Option[LatencyDetails],
+                      quarterTypeElection: Option[QuarterTypeElection]): BusinessDetailsModel =
     BusinessDetailsModel(
       incomeSourceId,
       accountingPeriodModel,
@@ -87,7 +90,8 @@ object BusinessDetailsModel {
       CessationModel.cessation(cessationDate, cessationReason),
       paperless,
       firstAccountingPeriodEndDate,
-      latencyDetails
+      latencyDetails,
+      quarterTypeElection
     )
 
   implicit val format: Format[BusinessDetailsModel] = Json.format[BusinessDetailsModel]

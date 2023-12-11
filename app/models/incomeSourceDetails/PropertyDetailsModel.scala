@@ -16,11 +16,11 @@
 
 package models.incomeSourceDetails
 
-import java.time.LocalDate
-
 import models.core.{AccountingPeriodModel, CessationModel, ContactDetailsModel, CustomReads}
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+import play.api.libs.json._
+
+import java.time.LocalDate
 
 case class PropertyDetailsModel(incomeSourceId: String,
                                 accountingPeriod: AccountingPeriodModel,
@@ -32,7 +32,8 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 incomeSourceType: Option[String],
                                 tradingStartDate: Option[LocalDate],
                                 latencyDetails: Option[LatencyDetails],
-                                cashOrAccruals: Option[Boolean])
+                                cashOrAccruals: Option[Boolean],
+                                quarterTypeElection: Option[QuarterTypeElection])
 
 object PropertyDetailsModel extends CustomReads {
 
@@ -51,7 +52,8 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "incomeSourceType").readNullable[String] and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "latencyDetails").readNullable[LatencyDetails] and
-      (__ \ "cashOrAccruals").readNullable[Boolean]
+      (__ \ "cashOrAccruals").readNullable[Boolean] and
+      (__ \ "quarterTypeElection").readNullable[QuarterTypeElection]
     ) (PropertyDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
@@ -68,7 +70,8 @@ object PropertyDetailsModel extends CustomReads {
                       incomeSourceType: Option[String],
                       tradingStartDate: Option[LocalDate],
                       latencyDetails: Option[LatencyDetails],
-                      cashOrAccruals: Option[Boolean]): PropertyDetailsModel = PropertyDetailsModel(
+                      cashOrAccruals: Option[Boolean],
+                      quarterTypeElection: Option[QuarterTypeElection]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,
     ContactDetailsModel.propertyContactDetails(email),
@@ -79,7 +82,8 @@ object PropertyDetailsModel extends CustomReads {
     incomeSourceType,
     tradingStartDate,
     latencyDetails,
-    cashOrAccruals
+    cashOrAccruals,
+    quarterTypeElection
   )
 
   implicit val writes: OWrites[PropertyDetailsModel] = Json.writes[PropertyDetailsModel]
