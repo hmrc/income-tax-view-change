@@ -17,6 +17,7 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
+import models.createIncomeSource.{CreateIncomeSourceRequest, CreateIncomeSourceRequestError}
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.{Logger, Logging}
@@ -34,10 +35,22 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
                                                ) extends BackendController(cc) with Logging {
 
   def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    request.body.asJson match {
-      case Some(body) =>
-        Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: " + body)
-        createBusinessDetailsService.createBusinessDetails(mtdbsaRef, body) map {
+    request.body.asJson.map(_.validate[CreateIncomeSourceRequest].fold(
+      invalid => {
+        logger.error(s"[CreateBusinessDetailsController][createBusinessDetails] - Validation Errors: $invalid")
+        CreateIncomeSourceRequestError("Json validation error while parsing request")
+      },
+      valid => {
+        logger.info(s"[CreateBusinessDetailsController][createBusinessDetails] - successfully parsed response to CreateIncomeSourceRequest")
+        valid
+      }
+    )) match {
+      case Some(err: CreateIncomeSourceRequestError) =>
+        logger.error(s"[CreateBusinessDetailsController][createBusinessDetails] - Bad Request")
+        Future(BadRequest(Json.toJson(err)))
+      case Some(createIncomeSourceRequest: CreateIncomeSourceRequest) =>
+        Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: " + createIncomeSourceRequest)
+        createBusinessDetailsService.createBusinessDetails(mtdbsaRef, createIncomeSourceRequest) map {
           case Right(successResponse) =>
             Ok(Json.toJson(successResponse))
           case Left(errorResponse) =>
