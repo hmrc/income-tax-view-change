@@ -32,7 +32,7 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 incomeSourceType: Option[String],
                                 tradingStartDate: Option[LocalDate],
                                 latencyDetails: Option[LatencyDetails],
-                                cashOrAccruals: Option[Boolean],
+                                cashOrAccruals: Boolean,
                                 quarterTypeElection: Option[QuarterTypeElection])
 
 object PropertyDetailsModel extends CustomReads {
@@ -52,7 +52,7 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "incomeSourceType").readNullable[String] and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "latencyDetails").readNullable[LatencyDetails] and
-      (__ \ "cashOrAccruals").readNullable[Boolean] and
+      (__ \ "cashOrAccruals").read[Boolean] and
       (__ \ "quarterTypeElection").readNullable[QuarterTypeElection]
     ) (PropertyDetailsModel.applyWithFields _)
 
@@ -70,7 +70,7 @@ object PropertyDetailsModel extends CustomReads {
                       incomeSourceType: Option[String],
                       tradingStartDate: Option[LocalDate],
                       latencyDetails: Option[LatencyDetails],
-                      cashOrAccruals: Option[Boolean],
+                      cashOrAccruals: Boolean,
                       quarterTypeElection: Option[QuarterTypeElection]): PropertyDetailsModel = PropertyDetailsModel(
     incomeSourceId,
     accountingPeriod,

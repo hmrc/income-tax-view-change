@@ -35,7 +35,7 @@ object BusinessDetailsTestConstants {
       address = Some(testAddressModel),
       contactDetails = Some(testContactDetailsModel),
       tradingStartDate = Some(LocalDate.parse("2017-01-01")),
-      cashOrAccruals = Some(false),
+      cashOrAccruals = false,
       seasonal = Some(true),
       cessation = Some(testCessationModel),
       paperless = Some(true),
@@ -57,7 +57,7 @@ object BusinessDetailsTestConstants {
     address = None,
     contactDetails = None,
     tradingStartDate = None,
-    cashOrAccruals = None,
+    cashOrAccruals = true,
     seasonal = None,
     cessation = None,
     paperless = None,
@@ -119,12 +119,14 @@ object BusinessDetailsTestConstants {
   val testMinimumBusinessDetailsJson: JsObject = Json.obj(
     "incomeSourceId" -> "111111111111111",
     "accountingPeriodStartDate" -> "2017-06-01",
-    "accountingPeriodEndDate" -> "2018-05-31"
+    "accountingPeriodEndDate" -> "2018-05-31",
+    "cashOrAccruals" -> true
   )
 
   val testMinimumBusinessDetailsToJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriod" -> testAccountingPeriodToJson
+    "accountingPeriod" -> testAccountingPeriodToJson,
+    "cashOrAccruals" -> true
   )
 
 }

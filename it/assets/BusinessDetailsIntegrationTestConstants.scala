@@ -45,7 +45,7 @@ object BusinessDetailsIntegrationTestConstants {
         faxNumber = Some("01332754256"),
         emailAddress = Some("stephen@manncorpone.co.uk"))),
       tradingStartDate = Some(LocalDate.parse("2017-01-01")),
-      cashOrAccruals = Some(false),
+      cashOrAccruals = false,
       seasonal = Some(true),
       cessation = None,
       paperless = Some(true),
@@ -73,7 +73,7 @@ object BusinessDetailsIntegrationTestConstants {
     None,
     None,
     None,
-    None, None
+    true, None
   )
 
   def successResponseIf(nino: String): JsValue = {
@@ -129,7 +129,8 @@ object BusinessDetailsIntegrationTestConstants {
           "accountingPeriodStartDate" -> "2017-06-01",
           "accountingPeriodEndDate" -> "2018-05-31",
           "paperLess" -> true,
-          "firstAccountingPeriodEndDate" -> "2017-06-01"
+          "firstAccountingPeriodEndDate" -> "2017-06-01",
+          "cashOrAccruals" -> false
         )
       )
     )
@@ -191,7 +192,8 @@ object BusinessDetailsIntegrationTestConstants {
         |                "end": "2018-05-31"
         |            },
         |            "paperless": true,
-        |            "firstAccountingPeriodEndDate": "2017-06-01"
+        |            "firstAccountingPeriodEndDate": "2017-06-01",
+        |            "cashOrAccruals": false
         |        }
         |    ]
         |}""".stripMargin)

@@ -49,7 +49,7 @@ object PropertyDetailsTestConstants {
       latencyIndicator1 = "A",
       taxYear2 = "2023",
       latencyIndicator2 = "Q")),
-    cashOrAccruals = Some(true),
+    cashOrAccruals = true,
     quarterTypeElection = Some(QuarterTypeElection("STANDARD", "2021"))
   )
 
@@ -64,7 +64,7 @@ object PropertyDetailsTestConstants {
     incomeSourceType = None,
     tradingStartDate = None,
     latencyDetails = None,
-    cashOrAccruals = None,
+    cashOrAccruals = true,
     quarterTypeElection = None
   )
 
@@ -173,7 +173,8 @@ object PropertyDetailsTestConstants {
   val testMinimumPropertyDetailsJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
     "accountingPeriodStartDate" -> "2017-06-01",
-    "accountingPeriodEndDate" -> "2018-05-31"
+    "accountingPeriodEndDate" -> "2018-05-31",
+    "cashOrAccruals" -> true
   )
 
 
