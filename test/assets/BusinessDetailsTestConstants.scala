@@ -16,13 +16,14 @@
 
 package assets
 
-import java.time.LocalDate
 import assets.AccountingPeriodTestConstants._
 import assets.AddressDetailsTestConstants._
 import assets.CessationTestConstants._
 import assets.ContactDetailsTestConstants._
-import models.incomeSourceDetails.{BusinessDetailsModel, LatencyDetails}
+import models.incomeSourceDetails.{BusinessDetailsModel, LatencyDetails, QuarterTypeElection}
 import play.api.libs.json.{JsObject, Json}
+
+import java.time.LocalDate
 
 object BusinessDetailsTestConstants {
 
@@ -41,10 +42,11 @@ object BusinessDetailsTestConstants {
       firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
       latencyDetails = Some(LatencyDetails(
         latencyEndDate = LocalDate.of(2022, 1, 1),
-        taxYear1 =  "2022",
+        taxYear1 = "2022",
         latencyIndicator1 = "A",
         taxYear2 = "2023",
-        latencyIndicator2 = "Q"))
+        latencyIndicator2 = "Q")),
+      quarterTypeElection = Some(QuarterTypeElection("STANDARD", "2021"))
     )
 
 
@@ -60,7 +62,8 @@ object BusinessDetailsTestConstants {
     cessation = None,
     paperless = None,
     firstAccountingPeriodEndDate = None,
-    latencyDetails = None
+    latencyDetails = None,
+    quarterTypeElection = None
   )
 
   val testBusinessDetailsJson: JsObject = Json.obj(
@@ -79,10 +82,14 @@ object BusinessDetailsTestConstants {
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "latencyDetails" -> Json.obj(
       "latencyEndDate" -> "2022-01-01",
-      "taxYear1" ->  "2022",
+      "taxYear1" -> "2022",
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
-      "latencyIndicator2" -> "Q")
+      "latencyIndicator2" -> "Q"),
+    "quarterTypeElection" -> Json.obj(
+      "quarterReportingType" -> "STANDARD",
+      "taxYearofElection" -> "2021"
+    )
   )
 
   val testBusinessDetailsToJson: JsObject = Json.obj(
@@ -102,7 +109,11 @@ object BusinessDetailsTestConstants {
       "taxYear1" -> "2022",
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
-      "latencyIndicator2" -> "Q")
+      "latencyIndicator2" -> "Q"),
+    "quarterTypeElection" -> Json.obj(
+      "quarterReportingType" -> "STANDARD",
+      "taxYearofElection" -> "2021"
+    )
   )
 
   val testMinimumBusinessDetailsJson: JsObject = Json.obj(
