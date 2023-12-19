@@ -17,31 +17,68 @@
 package controllers
 
 import assets.BaseIntegrationTestConstants._
-import assets.CreateBusinessDetailsIntegrationTestConstants.{successResponse, testBusinessDetails, testIncomeSourceId}
+import assets.CreateBusinessDetailsIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesCreateBusinessDetailsStub
+import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.Json
 
 class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
 
-  "Calling the CreateBusinessDetailsController.createBusinessDetails method" when {
-    "authorised with a valid request" when {
+  "Calling CreateBusinessDetailsController.createBusinessDetails method" when {
+    "authorised with a CreateBusinessIncomeSourceRequest model" when {
       "A successful response is returned from DES" should {
-        "return a valid createBusinessDetails model" in {
+        s"return $OK response with an incomeSourceId" in {
 
           isAuthorised(true)
 
-          And("I wiremock stub a successful createBusinessDetails response")
-          DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(testMtdbsa, OK, testBusinessDetails.toString, successResponse.toString)
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, Status.OK, testCreateBusinessIncomeSourceRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testBusinessDetails)
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
 
-          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testBusinessDetails.toString)
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
 
-          Then("a successful response is returned containing the incomeSourceId")
+          res should have(httpStatus(OK))
+          res.body should include(testIncomeSourceId)
+        }
+      }
+    }
+    "authorised with a CreateUKPropertyIncomeSourceRequest model" when {
+      "A successful response is returned from DES" should {
+        s"return $OK response with an incomeSourceId" in {
+
+          isAuthorised(true)
+
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, Status.OK, testCreateUKPropertyRequest, testCreateBusinessDetailsSuccessResponse)
+
+          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateUKPropertyRequest)
+
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateUKPropertyRequest)
+
+          res should have(httpStatus(OK))
+          res.body should include(testIncomeSourceId)
+        }
+      }
+    }
+    "authorised with a CreateForeignPropertyIncomeSourceRequest model" when {
+      "A successful response is returned from DES" should {
+        s"return $OK with an incomeSourceId" in {
+
+          isAuthorised(true)
+
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, Status.OK, testCreateForeignPropertyRequest, testCreateBusinessDetailsSuccessResponse)
+
+          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
+
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -49,13 +86,11 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
       }
     }
     "authorised with a invalid request" should {
-      s"return ${BAD_REQUEST}" in {
+      s"return $BAD_REQUEST" in {
+
         isAuthorised(true)
 
         val invalidRequest = Json.obj()
-
-        And("I wiremock stub a FAIL createBusinessDetails response")
-        DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(testMtdbsa, BAD_REQUEST, invalidRequest.toString, successResponse.toString)
 
         When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
         val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, invalidRequest)
