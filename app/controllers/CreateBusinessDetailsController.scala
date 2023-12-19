@@ -17,6 +17,7 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
+import models.incomeSourceDetails.CreateIncomeSourceRequest
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.{Logger, Logging}
@@ -27,6 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+
 @Singleton
 class CreateBusinessDetailsController @Inject()(val authentication: AuthenticationPredicate,
                                                 val createBusinessDetailsService: CreateBusinessDetailsService,
@@ -34,20 +36,23 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
                                                ) extends BackendController(cc) with Logging {
 
   def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    request.body.asJson match {
-      case Some(body) =>
-        Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: " + body)
-        createBusinessDetailsService.createBusinessDetails(mtdbsaRef, body) map {
-          case Right(successResponse) =>
-            Ok(Json.toJson(successResponse))
-          case Left(errorResponse) =>
-            Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - Error Response: $errorResponse")
-            Status(errorResponse.status)(Json.toJson(errorResponse))
+    request.body
+      .asJson.getOrElse(Json.obj()).validate[CreateIncomeSourceRequest].fold(
+        invalidRequest => {
+          Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - invalid request: $invalidRequest")
+          Future {
+            BadRequest("[CreateBusinessDetailsController][createBusinessDetails]: Error - no payload found")
+          }
+        }, validRequest => {
+          Logger("application").info(s"[CreateBusinessDetailsController][createBusinessDetails] - creating business request: $validRequest")
+          createBusinessDetailsService.createBusinessDetails(mtdbsaRef, validRequest) map {
+            case Right(successResponse) =>
+              Ok(Json.toJson(successResponse))
+            case Left(errorResponse) =>
+              Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - Error Response: $errorResponse")
+              Status(errorResponse.status)(Json.toJson(errorResponse))
+          }
         }
-      case _ =>
-        Future {
-          BadRequest("[CreateBusinessDetailsController][createBusinessDetails]: Error - no payload found")
-        }
-    }
+      )
   }
 }
