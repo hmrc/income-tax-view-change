@@ -22,16 +22,16 @@ sealed trait CreateIncomeSourceRequest
 object CreateIncomeSourceRequest {
 
   implicit val reads = {
-    __.read[CreateBusinessIncomeSourceRequest]        .map(x => x: CreateIncomeSourceRequest) orElse
-    __.read[CreateUKPropertyIncomeSourceRequest]      .map(x => x: CreateIncomeSourceRequest) orElse
-    __.read[CreateForeignPropertyIncomeSourceRequest] .map(x => x: CreateIncomeSourceRequest)
+    __.read[CreateBusinessIncomeSourceRequest]        .map(_.asInstanceOf[CreateIncomeSourceRequest]) orElse
+    __.read[CreateUKPropertyIncomeSourceRequest]      .map(_.asInstanceOf[CreateIncomeSourceRequest]) orElse
+    __.read[CreateForeignPropertyIncomeSourceRequest] .map(_.asInstanceOf[CreateIncomeSourceRequest])
   }
 
   implicit val writes = Writes[CreateIncomeSourceRequest]{
-    case x: CreateBusinessIncomeSourceRequest        => CreateBusinessIncomeSourceRequest.format.writes(x)
-    case x: CreateUKPropertyIncomeSourceRequest      => CreateUKPropertyIncomeSourceRequest.format.writes(x)
-    case x: CreateForeignPropertyIncomeSourceRequest => CreateForeignPropertyIncomeSourceRequest.format.writes(x)
-    case x: CreateBusinessDetailsRequestError        => CreateBusinessDetailsRequestError.format.writes(x)
+    case x: CreateBusinessIncomeSourceRequest         => CreateBusinessIncomeSourceRequest         .format.writes(x)
+    case x: CreateUKPropertyIncomeSourceRequest       => CreateUKPropertyIncomeSourceRequest       .format.writes(x)
+    case x: CreateForeignPropertyIncomeSourceRequest  => CreateForeignPropertyIncomeSourceRequest  .format.writes(x)
+    case x: CreateBusinessDetailsRequestError         => CreateBusinessDetailsRequestError         .format.writes(x)
   }
 }
 
