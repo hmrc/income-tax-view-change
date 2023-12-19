@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import models.createIncomeSource.{CreateIncomeSourceRequest, CreateIncomeSourceRequestError}
+import models.createIncomeSource.{BusinessDetails, CreateBusinessDetailsRequestError, CreateIncomeSourceRequest}
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.{Logger, Logging}
@@ -35,20 +35,20 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
                                                ) extends BackendController(cc) with Logging {
 
   def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    request.body.asJson.map(_.validate[CreateIncomeSourceRequest].fold(
+    request.body.asJson.getOrElse(Json.obj()).validate[BusinessDetails].fold(
       invalid => {
         logger.error(s"[CreateBusinessDetailsController][createBusinessDetails] - Validation Errors: $invalid")
-        CreateIncomeSourceRequestError("Json validation error while parsing request")
+        CreateBusinessDetailsRequestError("Json validation error while parsing request")
       },
       valid => {
         logger.info(s"[CreateBusinessDetailsController][createBusinessDetails] - successfully parsed response to CreateIncomeSourceRequest")
         valid
       }
-    )) match {
-      case Some(err: CreateIncomeSourceRequestError) =>
+    ) match {
+      case err: CreateBusinessDetailsRequestError =>
         logger.error(s"[CreateBusinessDetailsController][createBusinessDetails] - Bad Request")
         Future(BadRequest(Json.toJson(err)))
-      case Some(createIncomeSourceRequest: CreateIncomeSourceRequest) =>
+      case createIncomeSourceRequest: CreateIncomeSourceRequest =>
         Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: " + createIncomeSourceRequest)
         createBusinessDetailsService.createBusinessDetails(mtdbsaRef, createIncomeSourceRequest) map {
           case Right(successResponse) =>

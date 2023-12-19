@@ -94,8 +94,8 @@ object CreateUKPropertyIncomeSourceRequest {
   implicit val format: Format[CreateUKPropertyIncomeSourceRequest] = Json.format[CreateUKPropertyIncomeSourceRequest]
 }
 
-case class CreateIncomeSourceRequestError(reason: String) extends CreateIncomeSourceRequest
+case class CreateBusinessDetailsRequestError(reason: String) extends CreateIncomeSourceRequest
 
-object CreateIncomeSourceRequestError {
-  implicit val format: Format[CreateIncomeSourceRequestError] = Json.format
+object CreateBusinessDetailsRequestError {
+  implicit val format: Format[CreateBusinessDetailsRequestError] = Json.format
 }
