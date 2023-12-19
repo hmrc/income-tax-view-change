@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import models.createIncomeSource.{BusinessDetails, CreateBusinessDetailsRequestError, CreateIncomeSourceRequest}
+import models.createIncomeSource.{CreateBusinessDetailsRequestError, CreateIncomeSourceRequest}
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.{Logger, Logging}
@@ -35,7 +35,7 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
                                                ) extends BackendController(cc) with Logging {
 
   def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    request.body.asJson.getOrElse(Json.obj()).validate[BusinessDetails].fold(
+    request.body.asJson.getOrElse(Json.obj()).validate[CreateIncomeSourceRequest].fold(
       invalid => {
         logger.error(s"[CreateBusinessDetailsController][createBusinessDetails] - Validation Errors: $invalid")
         CreateBusinessDetailsRequestError("Json validation error while parsing request")

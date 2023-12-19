@@ -15,13 +15,24 @@
  */
 
 package models.createIncomeSource
-
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Format, Json, Writes, __}
 
 sealed trait CreateIncomeSourceRequest
 
 object CreateIncomeSourceRequest {
-  implicit val format: Format[CreateIncomeSourceRequest] = Json.format[CreateIncomeSourceRequest]
+
+  implicit val reads = {
+    __.read[CreateBusinessIncomeSourceRequest]        .map(x => x: CreateIncomeSourceRequest) orElse
+    __.read[CreateUKPropertyIncomeSourceRequest]      .map(x => x: CreateIncomeSourceRequest) orElse
+    __.read[CreateForeignPropertyIncomeSourceRequest] .map(x => x: CreateIncomeSourceRequest)
+  }
+
+  implicit val writes = Writes[CreateIncomeSourceRequest]{
+    case x: CreateBusinessIncomeSourceRequest        => CreateBusinessIncomeSourceRequest.format.writes(x)
+    case x: CreateUKPropertyIncomeSourceRequest      => CreateUKPropertyIncomeSourceRequest.format.writes(x)
+    case x: CreateForeignPropertyIncomeSourceRequest => CreateForeignPropertyIncomeSourceRequest.format.writes(x)
+    case x: CreateBusinessDetailsRequestError        => CreateBusinessDetailsRequestError.format.writes(x)
+  }
 }
 
 // *********************************************************************************************************************
