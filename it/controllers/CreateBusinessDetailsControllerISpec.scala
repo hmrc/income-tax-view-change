@@ -111,7 +111,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
             testMtdbsa,
             Status.INTERNAL_SERVER_ERROR,
             testCreateBusinessIncomeSourceRequest,
-            Json.toJson(CreateBusinessDetailsErrorResponse(500, "failed to create details"))
+            Json.toJson(CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, "failed to create details"))
           )
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
