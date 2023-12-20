@@ -47,7 +47,7 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
             )
           )
         case JsSuccess(validRequest, _) =>
-          logger.info(withPrefix(s"creating business from body: " + validRequest))
+          logger.info(withPrefix(s"creating business from body: $validRequest"))
           createBusinessDetailsService.createBusinessDetails(mtdbsaRef, validRequest) map {
             case Right(successResponse) =>
               Ok(
