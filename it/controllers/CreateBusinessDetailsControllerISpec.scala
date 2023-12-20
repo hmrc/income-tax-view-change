@@ -98,8 +98,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
         Then(s"a status of ${BAD_REQUEST} is returned ")
 
-        res should have(
-          httpStatus(BAD_REQUEST))
+        res should have(httpStatus(BAD_REQUEST))
       }
     }
     "authorised with a valid request" when {
@@ -118,8 +117,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
 
-          res should have(
-            httpStatus(INTERNAL_SERVER_ERROR))
+          res should have(httpStatus(INTERNAL_SERVER_ERROR))
         }
       }
     }
