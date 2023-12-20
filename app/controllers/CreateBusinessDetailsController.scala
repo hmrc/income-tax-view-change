@@ -39,20 +39,20 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
       .validate[CreateIncomeSourceRequest] match {
         case err: JsError =>
           logger.error(withPrefix(s"Validation Errors: ${err.errors}"))
-          Future(
+          Future {
             BadRequest(
               Json.toJson(
                 CreateBusinessDetailsRequestError("Json validation error while parsing request")
               )
             )
-          )
+          }
         case JsSuccess(validRequest, _) =>
           logger.info(withPrefix(s"creating business from body: $validRequest"))
           createBusinessDetailsService.createBusinessDetails(mtdbsaRef, validRequest) map {
             case Right(successResponse) =>
-              Ok(
+              Ok {
                 Json.toJson(successResponse)
-              )
+              }
             case Left(errorResponse) =>
               logger.error(withPrefix(s"Error Response: $errorResponse"))
               Status(errorResponse.status)(Json.toJson(errorResponse))
