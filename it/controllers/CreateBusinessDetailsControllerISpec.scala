@@ -21,7 +21,6 @@ import assets.CreateBusinessDetailsIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesCreateBusinessDetailsStub
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.CreateBusinessDetailsErrorResponse
-import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.Json
 
@@ -36,7 +35,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           DesCreateBusinessDetailsStub
-            .stubPostDesBusinessDetails(testMtdbsa, Status.OK, testCreateBusinessIncomeSourceRequest, testCreateBusinessDetailsSuccessResponse)
+            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateBusinessIncomeSourceRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
@@ -55,7 +54,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           DesCreateBusinessDetailsStub
-            .stubPostDesBusinessDetails(testMtdbsa, Status.OK, testCreateUKPropertyRequest, testCreateBusinessDetailsSuccessResponse)
+            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateUKPropertyRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateUKPropertyRequest)
@@ -74,7 +73,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           DesCreateBusinessDetailsStub
-            .stubPostDesBusinessDetails(testMtdbsa, Status.OK, testCreateForeignPropertyRequest, testCreateBusinessDetailsSuccessResponse)
+            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateForeignPropertyRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
@@ -96,7 +95,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
         When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
         val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, invalidRequest)
 
-        Then(s"a status of ${BAD_REQUEST} is returned ")
+        Then(s"a status of $BAD_REQUEST is returned ")
 
         res should have(httpStatus(BAD_REQUEST))
       }
@@ -109,9 +108,9 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
           DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(
             testMtdbsa,
-            Status.INTERNAL_SERVER_ERROR,
+            INTERNAL_SERVER_ERROR,
             testCreateBusinessIncomeSourceRequest,
-            Json.toJson(CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, "failed to create details"))
+            Json.toJson(CreateBusinessDetailsErrorResponse(INTERNAL_SERVER_ERROR, "failed to create details"))
           )
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
