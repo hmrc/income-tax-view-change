@@ -20,6 +20,7 @@ import assets.BaseIntegrationTestConstants._
 import assets.CreateBusinessDetailsIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesCreateBusinessDetailsStub
+import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.CreateBusinessDetailsErrorResponse
 import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -99,6 +100,27 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
         res should have(
           httpStatus(BAD_REQUEST))
+      }
+    }
+    "authorised with a valid request" when {
+      "API returns an error" should {
+        s"return $INTERNAL_SERVER_ERROR" in {
+
+          isAuthorised(true)
+
+          DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(
+            testMtdbsa,
+            Status.INTERNAL_SERVER_ERROR,
+            testCreateBusinessIncomeSourceRequest,
+            Json.toJson(CreateBusinessDetailsErrorResponse(500, "failed to create details"))
+          )
+
+          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR))
+        }
       }
     }
   }
