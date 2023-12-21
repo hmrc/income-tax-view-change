@@ -19,7 +19,7 @@ package assets
 import models.createIncomeSource.{AddressDetails, BusinessDetails, CreateBusinessIncomeSourceRequest}
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, IncomeSource}
 import play.api.http.Status
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
 
 import java.time.LocalDate
@@ -56,21 +56,26 @@ object CreateBusinessDetailsTestConstants {
       Map.empty
     )
 
-  val invalidRequest = validCreateSelfEmploymentRequest.copy(businessDetails = Nil)
+  val errorResponseBody: JsValue = Json.parse(
+    """
+      |  {
+      |    "status": "400",
+      |    "reason": "error"
+      |  }
+      |""".stripMargin)
 
-  val failureResponse = CreateBusinessDetailsErrorResponse(Status.BAD_REQUEST, "dummy message")
+  val invalidRequest = validCreateSelfEmploymentRequest
+
+  val badRequestFailureResponse = CreateBusinessDetailsErrorResponse(Status.BAD_REQUEST, errorResponseBody.toString)
+
+  val internalServerErrorFailureResponse = CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, "error")
+
+  val successResponseWithInvalidJson = CreateBusinessDetailsErrorResponse(Status.OK, Json.toJson(successResponse).toString)
 
   val failureHttpResponse =
     HttpResponse(
       Status.BAD_REQUEST,
-      Json.toJson(failureResponse),
-      Map.empty
-    )
-
-  val successHttpResponseWithInvalidJson =
-    HttpResponse(
-      Status.OK,
-      Json.toJson(failureResponse),
+      errorResponseBody,
       Map.empty
     )
 }

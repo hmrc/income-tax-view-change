@@ -44,12 +44,12 @@ class CreateBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
 
     "return CreateBusinessDetailsErrorResponse model if status (OK) is not returned by API" in {
       mock(validCreateSelfEmploymentRequest, failureHttpResponse)
-      create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Left(failureResponse)
+      create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Left(badRequestFailureResponse)
     }
 
     "return CreateBusinessDetailsErrorResponse model if future fails to complete" in {
-      setupMockHttpPutFailed[CreateIncomeSourceRequest](url(testMtdRef), microserviceAppConfig.desAuthHeaders)
-      create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Left(failureResponse)
+      setupMockHttpPostFailed[CreateIncomeSourceRequest](url(testMtdRef), microserviceAppConfig.desAuthHeaders)(validCreateSelfEmploymentRequest)
+      create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Left(internalServerErrorFailureResponse)
     }
   }
 }
