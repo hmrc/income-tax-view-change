@@ -58,11 +58,18 @@ object CreateBusinessDetailsTestConstants {
 
   val invalidRequest = validCreateSelfEmploymentRequest.copy(businessDetails = Nil)
 
-  val failureResponse = CreateBusinessDetailsErrorResponse(Status.BAD_REQUEST, "failed to create income source")
+  val failureResponse = CreateBusinessDetailsErrorResponse(Status.BAD_REQUEST, "dummy message")
 
   val failureHttpResponse =
     HttpResponse(
       Status.BAD_REQUEST,
+      Json.toJson(failureResponse),
+      Map.empty
+    )
+
+  val successHttpResponseWithInvalidJson =
+    HttpResponse(
+      Status.OK,
       Json.toJson(failureResponse),
       Map.empty
     )

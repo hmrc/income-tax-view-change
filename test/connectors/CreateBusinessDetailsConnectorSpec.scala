@@ -28,7 +28,6 @@ class CreateBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
 
   import TestCreateBusinessDetailsConnector._
 
-
   "CreateBusinessDetailsConnector.create" should {
 
     lazy val mock: (CreateIncomeSourceRequest, HttpResponse) => Unit =
@@ -36,18 +35,21 @@ class CreateBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
         url(testMtdRef), microserviceAppConfig.desAuthHeaders
       )
 
-    "return Status (OK) and a JSON body when successful" in {
-
+    "return an IncomeSource model if status (OK) is returned by API with valid json body" in {
       mock(validCreateSelfEmploymentRequest, successHttpResponse)
 
       create(testMtdRef, validCreateSelfEmploymentRequest)
         .futureValue shouldBe Right(successResponse)
     }
 
-    "return CreateBusinessDetailsErrorResponse model in case of failure" in {
-      mock(invalidRequest, failureHttpResponse)
-      create(testMtdRef, invalidRequest).futureValue shouldBe Left(failureResponse)
+    "return CreateBusinessDetailsErrorResponse model if status (OK) is not returned by API" in {
+      mock(validCreateSelfEmploymentRequest, failureHttpResponse)
+      create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Left(failureResponse)
     }
 
+    "return CreateBusinessDetailsErrorResponse model if future fails to complete" in {
+      setupMockHttpPutFailed[CreateIncomeSourceRequest](url(testMtdRef), microserviceAppConfig.desAuthHeaders)
+      create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Left(failureResponse)
+    }
   }
 }
