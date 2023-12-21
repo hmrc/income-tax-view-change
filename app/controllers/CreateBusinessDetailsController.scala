@@ -60,5 +60,5 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
       }
   }
 
-  val withPrefix: String => String = suffix => "[CreateBusinessDetailsController][createBusinessDetails] - " + suffix
+  private val withPrefix: String => String = suffix => "[CreateBusinessDetailsController][createBusinessDetails] - " + suffix
 }

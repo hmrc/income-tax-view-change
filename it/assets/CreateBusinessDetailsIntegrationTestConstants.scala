@@ -43,7 +43,7 @@ object CreateBusinessDetailsIntegrationTestConstants {
 
   val testDate = LocalDate.of(2022, 5, 1).toString
 
-  val testCreateBusinessIncomeSourceRequest =
+  val testCreateSelfEmploymentIncomeSourceRequest =
     Json.toJson(
       CreateBusinessIncomeSourceRequest(
         List(

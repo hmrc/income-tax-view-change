@@ -35,12 +35,12 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           DesCreateBusinessDetailsStub
-            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateBusinessIncomeSourceRequest, testCreateBusinessDetailsSuccessResponse)
+            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateSelfEmploymentIncomeSourceRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest)
 
-          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -109,12 +109,12 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(
             testMtdbsa,
             INTERNAL_SERVER_ERROR,
-            testCreateBusinessIncomeSourceRequest,
+            testCreateSelfEmploymentIncomeSourceRequest,
             Json.toJson(CreateBusinessDetailsErrorResponse(INTERNAL_SERVER_ERROR, "failed to create details"))
           )
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateBusinessIncomeSourceRequest)
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest)
 
           res should have(httpStatus(INTERNAL_SERVER_ERROR))
         }

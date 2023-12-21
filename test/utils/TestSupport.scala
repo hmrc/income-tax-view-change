@@ -35,6 +35,8 @@ trait TestSupport extends AnyWordSpec with AnyWordSpecLike with Matchers with Op
 
   def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("", "")
 
+  val fakePostRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withMethod("POST")
+
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
