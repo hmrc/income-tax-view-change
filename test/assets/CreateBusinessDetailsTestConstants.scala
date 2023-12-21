@@ -64,13 +64,9 @@ object CreateBusinessDetailsTestConstants {
       |  }
       |""".stripMargin)
 
-  val invalidRequest = validCreateSelfEmploymentRequest
-
   val badRequestFailureResponse = CreateBusinessDetailsErrorResponse(Status.BAD_REQUEST, errorResponseBody.toString)
 
   val internalServerErrorFailureResponse = CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, "error")
-
-  val successResponseWithInvalidJson = CreateBusinessDetailsErrorResponse(Status.OK, Json.toJson(successResponse).toString)
 
   val failureHttpResponse =
     HttpResponse(
