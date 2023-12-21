@@ -17,7 +17,6 @@
 package controllers
 
 import assets.BaseTestConstants.mtdRef
-import assets.CreateBusinessDetailsIntegrationTestConstants.testCreateSelfEmploymentIncomeSourceRequest
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockCreateBusinessDetailsService, MockMicroserviceAuthConnector}
 import models.createIncomeSource._
@@ -46,7 +45,11 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
 
         val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
           fakePostRequest.withJsonBody(
-            testCreateSelfEmploymentIncomeSourceRequest
+            Json.toJson(
+              CreateForeignPropertyIncomeSourceRequest(
+                PropertyDetails(testDate, "ACCRUALS", testDate)
+              )
+            )
           )
         )
 
