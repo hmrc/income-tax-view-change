@@ -32,30 +32,31 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
                                                val appConfig: MicroserviceAppConfig)
                                               (implicit ec: ExecutionContext) extends RawResponseReads {
 
+  val url: String => String = mtdbsaRef => s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
+
   def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
-    val url = s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
+    logger.debug(withPrefix(s"Calling POST ${url(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}"))
 
-    logger.debug(s"[CreateBusinessDetailsConnector][create] - " +
-      s"Calling POST $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
-
-    http.POST[CreateIncomeSourceRequest, HttpResponse](url, body, appConfig.desAuthHeaders) map {
+    http.POST[CreateIncomeSourceRequest, HttpResponse](url(mtdbsaRef), body, appConfig.desAuthHeaders) map {
       case response if response.status == OK =>
-        Logger("application").info(s"[CreateBusinessDetailsConnector][create] - SUCCESS - ${response.json}")
+        Logger("application").info(withPrefix(s"SUCCESS - ${response.json}"))
         response.json.validate[List[IncomeSource]].fold(
           invalidJson => {
-            Logger("application").error(s"Invalid Json with $invalidJson")
+            Logger("application").error(withPrefix(s"Invalid Json with $invalidJson"))
             Left(CreateBusinessDetailsErrorResponse(response.status, response.body))
           },
           (res: List[IncomeSource]) => Right(res)
         )
       case errorResponse =>
-        Logger("application").error(s"[CreateBusinessDetailsConnector][create] - Error with response code: ${errorResponse.status} and body: ${errorResponse.json}")
+        Logger("application").error(withPrefix(s"Error with response code: ${errorResponse.status} and body: ${errorResponse.json}"))
         Left(CreateBusinessDetailsErrorResponse(errorResponse.status, errorResponse.json.toString()))
     } recover {
       case ex =>
-        logger.error(s"[CreateBusinessDetailsConnector][create] - ${ex.getMessage}")
+        logger.error(withPrefix(s"${ex.getMessage}"))
         Left(CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, s"${ex.getMessage}"))
     }
   }
+
+  private val withPrefix: String => String = suffix => "[CreateBusinessDetailsConnector][create] - " + suffix
 }
