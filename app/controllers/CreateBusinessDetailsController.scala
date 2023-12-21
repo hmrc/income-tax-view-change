@@ -17,9 +17,10 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import play.api.libs.json.Json
+import models.createIncomeSource.{CreateBusinessDetailsRequestError, CreateIncomeSourceRequest}
+import play.api.Logging
+import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
-import play.api.{Logger, Logging}
 import services.CreateBusinessDetailsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -34,20 +35,30 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
                                                ) extends BackendController(cc) with Logging {
 
   def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    request.body.asJson match {
-      case Some(body) =>
-        Logger("application").info("[CreateBusinessDetailsController][createBusinessDetails] - creating business from body: " + body)
-        createBusinessDetailsService.createBusinessDetails(mtdbsaRef, body) map {
-          case Right(successResponse) =>
-            Ok(Json.toJson(successResponse))
-          case Left(errorResponse) =>
-            Logger("application").error(s"[CreateBusinessDetailsController][createBusinessDetails] - Error Response: $errorResponse")
-            Status(errorResponse.status)(Json.toJson(errorResponse))
-        }
-      case _ =>
-        Future {
-          BadRequest("[CreateBusinessDetailsController][createBusinessDetails]: Error - no payload found")
-        }
-    }
+    request.body.asJson.getOrElse(Json.obj())
+      .validate[CreateIncomeSourceRequest] match {
+        case err: JsError =>
+          logger.error(withPrefix(s"Validation Errors: ${err.errors}"))
+          Future {
+            BadRequest(
+              Json.toJson(
+                CreateBusinessDetailsRequestError("Json validation error while parsing request")
+              )
+            )
+          }
+        case JsSuccess(validRequest, _) =>
+          logger.info(withPrefix(s"creating business from body: $validRequest"))
+          createBusinessDetailsService.createBusinessDetails(mtdbsaRef, validRequest) map {
+            case Right(successResponse) =>
+              Ok {
+                Json.toJson(successResponse)
+              }
+            case Left(errorResponse) =>
+              logger.error(withPrefix(s"Error Response: $errorResponse"))
+              Status(errorResponse.status)(Json.toJson(errorResponse))
+          }
+      }
   }
+
+  private val withPrefix: String => String = suffix => "[CreateBusinessDetailsController][createBusinessDetails] - " + suffix
 }

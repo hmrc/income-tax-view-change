@@ -17,16 +17,17 @@
 package helpers.servicemocks
 
 import helpers.WiremockHelper
+import play.api.libs.json.JsValue
 
 object DesCreateBusinessDetailsStub {
 
   val url: String => String = mtdbsaRef => s"""/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"""
 
-  def stubPostDesBusinessDetails(mtdbsaRef: String, status: Int,  request: String, response: String): Unit = {
-    WiremockHelper.stubPost(url(mtdbsaRef), status, request, response)
+  def stubPostDesBusinessDetails(mtdbsaRef: String, status: Int, request: JsValue, response: JsValue): Unit = {
+    WiremockHelper.stubPost(url(mtdbsaRef), status, request.toString, response.toString)
   }
 
-  def verifyCreateDesBusinessDetails(mtdbsaRef: String, requestBody: String): Unit = {
-    WiremockHelper.verifyPost(url(mtdbsaRef), requestBody)
+  def verifyCreateDesBusinessDetails(mtdbsaRef: String, requestBody: JsValue): Unit = {
+    WiremockHelper.verifyPost(url(mtdbsaRef), requestBody.toString)
   }
 }

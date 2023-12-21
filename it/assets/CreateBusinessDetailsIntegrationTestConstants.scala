@@ -16,8 +16,11 @@
 
 package assets
 
+import models.createIncomeSource._
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsModel, IncomeSource}
 import play.api.libs.json.{JsValue, Json}
+
+import java.time.LocalDate
 
 object CreateBusinessDetailsIntegrationTestConstants {
 
@@ -38,7 +41,50 @@ object CreateBusinessDetailsIntegrationTestConstants {
          |""".stripMargin)
   }
 
-  val testBusinessDetails: JsValue = {
+  val testDate = LocalDate.of(2022, 5, 1).toString
+
+  val testCreateSelfEmploymentIncomeSourceRequest =
+    Json.toJson(
+      CreateBusinessIncomeSourceRequest(
+        List(
+          BusinessDetails(
+            accountingPeriodStartDate = testDate,
+            accountingPeriodEndDate = testDate,
+            tradingName = "Big Business",
+            addressDetails = AddressDetails("10 FooBar Street", None, None, None, None, None),
+            typeOfBusiness = None,
+            tradingStartDate = testDate,
+            cashOrAccrualsFlag = "CASH",
+            cessationDate = None,
+            cessationReason = None
+          )
+        )
+      )
+    )
+
+  val testCreateUKPropertyRequest =
+    Json.toJson(
+      CreateUKPropertyIncomeSourceRequest(
+        PropertyDetails(
+          tradingStartDate = testDate,
+          cashOrAccrualsFlag = "CASH",
+          startDate = testDate
+        )
+      )
+    )
+
+  val testCreateForeignPropertyRequest =
+    Json.toJson(
+      CreateForeignPropertyIncomeSourceRequest(
+        PropertyDetails(
+          tradingStartDate = testDate,
+          cashOrAccrualsFlag = "ACCRUALS",
+          startDate = testDate
+        )
+      )
+    )
+
+  val testCreateBusinessDetailsSuccessResponse: JsValue = {
     Json.toJson(
       CreateBusinessDetailsModel(
        List(
