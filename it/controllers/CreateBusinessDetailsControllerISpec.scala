@@ -29,7 +29,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
   "Calling CreateBusinessDetailsController.createBusinessDetails method" when {
     "authorised with a CreateBusinessIncomeSourceRequest model" when {
-      "A successful response is returned from DES" should {
+      "A successful response is returned from the API" should {
         s"return $OK response with an incomeSourceId" in {
 
           isAuthorised(true)
@@ -48,7 +48,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
       }
     }
     "authorised with a CreateUKPropertyIncomeSourceRequest model" when {
-      "A successful response is returned from DES" should {
+      "A successful response is returned from the API" should {
         s"return $OK response with an incomeSourceId" in {
 
           isAuthorised(true)
@@ -67,7 +67,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
       }
     }
     "authorised with a CreateForeignPropertyIncomeSourceRequest model" when {
-      "A successful response is returned from DES" should {
+      "A successful response is returned from the API" should {
         s"return $OK with an incomeSourceId" in {
 
           isAuthorised(true)
