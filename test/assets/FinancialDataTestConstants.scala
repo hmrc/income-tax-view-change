@@ -26,8 +26,7 @@ import java.time.LocalDate
 object FinancialDataTestConstants {
 
   val validChargesJson: JsValue = Json.parse(
-    """
-			|{
+    """{
       |"balanceDetails": {
       | "balanceDueWithin30Days": 100.00,
       | "overDueAmount": 200.00,
@@ -44,101 +43,101 @@ object FinancialDataTestConstants {
       |     "taxYearCoding": "2019"
       |   }
       | ],
-			| "documentDetails": [
-			|   {
-			|     "taxYear": "2018",
-			|     "documentId": "id",
-			|     "documentDescription": "documentDescription",
+      | "documentDetails": [
+      |   {
+      |     "taxYear": "2018",
+      |     "documentId": "id",
+      |     "documentDescription": "documentDescription",
       |     "documentText": "documentText",
-			|     "totalAmount": 300.00,
-			|     "documentOutstandingAmount": 200.00,
-			|     "lastClearedAmount": 100.00,
-			|     "documentDate": "2018-03-29",
-			|     "interestRate": 2.60,
-			|     "interestFromDate": "2018-08-01",
-			|     "interestEndDate": "2019-01-15",
+      |     "totalAmount": 300.00,
+      |     "documentOutstandingAmount": 200.00,
+      |     "lastClearedAmount": 100.00,
+      |     "documentDate": "2018-03-29",
+      |     "interestRate": 2.60,
+      |     "interestFromDate": "2018-08-01",
+      |     "interestEndDate": "2019-01-15",
       |     "latePaymentInterestID": "latePaymentInterestID",
-			|     "latePaymentInterestAmount": 12.34,
-			|     "interestOutstandingAmount": 31.00,
-			|     "paymentLot": "paymentLot",
-			|     "paymentLotItem": "paymentLotItem",
+      |     "latePaymentInterestAmount": 12.34,
+      |     "interestOutstandingAmount": 31.00,
+      |     "paymentLot": "paymentLot",
+      |     "paymentLotItem": "paymentLotItem",
       |     "lpiWithDunningBlock": 12.50,
       |     "amountCodedOut" : 3.21,
+      |     "effectiveDateOfPayment" : "2018-03-29",
+      |     "documentDueDate" : "2019-03-29"
+      |   },
+      |   {
+      |     "taxYear": "2019",
+      |     "documentId": "id2",
+      |     "documentDescription": "documentDescription2",
+      |     "totalAmount": 100.00,
+      |     "documentOutstandingAmount": 50.00,
+      |     "lastClearedAmount": 50.00,
+      |     "documentDate": "2018-03-29",
       |     "effectiveDateOfPayment" : "2018-03-29"
-			|   },
-			|   {
-			|     "taxYear": "2019",
-			|     "documentId": "id2",
-			|     "documentDescription": "documentDescription2",
-			|     "totalAmount": 100.00,
-			|     "documentOutstandingAmount": 50.00,
-			|     "lastClearedAmount": 50.00,
-			|     "documentDate": "2018-03-29",
-      |     "effectiveDateOfPayment" : "2018-03-29"
-			|   }
-			| ],
-			| "financialDetails": [
-			|   {
-			|     "taxYear": "2018",
-			|     "documentId": "id",
-			|     "documentDate": "2022-06-23",
-			|     "documentDescription": "type",
-			|     "totalAmount": 1000.00,
-			|     "originalAmount": 500.00,
-			|     "clearedAmount": 500.00,
-			|     "documentOutstandingAmount": 500.00,
-			|     "chargeType": "POA1",
-			|     "mainType": "4920",
+      |   }
+      | ],
+      | "financialDetails": [
+      |   {
+      |     "taxYear": "2018",
+      |     "documentId": "id",
+      |     "documentDate": "2022-06-23",
+      |     "documentDescription": "type",
+      |     "totalAmount": 1000.00,
+      |     "originalAmount": 500.00,
+      |     "clearedAmount": 500.00,
+      |     "documentOutstandingAmount": 500.00,
+      |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "accruedInterest": 1000,
-			|     "items": [{
-			|       "subItem": "1",
-			|       "amount": 100.00,
-			|       "clearingDate": "2022-06-23",
-			|       "clearingReason": "clearingReason",
-			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
+      |     "items": [{
+      |       "subItem": "1",
+      |       "amount": 100.00,
+      |       "clearingDate": "2022-06-23",
+      |       "clearingReason": "clearingReason",
+      |       "outgoingPaymentMethod": "outgoingPaymentMethod",
       |       "interestLock": "interestLock",
-			|       "dunningLock": "dunningLock",
-			|       "paymentReference": "paymentReference",
-			|       "paymentAmount": 2000.00,
-			|       "dueDate": "2022-06-23",
-			|       "paymentMethod": "paymentMethod",
-			|       "paymentLot": "paymentLot",
-			|       "paymentLotItem": "paymentLotItem"
-			|       }
-			|     ]
-			|   },
-			|   {
-			|     "taxYear": "2019",
-			|     "documentId": "transactionId2",
-			|     "documentDate": "2022-06-23",
-			|     "documentDescription": "type2",
-			|     "totalAmount": 2000.00,
-			|     "originalAmount": 500.00,
-			|     "clearedAmount": 500.00,
-			|     "documentOutstandingAmount": 200.00,
-			|     "chargeType": "POA1",
-			|     "mainType": "4920",
+      |       "dunningLock": "dunningLock",
+      |       "paymentReference": "paymentReference",
+      |       "paymentAmount": 2000.00,
+      |       "dueDate": "2022-06-23",
+      |       "paymentMethod": "paymentMethod",
+      |       "paymentLot": "paymentLot",
+      |       "paymentLotItem": "paymentLotItem"
+      |       }
+      |     ]
+      |   },
+      |   {
+      |     "taxYear": "2019",
+      |     "documentId": "transactionId2",
+      |     "documentDate": "2022-06-23",
+      |     "documentDescription": "type2",
+      |     "totalAmount": 2000.00,
+      |     "originalAmount": 500.00,
+      |     "clearedAmount": 500.00,
+      |     "documentOutstandingAmount": 200.00,
+      |     "chargeType": "POA1",
+      |     "mainType": "4920",
       |     "accruedInterest": 2000,
-			|     "items": [{
-			|       "subItem": "2",
-			|       "amount": 200.00,
-			|       "clearingDate": "2022-06-23",
-			|       "clearingReason": "clearingReason2",
-			|       "outgoingPaymentMethod": "outgoingPaymentMethod2",
+      |     "items": [{
+      |       "subItem": "2",
+      |       "amount": 200.00,
+      |       "clearingDate": "2022-06-23",
+      |       "clearingReason": "clearingReason2",
+      |       "outgoingPaymentMethod": "outgoingPaymentMethod2",
       |       "interestLock": "interestLock2",
       |       "dunningLock": "dunningLock2",
-			|       "paymentReference": "paymentReference2",
-			|       "paymentAmount": 3000.00,
-			|       "dueDate": "2022-06-23",
-			|       "paymentMethod": "paymentMethod2",
-			|       "paymentLot": "paymentLot2",
-			|       "paymentLotItem": "paymentLotItem2"
-			|       }
-			|     ]
-			|   }
-			| ]
-			|}
-			|""".stripMargin)
+      |       "paymentReference": "paymentReference2",
+      |       "paymentAmount": 3000.00,
+      |       "dueDate": "2022-06-23",
+      |       "paymentMethod": "paymentMethod2",
+      |       "paymentLot": "paymentLot2",
+      |       "paymentLotItem": "paymentLotItem2"
+      |       }
+      |     ]
+      |   }
+      | ]
+      |}""".stripMargin)
 
 
   val validFinancialDetailJsonAfterWrites: JsValue = Json.parse(
@@ -154,15 +153,15 @@ object FinancialDataTestConstants {
 			|     "clearedAmount": 500.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-      |     "accruedInterest": 1000,
+|     "accruedInterest": 1000,
 			|     "items": [{
 			|       "subItemId": "1",
 			|       "amount": 100.00,
 			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "2022-06-23",
@@ -195,7 +194,8 @@ object FinancialDataTestConstants {
     paymentLot = Some("paymentLot"),
     lpiWithDunningBlock = Some(12.50),
     amountCodedOut = Some(3.21),
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    documentDueDate = Some(LocalDate.parse("2019-03-29"))
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -360,8 +360,8 @@ object FinancialDataTestConstants {
 			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "2022-06-23",
@@ -397,8 +397,8 @@ object FinancialDataTestConstants {
 			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason",
 			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
 			|       "paymentReference": "paymentReference",
 			|       "paymentAmount": 2000.00,
 			|       "dueDate": "2022-06-23",
