@@ -32,30 +32,34 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
                                                val appConfig: MicroserviceAppConfig)
                                               (implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
+  val url: String => String = mtdbsaRef => s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
 
-    val url = s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
+  def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)
+            (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
-    logger.debug(s"[CreateBusinessDetailsConnector][create] - " +
-      s"Calling POST $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    logWithDebug(s"Calling POST ${url(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
 
-    http.POST[CreateIncomeSourceRequest, HttpResponse](url, body, appConfig.desAuthHeaders) map {
+    http.POST[CreateIncomeSourceRequest, HttpResponse](url(mtdbsaRef), body, appConfig.desAuthHeaders) map {
       case response if response.status == OK =>
-        Logger("application").info(s"[CreateBusinessDetailsConnector][create] - SUCCESS - ${response.json}")
+        logWithInfo(s"SUCCESS - ${response.json}")
         response.json.validate[List[IncomeSource]].fold(
           invalidJson => {
-            Logger("application").error(s"Invalid Json with $invalidJson")
+            logWithError(s"Invalid Json with $invalidJson")
             Left(CreateBusinessDetailsErrorResponse(response.status, response.body))
           },
           (res: List[IncomeSource]) => Right(res)
         )
       case errorResponse =>
-        Logger("application").error(s"[CreateBusinessDetailsConnector][create] - Error with response code: ${errorResponse.status} and body: ${errorResponse.json}")
+        logWithError(s"Error with response code: ${errorResponse.status} and body: ${errorResponse.json}")
         Left(CreateBusinessDetailsErrorResponse(errorResponse.status, errorResponse.json.toString()))
     } recover {
       case ex =>
-        logger.error(s"[CreateBusinessDetailsConnector][create] - ${ex.getMessage}")
+        logWithError(s"${ex.getMessage}")
         Left(CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, s"${ex.getMessage}"))
     }
   }
+
+  private val logWithError: String => Unit = suffix => Logger("application").error("[CreateBusinessDetailsConnector][create] - " + suffix)
+  private val logWithDebug: String => Unit = suffix => Logger("application").debug("[CreateBusinessDetailsConnector][create] - " + suffix)
+  private val logWithInfo: String => Unit = suffix => Logger("application").info("[CreateBusinessDetailsConnector][create] - " + suffix)
 }
