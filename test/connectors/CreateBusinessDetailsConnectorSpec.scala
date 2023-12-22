@@ -31,15 +31,11 @@ class CreateBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
   "CreateBusinessDetailsConnector.create" should {
 
     lazy val mock: (CreateIncomeSourceRequest, HttpResponse) => Unit =
-      setupMockHttpPostWithHeaderCarrier[CreateIncomeSourceRequest](
-        url(testMtdRef), microserviceAppConfig.desAuthHeaders
-      )
+      setupMockHttpPostWithHeaderCarrier[CreateIncomeSourceRequest](url(testMtdRef), microserviceAppConfig.desAuthHeaders)
 
     "return an IncomeSource model if status (OK) is returned by API with valid json body" in {
       mock(validCreateSelfEmploymentRequest, successHttpResponse)
-
-      create(testMtdRef, validCreateSelfEmploymentRequest)
-        .futureValue shouldBe Right(successResponse)
+      create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Right(successResponse)
     }
 
     "return CreateBusinessDetailsErrorResponse model if status (OK) is not returned by API" in {
