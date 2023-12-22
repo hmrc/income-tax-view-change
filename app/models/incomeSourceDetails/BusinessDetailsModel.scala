@@ -28,7 +28,7 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 address: Option[AddressModel],
                                 contactDetails: Option[ContactDetailsModel],
                                 tradingStartDate: Option[LocalDate],
-                                cashOrAccruals: Option[Boolean],
+                                cashOrAccruals: Boolean,
                                 seasonal: Option[Boolean],
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean],
@@ -39,12 +39,6 @@ case class BusinessDetailsModel(incomeSourceId: String,
 
 object BusinessDetailsModel {
 
-  private val cashOrAccrualsUntilRelease10: Reads[Option[Boolean]] = (__ \ "cashOrAccruals").readNullable[String].map {
-    case Some("cash") => Some(false)
-    case Some("accruals") => Some(true)
-    case _ => None
-  }
-
   val desReads: Reads[BusinessDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
       __.read(AccountingPeriodModel.desReads) and
@@ -52,9 +46,7 @@ object BusinessDetailsModel {
       (__ \ "businessAddressDetails").readNullable(AddressModel.desReads) and
       (__ \ "businessContactDetails").readNullable(ContactDetailsModel.desReads) and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
-      (__ \ "cashOrAccruals").readNullable[Boolean].orElse(
-        cashOrAccrualsUntilRelease10
-      ) and
+      (__ \ "cashOrAccruals").read[Boolean] and
       (__ \ "seasonal").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "cessationReason").readNullable[String] and
@@ -70,7 +62,7 @@ object BusinessDetailsModel {
                       address: Option[AddressModel],
                       contactDetails: Option[ContactDetailsModel],
                       tradingStartDate: Option[LocalDate],
-                      cashOrAccruals: Option[Boolean],
+                      cashOrAccruals: Boolean,
                       seasonal: Option[Boolean],
                       cessationDate: Option[LocalDate],
                       cessationReason: Option[String],

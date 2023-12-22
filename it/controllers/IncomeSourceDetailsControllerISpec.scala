@@ -110,12 +110,12 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
 
   "Calling the IncomeSourceDetailsController.getIncomeSourceDetails method" when {
     "authorised with a valid request" when {
-      "A successful response is returned from DES" should {
+      "A successful response is returned from IF" should {
         "return a valid IncomeSourceDetails model" in {
 
           isAuthorised(true)
 
-          And("I wiremock stub a successful getIncomeSOurceDetails response")
+          And("I wiremock stub a successful getIncomeSourceDetails response")
           BusinessDetailsStub.stubGetDesBusinessDetails(testMtdRef, incomeSourceDetailsSuccess)
 
           When(s"I call GET income-tax-view-change/income-sources/$testMtdRef")
@@ -131,7 +131,7 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
           )
         }
       }
-      "An error response is returned from DES" should {
+      "An error response is returned from IF" should {
         "return an Error Response model" in {
           isAuthorised(true)
 
