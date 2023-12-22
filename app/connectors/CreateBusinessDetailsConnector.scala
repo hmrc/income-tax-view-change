@@ -34,7 +34,8 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
 
   val url: String => String = mtdbsaRef => s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
 
-  def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)(implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
+  def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)
+            (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
     logger.debug(withPrefix(s"Calling POST ${url(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}"))
 
