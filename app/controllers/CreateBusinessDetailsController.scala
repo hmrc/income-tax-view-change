@@ -38,7 +38,7 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
     request.body.asJson.getOrElse(Json.obj())
       .validate[CreateIncomeSourceRequest] match {
         case err: JsError =>
-          logger.error(withPrefix(s"Validation Errors: ${err.errors}"))
+          logWithError(s"Validation Errors: ${err.errors}")
           Future {
             BadRequest(
               Json.toJson(
@@ -47,18 +47,19 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
             )
           }
         case JsSuccess(validRequest, _) =>
-          logger.info(withPrefix(s"creating business from body: $validRequest"))
+          logWithInfo(s"creating business from body: $validRequest")
           createBusinessDetailsService.createBusinessDetails(mtdbsaRef, validRequest) map {
             case Right(successResponse) =>
               Ok {
                 Json.toJson(successResponse)
               }
             case Left(errorResponse) =>
-              logger.error(withPrefix(s"Error Response: $errorResponse"))
+              logWithError(s"Error Response: $errorResponse")
               Status(errorResponse.status)(Json.toJson(errorResponse))
           }
       }
   }
 
-  private val withPrefix: String => String = suffix => "[CreateBusinessDetailsController][createBusinessDetails] - " + suffix
+  private val logWithError: String => Unit = suffix => logger.error("[CreateBusinessDetailsController][createBusinessDetails] - " + suffix)
+  private val logWithInfo: String => Unit = suffix => logger.info("[CreateBusinessDetailsController][createBusinessDetails] - " + suffix)
 }

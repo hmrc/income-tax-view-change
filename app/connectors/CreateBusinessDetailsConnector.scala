@@ -37,27 +37,29 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
   def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)
             (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
-    logger.debug(withPrefix(s"Calling POST ${url(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}"))
+    logWithDebug(s"Calling POST ${url(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
 
     http.POST[CreateIncomeSourceRequest, HttpResponse](url(mtdbsaRef), body, appConfig.desAuthHeaders) map {
       case response if response.status == OK =>
-        Logger("application").info(withPrefix(s"SUCCESS - ${response.json}"))
+        logWithInfo(s"SUCCESS - ${response.json}")
         response.json.validate[List[IncomeSource]].fold(
           invalidJson => {
-            Logger("application").error(withPrefix(s"Invalid Json with $invalidJson"))
+            logWithError(s"Invalid Json with $invalidJson")
             Left(CreateBusinessDetailsErrorResponse(response.status, response.body))
           },
           (res: List[IncomeSource]) => Right(res)
         )
       case errorResponse =>
-        Logger("application").error(withPrefix(s"Error with response code: ${errorResponse.status} and body: ${errorResponse.json}"))
+        logWithError(s"Error with response code: ${errorResponse.status} and body: ${errorResponse.json}")
         Left(CreateBusinessDetailsErrorResponse(errorResponse.status, errorResponse.json.toString()))
     } recover {
       case ex =>
-        logger.error(withPrefix(s"${ex.getMessage}"))
+        logWithError(s"${ex.getMessage}")
         Left(CreateBusinessDetailsErrorResponse(Status.INTERNAL_SERVER_ERROR, s"${ex.getMessage}"))
     }
   }
 
-  private val withPrefix: String => String = suffix => "[CreateBusinessDetailsConnector][create] - " + suffix
+  private val logWithError: String => Unit = suffix => Logger("application").error("[CreateBusinessDetailsConnector][create] - " + suffix)
+  private val logWithDebug: String => Unit = suffix => Logger("application").debug("[CreateBusinessDetailsConnector][create] - " + suffix)
+  private val logWithInfo: String => Unit = suffix => Logger("application").info("[CreateBusinessDetailsConnector][create] - " + suffix)
 }
