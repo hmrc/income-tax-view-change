@@ -57,8 +57,7 @@ class DocumentDetailSpec extends AnyWordSpec with Matchers {
     "paymentLot" -> "paymentLot",
     "lpiWithDunningBlock" -> 12.50,
     "amountCodedOut" -> 3.21,
-    "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
-    "documentDueDate" -> LocalDate.parse("2019-03-29")
+    "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
   )
 
   val documentDetailFullJsonWrite: JsValue = Json.obj(
@@ -79,8 +78,7 @@ class DocumentDetailSpec extends AnyWordSpec with Matchers {
     "paymentLot" -> "paymentLot",
     "lpiWithDunningBlock" -> 12.50,
     "amountCodedOut" -> 3.21,
-    "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
-    "documentDueDate" -> LocalDate.parse("2019-03-29")
+    "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
   )
 
   val documentDetailLpiWithDunningLockJsonRead: JsValue = Json.obj("taxYear" -> "2018", "documentId" -> "id", "documentDate" -> LocalDate.parse("2018-03-29"), "lpiWithDunningLock" -> 13.70, "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"))

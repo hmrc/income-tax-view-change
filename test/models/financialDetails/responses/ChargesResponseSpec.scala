@@ -17,7 +17,7 @@
 package models.financialDetails.responses
 
 import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
-import models.financialDetails._
+import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment, SubItem}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsSuccess, Json}
@@ -88,40 +88,41 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       "paymentLot" -> "paymentLot",
       "lpiWithDunningBlock" -> 12.50,
       "amountCodedOut" -> 3.21,
-      "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
-      "documentDueDate" -> LocalDate.parse("2019-03-29")
+      "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
     )),
     "financialDetails" -> Json.arr(Json.parse(
-      """{
-        |     "taxYear": "2018",
-        |     "transactionId": "id",
-        |     "transactionDate": "2022-06-23",
-        |     "type": "type",
-        |     "totalAmount": 1000.00,
-        |     "originalAmount": 500.00,
-        |     "outstandingAmount": 500.00,
-        |     "clearedAmount": 500.00,
-        |     "chargeType": "POA1",
-        |     "mainType": "4920",
-        |     "accruedInterest": 1000,
-        |     "items": [{
-        |       "subItemId": "1",
-        |       "amount": 100.00,
-        |       "clearingDate": "2022-06-23",
-        |       "clearingReason": "clearingReason",
-        |       "outgoingPaymentMethod": "outgoingPaymentMethod",
-        |       "interestLock": "interestLock",
-        |       "dunningLock": "dunningLock",
-        |       "paymentReference": "paymentReference",
-        |       "paymentAmount": 2000.00,
-        |       "dueDate": "2022-06-23",
-        |       "paymentMethod": "paymentMethod",
-        |       "paymentLot": "paymentLot",
-        |       "paymentLotItem": "paymentLotItem",
-        |       "paymentId": "paymentLot-paymentLotItem"
-        |       }
-        |     ]
-        |}""".stripMargin))
+      """
+			|{
+			|     "taxYear": "2018",
+			|     "transactionId": "id",
+			|     "transactionDate": "2022-06-23",
+			|     "type": "type",
+			|     "totalAmount": 1000.00,
+			|     "originalAmount": 500.00,
+			|     "outstandingAmount": 500.00,
+			|     "clearedAmount": 500.00,
+			|     "chargeType": "POA1",
+			|     "mainType": "4920",
+|     "accruedInterest": 1000,
+			|     "items": [{
+			|       "subItemId": "1",
+			|       "amount": 100.00,
+			|       "clearingDate": "2022-06-23",
+			|       "clearingReason": "clearingReason",
+			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
+|       "interestLock": "interestLock",
+|       "dunningLock": "dunningLock",
+			|       "paymentReference": "paymentReference",
+			|       "paymentAmount": 2000.00,
+			|       "dueDate": "2022-06-23",
+			|       "paymentMethod": "paymentMethod",
+			|       "paymentLot": "paymentLot",
+			|       "paymentLotItem": "paymentLotItem",
+			|       "paymentId": "paymentLot-paymentLotItem"
+			|       }
+			|     ]
+			|}
+			|""".stripMargin))
   )
 
   def document(documentId: String = "DOCID01",
