@@ -34,7 +34,7 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
                                          ) extends BackendController(cc) with Logging {
 
   def getOpenObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
-    logger.debug(s"[ReportDeadlinesController][getOpenObligations] - " +
+    logger.debug("[ReportDeadlinesController][getOpenObligations] - " +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino")
     reportDeadlinesConnector.getReportDeadlines(nino, openObligations = true).map {
       case success: ObligationsModel =>
@@ -47,7 +47,7 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
   }
 
   def getFulfilledObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
-    logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - " +
+    logger.debug("[ReportDeadlinesController][getFulfilledObligations] - " +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino")
     reportDeadlinesConnector.getReportDeadlines(nino, openObligations = false).map {
       case success: ObligationsModel =>
@@ -60,7 +60,7 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
   }
 
   def getPreviousObligations(nino: String, from: String, to: String): Action[AnyContent] = authentication.async { implicit request =>
-    logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - " +
+    logger.debug("[ReportDeadlinesController][getFulfilledObligations] - " +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino, from: $from, to: $to")
     reportDeadlinesConnector.getPreviousObligations(nino, from, to).map {
       case success: ObligationsModel =>

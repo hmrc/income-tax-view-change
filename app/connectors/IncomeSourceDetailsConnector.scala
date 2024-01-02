@@ -45,7 +45,7 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
     val url = getIncomeSourceDetailsUrl(mtdRef)
     val jsonReads = if (appConfig.useBusinessDetailsIFPlatform) IncomeSourceDetailsModel.ifReads else IncomeSourceDetailsModel.desReads
 
-    logger.debug(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] - " +
+    logger.debug("[IncomeSourceDetailsConnector][getIncomeSourceDetails] - " +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET[HttpResponse](url = url, headers = headers)(httpReads, headerCarrier, implicitly) map {
       response =>
@@ -58,7 +58,7 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
                 IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
               },
               valid => {
-                logger.info(s"[IncomeSourceDetailsConnector][getIncomeSourceDetails] successfully parsed response to LastTaxCalculation")
+                logger.info("[IncomeSourceDetailsConnector][getIncomeSourceDetails] successfully parsed response to LastTaxCalculation")
                 valid
               }
             )

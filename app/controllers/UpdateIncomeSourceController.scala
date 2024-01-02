@@ -43,12 +43,12 @@ class UpdateIncomeSourceController @Inject()(authentication: AuthenticationPredi
             UpdateIncomeSourceRequestError("Json validation error while parsing request")
           },
           valid => {
-            logger.info(s"[UpdateIncomeSourceController][updateIncomeSource] - successfully parsed response to UpdateIncomeSourceRequestModel")
+            logger.info("[UpdateIncomeSourceController][updateIncomeSource] - successfully parsed response to UpdateIncomeSourceRequestModel")
             valid
           }
         ) match {
           case x: UpdateIncomeSourceRequestError =>
-            logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Bad Request")
+            logger.error("[UpdateIncomeSourceController][updateIncomeSource] - Bad Request")
             Future(BadRequest(Json.toJson(x)))
           case x: UpdateIncomeSourceRequestModel => connector.updateIncomeSource(x).map {
             case error: UpdateIncomeSourceResponseError =>

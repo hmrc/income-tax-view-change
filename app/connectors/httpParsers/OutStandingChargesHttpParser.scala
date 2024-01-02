@@ -35,7 +35,7 @@ object OutStandingChargesHttpParser extends ResponseHttpParsers {
       response.status match {
         case OK =>
           val outstandingCharges = response.json.as[List[OutStandingCharge]]
-          logger.info(s"[OutStandingChargesResponse][read] successfully parsed response to List[OutStandingCharge]")
+          logger.info("[OutStandingChargesResponse][read] successfully parsed response to List[OutStandingCharge]")
 
           Right(OutstandingChargesSuccessResponse(outstandingCharges))
         case status if status >= 400 && status < 500 =>
