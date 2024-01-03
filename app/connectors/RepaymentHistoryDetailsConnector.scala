@@ -26,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
                                                  val appConfig: MicroserviceAppConfig
-                                             )(implicit ec: ExecutionContext) extends RawResponseReads {
+                                                )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   def listRepaymentHistoryDetailsUrl(nino: String): String = {
     val platformUrl = if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
@@ -37,12 +37,6 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
     if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifAuthHeaders1771 else appConfig.desAuthHeaders
   }
 
-  private[connectors] def dateQueryParameters(fromDate: String): Seq[(String, String)] = {
-    Seq(
-      "fromDate" -> fromDate
-    )
-  }
-  
   private[connectors] def IdQueryParameters(repaymentId: String): Seq[(String, String)] = {
     Seq(
       "repaymentRequestNumber" -> repaymentId
