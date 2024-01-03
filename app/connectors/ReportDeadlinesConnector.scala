@@ -62,7 +62,7 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                 ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
               },
               valid => {
-                logger.info(s"[ReportDeadlinesConnector][getReportDeadlines] successfully parsed response to ObligationsModel")
+                logger.info("[ReportDeadlinesConnector][getReportDeadlines] successfully parsed response to ObligationsModel")
                 valid
               }
             )
@@ -93,7 +93,7 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
                 ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
               },
               valid => {
-                logger.info(s"[ReportDeadlinesConnector][getPreviousObligations] successfully parsed response to ObligationsModel")
+                logger.info("[ReportDeadlinesConnector][getPreviousObligations] successfully parsed response to ObligationsModel")
                 valid
               }
             )

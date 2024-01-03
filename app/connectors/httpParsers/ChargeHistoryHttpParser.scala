@@ -35,7 +35,7 @@ object ChargeHistoryHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): ChargeHistoryResponse = {
       response.status match {
         case OK =>
-          logger.info(s"[ChargeHistoryResponse][read] successfully parsed response to List[ChargeHistory]")
+          logger.info("[ChargeHistoryResponse][read] successfully parsed response to List[ChargeHistory]")
           Right(response.json.as[ChargeHistorySuccessResponse])
         case status if status >= 400 && status < 500 =>
           logger.error(s"[ChargeHistoryResponse][read] $status returned from DES with body: ${response.body}")
