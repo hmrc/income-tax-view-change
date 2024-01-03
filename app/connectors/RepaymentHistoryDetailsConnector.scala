@@ -33,6 +33,10 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
     s"${platformUrl}/income-tax/self-assessment/repayments-viewer/$nino"
   }
 
+  def headers: Seq[(String, String)] = {
+    if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifAuthHeaders1771 else appConfig.desAuthHeaders
+  }
+
   private[connectors] def dateQueryParameters(fromDate: String): Seq[(String, String)] = {
     Seq(
       "fromDate" -> fromDate
@@ -49,7 +53,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
     http.GET(
       url = listRepaymentHistoryDetailsUrl(nino),
       queryParams = Seq.empty,
-      headers = appConfig.desAuthHeaders
+      headers = headers
     )(RepaymentHistoryReads, headerCarrier, ec)
   }
 
@@ -58,7 +62,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
     http.GET(
       url = listRepaymentHistoryDetailsUrl(nino),
       queryParams = IdQueryParameters(repaymentId),
-      headers = appConfig.desAuthHeaders
+      headers = headers
     )(RepaymentHistoryReads, headerCarrier, ec)
   }
 }
