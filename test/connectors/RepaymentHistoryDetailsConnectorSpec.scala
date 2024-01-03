@@ -42,7 +42,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet(
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = TestRepaymentHistoryConnector.IdQueryParameters(repaymentId = repaymentId),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = TestRepaymentHistoryConnector.headers
         )(Right(RepaymentHistorySuccessResponse(
           repaymentsViewerDetails = repaymentHistoryDetails)
         ))
@@ -61,7 +61,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = TestRepaymentHistoryConnector.IdQueryParameters(repaymentId = repaymentId),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = TestRepaymentHistoryConnector.headers
         )(Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString())))
 
         val result = TestRepaymentHistoryConnector.getRepaymentHistoryDetailsById(nino, repaymentId).futureValue
@@ -72,7 +72,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = TestRepaymentHistoryConnector.IdQueryParameters(repaymentId = repaymentId),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = TestRepaymentHistoryConnector.headers
         )(Left(RepaymentHistoryErrorResponse))
 
         val result = TestRepaymentHistoryConnector.getRepaymentHistoryDetailsById(nino, repaymentId).futureValue
@@ -91,7 +91,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet(
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = Seq(),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = TestRepaymentHistoryConnector.headers
         )(Right(RepaymentHistorySuccessResponse(
           repaymentsViewerDetails = repaymentHistoryDetails)
         ))
@@ -110,7 +110,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = Seq(),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = TestRepaymentHistoryConnector.headers
         )(Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString())))
 
         val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino).futureValue
@@ -121,7 +121,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockDesGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = Seq(),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = TestRepaymentHistoryConnector.headers
         )(Left(RepaymentHistoryErrorResponse))
 
         val result = TestRepaymentHistoryConnector.getAllRepaymentHistoryDetails(nino).futureValue
