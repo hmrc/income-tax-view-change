@@ -35,7 +35,7 @@ object RepaymentHistoryHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): RepaymentHistoryResponse = {
       response.status match {
         case OK =>
-          logger.info(s"[RepaymentHistoryResponse][read] successfully parsed response to List[RepaymentHistory]")
+          logger.info("[RepaymentHistoryResponse][read] successfully parsed response to List[RepaymentHistory]")
           Right(response.json.as[RepaymentHistorySuccessResponse])
         case status if status >= 400 && status < 500 =>
           logger.error(s"[RepaymentHistoryResponse][read] $status returned from DES with body: ${response.body}")

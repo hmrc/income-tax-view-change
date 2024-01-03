@@ -33,7 +33,7 @@ object CalculationListHttpParser extends ResponseHttpParsers {
               Left(UnexpectedJsonFormat)
             },
             valid => {
-              logger.info(s"[CalculationListReads][read] successfully parsed response to CalculationListResponseModel")
+              logger.info("[CalculationListReads][read] successfully parsed response to CalculationListResponseModel")
               Right(CalculationListResponseModel(valid))
             }
           )

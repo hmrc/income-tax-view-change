@@ -34,7 +34,7 @@ class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: Inc
     incomeSourceDetailsConnector.getIncomeSourceDetails(mtdRef).map {
       case success: IncomeSourceDetailsModel =>
         logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$success")
-        logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")
+        logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")
         success
       case error: IncomeSourceDetailsError =>
         logger.error(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$error")
@@ -48,7 +48,7 @@ class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: Inc
   def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[NinoResponse] = {
     getIncomeSourceDetails(mtdRef).map {
       case success: IncomeSourceDetailsModel =>
-        logger.debug(s"[IncomeSourceDetailsService][getNino] - Converting to Nino Model")
+        logger.debug("[IncomeSourceDetailsService][getNino] - Converting to Nino Model")
         NinoModel(success.nino)
       case error: IncomeSourceDetailsError => NinoErrorModel(error.status, error.reason)
       case notFound: IncomeSourceDetailsNotFound =>
