@@ -68,4 +68,5 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
 
   val incomeTaxSubmissionStubUrl: String = loadConfig("submissionStubUrl")
   val useBusinessDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useBusinessDetailsIFPlatform")
+  val useRepaymentHistoryDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useRepaymentHistoryDetailsIFPlatform")
 }

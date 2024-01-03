@@ -28,8 +28,10 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
                                                  val appConfig: MicroserviceAppConfig
                                              )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def listRepaymentHistoryDetailsUrl(nino: String): String =
-    s"${appConfig.desUrl}/income-tax/self-assessment/repayments-viewer/$nino"
+  def listRepaymentHistoryDetailsUrl(nino: String): String = {
+    val platformUrl = if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
+    s"${platformUrl}/income-tax/self-assessment/repayments-viewer/$nino"
+  }
 
   private[connectors] def dateQueryParameters(fromDate: String): Seq[(String, String)] = {
     Seq(
