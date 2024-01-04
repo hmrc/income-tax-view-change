@@ -44,8 +44,11 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
   }
 
   def getAllRepaymentHistoryDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
+    val url = listRepaymentHistoryDetailsUrl(nino)
+    logger.info(s"[RepaymentHistoryDetailsConnector][getAllRepaymentHistoryDetails] - Calling GET $url " +
+      s"\nHeaders: $headerCarrier \nIsMigrated: ${if (appConfig.useRepaymentHistoryDetailsIFPlatform) "YES" else "NO"}")
     http.GET(
-      url = listRepaymentHistoryDetailsUrl(nino),
+      url = url,
       queryParams = Seq.empty,
       headers = headers
     )(RepaymentHistoryReads, headerCarrier, ec)
@@ -53,8 +56,11 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
 
   def getRepaymentHistoryDetailsById(nino: String,
                                      repaymentId: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
+    val url = listRepaymentHistoryDetailsUrl(nino)
+    logger.info(s"[RepaymentHistoryDetailsConnector][getRepaymentHistoryDetailsById] - Calling GET $url " +
+      s"\nHeaders: $headerCarrier \nIsMigrated: ${if (appConfig.useRepaymentHistoryDetailsIFPlatform) "YES" else "NO"}")
     http.GET(
-      url = listRepaymentHistoryDetailsUrl(nino),
+      url = url,
       queryParams = IdQueryParameters(repaymentId),
       headers = headers
     )(RepaymentHistoryReads, headerCarrier, ec)
