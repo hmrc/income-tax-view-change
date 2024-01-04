@@ -48,7 +48,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
     logger.info(s"[RepaymentHistoryDetailsConnector][getAllRepaymentHistoryDetails] - Calling GET $url " +
       s"\nHeaders: $headerCarrier \nIsMigrated: ${if (appConfig.useRepaymentHistoryDetailsIFPlatform) "YES" else "NO"}")
     http.GET(
-      url = listRepaymentHistoryDetailsUrl(nino),
+      url = url,
       queryParams = Seq.empty,
       headers = headers
     )(RepaymentHistoryReads, headerCarrier, ec)
