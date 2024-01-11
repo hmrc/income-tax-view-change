@@ -29,6 +29,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
 
+
 trait TestSupport extends AnyWordSpec with AnyWordSpecLike with Matchers with OptionValues
   with GuiceOneServerPerSuite with BeforeAndAfterAll  with MaterializerSupport with ScalaFutures {
   this: Suite =>
@@ -42,5 +43,5 @@ trait TestSupport extends AnyWordSpec with AnyWordSpecLike with Matchers with Op
 
   val microserviceAppConfig: MicroserviceAppConfig = app.injector.instanceOf[MicroserviceAppConfig]
 
-  implicit val defaultPatience = PatienceConfig(timeout = Span(3, Seconds), interval = Span(5, Millis))
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(3, Seconds), interval = Span(5, Millis))
 }
