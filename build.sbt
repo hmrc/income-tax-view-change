@@ -9,7 +9,7 @@ val appName = "income-tax-view-change"
 
 val bootstrapPlayVersion = "8.1.0"
 val mockitoVersion = "5.8.0"
-val wiremockVersion = "3.0.1"
+val wiremockVersion = "2.7.1"
 val scalaMockVersion = "5.2.0"
 val pegdownVersion = "1.6.0"
 val jsoupVersion = "1.15.4"
