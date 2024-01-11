@@ -10,11 +10,8 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "2.4.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.9")
 
-// TODO: decommission plugin???
-//addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
-
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.11.1")
 
 addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.0")
 
-//addSbtPlugin("io.github.irundaia" % "sbt-sassify" % "1.5.2")
+addSbtPlugin("io.github.irundaia" % "sbt-sassify" % "1.5.2")
