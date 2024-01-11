@@ -20,7 +20,7 @@ import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
 import models.financialDetails._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json._
 
 import java.time.LocalDate
 
@@ -294,11 +294,12 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
     }
     "read from bad Json" when {
       "a parse error is generated" in {
-// TODO: fix failing unit test
-//        Json.fromJson[ChargesResponse](chargeResponseBadJson).toString shouldBe
-//          "JsError(List((/balanceDetails,List(JsonValidationError(List(error.path.missing),ArraySeq())))))"
+        Json.fromJson[ChargesResponse](chargeResponseBadJson) shouldBe JsError(
+          List((JsPath \ "balanceDetails", List(JsonValidationError(List("error.path.missing")))
+          )))
       }
     }
+
     "write to Json" when {
       "the model has the minimal details" in {
         Json.toJson(chargeResponseMinWrite) shouldBe chargeResponseMinWriteJson
