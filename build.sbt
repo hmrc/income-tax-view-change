@@ -1,4 +1,5 @@
 import play.core.PlayVersion
+import play.sbt.PlayImport
 import play.sbt.routes.RoutesKeys
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings._
@@ -6,17 +7,18 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "income-tax-view-change"
 
-val bootstrapPlayVersion = "5.24.0"
-val mockitoVersion = "3.12.4"
-val wiremockVersion = "2.26.3"
+val bootstrapPlayVersion = "8.1.0"
+val mockitoVersion = "5.8.0"
+val wiremockVersion = "2.7.1"
 val scalaMockVersion = "5.2.0"
 val pegdownVersion = "1.6.0"
-val jsoupVersion = "1.11.3"
-val scalaTestPlusVersion = "5.0.0"
+val jsoupVersion = "1.15.4"
+val scalaTestPlusVersion = "7.0.0"
+val currentScalaVersion = "2.13.12"
 
 val compile: Seq[ModuleID] = Seq(
-  ws,
-  "uk.gov.hmrc" %% "bootstrap-backend-play-28" % bootstrapPlayVersion
+  PlayImport.ws,
+  "uk.gov.hmrc" %% "bootstrap-backend-play-30"   % bootstrapPlayVersion
 )
 
 def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
@@ -24,10 +26,10 @@ def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
   "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
   "org.pegdown" % "pegdown" % pegdownVersion % scope,
   "org.jsoup" % "jsoup" % jsoupVersion % scope,
-  "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+  "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapPlayVersion % scope,
   "org.mockito" % "mockito-core" % mockitoVersion % scope,
-  "com.github.tomakehurst" % "wiremock-jre8" % wiremockVersion % scope,
-  "uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapPlayVersion % scope,
+  "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.16.1",
   caffeine
 )
 
@@ -51,6 +53,7 @@ lazy val microservice = Project(appName, file("."))
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(playSettings: _*)
   .settings(scalaSettings: _*)
+  .settings(scalaVersion := currentScalaVersion)
   .settings(scoverageSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(majorVersion := 1)
@@ -63,13 +66,14 @@ lazy val microservice = Project(appName, file("."))
   )
   .settings(
     Test / Keys.fork := true,
-    scalaVersion := "2.13.8",
+    scalaVersion := currentScalaVersion,
     scalacOptions += "-Wconf:src=routes/.*:s",
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
     IntegrationTest / Keys.fork := false,
+    scalaVersion := currentScalaVersion,
     IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
     IntegrationTest / parallelExecution := false)
