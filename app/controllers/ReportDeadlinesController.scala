@@ -25,13 +25,13 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ReportDeadlinesController @Inject()(val authentication: AuthenticationPredicate,
                                           val reportDeadlinesConnector: ReportDeadlinesConnector,
                                           cc: ControllerComponents
-                                         ) extends BackendController(cc) with Logging {
+                                         )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getOpenObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     logger.debug("[ReportDeadlinesController][getOpenObligations] - " +

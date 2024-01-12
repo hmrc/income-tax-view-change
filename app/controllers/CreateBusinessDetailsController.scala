@@ -25,14 +25,13 @@ import services.CreateBusinessDetailsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CreateBusinessDetailsController @Inject()(val authentication: AuthenticationPredicate,
                                                 val createBusinessDetailsService: CreateBusinessDetailsService,
                                                 cc: ControllerComponents
-                                               ) extends BackendController(cc) with Logging {
+                                               )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
     request.body.asJson.getOrElse(Json.obj())

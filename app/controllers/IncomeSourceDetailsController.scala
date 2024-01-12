@@ -26,13 +26,13 @@ import services.IncomeSourceDetailsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class IncomeSourceDetailsController @Inject()(val authentication: AuthenticationPredicate,
                                               val incomeSourceDetailsService: IncomeSourceDetailsService,
                                               cc: ControllerComponents
-                                             ) extends BackendController(cc) with Logging {
+                                             )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getNino(mtdRef).map {

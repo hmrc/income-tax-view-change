@@ -27,14 +27,13 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.{AffinityGroup, AuthorisationException, AuthorisedFunctions, ConfidenceLevel}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 @Singleton
 class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConnector, cc: ControllerComponents,
                                         val appConfig: MicroserviceAppConfig
-                                       ) extends BackendController(cc) with AuthorisedFunctions with Logging {
+                                       )(implicit ec: ExecutionContext) extends BackendController(cc) with AuthorisedFunctions with Logging {
 
   val minimumConfidenceLevel: Int = ConfidenceLevel.fromInt(appConfig.confidenceLevel) match {
     case Success(value) => value.level
