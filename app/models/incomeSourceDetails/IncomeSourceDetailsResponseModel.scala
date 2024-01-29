@@ -17,7 +17,7 @@
 package models.incomeSourceDetails
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+import play.api.libs.json._
 
 sealed trait IncomeSourceDetailsResponseModel
 
@@ -58,17 +58,10 @@ object IncomeSourceDetailsModel {
     (__ \ "taxPayerDisplayResponse" \ "nino").read[String] and
       (__ \ "taxPayerDisplayResponse" \ "mtdId").read[String] and
       (__ \ "taxPayerDisplayResponse" \ "yearOfMigration").readNullable[String] and
-      (__ \ "taxPayerDisplayResponse" \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
-      (__ \ "taxPayerDisplayResponse" \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.desReads))
+      (__ \ "taxPayerDisplayResponse" \ "businessData").readNullable(Reads.list(BusinessDetailsModel.reads)) and
+      (__ \ "taxPayerDisplayResponse" \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.reads))
     ) (IncomeSourceDetailsModel.applyWithFields _)
 
-  val desReads: Reads[IncomeSourceDetailsModel] = (
-    (__ \ "nino").read[String] and
-      (__ \ "mtdbsa").read[String].orElse((__ \ "mtdId").read[String]) and
-      (__ \ "yearOfMigration").readNullable[String] and
-      (__ \ "businessData").readNullable(Reads.list(BusinessDetailsModel.desReads)) and
-      (__ \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.desReads))
-    ) (IncomeSourceDetailsModel.applyWithFields _)
 
   implicit val format: Format[IncomeSourceDetailsModel] = Json.format[IncomeSourceDetailsModel]
 

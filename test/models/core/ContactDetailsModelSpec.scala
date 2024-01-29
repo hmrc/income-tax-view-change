@@ -26,11 +26,11 @@ class ContactDetailsModelSpec extends TestSupport with Matchers {
   "The ContactDetailsModel" should {
 
     "read from DES json with all fields" in {
-      Json.fromJson(testContactDetailsJson)(ContactDetailsModel.desReads) shouldBe JsSuccess(testContactDetailsModel)
+      Json.fromJson(testContactDetailsJson)(ContactDetailsModel.reads) shouldBe JsSuccess(testContactDetailsModel)
     }
 
     "read from DES Json with minimum fields" in {
-      Json.fromJson(Json.obj())(ContactDetailsModel.desReads) shouldBe JsSuccess(ContactDetailsModel(None, None, None, None))
+      Json.fromJson(Json.obj())(ContactDetailsModel.reads) shouldBe JsSuccess(ContactDetailsModel(None, None, None, None))
     }
 
     "write to Json" in {

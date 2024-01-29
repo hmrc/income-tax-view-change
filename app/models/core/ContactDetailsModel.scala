@@ -17,7 +17,7 @@
 package models.core
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+import play.api.libs.json._
 
 case class ContactDetailsModel(phoneNumber: Option[String],
                                mobileNumber: Option[String],
@@ -26,7 +26,7 @@ case class ContactDetailsModel(phoneNumber: Option[String],
 
 object ContactDetailsModel {
 
-  val desReads: Reads[ContactDetailsModel] = (
+  val reads: Reads[ContactDetailsModel] = (
     (__ \ "phoneNumber").readNullable[String] and
       (__ \ "mobileNumber").readNullable[String] and
       (__ \ "faxNumber").readNullable[String] and

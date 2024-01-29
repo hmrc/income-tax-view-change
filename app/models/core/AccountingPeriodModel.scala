@@ -16,16 +16,16 @@
 
 package models.core
 
-import java.time.LocalDate
-
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+import play.api.libs.json._
+
+import java.time.LocalDate
 
 case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
 
 object AccountingPeriodModel {
 
-  val desReads: Reads[AccountingPeriodModel] = (
+  val reads: Reads[AccountingPeriodModel] = (
     (__ \ "accountingPeriodStartDate").read[LocalDate] and
       (__ \ "accountingPeriodEndDate").read[LocalDate]
     ) (AccountingPeriodModel.apply _)

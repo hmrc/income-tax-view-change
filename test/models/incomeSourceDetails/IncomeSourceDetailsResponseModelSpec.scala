@@ -25,12 +25,6 @@ import utils.TestSupport
 class IncomeSourceDetailsResponseModelSpec extends TestSupport with Matchers {
 
   "The IncomeSourceDetailsResponseModel" should {
-    "read from DES Json when all fields are returned" in {
-      Json.fromJson(testDesIncomeSourceDetailsJson)(IncomeSourceDetailsModel.desReads) shouldBe JsSuccess(testIncomeSourceDetailsModel)
-    }
-    "read from DES Json when minimum fields are returned" in {
-      Json.fromJson(testDesMinimumIncomeSourceDetailsJson)(IncomeSourceDetailsModel.desReads) shouldBe JsSuccess(testMinimumIncomeSourceDetailsModel)
-    }
     "read from IF Json when all fields are returned" in {
       Json.fromJson(testIfIncomeSourceDetailsJson)(IncomeSourceDetailsModel.ifReads) shouldBe JsSuccess(testIncomeSourceDetailsModel)
     }

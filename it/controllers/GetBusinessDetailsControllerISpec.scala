@@ -32,18 +32,18 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
 
   "Calling the GetBusinessDetailsController.getBusinessDetails method" when {
     "authorised with a valid request" when {
-      "A successful response is returned from DES" should {
+      "A successful response is returned from IF" should {
         "return a valid IncomeSourceDetails model" in {
 
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          BusinessDetailsCallWithNinoStub.stubGetDesBusinessDetails(testNino, incomeSourceDetailsSuccess)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetails(testNino, incomeSourceDetailsSuccess)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          BusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("a successful response is returned with the correct business details")
 
@@ -76,12 +76,12 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub an error response")
-          BusinessDetailsCallWithNinoStub.stubGetDesBusinessDetailsError(testNino)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetailsError(testNino)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          BusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("an error response is returned")
 

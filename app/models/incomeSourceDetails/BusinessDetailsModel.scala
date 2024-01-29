@@ -39,12 +39,12 @@ case class BusinessDetailsModel(incomeSourceId: String,
 
 object BusinessDetailsModel {
 
-  val desReads: Reads[BusinessDetailsModel] = (
+  val reads: Reads[BusinessDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
-      __.read(AccountingPeriodModel.desReads) and
+      __.read(AccountingPeriodModel.reads) and
       (__ \ "tradingName").readNullable[String] and
-      (__ \ "businessAddressDetails").readNullable(AddressModel.desReads) and
-      (__ \ "businessContactDetails").readNullable(ContactDetailsModel.desReads) and
+      (__ \ "businessAddressDetails").readNullable(AddressModel.reads) and
+      (__ \ "businessContactDetails").readNullable(ContactDetailsModel.reads) and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "cashOrAccruals").read[Boolean] and
       (__ \ "seasonal").readNullable[Boolean] and
