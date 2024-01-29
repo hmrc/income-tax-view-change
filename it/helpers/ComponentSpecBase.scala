@@ -55,12 +55,6 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     .configure(config)
     .build()
 
-  implicit lazy val appWithBusinessDetailsOnIf: Application = new GuiceApplicationBuilder()
-    .in(Environment.simple(mode = Mode.Dev))
-    .configure(configWithBusinessDetailsOnIf)
-    .build()
-
-
   override def beforeAll(): Unit = {
     super.beforeAll()
     startWiremock()

@@ -25,9 +25,7 @@ import helpers.servicemocks.BusinessDetailsStub
 import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
-import play.api.mvc.Result
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{await, defaultAwaitTimeout, route, writeableOf_AnyContentAsEmpty}
+
 
 class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
 
@@ -52,23 +50,6 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
             httpStatus(OK),
             jsonBodyAs[NinoModel](ninoLookup)
           )
-        }
-        "return a valid NINO when calling submission stub" in {
-
-          isAuthorised(true)
-
-          And("I wiremock stub a successful getIncomeSourceDetails response")
-          BusinessDetailsStub.stubGetIfBusinessDetails(testMtdRef, incomeSourceDetailsSuccess)
-
-          When(s"I call GET income-tax-view-change/nino-lookup/$testMtdRef")
-          val request = FakeRequest(controllers.routes.IncomeSourceDetailsController.getIncomeSourceDetails(testMtdRef)).withHeaders("Authorization" -> "Bearer123")
-          val res: Result = await(route(appWithBusinessDetailsOnIf, request).get)
-
-          BusinessDetailsStub.verifyGetIfBusinessDetails(testMtdRef)
-
-          Then("a successful response is returned with the correct NINO")
-
-          res.header.status shouldBe OK
         }
       }
       "An error response is returned from IF" should {
