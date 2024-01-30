@@ -52,14 +52,7 @@ object IncomeSourceDetailsTestConstants {
       "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
       "propertyData" -> Json.arr(testPropertyDetailsJson))
   )
-  val testDesIncomeSourceDetailsJson = Json.obj(
-    "safeId" -> "XAIT12345678908",
-    "nino" -> testNino,
-    "mtdbsa" -> testMtdId,
-    "yearOfMigration" -> "2019",
-    "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
-    "propertyData" -> Json.arr(testPropertyDetailsJson)
-  )
+
 
   val testIncomeSourceDetailsToJson = Json.obj(
     "nino" -> testNino,
@@ -78,12 +71,6 @@ object IncomeSourceDetailsTestConstants {
       "mtdId" -> testMtdId
     )
   )
-
-  val testDesMinimumIncomeSourceDetailsJson = Json.obj(
-    "nino" -> testNino,
-    "mtdbsa" -> testMtdId
-  )
-
 
   val testNinoModel = NinoModel(testNino)
   val testIncomeSourceDetailsError = IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")

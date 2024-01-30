@@ -25,15 +25,15 @@ class PropertyDetailsModelSpec extends TestSupport with Matchers {
 
   "The PropertyDetailsModel" should {
 
-    "read from DES Json with all fields" in {
+    "read from Json with all fields" in {
       Json.fromJson(testPropertyDetailsJson)(PropertyDetailsModel.reads) shouldBe JsSuccess(testPropertyDetailsModel)
     }
 
-    "read from DES Json where Ints are Strings" in {
+    "read from Json where Ints are Strings" in {
       Json.fromJson(testPropertyDetailsJsonString)(PropertyDetailsModel.reads) shouldBe JsSuccess(testPropertyDetailsModel)
     }
 
-    "read from DES Json with minimum fields" in {
+    "read from Json with minimum fields" in {
       Json.fromJson(testMinimumPropertyDetailsJson)(PropertyDetailsModel.reads) shouldBe JsSuccess(testMinimumPropertyDetailsModel)
     }
 

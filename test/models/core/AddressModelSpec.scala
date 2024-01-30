@@ -25,11 +25,11 @@ class AddressModelSpec extends TestSupport with Matchers {
 
   "The AddressModel" should {
 
-    "read from DES Json with all fields" in {
+    "read from Json with all fields" in {
       Json.fromJson(testAddressJson)(AddressModel.reads) shouldBe JsSuccess(testAddressModel)
     }
 
-    "read from DES Json with minimum fields" in {
+    "read from Json with minimum fields" in {
       Json.fromJson(testMinimumAddressJson)(AddressModel.reads) shouldBe JsSuccess(testMinimumAddressModel)
     }
 

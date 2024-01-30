@@ -40,7 +40,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
     val jsonReads = IncomeSourceDetailsModel.ifReads
 
     logger.debug("[GetBusinessDetailsConnector][getBusinessDetails] - " +
-      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
     http.GET[HttpResponse](url = url, headers = headers)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
@@ -49,7 +49,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
             response.json.validate[IncomeSourceDetailsModel](jsonReads).fold(
               invalid => {
                 logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Validation Errors: $invalid")
-                IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
+                IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
               },
               valid => {
                 logger.info("[GetBusinessDetailsConnector][getBusinessDetails] successfully parsed response to getBusinessDetails")
