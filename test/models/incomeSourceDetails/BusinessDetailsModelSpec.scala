@@ -26,12 +26,12 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
 
   "The BusinessDetailsModel" should {
 
-    "read from DES Json with all fields" in {
-      Json.fromJson(testBusinessDetailsJson)(BusinessDetailsModel.desReads) shouldBe JsSuccess(testBusinessDetailsModel)
+    "read from Json with all fields" in {
+      Json.fromJson(testBusinessDetailsJson)(BusinessDetailsModel.reads) shouldBe JsSuccess(testBusinessDetailsModel)
     }
 
-    "read from DES Json with minimum fields" in {
-      Json.fromJson(testMinimumBusinessDetailsJson)(BusinessDetailsModel.desReads) shouldBe JsSuccess(testMinimumBusinessDetailsModel)
+    "read from Json with minimum fields" in {
+      Json.fromJson(testMinimumBusinessDetailsJson)(BusinessDetailsModel.reads) shouldBe JsSuccess(testMinimumBusinessDetailsModel)
     }
 
     "write to Json" in {
@@ -61,7 +61,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
+      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
     }
 
     "write cashOrAccruals `accruals` (pre-R10 value) to Some(true) (post-R10 value)" in {
@@ -87,7 +87,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
+      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
     }
 
     "write cashOrAccruals true (post-R10 value) to Some(true) (post-R10 value)" in {
@@ -113,7 +113,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelAfterR10)
+      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelAfterR10)
     }
 
     "write cashOrAccruals false (post-R10 value) to Some(false) (post-R10 value)" in {
@@ -139,7 +139,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.desReads) shouldBe JsSuccess(businessDetailsModelAfterR10)
+      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelAfterR10)
     }
 
   }

@@ -30,22 +30,17 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def getBusinessDetailsUrl(nino: String): String = {
-    val platformUrl = if (appConfig.useBusinessDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
-    s"${platformUrl}/registration/business-details/nino/$nino"
-  }
+  def getBusinessDetailsUrl(nino: String): String = s"${appConfig.ifUrl}/registration/business-details/nino/$nino"
 
-  def headers: Seq[(String, String)] = {
-    if (appConfig.useBusinessDetailsIFPlatform) appConfig.ifAuthHeaders else appConfig.desAuthHeaders
-  }
+  def headers: Seq[(String, String)] = appConfig.ifAuthHeaders
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = getBusinessDetailsUrl(nino)
-    val jsonReads = if (appConfig.useBusinessDetailsIFPlatform) IncomeSourceDetailsModel.ifReads else IncomeSourceDetailsModel.desReads
+    val jsonReads = IncomeSourceDetailsModel.ifReads
 
     logger.debug("[GetBusinessDetailsConnector][getBusinessDetails] - " +
-      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+      s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
     http.GET[HttpResponse](url = url, headers = headers)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
@@ -54,7 +49,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
             response.json.validate[IncomeSourceDetailsModel](jsonReads).fold(
               invalid => {
                 logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Validation Errors: $invalid")
-                IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
+                IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
               },
               valid => {
                 logger.info("[GetBusinessDetailsConnector][getBusinessDetails] successfully parsed response to getBusinessDetails")

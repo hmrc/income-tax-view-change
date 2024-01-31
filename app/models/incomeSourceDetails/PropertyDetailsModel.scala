@@ -37,9 +37,9 @@ case class PropertyDetailsModel(incomeSourceId: String,
 
 object PropertyDetailsModel extends CustomReads {
 
-  implicit val desReads: Reads[PropertyDetailsModel] = (
+  implicit val reads: Reads[PropertyDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
-      __.read(AccountingPeriodModel.desReads) and
+      __.read(AccountingPeriodModel.reads) and
       (__ \ "emailAddress").readNullable[String] and
       (__ \ "numPropRentedUK").readNullable[Int](readInt) and
       (__ \ "numPropRentedEEA").readNullable[Int](readInt) and

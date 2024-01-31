@@ -17,7 +17,7 @@
 package models.core
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+import play.api.libs.json._
 
 case class AddressModel(addressLine1: String,
                         addressLine2: Option[String],
@@ -28,7 +28,7 @@ case class AddressModel(addressLine1: String,
 
 object AddressModel {
 
-  val desReads: Reads[AddressModel] = (
+  val reads: Reads[AddressModel] = (
     (__ \ "addressLine1").read[String] and
       (__ \ "addressLine2").readNullable[String] and
       (__ \ "addressLine3").readNullable[String] and

@@ -52,7 +52,7 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
     "return LastTaxCalculationError model in case of bad JSON" in {
       mock(badJson)
       getBusinessDetails(testNino).futureValue shouldBe
-        IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
+        IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {

@@ -23,27 +23,24 @@ import helpers.ComponentSpecBase
 import helpers.servicemocks.BusinessDetailsCallWithNinoStub
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
-import play.api.mvc.Result
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{await, defaultAwaitTimeout, route, writeableOf_AnyContentAsEmpty}
 
 class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
 
 
   "Calling the GetBusinessDetailsController.getBusinessDetails method" when {
     "authorised with a valid request" when {
-      "A successful response is returned from DES" should {
+      "A successful response is returned from IF" should {
         "return a valid IncomeSourceDetails model" in {
 
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          BusinessDetailsCallWithNinoStub.stubGetDesBusinessDetails(testNino, incomeSourceDetailsSuccess)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetails(testNino, incomeSourceDetailsSuccess)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          BusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("a successful response is returned with the correct business details")
 
@@ -52,36 +49,18 @@ class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
             jsonBodyMatching(jsonSuccessOutput())
           )
         }
-        "return a valid IncomeSourceDetails model using IF platform" in {
-
-          isAuthorised(true)
-
-          And("I wiremock stub a successful getIncomeSourceDetails response")
-          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetails(testNino, incomeSourceDetailsSuccess)
-
-          When(s"I call GET /get-business-details/nino/$testNino")
-          val request = FakeRequest(controllers.routes.GetBusinessDetailsController.getBusinessDetails(testNino)).withHeaders("Authorization" -> "Bearer123")
-          val res: Result = await(route(appWithBusinessDetailsOnIf, request).get)
-
-          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
-
-          Then("a successful response is returned with the correct business details")
-
-          res.header.status shouldBe OK
-
-        }
       }
       "An error response is returned from DES" should {
         "return an Error Response model" in {
           isAuthorised(true)
 
           And("I wiremock stub an error response")
-          BusinessDetailsCallWithNinoStub.stubGetDesBusinessDetailsError(testNino)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetailsError(testNino)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          BusinessDetailsCallWithNinoStub.verifyGetDesBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("an error response is returned")
 

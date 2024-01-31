@@ -17,9 +17,9 @@
 package helpers
 
 import helpers.servicemocks.AuthStub
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, TestSuite}
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, TestSuite}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.JsValue
@@ -45,8 +45,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
   def configWithBusinessDetailsOnIf: Map[String, String] = Map(
     "microservice.services.auth.host" -> mockHost,
     "microservice.services.auth.port" -> mockPort,
-    "microservice.services.if.url" -> s"$mockUrl/if",
-    "microservice.services.des.url" -> s"$mockUrl/des",
+    "microservice.services.if.url" -> mockUrl,
     "submissionStubUrl" -> mockUrl,
     "useBusinessDetailsIFPlatform" -> "true",
   )
@@ -55,12 +54,6 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     .in(Environment.simple(mode = Mode.Dev))
     .configure(config)
     .build()
-
-  implicit lazy val appWithBusinessDetailsOnIf: Application = new GuiceApplicationBuilder()
-    .in(Environment.simple(mode = Mode.Dev))
-    .configure(configWithBusinessDetailsOnIf)
-    .build()
-
 
   override def beforeAll(): Unit = {
     super.beforeAll()

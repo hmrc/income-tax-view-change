@@ -23,25 +23,17 @@ import play.api.http.Status
 
 object BusinessDetailsStub {
 
-  val desUrl: (String) => String = (mtdRef) => s"""/registration/business-details/mtdbsa/$mtdRef"""
-  val ifurl: (String) => String = (mtdRef) => s"""/if/registration/business-details/mtdId/$mtdRef"""
+  val ifurl: (String) => String = (mtdRef) => s"""/registration/business-details/mtdId/$mtdRef"""
 
-  def stubGetDesBusinessDetails(mtdRef: String, response: IncomeSourceDetailsModel): Unit = {
-    val desBusinessDetailsResponse = successResponseDes(response.nino).toString
-    WiremockHelper.stubGet(desUrl(mtdRef), Status.OK, desBusinessDetailsResponse)
-  }
   def stubGetIfBusinessDetails(mtdRef: String, response: IncomeSourceDetailsModel): Unit = {
     val ifBusinessDetailsResponse = successResponseIf(response.nino).toString
     WiremockHelper.stubGet(ifurl(mtdRef), Status.OK, ifBusinessDetailsResponse)
   }
 
-  def stubGetDesBusinessDetailsError(mtdRef: String): Unit = {
+  def stubGetBusinessDetailsError(mtdRef: String): Unit = {
     val errorResponse = failureResponse("500", "ISE")
-    WiremockHelper.stubGet(desUrl(mtdRef), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
+    WiremockHelper.stubGet(ifurl(mtdRef), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
-
-  def verifyGetDesBusinessDetails(mtdRef: String): Unit =
-    WiremockHelper.verifyGet(desUrl(mtdRef))
 
   def verifyGetIfBusinessDetails(mtdRef: String): Unit =
     WiremockHelper.verifyGet(ifurl(mtdRef))

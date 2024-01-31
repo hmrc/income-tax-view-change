@@ -24,27 +24,19 @@ import play.api.http.Status
 object BusinessDetailsCallWithNinoStub {
 
   val url: (String) => String = (nino) => s"""/registration/business-details/nino/$nino"""
-  val ifurl: (String) => String = (nino) => s"""/if/registration/business-details/nino/$nino"""
 
-  def stubGetDesBusinessDetails(nino: String, response: IncomeSourceDetailsModel): Unit = {
-    val desBusinessDetailsResponse = successResponseDes(response.nino).toString
-    WiremockHelper.stubGet(url(nino), Status.OK, desBusinessDetailsResponse)
-  }
   def stubGetIfBusinessDetails(nino: String, response: IncomeSourceDetailsModel): Unit = {
     val ifBusinessDetailsResponse = successResponseIf(response.nino).toString
-    WiremockHelper.stubGet(ifurl(nino), Status.OK, ifBusinessDetailsResponse)
+    WiremockHelper.stubGet(url(nino), Status.OK, ifBusinessDetailsResponse)
   }
 
-  def stubGetDesBusinessDetailsError(nino: String): Unit = {
+  def stubGetIfBusinessDetailsError(nino: String): Unit = {
     val errorResponse = failureResponse("500", "ISE")
     WiremockHelper.stubGet(url(nino), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
   }
 
-  def verifyGetDesBusinessDetails(nino: String): Unit =
-    WiremockHelper.verifyGet(url(nino))
-
   def verifyGetIfBusinessDetails(nino: String): Unit = {
-    WiremockHelper.verifyGet(ifurl(nino))
+    WiremockHelper.verifyGet(url(nino))
   }
 
 }
