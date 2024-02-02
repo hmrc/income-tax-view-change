@@ -32,7 +32,7 @@ class IncomeSourceDetailsConnectorSpec extends TestSupport with MockHttp {
 
     import TestIncomeSourceDetailsConnector._
 
-    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getIncomeSourceDetailsUrl(mtdRef), microserviceAppConfig.ifAuthHeaders)(_)
+    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getIncomeSourceDetailsUrl(mtdRef), microserviceAppConfig.getIFHeaders("1171"))(_)
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)

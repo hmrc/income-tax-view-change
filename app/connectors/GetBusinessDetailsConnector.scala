@@ -32,7 +32,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
 
   def getBusinessDetailsUrl(nino: String): String = s"${appConfig.ifUrl}/registration/business-details/nino/$nino"
 
-  def headers: Seq[(String, String)] = appConfig.ifAuthHeaders
+  def headers: Seq[(String, String)] = appConfig.getIFHeaders("1171")
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 

@@ -34,7 +34,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
   }
 
   def headers: Seq[(String, String)] = {
-    if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifAuthHeaders1771 else appConfig.desAuthHeaders
+    if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.getIFHeaders("1771") else appConfig.desAuthHeaders
   }
 
   private[connectors] def IdQueryParameters(repaymentId: String): Seq[(String, String)] = {
