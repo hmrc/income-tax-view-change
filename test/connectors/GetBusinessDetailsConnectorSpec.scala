@@ -32,7 +32,7 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
 
     import TestGetBusinessDetailsConnector._
 
-    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getBusinessDetailsUrl(testNino), microserviceAppConfig.ifAuthHeaders)(_)
+    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getBusinessDetailsUrl(testNino), microserviceAppConfig.getIFHeaders("1171"))(_)
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)

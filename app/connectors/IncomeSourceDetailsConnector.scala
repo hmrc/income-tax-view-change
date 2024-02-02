@@ -36,7 +36,7 @@ class IncomeSourceDetailsConnector @Inject()(val http: HttpClient,
     s"$platformUrl/registration/business-details/$idtype/$mtdRef"
   }
 
-  def headers: Seq[(String, String)] = appConfig.ifAuthHeaders
+  def headers: Seq[(String, String)] = appConfig.getIFHeaders("1171")
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 

@@ -48,8 +48,8 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationListTYSUrl(nino, taxYear)
 
-    logger.debug(s"[CalculationListConnector][getCalculationListTYS] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders1896}")
-    http.GET(url = url, headers = appConfig.ifAuthHeaders1896)(CalculationListReads, headerCarrier, ec)
+    logger.debug(s"[CalculationListConnector][getCalculationListTYS] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1896")}")
+    http.GET(url = url, headers = appConfig.getIFHeaders("1896"))(CalculationListReads, headerCarrier, ec)
 
   }
 
