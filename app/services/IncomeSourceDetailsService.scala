@@ -16,9 +16,9 @@
 
 package services
 
-import connectors.IncomeSourceDetailsConnector
+import connectors.GetBusinessDetailsConnector
 import models.core.{NinoErrorModel, NinoModel, NinoResponse}
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails._
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -27,11 +27,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class IncomeSourceDetailsService @Inject()(val incomeSourceDetailsConnector: IncomeSourceDetailsConnector) extends Logging {
+class IncomeSourceDetailsService @Inject()(val getBusinessDetailsConnector: GetBusinessDetailsConnector) extends Logging {
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Requesting Income Source Details from Connector")
-    incomeSourceDetailsConnector.getIncomeSourceDetails(mtdRef).map {
+    getBusinessDetailsConnector.getBusinessDetails(mtdRef, IncomeSourceAccess).map {
       case success: IncomeSourceDetailsModel =>
         logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$success")
         logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")

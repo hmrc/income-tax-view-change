@@ -19,7 +19,7 @@ package connectors
 import assets.BaseTestConstants._
 import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockHttp
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsNotFound}
+import models.incomeSourceDetails.{BusinessAccess, IncomeSourceDetailsError, IncomeSourceDetailsNotFound}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
@@ -36,28 +36,28 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
-      getBusinessDetails(testNino).futureValue shouldBe testIncomeSourceDetailsModel
+      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe testIncomeSourceDetailsModel
     }
 
     "return LastTaxCalculationError model in case of failure" in {
       mock(badResponse)
-      getBusinessDetails(testNino).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
     }
 
     "return LastTaxCalculationError model with status 404 in case of failure" in {
       mock(notFoundBadResponse)
-      getBusinessDetails(testNino).futureValue shouldBe IncomeSourceDetailsNotFound(Status.NOT_FOUND, "Dummy error message")
+      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe IncomeSourceDetailsNotFound(Status.NOT_FOUND, "Dummy error message")
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
       mock(badJson)
-      getBusinessDetails(testNino).futureValue shouldBe
+      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Des Business Details")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getBusinessDetailsUrl(testNino))
-      getBusinessDetails(testNino).futureValue shouldBe
+      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }

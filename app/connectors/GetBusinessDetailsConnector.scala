@@ -17,7 +17,7 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{BusinessAccess, BusinessDetailsAccessType, IncomeSourceAccess, IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
 import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -30,18 +30,26 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
+  lazy val platformUrl: String = if (appConfig.useBusinessDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
   def getBusinessDetailsUrl(nino: String): String = {
-    val platformUrl = if (appConfig.useBusinessDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
     s"${platformUrl}/registration/business-details/nino/$nino"
+  }
+
+  def getIncomeSourceDetailsUrl(mtdRef: String): String = {
+    val idtype = if (appConfig.useBusinessDetailsIFPlatform) "mtdId" else "mtdbsa"
+    s"$platformUrl/registration/business-details/$idtype/$mtdRef"
   }
 
   def headers: Seq[(String, String)] = {
     if (appConfig.useBusinessDetailsIFPlatform) appConfig.ifAuthHeaders else appConfig.desAuthHeaders
   }
 
-  def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
+  def getBusinessDetails(ninoOrMtdRef: String, accessType: BusinessDetailsAccessType)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
-    val url = getBusinessDetailsUrl(nino)
+    val url = accessType match {
+      case BusinessAccess => getBusinessDetailsUrl(ninoOrMtdRef)
+      case IncomeSourceAccess => getIncomeSourceDetailsUrl(ninoOrMtdRef)
+    }
     val jsonReads = if (appConfig.useBusinessDetailsIFPlatform) IncomeSourceDetailsModel.ifReads else IncomeSourceDetailsModel.desReads
 
     logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - " +
