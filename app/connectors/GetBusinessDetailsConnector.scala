@@ -33,6 +33,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
   def getBusinessDetailsUrl(nino: String): String = {
     s"${appConfig.ifUrl}/registration/business-details/nino/$nino"
   }
+
   def getIncomeSourceDetailsUrl(mtdRef: String): String = {
     val idtype = "mtdId"
     s"${appConfig.ifUrl}/registration/business-details/$idtype/$mtdRef"

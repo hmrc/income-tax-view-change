@@ -29,7 +29,7 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import scala.concurrent.Future
 
 
-trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues  with BeforeAndAfterEach {
+trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockGetBusinessDetailsConnector: GetBusinessDetailsConnector = mock(classOf[GetBusinessDetailsConnector])
 
