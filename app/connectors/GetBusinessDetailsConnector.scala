@@ -40,7 +40,8 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
 
   def headers: Seq[(String, String)] = appConfig.getIFHeaders("1171")
 
-  def getBusinessDetails(ninoOrMtdRef: String, accessType: BusinessDetailsAccessType)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
+  def getBusinessDetails(ninoOrMtdRef: String, accessType: BusinessDetailsAccessType)
+                        (implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = accessType match {
       case BusinessAccess => getBusinessDetailsUrl(ninoOrMtdRef)
