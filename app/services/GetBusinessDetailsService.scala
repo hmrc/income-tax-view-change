@@ -17,7 +17,7 @@
 package services
 
 import connectors.GetBusinessDetailsConnector
-import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
+import models.incomeSourceDetails.{Nino, IncomeSourceDetailsResponseModel}
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -29,7 +29,7 @@ class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBu
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     logger.debug("[getBusinessDetailsService][getBusinessDetails] - Requesting Income Source Details from Connector")
-    getBusinessDetailsConnector.getBusinessDetails(nino)
+    getBusinessDetailsConnector.getBusinessDetails(nino, Nino)
   }
 
 }

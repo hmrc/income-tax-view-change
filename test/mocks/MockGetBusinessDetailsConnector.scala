@@ -16,19 +16,20 @@
 
 package mocks
 
-import assets.BaseTestConstants.testNino
+import assets.BaseTestConstants.{mtdRef, testNino}
 import connectors.GetBusinessDetailsConnector
-import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
+import models.incomeSourceDetails.{Nino, BusinessDetailsAccessType, MtdId, IncomeSourceDetailsResponseModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
+
 import scala.concurrent.Future
 
 
-trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues  with BeforeAndAfterEach {
+trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockGetBusinessDetailsConnector: GetBusinessDetailsConnector = mock(classOf[GetBusinessDetailsConnector])
 
@@ -37,12 +38,17 @@ trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with
     reset(mockGetBusinessDetailsConnector)
   }
 
-  def setupMockGetBusinessDetailsResult(testNino: String)(response: IncomeSourceDetailsResponseModel)
-  : OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
+  def setupMockGetBusinessDetailsResult(accessMode: BusinessDetailsAccessType)(response: IncomeSourceDetailsResponseModel)
+  : OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = {
+    val mtdRefOrNino = accessMode match {
+      case Nino => testNino
+      case MtdId => mtdRef
+    }
     when(mockGetBusinessDetailsConnector.getBusinessDetails(
-      ArgumentMatchers.eq(testNino))(ArgumentMatchers.any()))
+      ArgumentMatchers.eq(mtdRefOrNino), ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
+  }
 
-  def mockGetBusinessDetailsResult(incomeSourceDetailsResponse: IncomeSourceDetailsResponseModel): OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
-    setupMockGetBusinessDetailsResult(testNino)(incomeSourceDetailsResponse)
+  def mockGetBusinessDetailsResult(incomeSourceDetailsResponse: IncomeSourceDetailsResponseModel, accessMode: BusinessDetailsAccessType): OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
+    setupMockGetBusinessDetailsResult(accessMode)(incomeSourceDetailsResponse)
 }
