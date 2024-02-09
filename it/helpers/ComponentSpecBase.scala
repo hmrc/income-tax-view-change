@@ -116,7 +116,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getReportDeadlines(nino: String): WSResponse = get(s"/$nino/report-deadlines")
 
-    def getPreviousObligations(nino: String, from: String, to: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines/from/$from/to/$to")
+    def getAllObligations(nino: String, from: String, to: String): WSResponse = get(s"/$nino/report-deadlines/from/$from/to/$to")
 
     def getFulfilledReportDeadlines(nino: String): WSResponse = get(s"/$nino/fulfilled-report-deadlines")
 
