@@ -20,10 +20,12 @@ sealed trait BusinessDetailsAccessType {
   val key: String
 }
 
+//Used by GetBusinessDetails files
 case object Nino extends BusinessDetailsAccessType {
   override val key: String = "nino"
 }
 
+// Used by GetIncomeSourceDetails files
 case object MtdId extends BusinessDetailsAccessType {
   override val key: String = "mtdId"
 }

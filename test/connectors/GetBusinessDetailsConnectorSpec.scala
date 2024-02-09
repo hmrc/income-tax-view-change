@@ -32,7 +32,7 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
 
   "GetBusinessDetailsConnector.getBusinessDetails(BusinessAccess)" should {
 
-    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getBusinessDetailsUrl(testNino), microserviceAppConfig.getIFHeaders("1171"))(_)
+    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getUrl(Nino, testNino), microserviceAppConfig.getIFHeaders("1171"))(_)
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
@@ -56,14 +56,14 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
-      setupMockHttpGetFailed(getBusinessDetailsUrl(testNino))
+      setupMockHttpGetFailed(getUrl(Nino,testNino))
       getBusinessDetails(testNino, Nino).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }
   "GetBusinessDetailsConnector.getBusinessDetails(IncomeSourceAccess)" should {
 
-    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getIncomeSourceDetailsUrl(mtdRef), microserviceAppConfig.getIFHeaders("1171"))(_)
+    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getUrl(MtdId, mtdRef), microserviceAppConfig.getIFHeaders("1171"))(_)
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
@@ -82,7 +82,7 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
-      setupMockHttpGetFailed(getIncomeSourceDetailsUrl(mtdRef))
+      setupMockHttpGetFailed(getUrl(MtdId, mtdRef))
       getBusinessDetails(mtdRef, MtdId).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }

@@ -30,18 +30,10 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def getBusinessDetailsUrl(nino: String): String = {
-    s"${appConfig.ifUrl}/registration/business-details/nino/$nino"
-  }
-
-  def getIncomeSourceDetailsUrl(mtdRef: String): String = {
-    s"${appConfig.ifUrl}/registration/business-details/mtdId/$mtdRef"
-  }
-
   def getUrl(accessType: BusinessDetailsAccessType, ninoOrMtdRef: String) = {
     accessType match {
-      case Nino => getBusinessDetailsUrl(ninoOrMtdRef)
-      case MtdId => getIncomeSourceDetailsUrl(ninoOrMtdRef)
+      case Nino => s"${appConfig.ifUrl}/registration/business-details/nino/$ninoOrMtdRef"
+      case MtdId => s"${appConfig.ifUrl}/registration/business-details/mtdId/$ninoOrMtdRef"
     }
   }
 
