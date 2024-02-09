@@ -19,7 +19,7 @@ package connectors
 import assets.BaseTestConstants._
 import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockHttp
-import models.incomeSourceDetails.{BusinessAccess, IncomeSourceAccess, IncomeSourceDetailsError, IncomeSourceDetailsNotFound}
+import models.incomeSourceDetails.{Nino, MtdId, IncomeSourceDetailsError, IncomeSourceDetailsNotFound}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
@@ -36,28 +36,28 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
-      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe testIncomeSourceDetailsModel
+      getBusinessDetails(testNino, Nino).futureValue shouldBe testIncomeSourceDetailsModel
     }
 
     "return LastTaxCalculationError model in case of failure" in {
       mock(badResponse)
-      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+      getBusinessDetails(testNino, Nino).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
     }
 
     "return LastTaxCalculationError model with status 404 in case of failure" in {
       mock(notFoundBadResponse)
-      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe IncomeSourceDetailsNotFound(Status.NOT_FOUND, "Dummy error message")
+      getBusinessDetails(testNino, Nino).futureValue shouldBe IncomeSourceDetailsNotFound(Status.NOT_FOUND, "Dummy error message")
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
       mock(badJson)
-      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe
+      getBusinessDetails(testNino, Nino).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getBusinessDetailsUrl(testNino))
-      getBusinessDetails(testNino, BusinessAccess).futureValue shouldBe
+      getBusinessDetails(testNino, Nino).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }
@@ -67,23 +67,23 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
 
     "return Status (OK) and a JSON body when successful as a DesBusinessDetails" in {
       mock(successResponse)
-      getBusinessDetails(mtdRef, IncomeSourceAccess).futureValue shouldBe testIncomeSourceDetailsModel
+      getBusinessDetails(mtdRef, MtdId).futureValue shouldBe testIncomeSourceDetailsModel
     }
 
     "return LastTaxCalculationError model in case of failure" in {
       mock(badResponse)
-      getBusinessDetails(mtdRef, IncomeSourceAccess).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+      getBusinessDetails(mtdRef, MtdId).futureValue shouldBe IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
     }
 
     "return LastTaxCalculationError model in case of bad JSON" in {
       mock(badJson)
-      getBusinessDetails(mtdRef, IncomeSourceAccess).futureValue shouldBe
+      getBusinessDetails(mtdRef, MtdId).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
       setupMockHttpGetFailed(getIncomeSourceDetailsUrl(mtdRef))
-      getBusinessDetails(mtdRef, IncomeSourceAccess).futureValue shouldBe
+      getBusinessDetails(mtdRef, MtdId).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }

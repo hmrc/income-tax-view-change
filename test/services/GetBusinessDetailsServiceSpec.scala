@@ -19,7 +19,7 @@ package services
 import assets.BaseTestConstants.testNino
 import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockGetBusinessDetailsConnector
-import models.incomeSourceDetails.{BusinessAccess, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{Nino, IncomeSourceDetailsResponseModel}
 import utils.TestSupport
 
 import scala.concurrent.Future
@@ -38,7 +38,7 @@ class GetBusinessDetailsServiceSpec extends TestSupport with MockGetBusinessDeta
 
         "return a correctly formatted IncomeSourceDetailsModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
-          mockGetBusinessDetailsResult(resp, BusinessAccess)
+          mockGetBusinessDetailsResult(resp, Nino)
           result.futureValue shouldBe testIncomeSourceDetailsModel
         }
       }
@@ -46,7 +46,7 @@ class GetBusinessDetailsServiceSpec extends TestSupport with MockGetBusinessDeta
       "an Error Response is returned from the GetBusinessDetailsConnector" should {
 
         "return a correctly formatted DesBusinessDetailsError model" in {
-          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, BusinessAccess)
+          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, Nino)
           result.futureValue shouldBe testIncomeSourceDetailsError
         }
       }

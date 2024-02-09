@@ -18,7 +18,7 @@ package mocks
 
 import assets.BaseTestConstants.{mtdRef, testNino}
 import connectors.GetBusinessDetailsConnector
-import models.incomeSourceDetails.{BusinessAccess, BusinessDetailsAccessType, IncomeSourceAccess, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{Nino, BusinessDetailsAccessType, MtdId, IncomeSourceDetailsResponseModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
@@ -41,8 +41,8 @@ trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with
   def setupMockGetBusinessDetailsResult(accessMode: BusinessDetailsAccessType)(response: IncomeSourceDetailsResponseModel)
   : OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = {
     val mtdRefOrNino = accessMode match {
-      case BusinessAccess => testNino
-      case IncomeSourceAccess => mtdRef
+      case Nino => testNino
+      case MtdId => mtdRef
     }
     when(mockGetBusinessDetailsConnector.getBusinessDetails(
       ArgumentMatchers.eq(mtdRefOrNino), ArgumentMatchers.any())(ArgumentMatchers.any()))

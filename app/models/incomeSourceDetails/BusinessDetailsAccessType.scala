@@ -20,10 +20,10 @@ sealed trait BusinessDetailsAccessType {
   val key: String
 }
 
-case object BusinessAccess extends BusinessDetailsAccessType {
-  override val key: String = "business"
+case object Nino extends BusinessDetailsAccessType {
+  override val key: String = "nino"
 }
 
-case object IncomeSourceAccess extends BusinessDetailsAccessType {
-  override val key: String = "income-source"
+case object MtdId extends BusinessDetailsAccessType {
+  override val key: String = "mtdId"
 }

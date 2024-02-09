@@ -20,7 +20,7 @@ import assets.BaseTestConstants.mtdRef
 import assets.IncomeSourceDetailsTestConstants._
 import mocks.MockGetBusinessDetailsConnector
 import models.core.NinoResponse
-import models.incomeSourceDetails.{IncomeSourceAccess, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{MtdId, IncomeSourceDetailsResponseModel}
 import utils.TestSupport
 
 import scala.concurrent.Future
@@ -39,7 +39,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
 
         "return a correctly formatted IncomeSourceDetailsModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
-          mockGetBusinessDetailsResult(resp, IncomeSourceAccess)
+          mockGetBusinessDetailsResult(resp, MtdId)
           result.futureValue shouldBe testIncomeSourceDetailsModel
         }
       }
@@ -47,7 +47,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
       "an Error Response is returned from the IncomeSourceDetailsConnector" should {
 
         "return a correctly formatted DesBusinessDetailsError model" in {
-          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, IncomeSourceAccess)
+          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, MtdId)
           result.futureValue shouldBe testIncomeSourceDetailsError
         }
       }
@@ -61,7 +61,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
 
         "return a correctly formatted NinoModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
-          mockGetBusinessDetailsResult(resp, IncomeSourceAccess)
+          mockGetBusinessDetailsResult(resp, MtdId)
           result.futureValue shouldBe testNinoModel
         }
       }
@@ -69,7 +69,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
       "an Error Response is returned from the IncomeSourceDetailsConnector" should {
 
         "return a correctly formatted IncomeSourceDetailsError model" in {
-          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, IncomeSourceAccess)
+          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, MtdId)
           result.futureValue shouldBe testNinoError
         }
       }

@@ -30,7 +30,7 @@ class IncomeSourceDetailsService @Inject()(val getBusinessDetailsConnector: GetB
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Requesting Income Source Details from Connector")
-    getBusinessDetailsConnector.getBusinessDetails(mtdRef, IncomeSourceAccess).map {
+    getBusinessDetailsConnector.getBusinessDetails(mtdRef, MtdId).map {
       case success: IncomeSourceDetailsModel =>
         logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$success")
         logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")
