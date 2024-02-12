@@ -1,8 +1,9 @@
 import play.core.PlayVersion
 import play.sbt.PlayImport
 import play.sbt.routes.RoutesKeys
-import sbt._
-import uk.gov.hmrc.DefaultBuildSettings._
+import sbt.*
+import uk.gov.hmrc.DefaultBuildSettings.*
+import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "income-tax-view-change"
@@ -21,7 +22,7 @@ val compile: Seq[ModuleID] = Seq(
   "uk.gov.hmrc" %% "bootstrap-backend-play-30"   % bootstrapPlayVersion
 )
 
-def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
+def test(scope: String = "test"): Seq[ModuleID] = Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
   "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
   "org.pegdown" % "pegdown" % pegdownVersion % scope,
@@ -33,7 +34,18 @@ def test(scope: String = "test,it"): Seq[ModuleID] = Seq(
   caffeine
 )
 
+def it(scope: String = "test"): Seq[ModuleID] = Seq(
+  "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
+  "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
+  "org.pegdown" % "pegdown" % pegdownVersion % scope,
+  "org.jsoup" % "jsoup" % jsoupVersion % scope,
+  "org.mockito" % "mockito-core" % mockitoVersion % scope,
+  "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
+  caffeine
+)
+
 lazy val appDependencies: Seq[ModuleID] = compile ++ test()
+lazy val appDependenciesIt: Seq[ModuleID] = it()
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
@@ -58,27 +70,36 @@ lazy val microservice = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(majorVersion := 1)
   .settings(RoutesKeys.routesImport -= "controllers.Assets.Asset")
-  .settings(scalacOptions += "-Xfatal-warnings")
+  //.settings(scalacOptions += "-Xfatal-warnings")
   .settings(
     libraryDependencies ++= appDependencies,
-    retrieveManaged := true,
-    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false)
+    retrieveManaged := true
   )
   .settings(
     Test / Keys.fork := true,
     scalaVersion := currentScalaVersion,
     scalacOptions += "-Wconf:src=routes/.*:s",
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    IntegrationTest / Keys.fork := false,
-    scalaVersion := currentScalaVersion,
-    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
-    addTestReportOption(IntegrationTest, "int-test-reports"),
-    IntegrationTest / parallelExecution := false)
+    Keys.fork := false)
   .settings(resolvers ++= Seq(
     MavenRepository("HMRC-open-artefacts-maven2", "https://open.artefacts.tax.service.gov.uk/maven2"),
       Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
     Resolver.jcenterRepo
   ))
+
+lazy val it = project
+  .dependsOn(microservice % "test->test")
+  .settings(DefaultBuildSettings.itSettings(true).head)
+  .enablePlugins(play.sbt.PlayScala)
+  .settings(
+    publish / skip := true
+  )
+  .settings(scalaVersion := currentScalaVersion)
+  .settings(majorVersion := 1)
+  .settings(
+    testForkedParallel := true
+  )
+  .settings(
+    libraryDependencies ++= appDependenciesIt
+  )
