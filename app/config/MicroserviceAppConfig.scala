@@ -34,8 +34,6 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     )
   }
 
-  val isIfEnabled: Boolean = servicesConfig.getBoolean("microservice.services.if.enabled")
-
   val ifUrl: String = loadConfig("microservice.services.if.url")
   val ifAuthHeaders: Seq[(String, String)] = {
     val ifEnvironment: String = loadConfig("microservice.services.if.environment")

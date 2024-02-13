@@ -26,29 +26,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FinancialDetailsConnectorDES @Inject()(val http: HttpClient,
-                                             appConfig: MicroserviceAppConfig) extends FinancialDetailsConnector {
-  override val baseUrl: String = appConfig.desUrl
+class FinancialDetailsConnector  @Inject()(val http: HttpClient,
+                                            appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging {
 
-  override def headers(implicit hc: HeaderCarrier): Seq[(String, String)] = appConfig.desAuthHeaders
-}
+  val baseUrl: String = appConfig.ifUrl
 
-@Singleton
-class FinancialDetailsConnectorIF @Inject()(val http: HttpClient,
-                                            appConfig: MicroserviceAppConfig) extends FinancialDetailsConnector {
-  override val baseUrl: String = appConfig.ifUrl
-
-  override def headers(implicit hc: HeaderCarrier): Seq[(String, String)] = appConfig.getIFHeaders("1553")
-}
-
-
-trait FinancialDetailsConnector extends RawResponseReads with Logging {
-
-  def http: HttpClient
-
-  def baseUrl: String
-
-  def headers(implicit hc: HeaderCarrier): Seq[(String, String)]
+  def headers: Seq[(String, String)] = appConfig.getIFHeaders("1553")
 
   private[connectors] def financialDetailsUrl(nino: String): String = {
     s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
