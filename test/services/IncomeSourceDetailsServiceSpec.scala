@@ -18,16 +18,16 @@ package services
 
 import assets.BaseTestConstants.mtdRef
 import assets.IncomeSourceDetailsTestConstants._
-import mocks.MockIncomeSourceDetailsConnector
+import mocks.MockGetBusinessDetailsConnector
 import models.core.NinoResponse
-import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
+import models.incomeSourceDetails.{MtdId, IncomeSourceDetailsResponseModel}
 import utils.TestSupport
 
 import scala.concurrent.Future
 
-class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDetailsConnector {
+class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDetailsConnector {
 
-  object TestIncomeSourceDetailsService extends IncomeSourceDetailsService(mockIncomeSourceDetailsConnector)
+  object TestIncomeSourceDetailsService extends IncomeSourceDetailsService(mockGetBusinessDetailsConnector)
 
   "The IncomeSourceDetailsService" when {
 
@@ -39,7 +39,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
 
         "return a correctly formatted IncomeSourceDetailsModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
-          mockIncomeSourceDetailsResult(resp)
+          mockGetBusinessDetailsResult(resp, MtdId)
           result.futureValue shouldBe testIncomeSourceDetailsModel
         }
       }
@@ -47,7 +47,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
       "an Error Response is returned from the IncomeSourceDetailsConnector" should {
 
         "return a correctly formatted DesBusinessDetailsError model" in {
-          mockIncomeSourceDetailsResult(testIncomeSourceDetailsError)
+          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, MtdId)
           result.futureValue shouldBe testIncomeSourceDetailsError
         }
       }
@@ -61,7 +61,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
 
         "return a correctly formatted NinoModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
-          mockIncomeSourceDetailsResult(resp)
+          mockGetBusinessDetailsResult(resp, MtdId)
           result.futureValue shouldBe testNinoModel
         }
       }
@@ -69,7 +69,7 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockIncomeSourceDe
       "an Error Response is returned from the IncomeSourceDetailsConnector" should {
 
         "return a correctly formatted IncomeSourceDetailsError model" in {
-          mockIncomeSourceDetailsResult(testIncomeSourceDetailsError)
+          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, MtdId)
           result.futureValue shouldBe testNinoError
         }
       }

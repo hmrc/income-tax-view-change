@@ -17,7 +17,7 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails.{Nino, BusinessDetailsAccessType, MtdId, IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
 import play.api.http.Status
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -30,13 +30,19 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def getBusinessDetailsUrl(nino: String): String = s"${appConfig.ifUrl}/registration/business-details/nino/$nino"
+  def getUrl(accessType: BusinessDetailsAccessType, ninoOrMtdRef: String) = {
+    accessType match {
+      case Nino => s"${appConfig.ifUrl}/registration/business-details/nino/$ninoOrMtdRef"
+      case MtdId => s"${appConfig.ifUrl}/registration/business-details/mtdId/$ninoOrMtdRef"
+    }
+  }
 
   def headers: Seq[(String, String)] = appConfig.getIFHeaders("1171")
 
-  def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
+  def getBusinessDetails(ninoOrMtdRef: String, accessType: BusinessDetailsAccessType)
+                        (implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
-    val url = getBusinessDetailsUrl(nino)
+    val url = getUrl(accessType, ninoOrMtdRef)
     val jsonReads = IncomeSourceDetailsModel.ifReads
 
     logger.debug("[GetBusinessDetailsConnector][getBusinessDetails] - " +

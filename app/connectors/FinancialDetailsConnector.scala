@@ -38,7 +38,7 @@ class FinancialDetailsConnectorIF @Inject()(val http: HttpClient,
                                             appConfig: MicroserviceAppConfig) extends FinancialDetailsConnector {
   override val baseUrl: String = appConfig.ifUrl
 
-  override def headers(implicit hc: HeaderCarrier): Seq[(String, String)] = appConfig.ifAuthHeaders
+  override def headers(implicit hc: HeaderCarrier): Seq[(String, String)] = appConfig.getIFHeaders("1553")
 }
 
 
