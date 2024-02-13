@@ -26,14 +26,9 @@ import test.helpers.ComponentSpecBase
 import test.assets.FinancialDetailIntegrationTestConstants._
 import test.helpers.servicemocks.DesChargesStub._
 
-class FinancialDetailsControllerDESISpec extends FinancialDetailsControllerISpec(enableIF = false)
-
-class FinancialDetailsControllerIFISpec extends FinancialDetailsControllerISpec(enableIF = true)
 
 
-abstract class FinancialDetailsControllerISpec(enableIF: Boolean) extends ComponentSpecBase {
-
-  override def config: Map[String, String] = super.config + ("microservice.services.if.enabled" -> enableIF.toString)
+abstract class FinancialDetailsControllerISpec extends ComponentSpecBase {
 
   s"GET ${controllers.routes.FinancialDetailsController.getOnlyOpenItems(testNino)}" should {
     s"return $OK" when {

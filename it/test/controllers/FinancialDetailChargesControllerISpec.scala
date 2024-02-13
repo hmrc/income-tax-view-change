@@ -25,14 +25,7 @@ import play.api.libs.ws.WSResponse
 import test.helpers.ComponentSpecBase
 import test.helpers.servicemocks.DesChargesStub._
 
-class FinancialDetailChargesControllerDESISpec extends FinancialDetailChargesControllerISpec(enableIF = false)
-
-class FinancialDetailChargesControllerIFISpec extends FinancialDetailChargesControllerISpec(enableIF = true)
-
-
-abstract class FinancialDetailChargesControllerISpec(enableIF: Boolean) extends ComponentSpecBase {
-
-  override def config: Map[String, String] = super.config + ("microservice.services.if.enabled" -> enableIF.toString)
+class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 
   val from: String = "from"
   val to: String = "to"

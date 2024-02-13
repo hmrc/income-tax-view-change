@@ -27,14 +27,7 @@ import test.helpers.servicemocks.DesChargesStub.stubGetChargeDetails
 
 import java.time.LocalDate
 
-class FinancialDetailPaymentsControllerDESISpec extends FinancialDetailPaymentsControllerISpec(enableIF = false)
-
-class FinancialDetailPaymentsControllerIFISpec extends FinancialDetailPaymentsControllerISpec(enableIF = true)
-
-
-abstract class FinancialDetailPaymentsControllerISpec(enableIF: Boolean) extends ComponentSpecBase {
-
-  override def config: Map[String, String] = super.config + ("microservice.services.if.enabled" -> enableIF.toString)
+class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
 
   val from: String = "from"
   val to: String = "to"
