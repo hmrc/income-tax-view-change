@@ -20,6 +20,7 @@ import connectors.CalculationListConnector
 import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
 import play.api.Logging
+import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -52,5 +53,11 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
       case error@Left(_) =>
         error
     }
+  }
+
+  def getOverwriteCalculationListTYS(nino: String, taxYearRange: String, crystallisationStatus: String)
+                           (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Result] = {
+
+    calculationListConnector.getOverwriteCalculationListTYS(nino, taxYearRange, crystallisationStatus)
   }
 }

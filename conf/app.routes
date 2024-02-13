@@ -1,18 +1,19 @@
 # microservice specific routes
 
-GET        /nino-lookup/:mtdRef                                          controllers.IncomeSourceDetailsController.getNino(mtdRef)
+GET        /nino-lookup/:mtdRef                                                   controllers.IncomeSourceDetailsController.getNino(mtdRef)
 
-GET        /get-business-details/nino/:nino                              controllers.GetBusinessDetailsController.getBusinessDetails(nino)
+GET        /get-business-details/nino/:nino                                       controllers.GetBusinessDetailsController.getBusinessDetails(nino)
 
-GET        /income-sources/:mtdRef                                       controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
+GET        /income-sources/:mtdRef                                                controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
 
-GET        /:nino/report-deadlines                                       controllers.ReportDeadlinesController.getOpenObligations(nino)
-GET        /:nino/fulfilled-report-deadlines                             controllers.ReportDeadlinesController.getFulfilledObligations(nino)
-GET        /:nino/fulfilled-report-deadlines/from/:from/to/:to           controllers.ReportDeadlinesController.getPreviousObligations(nino, from, to)
+GET        /:nino/report-deadlines                                                controllers.ReportDeadlinesController.getOpenObligations(nino)
+GET        /:nino/fulfilled-report-deadlines                                      controllers.ReportDeadlinesController.getFulfilledObligations(nino)
+GET        /:nino/fulfilled-report-deadlines/from/:from/to/:to                    controllers.ReportDeadlinesController.getPreviousObligations(nino, from, to)
 
-GET        /list-of-calculation-results/:nino/:taxYear                  controllers.CalculationListController.getCalculationList(nino, taxYear)
+GET        /list-of-calculation-results/:nino/:taxYear                             controllers.CalculationListController.getCalculationList(nino, taxYear)
 
-GET        /calculation-list/:nino/:taxYear                             controllers.CalculationListController.getCalculationListTYS(nino, taxYear)
+GET        /calculation-list/:nino/:taxYear                                        controllers.CalculationListController.getCalculationListTYS(nino, taxYear)
+GET        /calculation-list/:nino/:taxYear/overwrite/:crystallisationStatus       controllers.CalculationListController.getOverwriteCalculationListTYS(nino, taxYear, crystallisationStatus)
 
 GET        /:nino/payment-allocations/:paymentLot/:paymentLotItem        controllers.PaymentAllocationsController.getPaymentAllocations(nino, paymentLot, paymentLotItem)
 

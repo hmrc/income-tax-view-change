@@ -102,4 +102,14 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
     }
   }
 
+  def getOverwriteCalculationListTYS(nino: String, taxYearRange: String, crystallisationStatus: String): Action[AnyContent] = authentication.async {
+    implicit request =>
+      calculationListService.getOverwriteCalculationListTYS(nino, taxYearRange, crystallisationStatus)(hc, ec) flatMap { response =>
+        response.header.status match {
+          case OK => Future.successful(Ok(response.body.toString))
+          case _ => Future.failed(new Exception(response.body.toString))
+        }
+      }
+  }
+
 }

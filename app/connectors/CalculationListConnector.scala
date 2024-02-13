@@ -21,7 +21,10 @@ import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
 import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
 import play.api.Logging
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.http.Status.OK
+import play.api.mvc.Result
+import play.api.mvc.Results.{InternalServerError, Ok}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,6 +38,8 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
   private[connectors] def getCalculationListTYSUrl(nino: String, taxYearRange: String): String =
     s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
 
+  private[connectors] def getOverwriteCalculationListTYSUrl(nino: String, taxYearRange: String, crystallisationStatus: String): String =
+    s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino/overwrite/$crystallisationStatus"
 
   def getCalculationList(nino: String, taxYear: String)
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
@@ -50,6 +55,22 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
 
     logger.debug(s"[CalculationListConnector][getCalculationListTYS] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1896")}")
     http.GET(url = url, headers = appConfig.getIFHeaders("1896"))(CalculationListReads, headerCarrier, ec)
+
+  }
+
+  implicit val httpReads: HttpReads[HttpResponse] = (method: String, url: String, response: HttpResponse) => response
+
+  def getOverwriteCalculationListTYS(nino: String, taxYear: String, crystallisationStatus: String)
+                           (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Result] = {
+    val url = getOverwriteCalculationListTYSUrl(nino, taxYear, crystallisationStatus)
+
+    println("CCCCCCCCC" + url)
+    http.GET(url = url, headers = appConfig.getIFHeaders("1896"))(httpReads, headerCarrier, ec).flatMap{
+      response => response.status match {
+        case OK => Future.successful(Ok("Success"))
+        case _ => Future.successful(InternalServerError("Failure"))
+      }
+    }
 
   }
 
