@@ -28,38 +28,20 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.TestSupport
 
-class FinancialDetailsConnectorDESSpec extends FinancialDetailsConnectorBehavior[FinancialDetailsConnectorDES] {
-  override val TestFinancialDetailsConnector = new FinancialDetailsConnectorDES(mockHttpGet, microserviceAppConfig)
 
-  override val expectedBaseUrl: String = microserviceAppConfig.desUrl
+class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
 
-  override val expectedApiHeaders = Seq(
-    "Environment" -> "localDESEnvironment",
-    "Authorization" -> "Bearer localDESToken"
-  )
-}
+  val TestFinancialDetailsConnector = new FinancialDetailsConnector(mockHttpGet, microserviceAppConfig)
 
-class FinancialDetailsConnectorIFSpec extends FinancialDetailsConnectorBehavior[FinancialDetailsConnectorIF] {
-  override val TestFinancialDetailsConnector = new FinancialDetailsConnectorIF(mockHttpGet, microserviceAppConfig)
+  val expectedBaseUrl: String = microserviceAppConfig.ifUrl
 
-  override val expectedBaseUrl: String = microserviceAppConfig.ifUrl
-
-  override val expectedApiHeaders = Seq(
+  val expectedApiHeaders = Seq(
     "Environment" -> "localIFEnvironment",
     "Authorization" -> "Bearer localIFToken1553"
   )
 
   override implicit val hc: HeaderCarrier =
     HeaderCarrierConverter.fromRequest(FakeRequest())
-}
-
-abstract class FinancialDetailsConnectorBehavior[C <: FinancialDetailsConnector] extends TestSupport with MockHttp {
-
-  def TestFinancialDetailsConnector: C
-
-  def expectedBaseUrl: String
-
-  def expectedApiHeaders: Seq[(String, String)]
 
   val testNino: String = "testNino"
   val testFrom: String = "testFrom"

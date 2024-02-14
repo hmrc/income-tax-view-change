@@ -36,9 +36,6 @@ class MicroserviceAppConfigSpec extends TestSupport {
     }
 
     "read from application.conf the values for calling IF APIs" which {
-      "has a flag to call IF rather than DES" in {
-        microserviceAppConfig.isIfEnabled shouldBe true
-      }
 
       "has a correct IF base url" in {
         microserviceAppConfig.ifUrl shouldBe "http://localhost:9084"
