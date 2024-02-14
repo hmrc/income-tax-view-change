@@ -31,13 +31,13 @@ class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
                                            (implicit ec: ExecutionContext) extends RawResponseReads {
 
   val updateIncomeSourceUrl: String = s"${appConfig.ifUrl}/income-tax/business-detail/income-source"
-
+  private val ifHeaders: Seq[(String, String)] = appConfig.getIFHeaders("1776")
   def updateIncomeSource(body: UpdateIncomeSourceRequestModel)(implicit headerCarrier: HeaderCarrier): Future[UpdateIncomeSourceResponse] = {
     val url = updateIncomeSourceUrl
     logger.info("[UpdateIncomeSourceConnector][updateIncomeSource] - INFO " +
-      s"Calling PUT $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.ifAuthHeaders} \nBody:$body")
+      s"Calling PUT $url \n\nHeaders: $headerCarrier \nAuth Headers: $ifHeaders \nBody:$body")
 
-    http.PUT[UpdateIncomeSourceRequestModel, HttpResponse](url = url, body = body, headers = appConfig.ifAuthHeaders) map {
+    http.PUT[UpdateIncomeSourceRequestModel, HttpResponse](url = url, body = body, headers = ifHeaders) map {
       response =>
         response.status match {
           case OK =>
