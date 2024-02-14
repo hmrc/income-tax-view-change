@@ -16,11 +16,12 @@
 
 package test.helpers.servicemocks
 
-import java.time.LocalDate
-import test.assets.ReportDeadlinesIntegrationTestConstants._
 import play.api.http.Status
 import services.DateService
+import test.assets.ReportDeadlinesIntegrationTestConstants._
 import test.helpers.WiremockHelper
+
+import java.time.LocalDate
 
 object DesReportDeadlinesStub {
 
@@ -32,7 +33,7 @@ object DesReportDeadlinesStub {
     s"/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
   }
 
-  def previousObligationsUrl(nino: String, from: String, to: String): String = {
+  def allObligationsUrl(nino: String, from: String, to: String): String = {
     s"/enterprise/obligation-data/nino/$nino/ITSA?from=$from&to=$to"
   }
 
