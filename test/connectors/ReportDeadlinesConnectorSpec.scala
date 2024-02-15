@@ -121,11 +121,11 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
     "return an obligations model" when {
       s"$OK is return with valid json" in new Setup {
         when(httpClient.GET[HttpResponse](
-          matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05")),
+          matches(connector.getAllReportDeadlinesUrl(testNino, "2020-04-06", "2021-04-05")),
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(successResponse))
 
-        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
+        val result: ReportDeadlinesResponseModel = connector.getAllObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testObligations
       }
@@ -133,31 +133,31 @@ class ReportDeadlinesConnectorSpec extends TestSupport {
     "return a report deadline error model" when {
       s"$OK is returned but the json is invalid" in new Setup {
         when(httpClient.GET[HttpResponse](
-          matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05")),
+          matches(connector.getAllReportDeadlinesUrl(testNino, "2020-04-06", "2021-04-05")),
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(badJson))
 
-        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
+        val result: ReportDeadlinesResponseModel = connector.getAllObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testReportDeadlinesErrorJson
       }
       s"a status which is not $OK is returned" in new Setup {
         when(httpClient.GET[HttpResponse](
-          matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05")),
+          matches(connector.getAllReportDeadlinesUrl(testNino, "2020-04-06", "2021-04-05")),
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.successful(badResponse))
 
-        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
+        val result: ReportDeadlinesResponseModel = connector.getAllObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testReportDeadlinesError
       }
       s"there was a problem making the call" in new Setup {
         when(httpClient.GET[HttpResponse](
-          matches(connector.getPreviousObligationsUrl(testNino, "2020-04-06", "2021-04-05")),
+          matches(connector.getAllReportDeadlinesUrl(testNino, "2020-04-06", "2021-04-05")),
           any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
           .thenReturn(Future.failed(new Exception("test exception")))
 
-        val result: ReportDeadlinesResponseModel = connector.getPreviousObligations(testNino, "2020-04-06", "2021-04-05").futureValue
+        val result: ReportDeadlinesResponseModel = connector.getAllObligations(testNino, "2020-04-06", "2021-04-05").futureValue
 
         result shouldBe testReportDeadlinesErrorFutureFailed("test exception")
       }

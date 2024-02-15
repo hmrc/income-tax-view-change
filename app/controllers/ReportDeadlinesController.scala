@@ -59,10 +59,10 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
     }
   }
 
-  def getPreviousObligations(nino: String, from: String, to: String): Action[AnyContent] = authentication.async { implicit request =>
+  def getAllObligations(nino: String, from: String, to: String): Action[AnyContent] = authentication.async { implicit request =>
     logger.debug("[ReportDeadlinesController][getFulfilledObligations] - " +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino, from: $from, to: $to")
-    reportDeadlinesConnector.getPreviousObligations(nino, from, to).map {
+    reportDeadlinesConnector.getAllObligations(nino, from, to).map {
       case success: ObligationsModel =>
         logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - Successful Response: $success")
         Ok(Json.toJson(success))

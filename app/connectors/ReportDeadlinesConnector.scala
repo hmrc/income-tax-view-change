@@ -41,7 +41,7 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
     s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
   }
 
-  private[connectors] def getPreviousObligationsUrl(nino: String, from: String, to: String): String = {
+  private[connectors] def getAllReportDeadlinesUrl(nino: String, from: String, to: String): String = {
     s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?from=$from&to=$to"
   }
 
@@ -77,9 +77,9 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
     }
   }
 
-  def getPreviousObligations(nino: String, from: String, to: String)
-                            (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
-    val url = getPreviousObligationsUrl(nino, from, to)
+  def getAllObligations(nino: String, from: String, to: String)
+                       (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
+    val url = getAllReportDeadlinesUrl(nino, from, to)
 
     logger.info(s"[ReportDeadlinesConnector][getReportDeadlines] - Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {

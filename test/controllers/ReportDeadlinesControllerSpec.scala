@@ -22,7 +22,7 @@ import connectors.ReportDeadlinesConnector
 import controllers.predicates.AuthenticationPredicate
 import mocks.MockMicroserviceAuthConnector
 import org.mockito.ArgumentMatchers.{any, eq => matches}
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{mock, when}
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.MissingBearerToken
 import utils.TestSupport
-import org.mockito.Mockito.mock
+
 import scala.concurrent.Future
 
 
@@ -118,10 +118,10 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
     s"return ${Status.OK}" when {
       "valid obligations are returned from the connector" in new Setup {
         mockAuth()
-        when(reportDeadlinesConnector.getPreviousObligations(matches(testNino), matches("2020-04-06"), matches("2021-04-05"))(any()))
+        when(reportDeadlinesConnector.getAllObligations(matches(testNino), matches("2020-04-06"), matches("2021-04-05"))(any()))
           .thenReturn(Future.successful(testObligations))
 
-        val result: Future[Result] = controller.getPreviousObligations(nino = testNino, from = "2020-04-06", to = "2021-04-05")(FakeRequest())
+        val result: Future[Result] = controller.getAllObligations(nino = testNino, from = "2020-04-06", to = "2021-04-05")(FakeRequest())
 
         status(result) shouldBe Status.OK
         contentAsJson(result) shouldBe Json.toJson(testObligations)
@@ -131,10 +131,10 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
     "return the status of the error model" when {
       "an error model is returned from the connector" in new Setup {
         mockAuth()
-        when(reportDeadlinesConnector.getPreviousObligations(matches(testNino), matches("2020-04-06"), matches("2021-04-05"))(any()))
+        when(reportDeadlinesConnector.getAllObligations(matches(testNino), matches("2020-04-06"), matches("2021-04-05"))(any()))
           .thenReturn(Future.successful(testReportDeadlinesError))
 
-        val result: Future[Result] = controller.getPreviousObligations(nino = testNino, from = "2020-04-06", to = "2021-04-05")(FakeRequest())
+        val result: Future[Result] = controller.getAllObligations(nino = testNino, from = "2020-04-06", to = "2021-04-05")(FakeRequest())
 
         status(result) shouldBe testReportDeadlinesError.status
         contentAsJson(result) shouldBe Json.toJson(testReportDeadlinesError)
@@ -145,7 +145,7 @@ class ReportDeadlinesControllerSpec extends TestSupport with MockMicroserviceAut
       "called by an unauthenticated user" in new Setup {
         mockAuth(Future.failed(new MissingBearerToken))
 
-        val result: Future[Result] = controller.getPreviousObligations(nino = testNino, from = "2020-04-06", to = "2021-04-05")(FakeRequest())
+        val result: Future[Result] = controller.getAllObligations(nino = testNino, from = "2020-04-06", to = "2021-04-05")(FakeRequest())
 
         status(result) shouldBe Status.UNAUTHORIZED
       }
