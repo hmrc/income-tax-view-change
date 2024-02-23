@@ -47,16 +47,17 @@ class RepaymentHistoryHttpParserSpec extends TestSupport {
                         RepaymentSupplementItem(
                           parentCreditReference = Some("002420002231"),
                           amount = Some(400.0),
-                          fromDate = Some( LocalDate.parse("2021-07-23") ),
-                          toDate = Some( LocalDate.parse("2021-08-23") ),
+                          fromDate = Some(LocalDate.parse("2021-07-23")),
+                          toDate = Some(LocalDate.parse("2021-08-23")),
                           rate = Some(500.0)
+                        )
                       )
-                    )
-                  )))
+                      )))
                 ),
                 estimatedRepaymentDate = Some(LocalDate.parse("2021-08-11")),
                 creationDate = Some(LocalDate.parse("2020-12-06")),
-                repaymentRequestNumber = "000000003135"
+                repaymentRequestNumber = "000000003135",
+                status = "A"
               )
             )
           )

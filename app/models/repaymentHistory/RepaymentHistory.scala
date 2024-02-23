@@ -20,7 +20,6 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 import java.time.LocalDate
-
 case class RepaymentHistory(amountApprovedforRepayment: Option[BigDecimal],
                             amountRequested: BigDecimal,
                             repaymentMethod: Option[String],
@@ -28,7 +27,8 @@ case class RepaymentHistory(amountApprovedforRepayment: Option[BigDecimal],
                             repaymentItems: Option[Seq[RepaymentItem]],
                             estimatedRepaymentDate: Option[LocalDate],
                             creationDate: Option[LocalDate],
-                            repaymentRequestNumber: String
+                            repaymentRequestNumber: String,
+                            status: String
                            )
 
 object RepaymentHistory {
@@ -44,7 +44,8 @@ object RepaymentHistory {
       } and
       (__ \ "estimatedRepaymentDate").readNullable[LocalDate] and
       (__ \ "creationDate").readNullable[LocalDate] and
-      (__ \ "repaymentRequestNumber").read[String]
+      (__ \ "repaymentRequestNumber").read[String] and
+      (__ \ "status").read[String]
     ) (RepaymentHistory.apply _)
 
   implicit val writes: OWrites[RepaymentHistory] = Json.writes[RepaymentHistory]
