@@ -174,7 +174,7 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, Some(400.00))
+  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
 
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = 2018,
