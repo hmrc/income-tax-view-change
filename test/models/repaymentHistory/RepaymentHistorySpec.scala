@@ -32,7 +32,8 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
     repaymentItems = None,
     estimatedRepaymentDate = Some(LocalDate.parse("2021-07-23")),
     creationDate = Some(LocalDate.parse("2021-07-21")),
-    repaymentRequestNumber = "000000003135"
+    repaymentRequestNumber = "000000003135",
+    status = "A"
   )
 
   val repaymentHistoryOneRSI: RepaymentHistory = RepaymentHistory(
@@ -55,7 +56,8 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
     ),
     estimatedRepaymentDate = Some(LocalDate.parse("2021-07-23")),
     creationDate = Some(LocalDate.parse("2021-07-21")),
-    repaymentRequestNumber = "000000003135"
+    repaymentRequestNumber = "000000003135",
+    status = "A"
   )
 
   val repaymentHistoryTwoRSI: RepaymentHistory = RepaymentHistory(
@@ -83,7 +85,8 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
           )))))),
     estimatedRepaymentDate = Some(LocalDate.parse("2021-07-23")),
     creationDate = Some(LocalDate.parse("2021-07-21")),
-    repaymentRequestNumber = "000000003135"
+    repaymentRequestNumber = "000000003135",
+    status = "A"
   )
 
   val repaymentHistoryAllRepaymentItemsJson: JsValue = Json.obj(
@@ -160,7 +163,9 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
       )),
     "estimatedRepaymentDate" -> LocalDate.parse("2021-07-23"),
     "creationDate" -> LocalDate.parse("2021-07-21"),
-    "repaymentRequestNumber" -> "000000003135"
+    "repaymentRequestNumber" -> "000000003135",
+    "status" -> "A"
+
   )
 
   val repaymentHistoryNoRepaymentItemsJson: JsValue = Json.obj(
@@ -170,7 +175,8 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
     "totalRepaymentAmount" -> Some(1234.56),
     "estimatedRepaymentDate" -> LocalDate.parse("2021-07-23"),
     "creationDate" -> LocalDate.parse("2021-07-21"),
-    "repaymentRequestNumber" -> "000000003135"
+    "repaymentRequestNumber" -> "000000003135",
+    "status" -> "A"
   )
 
   val repaymentHistoryNoRSIJson: JsValue = Json.obj(
@@ -230,7 +236,8 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
     ),
     "estimatedRepaymentDate" -> LocalDate.parse("2021-07-23"),
     "creationDate" -> LocalDate.parse("2021-07-21"),
-    "repaymentRequestNumber" -> "000000003135"
+    "repaymentRequestNumber" -> "000000003135",
+    "status" -> "A"
   )
 
 
@@ -253,7 +260,8 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
       )),
     "estimatedRepaymentDate" -> LocalDate.parse("2021-07-23"),
     "creationDate" -> LocalDate.parse("2021-07-21"),
-    "repaymentRequestNumber" -> "000000003135"
+    "repaymentRequestNumber" -> "000000003135",
+    "status" -> "A"
   )
 
   val repaymentHistoryTwoRSIJson: JsValue = Json.obj(
@@ -282,12 +290,14 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
       )),
     "estimatedRepaymentDate" -> LocalDate.parse("2021-07-23"),
     "creationDate" -> LocalDate.parse("2021-07-21"),
-    "repaymentRequestNumber" -> "000000003135"
+    "repaymentRequestNumber" -> "000000003135",
+    "status" -> "A"
   )
 
   val repaymentHistoryMinimalJson: JsValue = Json.obj(
     "amountRequested" -> 0.00,
-    "repaymentRequestNumber" -> "000000003135"
+    "repaymentRequestNumber" -> "000000003135",
+    "status" -> "A"
   )
 
   val repaymentHistoryMinimal: RepaymentHistory = RepaymentHistory(
@@ -298,7 +308,8 @@ class RepaymentHistorySpec extends AnyWordSpec with Matchers {
     repaymentItems = None,
     estimatedRepaymentDate = None,
     creationDate = None,
-    repaymentRequestNumber = "000000003135"
+    repaymentRequestNumber = "000000003135",
+    status = "A"
   )
 
   "RepaymentHistory" should {

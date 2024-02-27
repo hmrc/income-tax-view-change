@@ -16,7 +16,7 @@
 
 package assets
 
-import models.repaymentHistory.{RepaymentHistory, RepaymentItem, RepaymentSupplementItem}
+import models.repaymentHistory._
 import play.api.libs.json.{JsValue, Json}
 
 import java.time.LocalDate
@@ -45,15 +45,16 @@ object RepaymentHistoryTestConstants {
                   Json.obj(
                     "parentCreditReference" -> Some("002420002231"),
                     "amount" -> Some(400.0),
-                    "fromDate" -> Some( LocalDate.parse("2021-07-23") ),
-                    "toDate" -> Some( LocalDate.parse("2021-08-23") ),
+                    "fromDate" -> Some(LocalDate.parse("2021-07-23")),
+                    "toDate" -> Some(LocalDate.parse("2021-08-23")),
                     "rate" -> Some(500.0)
                   )
                 )
               )
             ),
             "estimatedRepaymentDate" -> LocalDate.parse("2021-08-11"),
-            "creationDate" -> LocalDate.parse("2020-12-06")
+            "creationDate" -> LocalDate.parse("2020-12-06"),
+            "status" -> "A"
           )
         )
     )
@@ -71,8 +72,8 @@ object RepaymentHistoryTestConstants {
             Json.obj(
               "parentCreditReference" -> Some("002420002231"),
               "amount" -> Some(400.0),
-              "fromDate" -> Some( LocalDate.parse("2021-07-23") ),
-              "toDate" -> Some( LocalDate.parse("2021-08-23") ),
+              "fromDate" -> Some(LocalDate.parse("2021-07-23")),
+              "toDate" -> Some(LocalDate.parse("2021-08-23")),
               "rate" -> Some(500.0)
             )
           ),
@@ -89,8 +90,8 @@ object RepaymentHistoryTestConstants {
             Json.obj(
               "parentCreditReference" -> Some("002420002231"),
               "amount" -> Some(400.0),
-              "fromDate" -> Some( LocalDate.parse("2021-07-23") ),
-              "toDate" -> Some( LocalDate.parse("2021-08-23") ),
+              "fromDate" -> Some(LocalDate.parse("2021-07-23")),
+              "toDate" -> Some(LocalDate.parse("2021-08-23")),
               "rate" -> Some(500.0)
             )
           ),
@@ -113,15 +114,16 @@ object RepaymentHistoryTestConstants {
             RepaymentSupplementItem(
               parentCreditReference = Some("002420002231"),
               amount = Some(400.0),
-              fromDate = Some( LocalDate.parse("2021-07-23") ),
-              toDate = Some( LocalDate.parse("2021-08-23") ),
+              fromDate = Some(LocalDate.parse("2021-07-23")),
+              toDate = Some(LocalDate.parse("2021-08-23")),
               rate = Some(500.0)
             )
           )
-      )))
+          )))
     ),
     estimatedRepaymentDate = Some(LocalDate.parse("2021-08-11")),
-    creationDate = Some(LocalDate.parse("2020-12-03"))
+    creationDate = Some(LocalDate.parse("2020-12-03")),
+    status = "A"
   )
 
 }
