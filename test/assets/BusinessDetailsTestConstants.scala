@@ -30,6 +30,7 @@ object BusinessDetailsTestConstants {
   val testBusinessDetailsModel: BusinessDetailsModel =
     BusinessDetailsModel(
       incomeSourceId = "111111111111111",
+      incomeSource = Some("Fruit Ltd"),
       accountingPeriod = testAccountingPeriodModel,
       tradingName = Some("Test Business"),
       address = Some(testAddressModel),
@@ -52,6 +53,7 @@ object BusinessDetailsTestConstants {
 
   val testMinimumBusinessDetailsModel: BusinessDetailsModel = BusinessDetailsModel(
     incomeSourceId = "111111111111111",
+    incomeSource = Some("Fruit Ltd"),
     accountingPeriod = testAccountingPeriodModel,
     tradingName = None,
     address = None,
@@ -68,6 +70,7 @@ object BusinessDetailsTestConstants {
 
   val testBusinessDetailsJson: JsObject = Json.obj(
     "incomeSourceId" -> "111111111111111",
+    "incomeSource" -> "Fruit Ltd",
     "accountingPeriodStartDate" -> "2017-06-01",
     "accountingPeriodEndDate" -> "2018-05-31",
     "tradingName" -> "Test Business",
@@ -94,6 +97,7 @@ object BusinessDetailsTestConstants {
 
   val testBusinessDetailsToJson: JsObject = Json.obj(
     "incomeSourceId" -> "111111111111111",
+    "incomeSource" -> "Fruit Ltd",
     "accountingPeriod" -> testAccountingPeriodToJson,
     "tradingName" -> "Test Business",
     "address" -> testAddressToJson,
@@ -118,6 +122,7 @@ object BusinessDetailsTestConstants {
 
   val testMinimumBusinessDetailsJson: JsObject = Json.obj(
     "incomeSourceId" -> "111111111111111",
+    "incomeSource" -> "Fruit Ltd",
     "accountingPeriodStartDate" -> "2017-06-01",
     "accountingPeriodEndDate" -> "2018-05-31",
     "cashOrAccruals" -> true
@@ -125,6 +130,7 @@ object BusinessDetailsTestConstants {
 
   val testMinimumBusinessDetailsToJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
+    "incomeSource" -> "Fruit Ltd",
     "accountingPeriod" -> testAccountingPeriodToJson,
     "cashOrAccruals" -> true
   )
