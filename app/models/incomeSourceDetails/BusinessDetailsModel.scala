@@ -23,6 +23,7 @@ import play.api.libs.json._
 import java.time.LocalDate
 
 case class BusinessDetailsModel(incomeSourceId: String,
+                                incomeSource: Option[String],
                                 accountingPeriod: AccountingPeriodModel,
                                 tradingName: Option[String],
                                 address: Option[AddressModel],
@@ -41,6 +42,7 @@ object BusinessDetailsModel {
 
   val reads: Reads[BusinessDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
+    (__ \ "incomeSource").readNullable[String] and
       __.read(AccountingPeriodModel.reads) and
       (__ \ "tradingName").readNullable[String] and
       (__ \ "businessAddressDetails").readNullable(AddressModel.reads) and
@@ -57,6 +59,7 @@ object BusinessDetailsModel {
     ) (BusinessDetailsModel.applyWithFields _)
 
   def applyWithFields(incomeSourceId: String,
+                      incomeSource: Option[String],
                       accountingPeriodModel: AccountingPeriodModel,
                       tradingName: Option[String],
                       address: Option[AddressModel],
@@ -72,6 +75,7 @@ object BusinessDetailsModel {
                       quarterTypeElection: Option[QuarterTypeElection]): BusinessDetailsModel =
     BusinessDetailsModel(
       incomeSourceId,
+      incomeSource,
       accountingPeriodModel,
       tradingName,
       address,
