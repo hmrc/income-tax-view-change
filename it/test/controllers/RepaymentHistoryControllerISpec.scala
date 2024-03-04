@@ -16,12 +16,12 @@
 
 package test.controllers
 
-import test.helpers.ComponentSpecBase
-import test.helpers.servicemocks.DesChargesStub.{stubAllRepaymentHistory, stubRepaymentHistoryById}
 import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse, RepaymentItem, RepaymentSupplementItem}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
+import test.helpers.ComponentSpecBase
+import test.helpers.servicemocks.DesChargesStub.{stubAllRepaymentHistory, stubRepaymentHistoryById}
 
 import java.time.LocalDate
 
@@ -56,7 +56,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
             )
           ),
           "estimatedRepaymentDate" -> LocalDate.parse("2021-01-21"),
-          "creationDate" -> LocalDate.parse("2020-12-25")
+          "creationDate" -> LocalDate.parse("2020-12-25"),
+          "status" -> "A"
         )
       )
   )
@@ -97,7 +98,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
               ),
               estimatedRepaymentDate = Some(LocalDate.parse("2021-01-21")),
               creationDate = Some(LocalDate.parse("2020-12-25")),
-              repaymentRequestNumber = "000000003135"
+              repaymentRequestNumber = "000000003135",
+              status = "A"
             ))))
 
         res should have(
@@ -180,7 +182,8 @@ class RepaymentHistoryControllerISpec extends ComponentSpecBase {
                 ),
               estimatedRepaymentDate = Some(LocalDate.parse("2021-01-21")),
               creationDate = Some(LocalDate.parse("2020-12-25")),
-              repaymentRequestNumber = "000000003135"
+              repaymentRequestNumber = "000000003135",
+              status = "A"
             ))))
 
         res should have(

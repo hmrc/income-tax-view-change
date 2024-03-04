@@ -41,12 +41,14 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
     "write cashOrAccruals `cash` (pre-R10 value) to Some(false) (post-R10 value)" in {
       val businessDetailsJsonBeforeR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
+        "incomeSource" -> "Fruit Ltd",
         "accountingPeriodStartDate" -> "2017-06-01",
         "accountingPeriodEndDate" -> "2018-05-31",
         "cashOrAccruals" -> false)
 
       val businessDetailsModelBeforeR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
+        incomeSource = Some("Fruit Ltd"),
         accountingPeriod = testAccountingPeriodModel,
         tradingName = None,
         address = None,
@@ -67,12 +69,14 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
     "write cashOrAccruals `accruals` (pre-R10 value) to Some(true) (post-R10 value)" in {
       val businessDetailsJsonBeforeR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
+        "incomeSource" -> "Fruit Ltd",
         "accountingPeriodStartDate" -> "2017-06-01",
         "accountingPeriodEndDate" -> "2018-05-31",
         "cashOrAccruals" -> true)
 
       val businessDetailsModelBeforeR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
+        incomeSource = Some("Fruit Ltd"),
         accountingPeriod = testAccountingPeriodModel,
         tradingName = None,
         address = None,
@@ -93,12 +97,14 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
     "write cashOrAccruals true (post-R10 value) to Some(true) (post-R10 value)" in {
       val businessDetailsJsonAfterR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
+        "incomeSource" -> "Fruit Ltd",
         "accountingPeriodStartDate" -> "2017-06-01",
         "accountingPeriodEndDate" -> "2018-05-31",
         "cashOrAccruals" -> true)
 
       val businessDetailsModelAfterR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
+        incomeSource = Some("Fruit Ltd"),
         accountingPeriod = testAccountingPeriodModel,
         tradingName = None,
         address = None,
@@ -119,12 +125,14 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
     "write cashOrAccruals false (post-R10 value) to Some(false) (post-R10 value)" in {
       val businessDetailsJsonAfterR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
+        "incomeSource" -> "Fruit Ltd",
         "accountingPeriodStartDate" -> "2017-06-01",
         "accountingPeriodEndDate" -> "2018-05-31",
         "cashOrAccruals" -> false)
 
       val businessDetailsModelAfterR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
+        incomeSource = Some("Fruit Ltd"),
         accountingPeriod = testAccountingPeriodModel,
         tradingName = None,
         address = None,

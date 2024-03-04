@@ -28,6 +28,7 @@ object BusinessDetailsIntegrationTestConstants {
   val testBusinessModel = List(
     BusinessDetailsModel(
       incomeSourceId = "111111111111111",
+      incomeSource = Some("Fruit Ltd"),
       accountingPeriod = AccountingPeriodModel(
         start = LocalDate.parse("2017-06-01"),
         end = LocalDate.parse("2018-05-31")),
