@@ -22,6 +22,7 @@ case class BalanceDetails(balanceDueWithin30Days: BigDecimal,
                           overDueAmount: BigDecimal,
                           totalBalance: BigDecimal,
                           availableCredit: Option[BigDecimal],
+                          allocatedCredit: Option[BigDecimal],
                           firstPendingAmountRequested: Option[BigDecimal],
                           secondPendingAmountRequested: Option[BigDecimal],
                           unallocatedCredit: Option[BigDecimal])

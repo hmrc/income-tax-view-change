@@ -144,6 +144,7 @@ object FinancialDetailIntegrationTestConstants {
     None,
     None,
     None,
+    None,
     unallocatedCredit = Some(400.00)
   )
 
