@@ -38,6 +38,9 @@ object OutStandingChargesHttpParser extends ResponseHttpParsers {
           logger.info("[OutStandingChargesResponse][read] successfully parsed response to List[OutStandingCharge]")
 
           Right(OutstandingChargesSuccessResponse(outstandingCharges))
+        case status if status == 404 =>
+          logger.info(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
+          Left(UnexpectedOutStandingChargeResponse(status, response.body))
         case status if status >= 400 && status < 500 =>
           logger.error(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
           Left(UnexpectedOutStandingChargeResponse(status, response.body))
