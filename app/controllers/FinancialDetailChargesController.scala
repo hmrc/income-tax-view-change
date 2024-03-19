@@ -43,7 +43,10 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
         case Right(chargeDetails) =>
           logger.debug("[FinancialDetailChargesController][getChargeDetails] - Successful Response: " + chargeDetails)
           Ok(Json.toJson(chargeDetails))
-        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 =>
+        case Left(error: UnexpectedChargeResponse) if error.code == NOT_FOUND =>
+          logger.info("[FinancialDetailChargesController][getChargeDetails] - 404: " + error)
+          Status(error.code)(error.response)
+        case Left(error: UnexpectedChargeResponse) if error.code >= BAD_REQUEST && error.code < INTERNAL_SERVER_ERROR =>
           logger.error("[FinancialDetailChargesController][getChargeDetails] - error: " + error)
           Status(error.code)(error.response)
         case Left(otherError) =>
