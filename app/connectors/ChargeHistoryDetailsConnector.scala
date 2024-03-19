@@ -40,13 +40,13 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
     )
   }
 
-  def getChargeHistoryDetailsLegacy(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
-    http.GET(
-      url = listChargeHistoryDetailsUrlLegacy("MTDBSA", mtdBsa, "ITSA"),
-      queryParams = queryParameters(docNumber),
-      headers = appConfig.desAuthHeaders
-    )(ChargeHistoryReads, headerCarrier, ec)
-  }
+//  def getChargeHistoryDetailsLegacy(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
+//    http.GET(
+//      url = listChargeHistoryDetailsUrlLegacy("MTDBSA", mtdBsa, "ITSA"),
+//      queryParams = queryParameters(docNumber),
+//      headers = appConfig.desAuthHeaders
+//    )(ChargeHistoryReads, headerCarrier, ec)
+//  }
 
   def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
     http.GET(

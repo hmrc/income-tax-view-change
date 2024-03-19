@@ -35,7 +35,7 @@ class ChargeHistoryController @Inject()(authentication: AuthenticationPredicate,
 
   def getChargeHistoryDetails(mtdBsa: String, docNumber: String): Action[AnyContent] =
     authentication.async { implicit request =>
-      chargeHistoryDetailsConnector.getChargeHistoryDetailsLegacy(
+      chargeHistoryDetailsConnector.getChargeHistoryDetails(
         mtdBsa = mtdBsa,
         docNumber = docNumber
       ) map {
