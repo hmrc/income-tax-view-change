@@ -72,7 +72,8 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
               documentDescription = "desc",
               totalAmount = 10000.00,
               reversalDate = "2018-10-09",
-              reversalReason = "reason"
+              reversalReason = "reason",
+              poaAdjustmentReason = None
             )
           ))))
 
