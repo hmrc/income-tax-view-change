@@ -45,8 +45,12 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
     )(ChargeHistoryReads, headerCarrier, ec)
   }
 
-  // TODO: We only have queryParam 'docNumber', Should we have queryParams for 'dateFrom' and 'dateTo' ?
-  // TODO: idType could be 'NINO' or 'MTDBSA', presumably agent uses MTDBSA, should we incorporate this logic?
+  // TODO: We only have queryParam 'docNumber', Should we have queryParams for 'dateFrom' and 'dateTo' ? Call examples:
+  //    cross-regime/charges/NINO/IN408059B/ITSA?dateFrom=2017-01-01&dateTo=2017-01-31
+  //    cross-regime/charges/MTDBSA/XAIT9999999999/ITSA?docNumber=XM0026100122
+  // TODO: idType could be 'NINO' or 'MTDBSA', presumably agent uses MTDBSA, should we incorporate this logic? Call examples:
+  //    cross-regime/charges/NINO/IN408059B/ITSA?dateFrom=2017-01-01&dateTo=2017-01-31
+  //    cross-regime/charges/MTDBSA/XAIT9999999999/ITSA?docNumber=XM0026100122
 
   def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
     http.GET(
