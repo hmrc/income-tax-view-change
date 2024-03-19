@@ -44,7 +44,7 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
           logger.debug("[FinancialDetailChargesController][getChargeDetails] - Successful Response: " + chargeDetails)
           Ok(Json.toJson(chargeDetails))
         case Left(error: UnexpectedChargeResponse) if error.code == 404 =>
-          logger.info("[FinancialDetailChargesController][getChargeDetails] - 404 error: " + error)
+          logger.info("[FinancialDetailChargesController][getChargeDetails] - 404: " + error)
           Status(error.code)(error.response)
         case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 =>
           logger.error("[FinancialDetailChargesController][getChargeDetails] - error: " + error)
