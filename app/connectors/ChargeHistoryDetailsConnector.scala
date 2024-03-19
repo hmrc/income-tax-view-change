@@ -18,8 +18,7 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHistoryHttpParser.{ChargeHistoryReads, ChargeHistoryResponse}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,11 +37,23 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
     )
   }
 
-  def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
+  def getChargeHistoryDetailsLegacy(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
     http.GET(
       url = listChargeHistoryDetailsUrl("MTDBSA", mtdBsa, "ITSA"),
       queryParams = queryParameters(docNumber),
       headers = appConfig.desAuthHeaders
     )(ChargeHistoryReads, headerCarrier, ec)
   }
+
+  // TODO: We only have queryParam 'docNumber', Should we have queryParams for 'dateFrom' and 'dateTo' ?
+  // TODO: idType could be 'NINO' or 'MTDBSA', presumably agent uses MTDBSA, should we incorporate this logic?
+
+  def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
+    http.GET(
+      url = listChargeHistoryDetailsUrl("MTDBSA", mtdBsa, "ITSA"),
+      queryParams = queryParameters(docNumber),
+      headers = appConfig.ifAuthHeaders
+    )(ChargeHistoryReads, headerCarrier, ec)
+  }
+
 }

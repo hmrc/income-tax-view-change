@@ -49,7 +49,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
           regimeType = "ITSA",
           chargeHistoryDetails = Some(chargeHistoryDetails))))
 
-        val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
+        val result = TestChargeHistoryConnector.getChargeHistoryDetailsLegacy(idNumber, docNumber).futureValue
 
         result shouldBe Right(ChargeHistorySuccessResponse(
           idType = "MTDBSA",
@@ -69,7 +69,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeHistoryResponse(404, errorJson.toString())))
 
-        val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
+        val result = TestChargeHistoryConnector.getChargeHistoryDetailsLegacy(idNumber, docNumber).futureValue
 
         result shouldBe Left(UnexpectedChargeHistoryResponse(404, errorJson.toString()))
       }
@@ -80,7 +80,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(ChargeHistoryErrorResponse))
 
-        val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
+        val result = TestChargeHistoryConnector.getChargeHistoryDetailsLegacy(idNumber, docNumber).futureValue
 
         result shouldBe Left(ChargeHistoryErrorResponse)
       }
