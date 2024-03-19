@@ -28,8 +28,6 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
                                               val appConfig: MicroserviceAppConfig
                                              )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def listChargeHistoryDetailsUrlLegacy(idType: String, idNumber: String, regimeType: String): String =
-    s"${appConfig.desUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
 
   def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String): String =
     s"${appConfig.ifUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
@@ -39,14 +37,6 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
       "docNumber" -> docNumber
     )
   }
-
-//  def getChargeHistoryDetailsLegacy(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
-//    http.GET(
-//      url = listChargeHistoryDetailsUrlLegacy("MTDBSA", mtdBsa, "ITSA"),
-//      queryParams = queryParameters(docNumber),
-//      headers = appConfig.desAuthHeaders
-//    )(ChargeHistoryReads, headerCarrier, ec)
-//  }
 
   def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
     http.GET(
