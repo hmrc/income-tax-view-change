@@ -33,13 +33,11 @@ class ChargeHistoryController @Inject()(authentication: AuthenticationPredicate,
                                        (implicit ec: ExecutionContext) extends BackendController(cc) {
 
 
-  def getChargeHistoryDetails(mtdBsa: String, docNumber: String, dateFrom: String, dateTo: String): Action[AnyContent] =
+  def getChargeHistoryDetails(mtdBsa: String, docNumber: String): Action[AnyContent] =
     authentication.async { implicit request =>
-      chargeHistoryDetailsConnector.getChargeHistoryDetails(
+      chargeHistoryDetailsConnector.getChargeHistoryDetailsLegacy(
         mtdBsa = mtdBsa,
-        docNumber = docNumber,
-        dateFrom = dateFrom,
-        dateTo = dateTo
+        docNumber = docNumber
       ) map {
         case Right(chargeHistory) => Ok(Json.toJson(chargeHistory))
         case Left(error: UnexpectedChargeHistoryResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)

@@ -39,8 +39,8 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
 
         val chargeHistoryDetails: List[ChargeHistoryDetailModel] = List(chargeHistoryDetail)
 
-        mockDesGet(
-          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
+        mockIFGet(
+          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrlLegacy(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
           headers = microserviceAppConfig.desAuthHeaders
         )(Right(ChargeHistorySuccessResponse(
@@ -49,7 +49,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
           regimeType = "ITSA",
           chargeHistoryDetails = Some(chargeHistoryDetails))))
 
-        val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
+        val result = TestChargeHistoryConnector.getChargeHistoryDetailsLegacy(idNumber, docNumber).futureValue
 
         result shouldBe Right(ChargeHistorySuccessResponse(
           idType = "MTDBSA",
@@ -63,24 +63,24 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeHistoryError, ChargeHistoryDetailModel](
-          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
+        mockIFGet[ChargeHistoryError, ChargeHistoryDetailModel](
+          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrlLegacy(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(UnexpectedChargeHistoryResponse(404, errorJson.toString())))
 
-        val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
+        val result = TestChargeHistoryConnector.getChargeHistoryDetailsLegacy(idNumber, docNumber).futureValue
 
         result shouldBe Left(UnexpectedChargeHistoryResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeHistoryError, ChargeHistoryDetailModel](
-          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
+        mockIFGet[ChargeHistoryError, ChargeHistoryDetailModel](
+          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrlLegacy(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
           headers = microserviceAppConfig.desAuthHeaders
         )(Left(ChargeHistoryErrorResponse))
 
-        val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
+        val result = TestChargeHistoryConnector.getChargeHistoryDetailsLegacy(idNumber, docNumber).futureValue
 
         result shouldBe Left(ChargeHistoryErrorResponse)
       }
