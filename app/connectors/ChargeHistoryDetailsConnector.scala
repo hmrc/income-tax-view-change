@@ -29,35 +29,23 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
                                              )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String): String =
-    s"${appConfig.desUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
+    s"${appConfig.ifUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
 
-  private[connectors] def queryParameters(docNumber: String): Seq[(String, String)] = {
+  private[connectors] def queryParameters(docNumber: String,
+                                          dateFrom: String,
+                                          dateTo:String): Seq[(String, String)] = {
     Seq(
-      "docNumber" -> docNumber
+      "docNumber" -> docNumber,
+      "dateFrom"  -> dateFrom,
+      "dateTo"    -> dateTo
     )
   }
 
-  def getChargeHistoryDetailsLegacy(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
+  def getChargeHistoryDetails(mtdBsa: String, docNumber: String, dateFrom: String, dateTo: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
     http.GET(
       url = listChargeHistoryDetailsUrl("MTDBSA", mtdBsa, "ITSA"),
-      queryParams = queryParameters(docNumber),
-      headers = appConfig.desAuthHeaders
-    )(ChargeHistoryReads, headerCarrier, ec)
-  }
-
-  // TODO: We only have queryParam 'docNumber', Should we have queryParams for 'dateFrom' and 'dateTo' ? Call examples:
-  //    cross-regime/charges/NINO/IN408059B/ITSA?dateFrom=2017-01-01&dateTo=2017-01-31
-  //    cross-regime/charges/MTDBSA/XAIT9999999999/ITSA?docNumber=XM0026100122
-  // TODO: idType could be 'NINO' or 'MTDBSA', presumably agent uses MTDBSA, should we incorporate this logic? Call examples:
-  //    cross-regime/charges/NINO/IN408059B/ITSA?dateFrom=2017-01-01&dateTo=2017-01-31
-  //    cross-regime/charges/MTDBSA/XAIT9999999999/ITSA?docNumber=XM0026100122
-
-  def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
-    http.GET(
-      url = listChargeHistoryDetailsUrl("MTDBSA", mtdBsa, "ITSA"),
-      queryParams = queryParameters(docNumber),
+      queryParams = queryParameters(docNumber, dateFrom, dateTo),
       headers = appConfig.ifAuthHeaders
     )(ChargeHistoryReads, headerCarrier, ec)
   }
-
 }
