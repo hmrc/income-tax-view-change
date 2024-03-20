@@ -38,7 +38,8 @@ object ChargeHistoryTestConstants {
 			|  		"documentDescription": "Balancing Charge",
 			|  		"totalAmount": 12345678912.12,
 			|     "reversalDate": "2020-02-24",
-			|     "reversalReason": "amended return"
+			|     "reversalReason": "amended return",
+			|     "poaAdjustmentReason": "001"
 			|   }
 			|  ]
 			|}
@@ -78,7 +79,8 @@ object ChargeHistoryTestConstants {
 			|  "documentDescription": "Balancing Charge",
 			|  "totalAmount": 12345678912.12,
 			|    "reversalDate": "2020-02-24",
-			|    "reversalReason": "amended return"
+			|    "reversalReason": "amended return",
+			|    "poaAdjustmentReason": "001"
 			|}
 			|
 			|""".stripMargin)
@@ -96,7 +98,8 @@ object ChargeHistoryTestConstants {
 			|			"documentDescription": "Balancing Charge",
 			|			"totalAmount": 12345678912.12,
 			|			"reversalDate": "2020-02-24",
-			|			"reversalReason": "amended return"
+			|			"reversalReason": "amended return",
+			|			"poaAdjustmentReason": "001"
 			|		},
 			|		{
 			|			"taxYear": "2018",
