@@ -99,7 +99,7 @@ object ChargeHistoryTestConstants {
 			|			"totalAmount": 12345678912.12,
 			|			"reversalDate": "2020-02-24",
 			|			"reversalReason": "amended return",
-|           "poaAdjustmentReason": "001"
+      |     "poaAdjustmentReason": "001"
 			|		},
 			|		{
 			|			"taxYear": "2018",
