@@ -37,7 +37,7 @@ trait MockHttp extends AnyWordSpecLike with Matchers with OptionValues with Befo
     reset(mockHttpGet)
   }
 
-  def mockDesGet[A, B](url: String, queryParameters: Seq[(String, String)], headers: Seq[(String, String)])(response: Either[A, B]): Unit = {
+  def mockGet[A, B](url: String, queryParameters: Seq[(String, String)], headers: Seq[(String, String)])(response: Either[A, B]): Unit = {
     when(mockHttpGet.GET[Either[A, B]](
       matches(url),
       ArgumentMatchers.eq(queryParameters),

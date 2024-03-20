@@ -39,7 +39,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
 
         val chargeHistoryDetails: List[ChargeHistoryDetailModel] = List(chargeHistoryDetail)
 
-        mockDesGet(
+        mockGet(
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
           headers = microserviceAppConfig.ifAuthHeaders
@@ -63,7 +63,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeHistoryError, ChargeHistoryDetailModel](
+        mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
           headers = microserviceAppConfig.ifAuthHeaders
@@ -74,7 +74,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedChargeHistoryResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeHistoryError, ChargeHistoryDetailModel](
+        mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
           headers = microserviceAppConfig.ifAuthHeaders
