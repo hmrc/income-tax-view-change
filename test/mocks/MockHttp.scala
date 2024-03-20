@@ -48,17 +48,6 @@ trait MockHttp extends AnyWordSpecLike with Matchers with OptionValues with Befo
     ).thenReturn(Future.successful(response))
   }
 
-  def mockIFGet[A, B](url: String, queryParameters: Seq[(String, String)], headers: Seq[(String, String)])(response: Either[A, B]): Unit = {
-    when(mockHttpGet.GET[Either[A, B]](
-      matches(url),
-      ArgumentMatchers.eq(queryParameters),
-      ArgumentMatchers.eq(headers)
-    )(ArgumentMatchers.any(),
-      ArgumentMatchers.any(),
-      ArgumentMatchers.any())
-    ).thenReturn(Future.successful(response))
-  }
-
   def setupMockHttpFutureGet[A](url: String)(response: A): OngoingStubbing[Future[A]] =
     when(mockHttpGet.GET[A](matches(url), ArgumentMatchers.any(), ArgumentMatchers.any())
       (ArgumentMatchers.any[HttpReads[A]](), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
