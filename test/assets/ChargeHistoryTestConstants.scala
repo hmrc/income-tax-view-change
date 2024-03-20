@@ -38,7 +38,8 @@ object ChargeHistoryTestConstants {
 			|  		"documentDescription": "Balancing Charge",
 			|  		"totalAmount": 12345678912.12,
 			|     "reversalDate": "2020-02-24",
-			|     "reversalReason": "amended return"
+			|     "reversalReason": "amended return",
+      |     "poaAdjustmentReason": "001"
 			|   }
 			|  ]
 			|}
@@ -78,8 +79,9 @@ object ChargeHistoryTestConstants {
 			|  "documentDescription": "Balancing Charge",
 			|  "totalAmount": 12345678912.12,
 			|    "reversalDate": "2020-02-24",
-			|    "reversalReason": "amended return"
-			|     }
+			|    "reversalReason": "amended return",
+      |    "poaAdjustmentReason": "001"
+			|}
 			|
 			|""".stripMargin)
 
@@ -96,7 +98,8 @@ object ChargeHistoryTestConstants {
 			|			"documentDescription": "Balancing Charge",
 			|			"totalAmount": 12345678912.12,
 			|			"reversalDate": "2020-02-24",
-			|			"reversalReason": "amended return"
+			|			"reversalReason": "amended return",
+|           "poaAdjustmentReason": "001"
 			|		},
 			|		{
 			|			"taxYear": "2018",
@@ -136,7 +139,7 @@ object ChargeHistoryTestConstants {
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",
     reversalReason = "amended return",
-    None
+    Some("001")
   )
 
   val singleChargeHistoryDetailTwo: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
@@ -171,7 +174,7 @@ object ChargeHistoryTestConstants {
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",
     reversalReason = "amended return",
-    None
+    Some("001")
   )
 
 
