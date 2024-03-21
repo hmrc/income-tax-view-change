@@ -26,7 +26,8 @@ case class ChargeHistoryDetailModel(taxYear: String,
                                     documentDescription: String,
                                     totalAmount: BigDecimal,
                                     reversalDate: String,
-                                    reversalReason: String)
+                                    reversalReason: String,
+                                    poaAdjustmentReason: Option[String])
 
 object ChargeHistoryDetailModel {
   implicit val format: OFormat[ChargeHistoryDetailModel] = Json.format[ChargeHistoryDetailModel]

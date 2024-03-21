@@ -80,7 +80,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   "getChargeDetails" should {
     "return a list of charges" when {
       s"$OK is received from ETMP with charges " in {
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
           headers = expectedApiHeaders
@@ -95,7 +95,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
           headers = expectedApiHeaders
@@ -106,7 +106,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
           headers = expectedApiHeaders
@@ -144,7 +144,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         val documentDetails: List[DocumentDetail] = List(documentDetail)
         val financialDetails: List[FinancialDetail] = List(financialDetail)
 
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedApiHeaders
@@ -159,7 +159,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedApiHeaders
@@ -170,7 +170,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
           queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
           headers = expectedApiHeaders
@@ -205,7 +205,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
           documentDetails = List(documentDetail),
           financialDetails = List(financialDetail)))
 
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = expectedUrl,
           queryParameters = expectedOnlyOpenItemsQueryParameters,
           headers = expectedApiHeaders
@@ -222,7 +222,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
         val expectedErrorResponse = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString))
 
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = expectedUrl,
           queryParameters = expectedOnlyOpenItemsQueryParameters,
           headers = expectedApiHeaders
@@ -236,7 +236,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
       "something went wrong" in {
         val expectedErrorResponse = Left(UnexpectedChargeErrorResponse)
 
-        mockDesGet[ChargeResponseError, ChargesResponse](
+        mockGet[ChargeResponseError, ChargesResponse](
           url = expectedUrl,
           queryParameters = expectedOnlyOpenItemsQueryParameters,
           headers = expectedApiHeaders

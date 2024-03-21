@@ -39,10 +39,10 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
 
         val chargeHistoryDetails: List[ChargeHistoryDetailModel] = List(chargeHistoryDetail)
 
-        mockDesGet(
+        mockGet(
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = microserviceAppConfig.ifAuthHeaders
         )(Right(ChargeHistorySuccessResponse(
           idType = "MTDBSA",
           idValue = "XAIT000000000000",
@@ -63,10 +63,10 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[ChargeHistoryError, ChargeHistoryDetailModel](
+        mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = microserviceAppConfig.ifAuthHeaders
         )(Left(UnexpectedChargeHistoryResponse(404, errorJson.toString())))
 
         val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
@@ -74,10 +74,10 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedChargeHistoryResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[ChargeHistoryError, ChargeHistoryDetailModel](
+        mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.desAuthHeaders
+          headers = microserviceAppConfig.ifAuthHeaders
         )(Left(ChargeHistoryErrorResponse))
 
         val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue

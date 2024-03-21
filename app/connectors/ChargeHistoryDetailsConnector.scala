@@ -18,8 +18,7 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHistoryHttpParser.{ChargeHistoryReads, ChargeHistoryResponse}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,8 +28,9 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
                                               val appConfig: MicroserviceAppConfig
                                              )(implicit ec: ExecutionContext) extends RawResponseReads {
 
+
   def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String): String =
-    s"${appConfig.desUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
+    s"${appConfig.ifUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
 
   private[connectors] def queryParameters(docNumber: String): Seq[(String, String)] = {
     Seq(
@@ -42,7 +42,7 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
     http.GET(
       url = listChargeHistoryDetailsUrl("MTDBSA", mtdBsa, "ITSA"),
       queryParams = queryParameters(docNumber),
-      headers = appConfig.desAuthHeaders
+      headers = appConfig.ifAuthHeaders
     )(ChargeHistoryReads, headerCarrier, ec)
   }
 }
