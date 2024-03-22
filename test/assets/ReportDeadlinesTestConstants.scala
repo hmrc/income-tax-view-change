@@ -36,15 +36,6 @@ object ReportDeadlinesTestConstants {
     obligationType = "Quarterly"
   )
 
-  val testReceivedDeadlineEOPS: ReportDeadlineModel = ReportDeadlineModel(
-    start = LocalDate.parse("2017-06-01"),
-    end = LocalDate.parse("2018-05-31"),
-    due = LocalDate.parse("2018-06-01"),
-    periodKey = "EOPS",
-    dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "EOPS"
-  )
-
   val testReceivedDeadlineCrystallised: ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
@@ -59,14 +50,6 @@ object ReportDeadlinesTestConstants {
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
     "periodKey" -> "#001",
-    "inboundCorrespondenceDateReceived" -> "2018-05-01"
-  )
-
-  val testReceivedEOPSDeadlineFromJson: JsValue = Json.obj(
-    "inboundCorrespondenceFromDate" -> "2017-06-01",
-    "inboundCorrespondenceToDate" -> "2018-05-31",
-    "inboundCorrespondenceDueDate" -> "2018-06-01",
-    "periodKey" -> "EOPS",
     "inboundCorrespondenceDateReceived" -> "2018-05-01"
   )
 

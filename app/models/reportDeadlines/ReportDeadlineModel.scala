@@ -40,10 +40,7 @@ object ReportDeadlineModel {
       (__ \ "inboundCorrespondenceDateReceived").readNullable[LocalDate] and
       (incomeSourceType match {
         case "ITSA" => Reads.pure("Crystallised")
-        case _ => (__ \ "periodKey").read[String].map {
-          case "EOPS" => "EOPS"
-          case _ => "Quarterly"
-        }
+        case _ => (__ \ "periodKey").read[String].map(_ => "Quarterly")
       })
     ) (ReportDeadlineModel.apply _)
 

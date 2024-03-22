@@ -31,11 +31,7 @@ class ReportDeadlineModelSpec extends TestSupport with Matchers {
         Json.fromJson(testReceivedDeadlineFromJson)(ReportDeadlineModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised)
       }
 
-      "read from the json with an incomeSourceType that is not ITSA and periodKey is EOPS" in {
-        Json.fromJson(testReceivedEOPSDeadlineFromJson)(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineEOPS)
-      }
-
-      "read from the json with an incomeSourceType that is not ITSA and periodKey is not EOPS" in {
+      "read from the json with an incomeSourceType that is not ITSA and periodKey is quarterly" in {
         Json.fromJson(testReceivedDeadlineFromJson)(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineQuarterly)
       }
 
