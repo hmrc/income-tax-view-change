@@ -89,6 +89,7 @@ object FinancialDataTestConstants {
       |     "documentOutstandingAmount": 500.00,
       |     "chargeType": "POA1",
       |     "mainType": "4920",
+      |     "mainTransaction": "4920",
       |     "accruedInterest": 1000,
       |     "items": [{
       |       "subItem": "1",
@@ -118,6 +119,7 @@ object FinancialDataTestConstants {
       |     "documentOutstandingAmount": 200.00,
       |     "chargeType": "POA1",
       |     "mainType": "4920",
+      |     "mainTransaction": "4920",
       |     "accruedInterest": 2000,
       |     "items": [{
       |       "subItem": "2",
@@ -153,7 +155,8 @@ object FinancialDataTestConstants {
 			|     "clearedAmount": 500.00,
 			|     "chargeType": "POA1",
 			|     "mainType": "4920",
-|     "accruedInterest": 1000,
+      |     "mainTransaction": "4920",
+      |     "accruedInterest": 1000,
 			|     "items": [{
 			|       "subItemId": "1",
 			|       "amount": 100.00,
@@ -249,6 +252,7 @@ object FinancialDataTestConstants {
     clearedAmount = Some(BigDecimal(-1000.00)),
     chargeType = Some("Cutover Credits"),
     mainType = Some("ITSA Cutover Credits"),
+    mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("0")),
     items = Some(Seq(
       SubItem(
@@ -280,6 +284,7 @@ object FinancialDataTestConstants {
     clearedAmount = Some(BigDecimal(500.00)),
     chargeType = Some("POA1"),
     mainType = Some("4920"),
+    mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("1000.00")),
     items = Some(Seq(
       SubItem(
@@ -310,6 +315,7 @@ object FinancialDataTestConstants {
     clearedAmount = Some(BigDecimal(500.00)),
     chargeType = Some("POA1"),
     mainType = Some("4920"),
+    mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("2000.00")),
     items = Some(Seq(
       SubItem(

@@ -54,7 +54,8 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "dueDate" -> LocalDate.parse("2018-03-29"),
       "documentDate" -> LocalDate.parse("2022-06-23"),
       "transactionId" -> "id",
-      "mainType" -> "ITSA Cutover Credits"
+      "mainType" -> "ITSA Cutover Credits",
+      "mainTransaction" -> "4920"
     )
   )
 
