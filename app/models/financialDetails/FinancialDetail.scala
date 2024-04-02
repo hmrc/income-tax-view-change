@@ -44,7 +44,7 @@ object FinancialDetail {
       (JsPath \ "documentDescription").readNullable[String] and
       (JsPath \ "totalAmount").readNullable[BigDecimal] and
       (JsPath \ "originalAmount").readNullable[BigDecimal] and
-      (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal] and
+      (JsPath \ "outstandingAmount").readNullable[BigDecimal] and
       (JsPath \ "clearedAmount").readNullable[BigDecimal] and
       (JsPath \ "chargeType").readNullable[String] and
       (JsPath \ "mainType").readNullable[String] and
