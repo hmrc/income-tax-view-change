@@ -39,7 +39,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
 
         val repaymentHistoryDetails: List[RepaymentHistory] = List(repaymentHistoryDetail)
 
-        mockDesGet(
+        mockGet(
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = TestRepaymentHistoryConnector.IdQueryParameters(repaymentId = repaymentId),
           headers = TestRepaymentHistoryConnector.headers
@@ -58,7 +58,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[RepaymentHistoryError, RepaymentHistory](
+        mockGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = TestRepaymentHistoryConnector.IdQueryParameters(repaymentId = repaymentId),
           headers = TestRepaymentHistoryConnector.headers
@@ -69,7 +69,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[RepaymentHistoryError, RepaymentHistory](
+        mockGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = TestRepaymentHistoryConnector.IdQueryParameters(repaymentId = repaymentId),
           headers = TestRepaymentHistoryConnector.headers
@@ -88,7 +88,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
 
         val repaymentHistoryDetails: List[RepaymentHistory] = List(repaymentHistoryDetail)
 
-        mockDesGet(
+        mockGet(
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = Seq(),
           headers = TestRepaymentHistoryConnector.headers
@@ -107,7 +107,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockDesGet[RepaymentHistoryError, RepaymentHistory](
+        mockGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = Seq(),
           headers = TestRepaymentHistoryConnector.headers
@@ -118,7 +118,7 @@ class RepaymentHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         result shouldBe Left(UnexpectedRepaymentHistoryResponse(404, errorJson.toString()))
       }
       "something went wrong" in {
-        mockDesGet[RepaymentHistoryError, RepaymentHistory](
+        mockGet[RepaymentHistoryError, RepaymentHistory](
           url = TestRepaymentHistoryConnector.listRepaymentHistoryDetailsUrl(nino),
           queryParameters = Seq(),
           headers = TestRepaymentHistoryConnector.headers

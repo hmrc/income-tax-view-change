@@ -17,7 +17,7 @@
 package connectors.httpParsers
 
 import models.outStandingCharges.{OutStandingCharge, OutstandingChargesSuccessResponse}
-import play.api.http.Status.OK
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object OutStandingChargesHttpParser extends ResponseHttpParsers {
@@ -38,7 +38,10 @@ object OutStandingChargesHttpParser extends ResponseHttpParsers {
           logger.info("[OutStandingChargesResponse][read] successfully parsed response to List[OutStandingCharge]")
 
           Right(OutstandingChargesSuccessResponse(outstandingCharges))
-        case status if status >= 400 && status < 500 =>
+        case status if status == NOT_FOUND =>
+          logger.info(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
+          Left(UnexpectedOutStandingChargeResponse(status, response.body))
+        case status if status >= BAD_REQUEST && status < INTERNAL_SERVER_ERROR =>
           logger.error(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
           Left(UnexpectedOutStandingChargeResponse(status, response.body))
         case status =>

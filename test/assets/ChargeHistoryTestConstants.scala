@@ -38,7 +38,8 @@ object ChargeHistoryTestConstants {
 			|  		"documentDescription": "Balancing Charge",
 			|  		"totalAmount": 12345678912.12,
 			|     "reversalDate": "2020-02-24",
-			|     "reversalReason": "amended return"
+			|     "reversalReason": "amended return",
+			|     "poaAdjustmentReason": "001"
 			|   }
 			|  ]
 			|}
@@ -78,8 +79,9 @@ object ChargeHistoryTestConstants {
 			|  "documentDescription": "Balancing Charge",
 			|  "totalAmount": 12345678912.12,
 			|    "reversalDate": "2020-02-24",
-			|    "reversalReason": "amended return"
-			|     }
+			|    "reversalReason": "amended return",
+			|    "poaAdjustmentReason": "001"
+			|}
 			|
 			|""".stripMargin)
 
@@ -96,7 +98,8 @@ object ChargeHistoryTestConstants {
 			|			"documentDescription": "Balancing Charge",
 			|			"totalAmount": 12345678912.12,
 			|			"reversalDate": "2020-02-24",
-			|			"reversalReason": "amended return"
+			|			"reversalReason": "amended return",
+			|			"poaAdjustmentReason": "001"
 			|		},
 			|		{
 			|			"taxYear": "2018",
@@ -116,7 +119,7 @@ object ChargeHistoryTestConstants {
     idValue = "XAIT000000000000",
     regimeType = "ITSA",
     chargeHistoryDetails = Some(List(
-      ChargeHistoryDetailModel("  2019 ", "123456789", LocalDate.parse("2020-01-29"), "Balancing Charge", 12345678912.12, "2020-02-24", "amended return")
+      ChargeHistoryDetailModel("  2019 ", "123456789", LocalDate.parse("2020-01-29"), "Balancing Charge", 12345678912.12, "2020-02-24", "amended return", None)
     )))
 
   val testValidChargeHistoryModel2: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
@@ -124,7 +127,7 @@ object ChargeHistoryTestConstants {
     idValue = "XAIT000000000000",
     regimeType = "ITSA",
     chargeHistoryDetails = Some(List(
-      ChargeHistoryDetailModel("  2021 ", "123456789", LocalDate.parse("2020-01-29"), "Balancing Charge", 123456789012345.67, "2020-02-24", "amended return")
+      ChargeHistoryDetailModel("  2021 ", "123456789", LocalDate.parse("2020-01-29"), "Balancing Charge", 123456789012345.67, "2020-02-24", "amended return", None)
     )))
 
 
@@ -135,7 +138,8 @@ object ChargeHistoryTestConstants {
     documentDescription = "Balancing Charge",
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",
-    reversalReason = "amended return"
+    reversalReason = "amended return",
+    Some("001")
   )
 
   val singleChargeHistoryDetailTwo: ChargeHistoryDetailModel = ChargeHistoryDetailModel(
@@ -145,7 +149,8 @@ object ChargeHistoryTestConstants {
     documentDescription = "POA1",
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",
-    reversalReason = "Customer Request"
+    reversalReason = "Customer Request",
+    None
   )
 
   val SingleChargeHistoryResponseModel: ChargeHistorySuccessResponse = ChargeHistorySuccessResponse(
@@ -168,7 +173,8 @@ object ChargeHistoryTestConstants {
     documentDescription = "Balancing Charge",
     totalAmount = 12345678912.12,
     reversalDate = "2020-02-24",
-    reversalReason = "amended return"
+    reversalReason = "amended return",
+    Some("001")
   )
 
 

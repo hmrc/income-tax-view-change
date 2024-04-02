@@ -44,6 +44,15 @@ class OutStandingChargesHttpParserSpec extends TestSupport {
 
         actualResult shouldBe expectedResult
       }
+      "a 404 status is returned" in {
+        val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
+        val httpResponse: HttpResponse = HttpResponse(NOT_FOUND, errorJson, Map.empty)
+
+        val expectedResult: OutStandingChargeResponse = Left(UnexpectedOutStandingChargeResponse(NOT_FOUND, errorJson))
+        val actualResult: OutStandingChargeResponse = OutStandingChargesReads.read("", "", httpResponse)
+
+        actualResult shouldBe expectedResult
+      }
       "any other status is returned" in {
         val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, "")
 

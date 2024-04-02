@@ -59,7 +59,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
   "getPaymentAllocations" should {
     "return payment allocations" when {
       s"$OK is returned from the connector call with correct json" in {
-        mockDesGet(
+        mockGet(
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
           queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
           headers = microserviceAppConfig.desAuthHeaders
@@ -73,7 +73,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
 
     "return a not found response" when {
       s"$NOT_FOUND is returned from the connector call" in {
-        mockDesGet(
+        mockGet(
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
           queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
           headers = microserviceAppConfig.desAuthHeaders
@@ -87,7 +87,7 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
 
     s"return an error" when {
       "something went wrong" in {
-        mockDesGet[PaymentAllocationsError, PaymentAllocations](
+        mockGet[PaymentAllocationsError, PaymentAllocations](
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
           queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
           headers = microserviceAppConfig.desAuthHeaders
