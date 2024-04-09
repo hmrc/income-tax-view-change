@@ -42,11 +42,11 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
         }
       }
 
-      val mainType = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+      val mainType: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
         _.mainType
       )
 
-      val mainTransaction = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+      val mainTransaction: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
         _.mainTransaction
       )
 
