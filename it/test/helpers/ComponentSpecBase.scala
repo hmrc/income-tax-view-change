@@ -34,25 +34,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
   val mockPort = WiremockHelper.wiremockPort.toString
   val mockUrl = s"http://$mockHost:$mockPort"
 
-  def config: Map[String, String] = Map(
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "microservice.services.if.url" -> mockUrl,
-    "microservice.services.des.url" -> mockUrl,
-    "useBusinessDetailsIFPlatform" -> "false"
-  )
-
-  def configWithBusinessDetailsOnIf: Map[String, String] = Map(
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "microservice.services.if.url" -> mockUrl,
-    "submissionStubUrl" -> mockUrl,
-    "useBusinessDetailsIFPlatform" -> "true",
-  )
-
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
-    .configure(config)
     .build()
 
   override def beforeAll(): Unit = {
