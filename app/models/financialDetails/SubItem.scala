@@ -25,6 +25,7 @@ case class SubItem(subItemId: Option[String],
                    amount: Option[BigDecimal],
                    clearingDate: Option[LocalDate],
                    clearingReason: Option[String],
+                   clearingSAPDocument: Option[String],
                    outgoingPaymentMethod: Option[String],
                    interestLock: Option[String],
                    dunningLock: Option[String],
@@ -38,7 +39,7 @@ case class SubItem(subItemId: Option[String],
 
 object SubItem extends Logging {
 
-  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
 
@@ -47,6 +48,7 @@ object SubItem extends Logging {
     amount <- (JsPath \ "amount").readNullable[BigDecimal]
     clearingDate <- (JsPath \ "clearingDate").readNullable[LocalDate]
     clearingReason <- (JsPath \ "clearingReason").readNullable[String]
+    clearingSAPDocument <- (JsPath \ "clearingSAPDocument").readNullable[String]
     outgoingPaymentMethod <- (JsPath \ "outgoingPaymentMethod").readNullable[String]
     interestLock <- (JsPath \ "interestLock").readNullable[String]
     dunningLock <- (JsPath \ "dunningLock").readNullable[String]
@@ -67,6 +69,7 @@ object SubItem extends Logging {
       amount,
       clearingDate,
       clearingReason,
+      clearingSAPDocument,
       outgoingPaymentMethod,
       interestLock,
       dunningLock,
