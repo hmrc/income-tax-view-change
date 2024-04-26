@@ -42,7 +42,9 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
     lotItem = None,
     dueDate = Some(LocalDate.parse("2018-03-29")),
     documentDate = LocalDate.parse("2018-03-29"),
-    transactionId = "id"
+    transactionId = "id",
+    mainType = None,
+    mainTransaction = None
   )
 
   val payments2: Payment = Payment(
@@ -55,7 +57,9 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
     lotItem = None,
     dueDate = Some(LocalDate.parse("2018-03-29")),
     documentDate = LocalDate.parse("2018-03-29"),
-    transactionId = "id2"
+    transactionId = "id2",
+    mainType = None,
+    mainTransaction = None
   )
 
   val chargeJson: JsObject = Json.obj(

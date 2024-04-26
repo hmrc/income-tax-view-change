@@ -42,8 +42,12 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
         }
       }
 
-      val mainType = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+      val mainType: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
         _.mainType
+      )
+
+      val mainTransaction: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
+        _.mainTransaction
       )
 
       Payment(
@@ -57,7 +61,8 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
         dueDate = document.effectiveDateOfPayment,
         documentDate = document.documentDate,
         transactionId = document.transactionId,
-        mainType = mainType
+        mainType = mainType,
+        mainTransaction = mainTransaction
       )
     }
   }

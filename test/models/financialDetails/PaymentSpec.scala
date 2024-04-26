@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 class PaymentSpec extends AnyWordSpec with Matchers {
 
-  val paymentEmpty: Payment = Payment(None, None, None, None, None, None, None, None, LocalDate.parse("2022-06-23"), "DOCID01")
+  val paymentEmpty: Payment = Payment(None, None, None, None, None, None, None, None, LocalDate.parse("2022-06-23"), "DOCID01", None, None)
 
   val paymentEmptyJson: JsObject = Json.obj("documentDate" -> LocalDate.parse("2022-06-23"), "transactionId" -> "DOCID01")
 
@@ -38,7 +38,9 @@ class PaymentSpec extends AnyWordSpec with Matchers {
     lotItem = Some("lotItem"),
     dueDate = Some(LocalDate.parse("2022-06-23")),
     documentDate = LocalDate.parse("2022-06-23"),
-    transactionId = "DOCID01"
+    transactionId = "DOCID01",
+    None,
+    None
   )
 
   val paymentFullJson: JsObject = Json.obj(

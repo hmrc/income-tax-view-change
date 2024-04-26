@@ -84,6 +84,7 @@ object FinancialDetailIntegrationTestConstants {
         "clearedAmount" -> 500.00,
         "chargeType" -> "POA1",
         "mainType" -> "4920",
+        "mainTransaction" -> "4920",
         "accruedInterest" -> 1000,
         "items" -> Json.arr(
           Json.obj(
@@ -115,6 +116,7 @@ object FinancialDetailIntegrationTestConstants {
         "clearedAmount" -> 500.00,
         "chargeType" -> "POA1",
         "mainType" -> "4920",
+        "mainTransaction" -> "4920",
         "accruedInterest" -> 2000,
         "items" -> Json.arr(
           Json.obj(
@@ -203,6 +205,7 @@ object FinancialDetailIntegrationTestConstants {
     clearedAmount = Some(BigDecimal("500.00")),
     chargeType = Some("POA1"),
     mainType = Some("4920"),
+    mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("1000")),
     items = Some(Seq(
       SubItem(
@@ -235,6 +238,7 @@ object FinancialDetailIntegrationTestConstants {
     clearedAmount = Some(BigDecimal("500.00")),
     chargeType = Some("POA1"),
     mainType = Some("4920"),
+    mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("2000")),
     items = Some(Seq(
       SubItem(

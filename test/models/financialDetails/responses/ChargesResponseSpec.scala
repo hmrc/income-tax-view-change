@@ -103,6 +103,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         |     "clearedAmount": 500.00,
         |     "chargeType": "POA1",
         |     "mainType": "4920",
+        |     "mainTransaction": "4920",
         |     "accruedInterest": 1000,
         |     "items": [{
         |       "subItemId": "1",
@@ -185,6 +186,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       clearedAmount = None,
       chargeType = None,
       mainType = Some("mainType1"),
+      mainTransaction = Some("4920"),
       accruedInterest = None,
       items = items
     )
@@ -262,7 +264,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
             Payment(reference = Some("ref"), amount = Some(-1000.0), outstandingAmount = Some(700),
               documentDescription = None, method = Some("method"), lot = None, lotItem = None,
               dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
-              transactionId = "DOCID01", mainType = Some("mainType1"))
+              transactionId = "DOCID01", mainType = Some("mainType1"), mainTransaction = Some("4920"))
           )
         }
 
@@ -279,11 +281,11 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
             Payment(reference = Some("ref"), amount = Some(-1000.0), outstandingAmount = Some(700),
               documentDescription = None, method = Some("method"), lot = None, lotItem = None,
               dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
-              transactionId = "DOCID01", mainType = Some("mainType1")),
+              transactionId = "DOCID01", mainType = Some("mainType1"), mainTransaction = Some("4920")),
             Payment(reference = Some("ref"), amount = Some(-1000.0), outstandingAmount = Some(700),
               documentDescription = None, method = Some("method"), lot = None, lotItem = None,
               dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
-              transactionId = "DOCID02", mainType = Some("mainType1"))
+              transactionId = "DOCID02", mainType = Some("mainType1"), mainTransaction = Some("4920"))
           )
         }
       }
