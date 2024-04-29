@@ -187,7 +187,7 @@ object FinancialDataTestConstants {
     transactionId = "id",
     documentDescription = Some("documentDescription"),
     documentText = Some("documentText"),
-    originalAmount = Some(300.00),
+    originalAmount = 300.00,
     outstandingAmount = Some(200.00),
     documentDate = LocalDate.parse("2018-03-29"),
     interestRate = Some(2.60),
@@ -201,7 +201,8 @@ object FinancialDataTestConstants {
     lpiWithDunningBlock = Some(12.50),
     amountCodedOut = Some(3.21),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    documentDueDate = Some(LocalDate.parse("2019-03-29"))
+    documentDueDate = Some(LocalDate.parse("2019-03-29")),
+    poaRelevantAmount = Some(1000)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -209,7 +210,7 @@ object FinancialDataTestConstants {
     transactionId = "id2",
     documentDescription = Some("documentDescription2"),
     documentText = None,
-    originalAmount = Some(100.00),
+    originalAmount = 100.00,
     outstandingAmount = Some(50.00),
     documentDate = LocalDate.parse("2018-03-29"),
     interestRate = None,
@@ -221,14 +222,15 @@ object FinancialDataTestConstants {
     paymentLotItem = None,
     paymentLot = None,
     lpiWithDunningBlock = None,
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    poaRelevantAmount = Some(1000.00)
   )
 
   val documentDetail3: DocumentDetail = DocumentDetail(
     taxYear = 2018,
     documentDescription = Some("documentDescription"),
     documentText = None,
-    originalAmount = Some(-1000),
+    originalAmount = -1000.00,
     outstandingAmount = Some(0),
     documentDate = LocalDate.parse("2022-06-23"),
     interestRate = None,
@@ -241,7 +243,8 @@ object FinancialDataTestConstants {
     paymentLot = None,
     paymentLotItem = None,
     lpiWithDunningBlock = None,
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    poaRelevantAmount = Some(1000.00)
   )
 
   val financialDetail3: FinancialDetail = FinancialDetail(
