@@ -39,7 +39,8 @@ case class DocumentDetail(taxYear: Int,
                           lpiWithDunningBlock: Option[BigDecimal],
                           amountCodedOut: Option[BigDecimal] = None,
                           effectiveDateOfPayment: Option[LocalDate],
-                          documentDueDate: Option[LocalDate] = None
+                          documentDueDate: Option[LocalDate] = None,
+                          poaRelevantAmount: Option[BigDecimal]
                          )
 
 object DocumentDetail {
@@ -63,6 +64,7 @@ object DocumentDetail {
       (__ \ "lpiWithDunningBlock").read[BigDecimal].map(Option(_)).orElse((__ \ "lpiWithDunningLock").readNullable[BigDecimal]) and
       (__ \ "amountCodedOut").readNullable[BigDecimal] and
       (__ \ "effectiveDateOfPayment").readNullable[LocalDate] and
-      (__ \ "documentDueDate").readNullable[LocalDate]
+      (__ \ "documentDueDate").readNullable[LocalDate] and
+      (__ \ "poaRelevantAmount").readNullable[BigDecimal]
     ) (DocumentDetail.apply _)
 }

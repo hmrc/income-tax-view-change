@@ -89,7 +89,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       "lpiWithDunningBlock" -> 12.50,
       "amountCodedOut" -> 3.21,
       "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
-      "documentDueDate" -> LocalDate.parse("2019-03-29")
+      "documentDueDate" -> LocalDate.parse("2019-03-29"),
+      "poaRelevantAmount" -> Some(1000.00)
     )),
     "financialDetails" -> Json.arr(Json.parse(
       """{
@@ -147,7 +148,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       paymentLotItem = paymentLotItem,
       lpiWithDunningBlock = None,
       amountCodedOut = Some(3.21),
-      effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+      effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+      poaRelevantAmount = Some(1000.00)
     )
   }
 
@@ -170,7 +172,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       paymentLotItem = None,
       lpiWithDunningBlock = None,
       amountCodedOut = Some(3.21),
-      effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+      effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+      poaRelevantAmount = Some(1000.00)
     )
   }
 
