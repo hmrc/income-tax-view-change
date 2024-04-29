@@ -49,22 +49,23 @@ object FinancialDataTestConstants {
       |     "documentId": "id",
       |     "documentDescription": "documentDescription",
       |     "documentText": "documentText",
-      |     "totalAmount": 300.00,
-      |     "documentOutstandingAmount": 200.00,
-      |     "lastClearedAmount": 100.00,
+      |     "totalAmount": 300.0,
+      |     "documentOutstandingAmount": 200.0,
+      |     "lastClearedAmount": 100.0,
       |     "documentDate": "2018-03-29",
-      |     "interestRate": 2.60,
+      |     "interestRate": 2.6,
       |     "interestFromDate": "2018-08-01",
       |     "interestEndDate": "2019-01-15",
       |     "latePaymentInterestID": "latePaymentInterestID",
       |     "latePaymentInterestAmount": 12.34,
-      |     "interestOutstandingAmount": 31.00,
+      |     "interestOutstandingAmount": 31.0,
       |     "paymentLot": "paymentLot",
       |     "paymentLotItem": "paymentLotItem",
-      |     "lpiWithDunningBlock": 12.50,
+      |     "lpiWithDunningBlock": 12.5,
       |     "amountCodedOut" : 3.21,
       |     "effectiveDateOfPayment" : "2018-03-29",
-      |     "documentDueDate" : "2019-03-29"
+      |     "documentDueDate" : "2019-03-29",
+      |     "poaRelevantAmount": 1000.0
       |   },
       |   {
       |     "taxYear": "2019",
@@ -74,7 +75,8 @@ object FinancialDataTestConstants {
       |     "documentOutstandingAmount": 50.00,
       |     "lastClearedAmount": 50.00,
       |     "documentDate": "2018-03-29",
-      |     "effectiveDateOfPayment" : "2018-03-29"
+      |     "effectiveDateOfPayment" : "2018-03-29",
+      |     "poaRelevantAmount": 1000.0
       |   }
       | ],
       | "financialDetails": [
@@ -201,7 +203,8 @@ object FinancialDataTestConstants {
     lpiWithDunningBlock = Some(12.50),
     amountCodedOut = Some(3.21),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    documentDueDate = Some(LocalDate.parse("2019-03-29"))
+    documentDueDate = Some(LocalDate.parse("2019-03-29")),
+    poaRelevantAmount = Some(1000.00)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -221,7 +224,8 @@ object FinancialDataTestConstants {
     paymentLotItem = None,
     paymentLot = None,
     lpiWithDunningBlock = None,
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    poaRelevantAmount = Some(1000.00)
   )
 
   val documentDetail3: DocumentDetail = DocumentDetail(
@@ -241,7 +245,8 @@ object FinancialDataTestConstants {
     paymentLot = None,
     paymentLotItem = None,
     lpiWithDunningBlock = None,
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    poaRelevantAmount = Some(1000.00)
   )
 
   val financialDetail3: FinancialDetail = FinancialDetail(
