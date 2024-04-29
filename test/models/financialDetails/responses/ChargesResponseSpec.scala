@@ -110,6 +110,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         |       "amount": 100.00,
         |       "clearingDate": "2022-06-23",
         |       "clearingReason": "clearingReason",
+        |       "clearingSAPDocument": "012345678912",
         |       "outgoingPaymentMethod": "outgoingPaymentMethod",
         |       "interestLock": "interestLock",
         |       "dunningLock": "dunningLock",
@@ -209,7 +210,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       paymentMethod = Some("method"),
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
-      paymentId = Some("paymentId")
+      paymentId = Some("paymentId"),
+      clearingSAPDocument = Some("012345678912")
     )
   }
 

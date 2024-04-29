@@ -49,6 +49,7 @@ class FinancialDetailSpec extends AnyWordSpec with Matchers {
         "amount" -> 100.00,
         "clearingDate" -> LocalDate.parse("2022-06-23"),
         "clearingReason" -> "clearingReason",
+        "clearingSAPDocument" -> "012345678912",
         "outgoingPaymentMethod" -> "outgoingPaymentMethod",
         "interestLock" -> "interestLock",
         "dunningLock" -> "dunningLock",
