@@ -26,7 +26,7 @@ case class ChargesResponse(balanceDetails: BalanceDetails,
                            financialDetails: List[FinancialDetail]) {
 
   val payments: List[Payment] = {
-    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.originalAmount.exists(_ < 0))
+    val paymentDocuments: List[DocumentDetail] = documentDetails.filter(document => document.originalAmount < 0)
     paymentDocuments.map { document =>
       val subItem = {
         if (document.paymentLot.isDefined && document.paymentLotItem.isDefined) {

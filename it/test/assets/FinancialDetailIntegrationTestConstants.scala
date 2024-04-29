@@ -157,7 +157,7 @@ object FinancialDetailIntegrationTestConstants {
     transactionId = "id",
     documentDescription = Some("documentDescription"),
     documentText = Some("documentText"),
-    originalAmount = Some(300.00),
+    originalAmount = 300.00,
     outstandingAmount = Some(200.00),
     documentDate = LocalDate.parse("2018-03-29"),
     interestRate = Some(2.60),
@@ -170,7 +170,8 @@ object FinancialDetailIntegrationTestConstants {
     paymentLot = Some("paymentLot"),
     lpiWithDunningBlock = Some(12.50),
     amountCodedOut = Some(3.21),
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    poaRelevantAmount = Some(1000.00)
   )
 
   val documentDetail2: DocumentDetail = DocumentDetail(
@@ -178,7 +179,7 @@ object FinancialDetailIntegrationTestConstants {
     transactionId = "id2",
     documentDescription = Some("documentDescription2"),
     documentText = None,
-    originalAmount = Some(100.00),
+    originalAmount = 300.00,
     outstandingAmount = Some(50.00),
     documentDate = LocalDate.parse("2018-03-29"),
     interestRate = None,
@@ -190,7 +191,8 @@ object FinancialDetailIntegrationTestConstants {
     paymentLotItem = None,
     paymentLot = None,
     lpiWithDunningBlock = None,
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29"))
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    poaRelevantAmount = Some(1000.00)
   )
 
 

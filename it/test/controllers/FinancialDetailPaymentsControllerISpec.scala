@@ -34,7 +34,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
 
   val payments1: Payment = Payment(
     reference = Some("paymentReference"),
-    amount = Some(BigDecimal("-1000.00")),
+    amount = BigDecimal("-1000.00"),
     outstandingAmount = Some(BigDecimal("0")),
     documentDescription = Some("documentDescription"),
     method = Some("paymentMethod"),
@@ -49,7 +49,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
 
   val payments2: Payment = Payment(
     reference = Some("paymentReference2"),
-    amount = Some(BigDecimal("-1000.00")),
+    amount = BigDecimal("-1000.00"),
     outstandingAmount = Some(BigDecimal("0")),
     method = Some("paymentMethod2"),
     documentDescription =  Some("documentDescription2"),
