@@ -25,8 +25,8 @@ case class DocumentDetail(taxYear: Int,
                           transactionId: String,
                           documentDescription: Option[String],
                           documentText: Option[String],
-                          originalAmount: Option[BigDecimal],
-                          outstandingAmount: Option[BigDecimal],
+                          originalAmount: BigDecimal,
+                          outstandingAmount: BigDecimal,
                           documentDate: LocalDate,
                           interestRate: Option[BigDecimal],
                           interestFromDate: Option[LocalDate],
@@ -50,8 +50,8 @@ object DocumentDetail {
       (__ \ "documentId").read[String] and
       (__ \ "documentDescription").readNullable[String] and
       (__ \ "documentText").readNullable[String] and
-      (__ \ "totalAmount").readNullable[BigDecimal] and
-      (__ \ "documentOutstandingAmount").readNullable[BigDecimal] and
+      (__ \ "totalAmount").read[BigDecimal] and
+      (__ \ "documentOutstandingAmount").read[BigDecimal] and
       (__ \ "documentDate").read[LocalDate] and
       (__ \ "interestRate").readNullable[BigDecimal] and
       (__ \ "interestFromDate").readNullable[LocalDate] and

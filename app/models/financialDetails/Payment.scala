@@ -21,8 +21,8 @@ import play.api.libs.json._
 import java.time.LocalDate
 
 case class Payment(reference: Option[String],
-                   amount: Option[BigDecimal],
-                   outstandingAmount: Option[BigDecimal],
+                   amount: BigDecimal,
+                   outstandingAmount: BigDecimal,
                    documentDescription: Option[String],
                    method: Option[String],
                    lot: Option[String],
