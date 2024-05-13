@@ -24,14 +24,14 @@ import java.time.LocalDate
 
 class PaymentSpec extends AnyWordSpec with Matchers {
 
-  val paymentEmpty: Payment = Payment(None, None, None, None, None, None, None, None, LocalDate.parse("2022-06-23"), "DOCID01", None, None)
+  val paymentEmpty: Payment = Payment(None, 1000.00, 300.00, None, None, None, None, None, LocalDate.parse("2022-06-23"), "DOCID01", None, None)
 
-  val paymentEmptyJson: JsObject = Json.obj("documentDate" -> LocalDate.parse("2022-06-23"), "transactionId" -> "DOCID01")
+  val paymentEmptyJson: JsObject = Json.obj("amount" -> 1000.00, "outstandingAmount" -> 300.00, "documentDate" -> LocalDate.parse("2022-06-23"), "transactionId" -> "DOCID01")
 
   val paymentFull: Payment = Payment(
     reference = Some("reference"),
-    amount = Some(100.00),
-    outstandingAmount = Some(100.00),
+    amount = 100.00,
+    outstandingAmount = 100.00,
     documentDescription = Some("documentDescriptionX"),
     method = Some("method"),
     lot = Some("lot"),
