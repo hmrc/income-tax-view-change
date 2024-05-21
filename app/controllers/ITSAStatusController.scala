@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.ITSAStatusConnector
+import connectors.itsastatus.ITSAStatusConnector
 import controllers.predicates.AuthenticationPredicate
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
 import play.api.Logging
@@ -32,7 +32,8 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
                                      connector: ITSAStatusConnector)
                                     (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean, history: Boolean): Action[AnyContent] = authentication.async { implicit request =>
+  def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean,
+                    history: Boolean): Action[AnyContent] = authentication.async { implicit request =>
     connector.getITSAStatus(
       taxableEntityId = taxableEntityId,
       taxYear = taxYear,
