@@ -141,5 +141,9 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     def createBusinessDetails(mtdbsaRef: String, body: JsValue): WSResponse = {
       buildClient(s"/create-income-source/business/$mtdbsaRef").post(body).futureValue
     }
+
+    def postClaimToAdjustPoa(body: JsValue): WSResponse = {
+      buildClient(s"/adjust-poa").post(body).futureValue
+    }
   }
 }
