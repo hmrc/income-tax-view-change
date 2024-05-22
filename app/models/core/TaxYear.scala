@@ -20,10 +20,30 @@ import scala.util.Try
 
 object TaxYear {
 
+  def fromString(years: String): Option[TaxYear] = {
+
+    years.split('-') match {
+      case Array(yearOne, yearTwo) if areValidYears(yearOne, yearTwo) =>
+        Some(
+          TaxYear(yearOne.toInt, yearTwo.toInt)
+        )
+      case _ => None
+    }
+  }
+
   private def isValidYear(year: String): Boolean =
     year.length == 4 &&
       year.forall(_.isDigit) &&
       Try(year.toInt).toOption.isDefined
+
+  private def areValidYears(yearOne: String, yearTwo: String): Boolean = {
+    def differenceIsOne(yearOne: String, yearTwo: String): Boolean =
+      yearOne.toInt + 1 == yearTwo.toInt
+
+    isValidYear(yearOne) &&
+      isValidYear(yearTwo) &&
+      differenceIsOne(yearOne, yearTwo)
+  }
 
   def forYearEnd(endYear: Int): TaxYear = {
     require(isValidYear(endYear.toString), "invalid year")

@@ -17,7 +17,9 @@
 package controllers
 
 import connectors.itsastatus.ITSAStatusConnector
+import connectors.itsastatus.OptOutUpdateRequestModel._
 import controllers.predicates.AuthenticationPredicate
+import models.core.TaxYear
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
 import play.api.Logging
 import play.api.libs.json.Json
@@ -25,7 +27,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
                                      cc: ControllerComponents,
@@ -51,6 +53,16 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
         logger.debug(s"[ITSAStatusController][getITSAStatus] - Successful Response: $result")
         Ok(Json.toJson(result))
     }
+  }
+
+  def updateItsaStatus(taxableEntityId: String, taxYear: String): Action[AnyContent] = authentication.async { implicit request =>
+    TaxYear.fromString(taxYear)
+      .map(taxYearValue => connector.requestOptOutForTaxYear(taxYearValue, taxableEntityId, ItsaUpdateReason.optOut))
+      .map(f => f.map {
+        case success: OptOutUpdateResponseSuccess => Ok(Json.toJson(success))
+        case failure: OptOutUpdateResponseFailure => Ok(Json.toJson(failure))
+      })
+      .getOrElse(Future.successful(Ok(Json.toJson(OptOutUpdateResponseFailure.defaultFailure()))))
   }
 
 }
