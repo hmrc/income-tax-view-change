@@ -16,7 +16,6 @@
 
 package controllers
 
-import com.github.tomakehurst.wiremock.client.WireMock._
 import models.claimToAdjustPoa.{ClaimToAdjustPoaRequest, MainIncomeLower}
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -26,7 +25,7 @@ class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
 
   val apiUrl = "/income-tax/calculations/POA/ClaimToAdjust"
 
-  "Calling ClaimToAdjustPoaController.createBusinessDetails method" when {
+  "Calling /submit-claim-to-adjust-poa" when {
 
     val request = ClaimToAdjustPoaRequest(
       "AA000000A",
@@ -35,9 +34,11 @@ class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
       MainIncomeLower
     )
 
-    "authorised with a ClaimToAdjustPoaController model" when {
-      "A successful response is returned from the API" should {
-        s"return $OK response with an incomeSourceId" in {
+    "authorised with a valid request" when {
+
+      "A successful response is received from the API" should {
+
+        s"return a successful $CREATED response" in {
 
           isAuthorised(true)
 
@@ -53,7 +54,7 @@ class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
             requestBody = Json.stringify(Json.toJson(request)),
             responseBody = Json.stringify(Json.toJson(response)))
 
-          When(s"I call POST /adjust-poa")
+          When(s"I call POST /submit-claim-to-adjust-poa")
 
           val res = IncomeTaxViewChange.postClaimToAdjustPoa(
             Json.toJson(request)
@@ -64,9 +65,41 @@ class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
           json shouldBe Json.obj("processingDate" -> "2024-01-31T09:27:17Z")
         }
       }
+
+      "A failure response is received from the API" should {
+
+        s"return $BAD_REQUEST and code from API" in {
+
+          isAuthorised(true)
+
+          WiremockHelper.stubPost(
+            url = apiUrl,
+            status = BAD_REQUEST,
+            requestBody = Json.stringify(Json.toJson(request)),
+            responseBody = Json.stringify(Json.obj(
+              "failures" -> Json.arr(
+                Json.obj(
+                  "code" -> "INVALID_PAYLOAD",
+                  "reason" -> "Submission has not passed validation. Invalid payload.")))))
+
+          When(s"I call POST /submit-claim-to-adjust-poa")
+          val res = IncomeTaxViewChange.postClaimToAdjustPoa(
+            Json.toJson(request)
+          )
+
+          Then(s"a status of $BAD_REQUEST is returned ")
+
+          res should have(httpStatus(BAD_REQUEST))
+          val json = Json.parse(res.body)
+          json shouldBe Json.obj(
+            "message" -> "INVALID_PAYLOAD"
+          )
+        }
+      }
     }
 
     "authorised with a invalid request" should {
+
       s"return $BAD_REQUEST" in {
 
         isAuthorised(true)
@@ -81,7 +114,7 @@ class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
 
         val invalidRequest = Json.obj()
 
-        When(s"I call POST /adjust-poa")
+        When(s"I call POST /submit-claim-to-adjust-poa")
         val res = IncomeTaxViewChange.postClaimToAdjustPoa(
           Json.toJson(invalidRequest)
         )
@@ -93,37 +126,6 @@ class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
         json shouldBe Json.obj(
           "message" -> "Could not validate request"
         )
-      }
-    }
-    "authorised with a valid request" when {
-      "API returns an error" should {
-        s"return $INTERNAL_SERVER_ERROR" in {
-
-          isAuthorised(true)
-
-          WiremockHelper.stubPost(
-            url = apiUrl,
-            status = BAD_REQUEST,
-            requestBody = Json.stringify(Json.toJson(request)),
-            responseBody = Json.stringify(Json.obj(
-              "failures" -> Json.arr(
-                Json.obj(
-              "code" -> "INVALID_PAYLOAD",
-              "reason" -> "Submission has not passed validation. Invalid payload.")))))
-
-          When(s"I call POST /adjust-poa")
-          val res = IncomeTaxViewChange.postClaimToAdjustPoa(
-            Json.toJson(request)
-          )
-
-          Then(s"a status of $INTERNAL_SERVER_ERROR is returned ")
-
-          res should have(httpStatus(BAD_REQUEST))
-          val json = Json.parse(res.body)
-          json shouldBe Json.obj(
-            "message" -> "INVALID_PAYLOAD"
-          )
-        }
       }
     }
   }

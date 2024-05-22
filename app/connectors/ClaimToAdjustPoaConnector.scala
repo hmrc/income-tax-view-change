@@ -26,7 +26,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
-import java.util.UUID.randomUUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,15 +36,12 @@ class ClaimToAdjustPoaConnector @Inject() ( val appConfig: MicroserviceAppConfig
 
   val endpoint = s"${appConfig.ifUrl}/income-tax/calculations/POA/ClaimToAdjust"
 
-  def postClaimToAdjustPoa(request: ClaimToAdjustPoaRequest)(implicit hc: HeaderCarrier
-  ): Future[ClaimToAdjustPoaResponse] = {
-
-    val headers = appConfig.getIFHeaders("1773") ++ Seq(("Correlation-Id" -> randomUUID.toString))
-    val updatedHc: HeaderCarrier = hc.withExtraHeaders(headers:_*)
-
+  def postClaimToAdjustPoa(request: ClaimToAdjustPoaRequest)
+                          (implicit hc: HeaderCarrier): Future[ClaimToAdjustPoaResponse] = {
     http
-      .post(url"$endpoint")(updatedHc)
+      .post(url"$endpoint")
       .withBody(Json.toJson(request))
+      .setHeader(appConfig.getIFHeaders("1773"):_*)
       .execute[ClaimToAdjustPoaResponse]
       .recover {
         case e =>

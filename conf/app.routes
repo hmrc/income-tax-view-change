@@ -38,4 +38,4 @@ GET         /itsa-status/status/:nino/:year                          controllers
 
 POST        /create-income-source/business/:mtdbsaRef                controllers.CreateBusinessDetailsController.createBusinessDetails(mtdbsaRef: String)
 
-POST        /adjust-poa                                             controllers.ClaimToAdjustPoaController.submitClaimToAdjustPoa()
+POST        /submit-claim-to-adjust-poa                              controllers.ClaimToAdjustPoaController.submitClaimToAdjustPoa()

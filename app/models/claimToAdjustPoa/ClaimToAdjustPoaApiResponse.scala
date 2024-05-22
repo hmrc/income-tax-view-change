@@ -34,11 +34,11 @@ object ClaimToAdjustPoaResponse {
 
 object ClaimToAdjustPoaApiResponse {
 
-  case class ClaimToAdjustPoaSuccess(successResponse: SuccessResponse)
+  case class ClaimToAdjustPoaApiSuccess(successResponse: SuccessResponse)
 
   case class SuccessResponse(processingDate: String)
 
-  case class ClaimToAdjustPoaFailure(failures: Seq[Failure]) {
+  case class ClaimToAdjustPoaApiFailure(failures: Seq[Failure]) {
     override def toString: String = failures.map(_.code).mkString(", ")
   }
 
@@ -48,8 +48,8 @@ object ClaimToAdjustPoaApiResponse {
 
   implicit val failureFormat: Format[Failure] = Json.format[Failure]
 
-  implicit val failureResponseFormat: Format[ClaimToAdjustPoaFailure] = Json.format[ClaimToAdjustPoaFailure]
+  implicit val failureResponseFormat: Format[ClaimToAdjustPoaApiFailure] = Json.format[ClaimToAdjustPoaApiFailure]
 
-  implicit val successResponseFormat: Format[ClaimToAdjustPoaSuccess] = Json.format[ClaimToAdjustPoaSuccess]
+  implicit val successResponseFormat: Format[ClaimToAdjustPoaApiSuccess] = Json.format[ClaimToAdjustPoaApiSuccess]
 
 }

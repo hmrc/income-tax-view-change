@@ -30,23 +30,23 @@ object ClaimToAdjustPoaHttpParser {
         override def read(method: String, url: String, response: HttpResponse): ClaimToAdjustPoaResponse = {
                 (response.status match {
             case CREATED =>
-                response.json.validate[ClaimToAdjustPoaSuccess] match {
+                response.json.validate[ClaimToAdjustPoaApiSuccess] match {
                 case JsSuccess(model, _) =>
                     ClaimToAdjustPoaResponse(CREATED, Right(model.successResponse))
                 case _ => {
-                    Logger("application").warn(s"Unable to parse the content of a success response from Claim To Adjust POA")
+                    Logger("application").warn(s"Invalid JSON in Claim To Adjust POA success response")
                     ClaimToAdjustPoaResponse(INTERNAL_SERVER_ERROR,
-                        Left(ErrorResponse("Unable to parse the content of a success response from Claim To Adjust POA")))
+                        Left(ErrorResponse("Invalid JSON in success response")))
                 }
             }
             case status =>
-                response.json.validate[ClaimToAdjustPoaFailure] match {
+                response.json.validate[ClaimToAdjustPoaApiFailure] match {
                     case JsSuccess(model, _) =>
                         ClaimToAdjustPoaResponse(status = status, Left(ErrorResponse(model.toString)))
                     case _ =>
-                        Logger("application").warn(s"Unable to parse the content of a failure response from Claim To Adjust POA")
+                        Logger("application").warn(s"Invalid JSON in Claim To Adjust POA failure response")
                         ClaimToAdjustPoaResponse(INTERNAL_SERVER_ERROR,
-                            Left(ErrorResponse("Unable to parse the content of a failure response from Claim To Adjust POA")))
+                            Left(ErrorResponse("Invalid JSON in failure response")))
                 }
           })
         }

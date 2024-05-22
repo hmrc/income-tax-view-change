@@ -143,7 +143,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     }
 
     def postClaimToAdjustPoa(body: JsValue): WSResponse = {
-      buildClient(s"/adjust-poa").post(body).futureValue
+      buildClient(s"/submit-claim-to-adjust-poa").post(body).futureValue
     }
   }
 }
