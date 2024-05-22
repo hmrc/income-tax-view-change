@@ -57,7 +57,7 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
 
   def updateItsaStatus(taxableEntityId: String, taxYear: String): Action[AnyContent] = authentication.async { implicit request =>
     TaxYear.fromString(taxYear)
-      .map(taxYearValue => connector.requestOptOutForTaxYear(taxYearValue, taxableEntityId, ItsaUpdateReason.optOut))
+      .map(taxYearValue => connector.requestOptOutForTaxYear(taxYearValue, taxableEntityId, optOutUpdateReason))
       .map(f => f.map {
         case success: OptOutUpdateResponseSuccess => Ok(Json.toJson(success))
         case failure: OptOutUpdateResponseFailure => Ok(Json.toJson(failure))

@@ -73,13 +73,13 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
 
       "return successful response" in {
 
-        val apiRequest = OptOutUpdateRequest(taxYear.toString, itsaOptOutUpdateReason)
+        val apiRequest = OptOutUpdateRequest(taxYear.toString, optOutUpdateReason)
         val apiResponse = OptOutUpdateResponseSuccess("123", NO_CONTENT)
         val httpResponse = HttpResponse(NO_CONTENT, Json.toJson(apiResponse), Map(CorrelationIdHeader -> Seq("123")))
 
         setupHttpClientMock[OptOutUpdateRequest](connector.buildUpdateRequestUrlWith(taxableEntityId))(apiRequest, httpResponse)
 
-        val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxYear, taxableEntityId, itsaOptOutUpdateReason)
+        val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxYear, taxableEntityId, optOutUpdateReason)
 
         result.futureValue shouldBe OptOutUpdateResponseSuccess("123", NO_CONTENT)
 
@@ -93,13 +93,13 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
         val errorItems = List(ErrorItem("INVALID_TAXABLE_ENTITY_ID",
           "Submission has not passed validation. Invalid parameter taxableEntityId."))
         val correlationId = "123"
-        val apiRequest = OptOutUpdateRequest(taxYear.toString, itsaOptOutUpdateReason)
+        val apiRequest = OptOutUpdateRequest(taxYear.toString, optOutUpdateReason)
         val apiFailResponse = OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
         val httpResponse = HttpResponse(BAD_REQUEST, Json.toJson(apiFailResponse), Map(CorrelationIdHeader -> Seq("123")))
 
         setupHttpClientMock[OptOutUpdateRequest](connector.buildUpdateRequestUrlWith(taxableEntityId))(apiRequest, httpResponse)
 
-        val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxYear, taxableEntityId, itsaOptOutUpdateReason)
+        val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxYear, taxableEntityId, optOutUpdateReason)
 
         result.futureValue shouldBe OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
 
@@ -113,13 +113,13 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
         val errorItems = List(ErrorItem("INVALID_TAXABLE_ENTITY_ID",
           "Submission has not passed validation. Invalid parameter taxableEntityId."))
         val correlationId = "123"
-        val apiRequest = OptOutUpdateRequest(taxYear.toString, itsaOptOutUpdateReason)
+        val apiRequest = OptOutUpdateRequest(taxYear.toString, optOutUpdateReason)
         val apiFailResponse = OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
         val httpResponse = HttpResponse(BAD_REQUEST, Json.toJson(apiFailResponse), Map.empty)
 
         setupHttpClientMock[OptOutUpdateRequest](connector.buildUpdateRequestUrlWith(taxableEntityId))(apiRequest, httpResponse)
 
-        val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxYear, taxableEntityId, itsaOptOutUpdateReason)
+        val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxYear, taxableEntityId, optOutUpdateReason)
 
         result.futureValue shouldBe OptOutUpdateResponseFailure("Unknown_CorrelationId", BAD_REQUEST, errorItems)
 
