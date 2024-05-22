@@ -34,7 +34,7 @@ class ClaimToAdjustPoaController @Inject()(authentication: AuthenticationPredica
                                            connector: ClaimToAdjustPoaConnector)
                                           (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def submitClaimToAdjustPoa(): Action[AnyContent] = Action.async {
+  def submitClaimToAdjustPoa(): Action[AnyContent] = authentication.async {
     implicit request: Request[AnyContent] =>
       withValidRequest { claimToAdjustRequest =>
         connector.postClaimToAdjustPoa(claimToAdjustRequest).map {

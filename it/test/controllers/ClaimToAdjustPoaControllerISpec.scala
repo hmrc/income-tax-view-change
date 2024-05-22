@@ -34,6 +34,22 @@ class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
       MainIncomeLower
     )
 
+    "unauthorised" should {
+
+      s"return a $UNAUTHORIZED response" in {
+
+        isAuthorised(false)
+
+        When(s"I call POST /submit-claim-to-adjust-poa")
+
+        val res = IncomeTaxViewChange.postClaimToAdjustPoa(
+          Json.toJson(request)
+        )
+
+        res should have(httpStatus(UNAUTHORIZED))
+      }
+    }
+
     "authorised with a valid request" when {
 
       "A successful response is received from the API" should {
