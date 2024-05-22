@@ -42,7 +42,7 @@ class ClaimToAdjustPoaController @Inject()(authentication: AuthenticationPredica
             response.claimToAdjustPoaBody match {
             case Right(x: SuccessResponse)  => Created(Json.toJson(x))
             case Left(e: ErrorResponse)     =>
-              Logger("application").error(e.message)
+              Logger("application").error(s"[ClaimToAdjustPoaController] ${e.message}")
               Status(response.status)(Json.toJson(e))
           }
         }

@@ -34,7 +34,7 @@ object ClaimToAdjustPoaHttpParser {
                 case JsSuccess(model, _) =>
                     ClaimToAdjustPoaResponse(CREATED, Right(model.successResponse))
                 case _ => {
-                    Logger("application").warn(s"Invalid JSON in Claim To Adjust POA success response")
+                    Logger("application").warn(s"[ClaimToAdjustPoaResponseReads] Invalid JSON in Claim To Adjust POA success response")
                     ClaimToAdjustPoaResponse(INTERNAL_SERVER_ERROR,
                         Left(ErrorResponse("Invalid JSON in success response")))
                 }
@@ -44,7 +44,7 @@ object ClaimToAdjustPoaHttpParser {
                     case JsSuccess(model, _) =>
                         ClaimToAdjustPoaResponse(status = status, Left(ErrorResponse(model.toString)))
                     case _ =>
-                        Logger("application").warn(s"Invalid JSON in Claim To Adjust POA failure response")
+                        Logger("application").warn(s"[ClaimToAdjustPoaResponseReads] Invalid JSON in Claim To Adjust POA failure response")
                         ClaimToAdjustPoaResponse(INTERNAL_SERVER_ERROR,
                             Left(ErrorResponse("Invalid JSON in failure response")))
                 }

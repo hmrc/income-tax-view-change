@@ -45,7 +45,7 @@ class ClaimToAdjustPoaConnector @Inject() ( val appConfig: MicroserviceAppConfig
       .execute[ClaimToAdjustPoaResponse]
       .recover {
         case e =>
-          Logger("application").error(e.getMessage)
+          Logger("application").error(s"[ClaimToAdjustPoaConnector] ${e.getMessage}")
           ClaimToAdjustPoaResponse(INTERNAL_SERVER_ERROR, Left(ErrorResponse(e.getMessage)))
       }
   }
