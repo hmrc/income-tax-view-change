@@ -27,6 +27,7 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.Inject
+import scala.concurrent.duration.{Duration, SECONDS}
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -42,6 +43,7 @@ class ClaimToAdjustPoaConnector @Inject() ( val appConfig: MicroserviceAppConfig
       .post(url"$endpoint")
       .withBody(Json.toJson(request))
       .setHeader(appConfig.getIFHeaders("1773"):_*)
+      .transform(_.withRequestTimeout(Duration(appConfig.claimToAdjustTimeout, SECONDS)))
       .execute[ClaimToAdjustPoaResponse]
       .recover {
         case e =>

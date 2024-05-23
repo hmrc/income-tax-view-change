@@ -54,6 +54,8 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     )
   }
 
+  val claimToAdjustTimeout: Int = servicesConfig.getInt("claim-to-adjust.timeout")
+
   val confidenceLevel:Int = servicesConfig.getInt("auth.confidenceLevel")
 
   val incomeTaxSubmissionStubUrl: String = loadConfig("submissionStubUrl")
