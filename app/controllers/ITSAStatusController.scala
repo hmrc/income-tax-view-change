@@ -17,13 +17,16 @@
 package controllers
 
 import connectors.itsastatus.ITSAStatusConnector
+import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
 import controllers.predicates.AuthenticationPredicate
-import models.core.TaxYear
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
+import org.apache.pekko.util.ByteString
 import play.api.Logging
+import play.api.http.HttpEntity
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, ControllerComponents, ResponseHeader, Result}
+import play.mvc.Http
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.Inject
@@ -55,14 +58,31 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
     }
   }
 
-  def updateItsaStatus(taxableEntityId: String, taxYear: String): Action[AnyContent] = authentication.async { implicit request =>
-    TaxYear.fromString(taxYear)
-      .map(taxYearValue => connector.requestOptOutForTaxYear(taxYearValue, taxableEntityId, optOutUpdateReason))
-      .map(f => f.map {
-        case success: OptOutUpdateResponseSuccess => Ok(Json.toJson(success))
-        case failure: OptOutUpdateResponseFailure => Ok(Json.toJson(failure))
-      })
-      .getOrElse(Future.successful(Ok(Json.toJson(OptOutUpdateResponseFailure.defaultFailure()))))
+  def updateItsaStatus(taxableEntityId: String): Action[AnyContent] = authentication.async { implicit request =>
+
+    def toResult(fResponse: Future[OptOutUpdateResponse]): Future[Result] = {
+      fResponse.map {
+
+        case success: OptOutUpdateResponseSuccess => new Result(ResponseHeader(Http.Status.OK,
+          Map(CorrelationIdHeader -> success.correlationId)),
+          HttpEntity.Strict(ByteString(Json.toJson(success).toString()), None))
+
+        case fail: OptOutUpdateResponseFailure => new Result(ResponseHeader(fail.statusCode,
+          Map(CorrelationIdHeader -> fail.correlationId)),
+          HttpEntity.Strict(ByteString(Json.toJson(fail).toString()), None))
+
+      }
+    }
+
+    val connectorResponse = for {
+      json <- request.body.asJson
+      optOutUpdateRequest <- json.validate[OptOutUpdateRequest].asOpt
+    } yield {
+      connector.requestOptOutForTaxYear(taxableEntityId, optOutUpdateRequest)
+    }
+
+    connectorResponse.map(toResult).getOrElse(toResult(Future.successful(OptOutUpdateResponseFailure.defaultFailure())))
+
   }
 
 }

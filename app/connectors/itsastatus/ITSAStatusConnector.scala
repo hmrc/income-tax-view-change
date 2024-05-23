@@ -20,8 +20,7 @@ import config.MicroserviceAppConfig
 import connectors.RawResponseReads
 import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
-import models.core.TaxYear
-import models.itsaStatus._
+import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
 import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.mvc.Http.Status
@@ -83,13 +82,11 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
   def buildUpdateRequestUrlWith(taxableEntityId: String): String =
     s"${appConfig.ifUrl}/income-tax/itsa-status/update/$taxableEntityId"
 
-  def requestOptOutForTaxYear(taxYear: TaxYear, taxableEntityId: String, updateReason: Int)
+  def requestOptOutForTaxYear(taxableEntityId: String, optOutUpdateRequest: OptOutUpdateRequest)
                              (implicit headerCarrier: HeaderCarrier): Future[OptOutUpdateResponse] = {
 
-    val body = OptOutUpdateRequest(taxYear = taxYear.toString, updateReason = updateReason)
-
     http.PUT[OptOutUpdateRequest, HttpResponse](
-      buildUpdateRequestUrlWith(taxableEntityId), body, Seq[(String, String)]()
+      buildUpdateRequestUrlWith(taxableEntityId), optOutUpdateRequest, Seq[(String, String)]()
     ).map { response =>
       val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
       response.status match {
