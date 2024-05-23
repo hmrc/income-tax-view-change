@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package test.helpers.servicemocks
+package helpers.servicemocks
 
-import test.assets.CalculationListIntegrationTestConstants.{failureResponse, successResponse}
+import  assets.CalculationListIntegrationTestConstants.{failureResponse, successResponse}
 import play.api.http.Status
-import test.helpers.WiremockHelper
+import  helpers.WiremockHelper
 
 object DesCalculationListStub {
   def url(nino: String, taxYear: String): String = s"""/income-tax/list-of-calculation-results/$nino?taxYear=$taxYear"""

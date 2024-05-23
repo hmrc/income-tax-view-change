@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package test.controllers
+package controllers
 
 
 import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
-import test.assets.BaseIntegrationTestConstants._
-import test.helpers.ComponentSpecBase
-import test.assets.FinancialDetailIntegrationTestConstants._
-import test.helpers.servicemocks.DesChargesStub._
+import  assets.BaseIntegrationTestConstants._
+import  helpers.ComponentSpecBase
+import  assets.FinancialDetailIntegrationTestConstants._
+import  helpers.servicemocks.DesChargesStub._
 
 
 

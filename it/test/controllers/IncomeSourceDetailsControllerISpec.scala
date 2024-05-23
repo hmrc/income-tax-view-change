@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package test.controllers
+package controllers
 
-import test.assets.BaseIntegrationTestConstants._
-import test.assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
-import test.assets.IncomeSourceIntegrationTestConstants._
-import test.assets.NinoIntegrationTestConstants._
+import  assets.BaseIntegrationTestConstants._
+import  assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
+import  assets.IncomeSourceIntegrationTestConstants._
+import  assets.NinoIntegrationTestConstants._
 import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
-import test.helpers.ComponentSpecBase
-import test.helpers.servicemocks.BusinessDetailsStub
+import  helpers.ComponentSpecBase
+import  helpers.servicemocks.BusinessDetailsStub
 
 
 class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {

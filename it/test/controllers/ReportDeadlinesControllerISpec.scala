@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package test.controllers
+package controllers
 
-import test.assets.BaseIntegrationTestConstants._
-import test.assets.ReportDeadlinesIntegrationTestConstants._
+import  assets.BaseIntegrationTestConstants._
+import  assets.ReportDeadlinesIntegrationTestConstants._
 import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
 import play.api.http.Status._
-import test.helpers.ComponentSpecBase
-import test.helpers.servicemocks.DesReportDeadlinesStub
+import  helpers.ComponentSpecBase
+import  helpers.servicemocks.DesReportDeadlinesStub
 
 class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 

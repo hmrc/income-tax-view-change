@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package test.controllers
+package controllers
 
-import test.assets.BaseIntegrationTestConstants._
-import test.assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
-import test.assets.IncomeSourceIntegrationTestConstants._
+import  assets.BaseIntegrationTestConstants._
+import  assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
+import  assets.IncomeSourceIntegrationTestConstants._
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
-import test.helpers.ComponentSpecBase
-import test.helpers.servicemocks.BusinessDetailsCallWithNinoStub
+import  helpers.ComponentSpecBase
+import  helpers.servicemocks.BusinessDetailsCallWithNinoStub
 
 class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
 

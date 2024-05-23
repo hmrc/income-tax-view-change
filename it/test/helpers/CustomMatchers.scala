@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.helpers
+package helpers
 
 import org.jsoup.Jsoup
 import org.scalatest._

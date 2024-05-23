@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package test.helpers.servicemocks
+package helpers.servicemocks
 
-import test.assets.ITSAStatusIntegrationTestConstants.{errorITSAStatusError, failedFutureITSAStatusError, taxYear, taxableEntityId}
+import  assets.ITSAStatusIntegrationTestConstants.{errorITSAStatusError, failedFutureITSAStatusError, taxYear, taxableEntityId}
 import play.mvc.Http.Status
-import test.helpers.WiremockHelper
+import  helpers.WiremockHelper
 
 object IfITSAStatusStub {
 
