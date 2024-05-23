@@ -17,7 +17,7 @@
 package helpers.servicemocks
 
 import play.api.libs.json.JsValue
-import  helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object DesCreateBusinessDetailsStub {
 

@@ -16,9 +16,9 @@
 
 package helpers.servicemocks
 
-import  assets.CalculationListIntegrationTestConstants.{failureResponse, successResponse}
+import assets.CalculationListIntegrationTestConstants.{failureResponse, successResponse}
 import play.api.http.Status
-import  helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object DesCalculationListStub {
   def url(nino: String, taxYear: String): String = s"""/income-tax/list-of-calculation-results/$nino?taxYear=$taxYear"""

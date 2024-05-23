@@ -16,13 +16,13 @@
 
 package controllers
 
-import  assets.BaseIntegrationTestConstants._
-import  assets.CreateBusinessDetailsIntegrationTestConstants._
+import assets.BaseIntegrationTestConstants._
+import assets.CreateBusinessDetailsIntegrationTestConstants._
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.CreateBusinessDetailsErrorResponse
 import play.api.http.Status._
 import play.api.libs.json.Json
-import  helpers.ComponentSpecBase
-import  helpers.servicemocks.DesCreateBusinessDetailsStub
+import helpers.ComponentSpecBase
+import helpers.servicemocks.DesCreateBusinessDetailsStub
 
 class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 

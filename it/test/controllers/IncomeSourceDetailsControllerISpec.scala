@@ -16,15 +16,15 @@
 
 package controllers
 
-import  assets.BaseIntegrationTestConstants._
-import  assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
-import  assets.IncomeSourceIntegrationTestConstants._
-import  assets.NinoIntegrationTestConstants._
+import assets.BaseIntegrationTestConstants._
+import assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
+import assets.IncomeSourceIntegrationTestConstants._
+import assets.NinoIntegrationTestConstants._
 import models.core.{NinoErrorModel, NinoModel}
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
-import  helpers.ComponentSpecBase
-import  helpers.servicemocks.BusinessDetailsStub
+import helpers.ComponentSpecBase
+import helpers.servicemocks.BusinessDetailsStub
 
 
 class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {

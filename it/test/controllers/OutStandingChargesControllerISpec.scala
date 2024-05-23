@@ -16,13 +16,13 @@
 
 package controllers
 
-import  helpers.servicemocks.DesOutStandingChargesStub._
-import  assets.OutStandingChargesIntegrationTestConstant._
+import helpers.servicemocks.DesOutStandingChargesStub._
+import assets.OutStandingChargesIntegrationTestConstant._
 import models.outStandingCharges.OutstandingChargesSuccessResponse
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
-import  helpers.ComponentSpecBase
+import helpers.ComponentSpecBase
 
 class OutStandingChargesControllerISpec extends ComponentSpecBase {
 

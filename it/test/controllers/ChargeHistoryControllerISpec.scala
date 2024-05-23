@@ -20,8 +20,8 @@ import models.chargeHistoryDetail.{ChargeHistoryDetailModel, ChargeHistorySucces
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
-import  helpers.ComponentSpecBase
-import  helpers.servicemocks.DesChargesStub.stubChargeHistory
+import helpers.ComponentSpecBase
+import helpers.servicemocks.DesChargesStub.stubChargeHistory
 
 import java.time.LocalDate
 

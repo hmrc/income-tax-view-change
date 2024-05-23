@@ -18,8 +18,8 @@ package helpers.servicemocks
 
 import play.api.http.Status
 import services.DateService
-import  assets.ReportDeadlinesIntegrationTestConstants._
-import  helpers.WiremockHelper
+import assets.ReportDeadlinesIntegrationTestConstants._
+import helpers.WiremockHelper
 
 import java.time.LocalDate
 

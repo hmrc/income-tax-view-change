@@ -17,7 +17,7 @@
 package helpers.servicemocks
 
 import play.api.libs.json.{JsValue, Json}
-import  helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object DesChargesStub {
 

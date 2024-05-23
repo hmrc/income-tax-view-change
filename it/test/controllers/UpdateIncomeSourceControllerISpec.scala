@@ -16,12 +16,12 @@
 
 package controllers
 
-import  assets.UpdateIncomeSourceIntegrationTestConstants._
+import assets.UpdateIncomeSourceIntegrationTestConstants._
 import models.updateIncomeSource.UpdateIncomeSourceResponseError
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import play.api.libs.json.Json
-import  helpers.ComponentSpecBase
-import  helpers.servicemocks.IfUpdateIncomeSourceStub
+import helpers.ComponentSpecBase
+import helpers.servicemocks.IfUpdateIncomeSourceStub
 
 
 class UpdateIncomeSourceControllerISpec extends ComponentSpecBase {

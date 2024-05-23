@@ -16,10 +16,10 @@
 
 package helpers.servicemocks
 
-import  assets.BusinessDetailsIntegrationTestConstants._
+import assets.BusinessDetailsIntegrationTestConstants._
 import models.incomeSourceDetails.IncomeSourceDetailsModel
 import play.api.http.Status
-import  helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object BusinessDetailsStub {
 

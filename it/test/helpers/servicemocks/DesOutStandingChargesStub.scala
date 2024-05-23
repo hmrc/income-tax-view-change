@@ -17,7 +17,7 @@
 package helpers.servicemocks
 
 import play.api.libs.json.{JsValue, Json}
-import  helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object DesOutStandingChargesStub {
   private def url(idType: String, idNumber: String, taxYearEndDate: String): String = {

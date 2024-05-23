@@ -16,11 +16,11 @@
 
 package controllers
 
-import  assets.ITSAStatusIntegrationTestConstants._
+import assets.ITSAStatusIntegrationTestConstants._
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
-import  helpers.ComponentSpecBase
-import  helpers.servicemocks.IfITSAStatusStub
+import helpers.ComponentSpecBase
+import helpers.servicemocks.IfITSAStatusStub
 
 
 class ITSAStatusControllerISpec extends ComponentSpecBase {

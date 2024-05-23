@@ -21,10 +21,10 @@ import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
-import  assets.BaseIntegrationTestConstants._
-import  helpers.ComponentSpecBase
-import  assets.FinancialDetailIntegrationTestConstants._
-import  helpers.servicemocks.DesChargesStub._
+import assets.BaseIntegrationTestConstants._
+import helpers.ComponentSpecBase
+import assets.FinancialDetailIntegrationTestConstants._
+import helpers.servicemocks.DesChargesStub._
 
 
 

@@ -16,13 +16,13 @@
 
 package controllers
 
-import  assets.BaseIntegrationTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import  assets.CalculationListIntegrationTestConstants.calculationListFull
+import assets.BaseIntegrationTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
+import assets.CalculationListIntegrationTestConstants.calculationListFull
 import models.calculationList.CalculationListModel
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, UNAUTHORIZED}
 import play.api.libs.ws.WSResponse
-import  helpers.ComponentSpecBase
-import  helpers.servicemocks.DesCalculationListStub
+import helpers.ComponentSpecBase
+import helpers.servicemocks.DesCalculationListStub
 
 class CalculationListControllerISpec extends ComponentSpecBase {
   "CalculationListController.getCalculationList" should {

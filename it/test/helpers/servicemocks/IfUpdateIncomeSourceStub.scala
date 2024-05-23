@@ -16,9 +16,9 @@
 
 package helpers.servicemocks
 
-import  assets.UpdateIncomeSourceIntegrationTestConstants.failureResponse
+import assets.UpdateIncomeSourceIntegrationTestConstants.failureResponse
 import play.mvc.Http.Status
-import  helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object IfUpdateIncomeSourceStub {
 

@@ -16,14 +16,14 @@
 
 package controllers
 
-import  assets.BaseIntegrationTestConstants._
-import  assets.FinancialDetailIntegrationTestConstants._
+import assets.BaseIntegrationTestConstants._
+import assets.FinancialDetailIntegrationTestConstants._
 import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
-import  helpers.ComponentSpecBase
-import  helpers.servicemocks.DesChargesStub._
+import helpers.ComponentSpecBase
+import helpers.servicemocks.DesChargesStub._
 
 class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 

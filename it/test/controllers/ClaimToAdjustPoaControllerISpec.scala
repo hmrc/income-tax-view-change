@@ -19,7 +19,7 @@ package controllers
 import models.claimToAdjustPoa.{ClaimToAdjustPoaRequest, MainIncomeLower}
 import play.api.http.Status._
 import play.api.libs.json.Json
-import  helpers.{ComponentSpecBase, WiremockHelper}
+import helpers.{ComponentSpecBase, WiremockHelper}
 
 class ClaimToAdjustPoaControllerISpec extends ComponentSpecBase {
 
