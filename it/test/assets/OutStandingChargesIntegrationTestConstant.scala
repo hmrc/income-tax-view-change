@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.assets
+package assets
 
 import models.outStandingCharges.{OutStandingCharge, OutstandingChargesSuccessResponse}
 import play.api.libs.json.{JsValue, Json}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.assets
+package assets
 
 import models.calculationList.{CalculationListModel, CalculationListResponseModel}
 import play.api.libs.json.{JsBoolean, JsObject, JsValue, Json}

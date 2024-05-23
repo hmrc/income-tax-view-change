@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package test.helpers.servicemocks
+package helpers.servicemocks
 
 import play.api.libs.json.JsValue
-import test.helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object DesCreateBusinessDetailsStub {
 

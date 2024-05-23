@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package test.helpers.servicemocks
+package helpers.servicemocks
 
-import test.assets.BusinessDetailsIntegrationTestConstants._
+import assets.BusinessDetailsIntegrationTestConstants._
 import models.incomeSourceDetails.IncomeSourceDetailsModel
 import play.api.http.Status
-import test.helpers.WiremockHelper
+import helpers.WiremockHelper
 
 object BusinessDetailsStub {
 

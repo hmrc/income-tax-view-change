@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package test.helpers.servicemocks
+package helpers.servicemocks
 
 import play.api.http.Status
 import play.api.libs.json.{JsObject, Json}
-import test.helpers.WiremockHelper
+import helpers.WiremockHelper
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 object AuthStub {

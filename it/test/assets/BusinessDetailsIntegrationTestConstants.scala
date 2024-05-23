@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.assets
+package assets
 
 import BaseIntegrationTestConstants.testMtdRef
 import models.core.{AccountingPeriodModel, AddressModel, ContactDetailsModel}

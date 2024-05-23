@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.assets
+package assets
 
 import BaseIntegrationTestConstants.testNino
 import models.updateIncomeSource.request.{Cessation, TaxYearSpecific, UpdateIncomeSourceRequestModel}
