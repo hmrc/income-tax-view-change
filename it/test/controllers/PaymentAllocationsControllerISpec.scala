@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package test.controllers
+package controllers
 
-import test.assets.BaseIntegrationTestConstants._
-import test.helpers.servicemocks.DesPaymentAllocationsStub._
+import assets.BaseIntegrationTestConstants._
+import helpers.servicemocks.DesPaymentAllocationsStub._
 import models.paymentAllocations.{AllocationDetail, PaymentAllocations}
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSResponse
-import test.helpers.ComponentSpecBase
+import helpers.ComponentSpecBase
 
 import java.time.LocalDate
 

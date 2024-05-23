@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.assets
+package assets
 
 import java.time.LocalDate
 

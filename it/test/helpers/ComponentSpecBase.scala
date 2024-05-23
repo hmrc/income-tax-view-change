@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.helpers
+package helpers
 
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
@@ -24,7 +24,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
-import test.helpers.servicemocks.AuthStub
+import helpers.servicemocks.AuthStub
 
 trait ComponentSpecBase extends TestSuite with CustomMatchers
   with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience with Matchers
@@ -140,6 +140,10 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def createBusinessDetails(mtdbsaRef: String, body: JsValue): WSResponse = {
       buildClient(s"/create-income-source/business/$mtdbsaRef").post(body).futureValue
+    }
+
+    def postClaimToAdjustPoa(body: JsValue): WSResponse = {
+      buildClient(s"/submit-claim-to-adjust-poa").post(body).futureValue
     }
   }
 }

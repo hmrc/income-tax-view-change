@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package assets
+package models.claimToAdjustPoa
 
-object BaseIntegrationTestConstants {
+import play.api.libs.json.{Format, Json}
 
-  val testMtditidEnrolmentKey = "HMRC-MTD-IT"
-  val testMtditidEnrolmentIdentifier = "MTDITID"
+case class ClaimToAdjustPoaRequest(
+  nino: String,
+  taxYear: String,
+  amount: BigDecimal,
+  poaAdjustmentReason: SelectYourReason)
 
-  val testNinoEnrolmentKey = "HMRC-NI"
-  val testNinoEnrolmentIdentifier = "NINO"
-  val testNino = "BB123456A"
-  val testTaxYearRange = "23-24"
-  val testTaxYearEnd = "2022"
-  val testMtdbsa = "XIAT0000000000A"
-  val testMtdRef = "123456789012345"
-  val testYear = "2018"
-  val testCalcType = "it"
-
+object ClaimToAdjustPoaRequest {
+  implicit val format: Format[ClaimToAdjustPoaRequest] = Json.format[ClaimToAdjustPoaRequest]
 }

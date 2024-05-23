@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package test.controllers
+package controllers
 
 import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse, RepaymentItem, RepaymentSupplementItem}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
-import test.helpers.ComponentSpecBase
-import test.helpers.servicemocks.DesChargesStub.{stubAllRepaymentHistory, stubRepaymentHistoryById}
+import helpers.ComponentSpecBase
+import helpers.servicemocks.DesChargesStub.{stubAllRepaymentHistory, stubRepaymentHistoryById}
 
 import java.time.LocalDate
 

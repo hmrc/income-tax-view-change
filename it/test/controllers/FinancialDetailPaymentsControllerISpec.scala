@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package test.controllers
+package controllers
 
-import test.assets.BaseIntegrationTestConstants._
+import assets.BaseIntegrationTestConstants._
 import models.financialDetails.Payment
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.WSResponse
-import test.helpers.ComponentSpecBase
-import test.helpers.servicemocks.DesChargesStub.stubGetChargeDetails
+import helpers.ComponentSpecBase
+import helpers.servicemocks.DesChargesStub.stubGetChargeDetails
 
 
 import java.time.LocalDate

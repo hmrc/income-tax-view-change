@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.assets
+package assets
 
 import models.createIncomeSource._
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsModel, IncomeSource}

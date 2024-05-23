@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package test.helpers.servicemocks
+package helpers.servicemocks
 
 import play.api.http.Status
 import services.DateService
-import test.assets.ReportDeadlinesIntegrationTestConstants._
-import test.helpers.WiremockHelper
+import assets.ReportDeadlinesIntegrationTestConstants._
+import helpers.WiremockHelper
 
 import java.time.LocalDate
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.assets
+package assets
 
 import models.latestTaxCalculation.{LastTaxCalculation, LastTaxCalculationError}
 import play.mvc.Http.Status
