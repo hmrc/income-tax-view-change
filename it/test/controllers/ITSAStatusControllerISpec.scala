@@ -129,8 +129,8 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
 
           result should have(
-            httpStatus(Status.OK),
-            bodyMatching(expectedBody)
+            httpStatus(Status.NO_CONTENT),
+            emptyBody
           )
         }
       }
