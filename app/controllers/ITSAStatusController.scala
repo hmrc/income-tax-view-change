@@ -63,9 +63,8 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
     def toResult(fResponse: Future[OptOutUpdateResponse]): Future[Result] = {
       fResponse.map {
 
-        case success: OptOutUpdateResponseSuccess => new Result(ResponseHeader(Http.Status.OK,
-          Map(CorrelationIdHeader -> success.correlationId)),
-          HttpEntity.Strict(ByteString(Json.toJson(success).toString()), None))
+        case success: OptOutUpdateResponseSuccess => new Result(ResponseHeader(Http.Status.NO_CONTENT,
+          Map(CorrelationIdHeader -> success.correlationId)), HttpEntity.NoEntity, None)
 
         case fail: OptOutUpdateResponseFailure => new Result(ResponseHeader(fail.statusCode,
           Map(CorrelationIdHeader -> fail.correlationId)),
