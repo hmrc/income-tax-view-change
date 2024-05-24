@@ -94,8 +94,9 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
         case _ =>
           response.json.validate[OptOutUpdateResponseFailure].fold(
             invalid => {
-              logger.error(s"Json validation error parsing update income source response, error $invalid")
-              OptOutUpdateResponseFailure.defaultFailure(correlationId)
+              val msg = s"Json validation error parsing itsa-status update response, error $invalid"
+              logger.error(msg)
+              OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
             },
             valid => valid.copy(correlationId = correlationId, statusCode = response.status)
           )

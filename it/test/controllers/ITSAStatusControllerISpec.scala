@@ -157,6 +157,25 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
         }
       }
 
+      "a bad format fail response is returned from IF" should {
+        "return fail response" in {
+
+          isAuthorised(true)
+
+          val optOutTaxYear = TaxYear.forYearEnd(2024)
+
+          val headers = Map(CorrelationIdHeader -> "123")
+          IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, Json.toJson("bad-format-fail-response").toString(), headers)
+
+          val request = OptOutUpdateRequest(toApiFormat(optOutTaxYear), optOutUpdateReason)
+          val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
+
+          result should have(
+            httpStatus(Status.INTERNAL_SERVER_ERROR)
+          )
+        }
+      }
+
     }
   }
 
