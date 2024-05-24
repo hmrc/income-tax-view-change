@@ -35,7 +35,6 @@ package connectors.itsastatus
 import config.MicroserviceAppConfig
 import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
-import models.core.TaxYear
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.scalatest.BeforeAndAfter
@@ -56,7 +55,7 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
   implicit val headerCarrier: HeaderCarrier = mock(classOf[HeaderCarrier])
   val connector = new ITSAStatusConnector(httpClient, appConfig)
 
-  val taxYear = TaxYear.forYearEnd(2024)
+  val taxYear = "2023-24"
   val taxableEntityId: String = "AB123456A"
 
   before {
@@ -73,7 +72,7 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
 
       "return successful response" in {
 
-        val apiRequest = OptOutUpdateRequest(taxYear.toString, optOutUpdateReason)
+        val apiRequest = OptOutUpdateRequest(taxYear, optOutUpdateReason)
         val apiResponse = OptOutUpdateResponseSuccess("123", NO_CONTENT)
         val httpResponse = HttpResponse(NO_CONTENT, Json.toJson(apiResponse), Map(CorrelationIdHeader -> Seq("123")))
 
@@ -93,7 +92,7 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
         val errorItems = List(ErrorItem("INVALID_TAXABLE_ENTITY_ID",
           "Submission has not passed validation. Invalid parameter taxableEntityId."))
         val correlationId = "123"
-        val apiRequest = OptOutUpdateRequest(taxYear.toString, optOutUpdateReason)
+        val apiRequest = OptOutUpdateRequest(taxYear, optOutUpdateReason)
         val apiFailResponse = OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
         val httpResponse = HttpResponse(BAD_REQUEST, Json.toJson(apiFailResponse), Map(CorrelationIdHeader -> Seq("123")))
 
@@ -113,7 +112,7 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
         val errorItems = List(ErrorItem("INVALID_TAXABLE_ENTITY_ID",
           "Submission has not passed validation. Invalid parameter taxableEntityId."))
         val correlationId = "123"
-        val apiRequest = OptOutUpdateRequest(taxYear.toString, optOutUpdateReason)
+        val apiRequest = OptOutUpdateRequest(taxYear, optOutUpdateReason)
         val apiFailResponse = OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
         val httpResponse = HttpResponse(BAD_REQUEST, Json.toJson(apiFailResponse), Map.empty)
 

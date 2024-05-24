@@ -23,7 +23,6 @@ import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import helpers.ComponentSpecBase
 import helpers.servicemocks.IfITSAStatusStub
-import models.core.TaxYear
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 
@@ -118,14 +117,14 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
-          val optOutTaxYear = TaxYear.forYearEnd(2024)
+          val optOutTaxYear = "2023-24"
 
           val correlationId = "123"
           val expectedBody = Json.toJson(OptOutUpdateResponseSuccess(correlationId)).toString()
           val headers = Map(CorrelationIdHeader -> correlationId)
           IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.NO_CONTENT, expectedBody, headers)
 
-          val request = OptOutUpdateRequest(toApiFormat(optOutTaxYear), optOutUpdateReason)
+          val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
 
           result should have(
@@ -141,13 +140,13 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           val correlationId = "123"
-          val optOutTaxYear = TaxYear.forYearEnd(2024)
+          val optOutTaxYear = "2023-24"
 
           val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
           val headers = Map(CorrelationIdHeader -> "123")
           IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, expectedResponse, headers)
 
-          val request = OptOutUpdateRequest(toApiFormat(optOutTaxYear), optOutUpdateReason)
+          val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
 
           result should have(
@@ -162,12 +161,12 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
-          val optOutTaxYear = TaxYear.forYearEnd(2024)
+          val optOutTaxYear = "2023-24"
 
           val headers = Map(CorrelationIdHeader -> "123")
           IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, Json.toJson("bad-format-fail-response").toString(), headers)
 
-          val request = OptOutUpdateRequest(toApiFormat(optOutTaxYear), optOutUpdateReason)
+          val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
 
           result should have(
@@ -177,9 +176,5 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
       }
 
     }
-  }
-
-  private def toApiFormat(taxYear: TaxYear): String = {
-    s"${taxYear.startYear}-${taxYear.endYear.toString.toSeq.drop(2)}"
   }
 }
