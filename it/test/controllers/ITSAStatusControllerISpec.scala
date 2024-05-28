@@ -17,10 +17,14 @@
 package controllers
 
 import assets.ITSAStatusIntegrationTestConstants._
+import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
+import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import helpers.ComponentSpecBase
 import helpers.servicemocks.IfITSAStatusStub
+import play.api.libs.json.Json
+import play.mvc.Http.Status
 
 
 class ITSAStatusControllerISpec extends ComponentSpecBase {
@@ -103,5 +107,74 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
       }
     }
 
+  }
+
+  "Calling the ITSAStatusController.updateItsaStatus method" when {
+    "authorised with a valid request" when {
+
+      "a success response is returned from IF" should {
+        "return success response" in {
+
+          isAuthorised(true)
+
+          val optOutTaxYear = "2023-24"
+
+          val correlationId = "123"
+          val expectedBody = Json.toJson(OptOutUpdateResponseSuccess(correlationId)).toString()
+          val headers = Map(CorrelationIdHeader -> correlationId)
+          IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.NO_CONTENT, expectedBody, headers)
+
+          val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
+          val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
+
+          result should have(
+            httpStatus(Status.NO_CONTENT),
+            emptyBody
+          )
+        }
+      }
+
+      "a fail response is returned from IF" should {
+        "return fail response" in {
+
+          isAuthorised(true)
+
+          val correlationId = "123"
+          val optOutTaxYear = "2023-24"
+
+          val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
+          val headers = Map(CorrelationIdHeader -> "123")
+          IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, expectedResponse, headers)
+
+          val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
+          val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
+
+          result should have(
+            httpStatus(Status.INTERNAL_SERVER_ERROR),
+            bodyMatching(expectedResponse)
+          )
+        }
+      }
+
+      "a bad format fail response is returned from IF" should {
+        "return fail response" in {
+
+          isAuthorised(true)
+
+          val optOutTaxYear = "2023-24"
+
+          val headers = Map(CorrelationIdHeader -> "123")
+          IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, Json.toJson("bad-format-fail-response").toString(), headers)
+
+          val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
+          val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
+
+          result should have(
+            httpStatus(Status.INTERNAL_SERVER_ERROR)
+          )
+        }
+      }
+
+    }
   }
 }

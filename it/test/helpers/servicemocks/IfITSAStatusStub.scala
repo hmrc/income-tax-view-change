@@ -23,11 +23,17 @@ import helpers.WiremockHelper
 object IfITSAStatusStub {
 
   def getITSAStatusUrl(taxableEntityId: String, taxYear: String, futureYears: Boolean = true, history: Boolean = true) = s"/income-tax/$taxableEntityId/person-itd/itsa-status/$taxYear?futureYears=$futureYears&history=$history"
+  def updateItsStatusUrl(taxableEntityId: String) = s"/income-tax/itsa-status/update/$taxableEntityId"
 
   val url: String = getITSAStatusUrl(taxableEntityId, taxYear)
+  val updateUrl: String = updateItsStatusUrl(taxableEntityId)
 
   def stubGetIfITSAStatusDetails(response: String): Unit = {
     WiremockHelper.stubGet(url, Status.OK, response)
+  }
+
+  def stubPutIfITSAStatusUpdate(statusInt: Int, response: String, headers: Map[String, String] = Map.empty): Unit = {
+    WiremockHelper.stubPutWithHeaders(updateUrl, statusInt, response, headers)
   }
 
   def stubGetIfITSAStatusDetailsError(): Unit = {

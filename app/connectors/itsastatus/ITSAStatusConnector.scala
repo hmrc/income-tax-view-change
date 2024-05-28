@@ -14,21 +14,31 @@
  * limitations under the License.
  */
 
-package connectors
+package connectors.itsastatus
 
 import config.MicroserviceAppConfig
-import models.itsaStatus._
+import connectors.RawResponseReads
+import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
+import connectors.itsastatus.OptOutUpdateRequestModel._
+import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
+import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
+import play.mvc.Http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
+object ITSAStatusConnector {
+  val CorrelationIdHeader = "CorrelationId"
+}
+
 class ITSAStatusConnector @Inject()(val http: HttpClient,
                                     val appConfig: MicroserviceAppConfig
-                                   )(implicit ec: ExecutionContext) extends RawResponseReads {
+                                   )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {
 
-  def getITSAStatusUrl(taxableEntityId: String, taxYear: String) = s"${appConfig.ifUrl}/income-tax/$taxableEntityId/person-itd/itsa-status/$taxYear"
+  def getITSAStatusUrl(taxableEntityId: String, taxYear: String): String =
+    s"${appConfig.ifUrl}/income-tax/$taxableEntityId/person-itd/itsa-status/$taxYear"
 
   def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean, history: Boolean)
                    (implicit headerCarrier: HeaderCarrier): Future[Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]] = {
@@ -66,6 +76,31 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
       case ex =>
         logger.error(s"[ITSAStatusConnector][getITSAStatus] - Unexpected failed future, ${ex.getMessage}")
         Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}"))
+    }
+  }
+
+  def buildUpdateRequestUrlWith(taxableEntityId: String): String =
+    s"${appConfig.ifUrl}/income-tax/itsa-status/update/$taxableEntityId"
+
+  def requestOptOutForTaxYear(taxableEntityId: String, optOutUpdateRequest: OptOutUpdateRequest)
+                             (implicit headerCarrier: HeaderCarrier): Future[OptOutUpdateResponse] = {
+
+    http.PUT[OptOutUpdateRequest, HttpResponse](
+      buildUpdateRequestUrlWith(taxableEntityId), optOutUpdateRequest, Seq[(String, String)]()
+    ).map { response =>
+      val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
+      response.status match {
+        case Status.NO_CONTENT => OptOutUpdateResponseSuccess(correlationId)
+        case _ =>
+          response.json.validate[OptOutUpdateResponseFailure].fold(
+            invalid => {
+              val msg = s"Json validation error parsing itsa-status update response, error $invalid"
+              logger.error(msg)
+              OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
+            },
+            valid => valid.copy(correlationId = correlationId, statusCode = response.status)
+          )
+      }
     }
   }
 }

@@ -16,23 +16,29 @@
 
 package controllers
 
-import connectors.ITSAStatusConnector
+import connectors.itsastatus.ITSAStatusConnector
+import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
+import connectors.itsastatus.OptOutUpdateRequestModel._
 import controllers.predicates.AuthenticationPredicate
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
+import org.apache.pekko.util.ByteString
 import play.api.Logging
+import play.api.http.HttpEntity
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, ControllerComponents, ResponseHeader, Result}
+import play.mvc.Http
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
                                      cc: ControllerComponents,
                                      connector: ITSAStatusConnector)
                                     (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean, history: Boolean): Action[AnyContent] = authentication.async { implicit request =>
+  def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean,
+                    history: Boolean): Action[AnyContent] = authentication.async { implicit request =>
     connector.getITSAStatus(
       taxableEntityId = taxableEntityId,
       taxYear = taxYear,
@@ -50,6 +56,32 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
         logger.debug(s"[ITSAStatusController][getITSAStatus] - Successful Response: $result")
         Ok(Json.toJson(result))
     }
+  }
+
+  def updateItsaStatus(taxableEntityId: String): Action[AnyContent] = authentication.async { implicit request =>
+
+    def toResult(fResponse: Future[OptOutUpdateResponse]): Future[Result] = {
+      fResponse.map {
+
+        case success: OptOutUpdateResponseSuccess => new Result(ResponseHeader(Http.Status.NO_CONTENT,
+          Map(CorrelationIdHeader -> success.correlationId)), HttpEntity.NoEntity, None)
+
+        case fail: OptOutUpdateResponseFailure => new Result(ResponseHeader(fail.statusCode,
+          Map(CorrelationIdHeader -> fail.correlationId)),
+          HttpEntity.Strict(ByteString(Json.toJson(fail).toString()), None))
+
+      }
+    }
+
+    val connectorResponse = for {
+      json <- request.body.asJson
+      optOutUpdateRequest <- json.validate[OptOutUpdateRequest].asOpt
+    } yield {
+      connector.requestOptOutForTaxYear(taxableEntityId, optOutUpdateRequest)
+    }
+
+    connectorResponse.map(toResult).getOrElse(toResult(Future.successful(OptOutUpdateResponseFailure.defaultFailure())))
+
   }
 
 }

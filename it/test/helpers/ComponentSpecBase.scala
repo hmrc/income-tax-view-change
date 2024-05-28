@@ -81,6 +81,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     }
 
     def get(uri: String): WSResponse = buildClient(uri).get().futureValue
+    def put(uri: String, requestBody: JsValue): WSResponse = buildClient(uri).put(requestBody).futureValue
 
     def getChargeDetails(nino: String, from: String, to: String): WSResponse = {
       get(s"/$nino/financial-details/charges/from/$from/to/$to")
@@ -136,6 +137,10 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean = true, history: Boolean = true): WSResponse = {
       get(s"/itsa-status/status/$taxableEntityId/$taxYear?futureYears=$futureYears&history=$history")
+    }
+
+    def updateItsaStatus(taxableEntityId: String, requestBody: JsValue): WSResponse = {
+      put(s"/itsa-status/update/$taxableEntityId", requestBody)
     }
 
     def createBusinessDetails(mtdbsaRef: String, body: JsValue): WSResponse = {

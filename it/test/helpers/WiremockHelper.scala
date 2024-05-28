@@ -20,6 +20,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
+import com.github.tomakehurst.wiremock.http.{HttpHeader, HttpHeaders}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -89,6 +90,24 @@ object WiremockHelper extends Eventually with IntegrationPatience {
           withBody(responseBody)
       )
     )
+
+  def stubPutWithHeaders(url: String, status: Int, responseBody: String, headers: Map[String, String] = Map.empty): StubMapping = {
+    def toHttpHeaders(toConvert: Map[String, String]): HttpHeaders = {
+      val headersList = toConvert.map { case (key, value) =>
+        new HttpHeader(key, value)
+      }.toSeq
+      new HttpHeaders(headersList: _*)
+    }
+
+    stubFor(put(urlMatching(url))
+      .willReturn(
+        aResponse().
+          withStatus(status).
+          withBody(responseBody).
+          withHeaders(toHttpHeaders(headers))
+      )
+    )
+  }
 
   def stubPut(url: String, status: Integer, requestBody: String, responseBody: String): StubMapping = {
 
