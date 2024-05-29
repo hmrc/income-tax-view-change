@@ -26,7 +26,7 @@ GET        /:nino/financial-details/payments/from/:from/to/:to       controllers
 
 GET         /out-standing-charges/:idType/:idNumber/:taxYear         controllers.OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYear)
 
-GET         /charge-history/:mtdBsa/docId/:docNumber 	             controllers.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, docNumber)
+GET         /charge-history/:mtdBsa/chargeRef/:chargeReference 	         controllers.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, chargeReference)
 
 GET         /repayments/:nino/repaymentId/:repaymentId               controllers.RepaymentHistoryController.getRepaymentHistoryById(nino, repaymentId)
 
