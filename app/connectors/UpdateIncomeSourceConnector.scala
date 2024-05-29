@@ -34,31 +34,31 @@ class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
   private val ifHeaders: Seq[(String, String)] = appConfig.getIFHeaders("1776")
   def updateIncomeSource(body: UpdateIncomeSourceRequestModel)(implicit headerCarrier: HeaderCarrier): Future[UpdateIncomeSourceResponse] = {
     val url = updateIncomeSourceUrl
-    logger.info("[UpdateIncomeSourceConnector][updateIncomeSource] - INFO " +
+    logger.info("INFO " +
       s"Calling PUT $url \n\nHeaders: $headerCarrier \nAuth Headers: $ifHeaders \nBody:$body")
 
     http.PUT[UpdateIncomeSourceRequestModel, HttpResponse](url = url, body = body, headers = ifHeaders) map {
       response =>
         response.status match {
           case OK =>
-            logger.debug(s"[UpdateIncomeSourceConnector][updateIncomeSource] - RESPONSE status:${response.status}, body:${response.body}")
+            logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
             response.json.validate[UpdateIncomeSourceResponseModel].fold(
               invalid => {
-                logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - Validation Errors: $invalid")
+                logger.error(s"Validation Errors: $invalid")
                 UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing IF Update Income Source")
               },
               valid => {
-                logger.info("[UpdateIncomeSourceConnector][updateIncomeSource] successfully parsed response to UpdateIncomeSource")
+                logger.info("successfully parsed response to UpdateIncomeSource")
                 valid
               }
             )
           case _ =>
-            logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
             UpdateIncomeSourceResponseError(response.status, response.body)
         }
     } recover {
       case ex =>
-        logger.error(s"[UpdateIncomeSourceConnector][updateIncomeSource] - Unexpected failed future, ${ex.getMessage}")
+        logger.error(s"Unexpected failed future, ${ex.getMessage}")
         UpdateIncomeSourceResponseError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
     }
 

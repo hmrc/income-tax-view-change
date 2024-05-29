@@ -59,6 +59,6 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
       }
   }
 
-  private val logWithError: String => Unit = suffix => logger.error("[CreateBusinessDetailsController][createBusinessDetails] - " + suffix)
-  private val logWithInfo: String => Unit = suffix => logger.info("[CreateBusinessDetailsController][createBusinessDetails] - " + suffix)
+  private val logWithError: String => Unit = suffix => logger.error("" + suffix)
+  private val logWithInfo: String => Unit = suffix => logger.info("" + suffix)
 }

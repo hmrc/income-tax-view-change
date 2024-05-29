@@ -29,24 +29,24 @@ object CalculationListHttpParser extends ResponseHttpParsers {
         case OK =>
           response.json.validate[Seq[CalculationListModel]].fold(
             invalid => {
-              logger.error(s"[CalculationListReads][read] could not parse to CalculationListResponseModel. Invalid: $invalid")
+              logger.error(s"could not parse to CalculationListResponseModel. Invalid: $invalid")
               Left(UnexpectedJsonFormat)
             },
             valid => {
-              logger.info("[CalculationListReads][read] successfully parsed response to CalculationListResponseModel")
+              logger.info("successfully parsed response to CalculationListResponseModel")
               Right(CalculationListResponseModel(valid))
             }
           )
         case NO_CONTENT =>
-          logger.info(s"[CalculationListReads][read] ${response.status} returned")
+          logger.info(s"${response.status} returned")
           Right(CalculationListResponseModel(Seq.empty))
 
         case status if status >= 400 && status < 500 =>
-          logger.warn(s"[CalculationListReads][read] $status returned from DES with body: ${response.body}")
+          logger.warn(s"$status returned from DES with body: ${response.body}")
           handleErrorResponse(response)
 
         case status =>
-          logger.error(s"[CalculationListReads][read] Unexpected Response with status: $status")
+          logger.error(s"Unexpected Response with status: $status")
           Left(UnexpectedResponse)
       }
     }

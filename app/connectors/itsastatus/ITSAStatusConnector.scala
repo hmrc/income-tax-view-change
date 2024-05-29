@@ -45,7 +45,7 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
 
     val url = getITSAStatusUrl(taxableEntityId, taxYear)
 
-    logger.info("[ITSAStatusConnector][getITSAStatus] - " +
+    logger.info("" +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1878")}")
 
     val queryParams: Seq[(String, String)] = Seq(("futureYears", futureYears.toString), ("history", history.toString))
@@ -54,27 +54,27 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
       response =>
         response.status match {
           case OK =>
-            logger.debug(s"[ITSAStatusConnector][getITSAStatus] - RESPONSE status:${response.status}, body:${response.body}")
+            logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
             response.json.validate[List[ITSAStatusResponseModel]].fold(
               invalid => {
-                logger.error(s"[ITSAStatusConnector][getITSAStatus] - Validation Errors: $invalid")
+                logger.error(s"Validation Errors: $invalid")
                 Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing ITSA Status Response"))
               },
               valid => {
-                logger.info("[ITSAStatusConnector][getITSAStatus] successfully parsed response to getITSAStatus")
+                logger.info("successfully parsed response to getITSAStatus")
                 Right(valid)
               }
             )
           case NOT_FOUND =>
-            logger.warn(s"[ITSAStatusConnector][getITSAStatus] -  RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.warn(s" RESPONSE status: ${response.status}, body: ${response.body}")
             Left(ITSAStatusResponseNotFound(response.status, response.body))
           case _ =>
-            logger.error(s"[ITSAStatusConnector][getITSAStatus] - RESPONSE status: ${response.status}, body: ${response.body}, hc: ${headerCarrier}")
+            logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}, hc: ${headerCarrier}")
             Left(ITSAStatusResponseError(response.status, response.body))
         }
     } recover {
       case ex =>
-        logger.error(s"[ITSAStatusConnector][getITSAStatus] - Unexpected failed future, ${ex.getMessage}")
+        logger.error(s"Unexpected failed future, ${ex.getMessage}")
         Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}"))
     }
   }

@@ -34,40 +34,40 @@ class ReportDeadlinesController @Inject()(val authentication: AuthenticationPred
                                          )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getOpenObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
-    logger.debug("[ReportDeadlinesController][getOpenObligations] - " +
+    logger.debug("" +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino")
     reportDeadlinesConnector.getReportDeadlines(nino, openObligations = true).map {
       case success: ObligationsModel =>
-        logger.debug(s"[ReportDeadlinesController][getOpenObligations] - Successful Response: $success")
+        logger.debug(s"Successful Response: $success")
         Ok(Json.toJson(success))
       case error: ReportDeadlinesErrorModel =>
-        logger.error(s"[ReportDeadlinesController][getOpenObligations] - Error Response: $error")
+        logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
     }
   }
 
   def getFulfilledObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
-    logger.debug("[ReportDeadlinesController][getFulfilledObligations] - " +
+    logger.debug("" +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino")
     reportDeadlinesConnector.getReportDeadlines(nino, openObligations = false).map {
       case success: ObligationsModel =>
-        logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - Successful Response: $success")
+        logger.debug(s"Successful Response: $success")
         Ok(Json.toJson(success))
       case error: ReportDeadlinesErrorModel =>
-        logger.error(s"[ReportDeadlinesController][getFulfilledObligations] - Error Response: $error")
+        logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
     }
   }
 
   def getAllObligations(nino: String, from: String, to: String): Action[AnyContent] = authentication.async { implicit request =>
-    logger.debug("[ReportDeadlinesController][getFulfilledObligations] - " +
+    logger.debug("" +
       s"Requesting obligations from ReportDeadlinesService for nino: $nino, from: $from, to: $to")
     reportDeadlinesConnector.getAllObligations(nino, from, to).map {
       case success: ObligationsModel =>
-        logger.debug(s"[ReportDeadlinesController][getFulfilledObligations] - Successful Response: $success")
+        logger.debug(s"Successful Response: $success")
         Ok(Json.toJson(success))
       case error: ReportDeadlinesErrorModel =>
-        logger.error(s"[ReportDeadlinesController][getFulfilledObligations] - Error Response: $error")
+        logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
     }
   }

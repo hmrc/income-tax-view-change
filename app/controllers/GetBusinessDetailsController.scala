@@ -37,13 +37,13 @@ class GetBusinessDetailsController @Inject()(val authentication: AuthenticationP
   def getBusinessDetails(nino: String): Action[AnyContent] = authentication.async { implicit request =>
     getBusinessDetailsService.getBusinessDetails(nino).map {
       case notFound: IncomeSourceDetailsNotFound =>
-        logger.warn(s"[GetBusinessDetailsController][getBusinessDetails] - Income tax details not found: $notFound")
+        logger.warn(s"Income tax details not found: $notFound")
         Status(notFound.status)(Json.toJson(notFound))
       case error: IncomeSourceDetailsError =>
-        logger.error(s"[GetBusinessDetailsController][getBusinessDetails] - Error Response: $error")
+        logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: IncomeSourceDetailsModel =>
-        logger.debug(s"[GetBusinessDetailsController][getBusinessDetails] - Successful Response: $success")
+        logger.debug(s"Successful Response: $success")
         Ok(Json.toJson(success))
     }
   }

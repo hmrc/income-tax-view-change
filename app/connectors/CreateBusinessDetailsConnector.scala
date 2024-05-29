@@ -59,7 +59,7 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
     }
   }
 
-  private val logWithError: String => Unit = suffix => Logger("application").error("[CreateBusinessDetailsConnector][create] - " + suffix)
-  private val logWithDebug: String => Unit = suffix => Logger("application").debug("[CreateBusinessDetailsConnector][create] - " + suffix)
-  private val logWithInfo: String => Unit = suffix => Logger("application").info("[CreateBusinessDetailsConnector][create] - " + suffix)
+  private val logWithError: String => Unit = suffix => Logger("application").error("" + suffix)
+  private val logWithDebug: String => Unit = suffix => Logger("application").debug("" + suffix)
+  private val logWithInfo: String => Unit = suffix => Logger("application").info("" + suffix)
 }

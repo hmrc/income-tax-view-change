@@ -39,23 +39,23 @@ class UpdateIncomeSourceController @Inject()(authentication: AuthenticationPredi
       implicit request =>
         request.body.asJson.getOrElse(Json.obj()).validate[UpdateIncomeSourceRequestModel].fold(
           invalid => {
-            logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Validation Errors: $invalid")
+            logger.error(s"Validation Errors: $invalid")
             UpdateIncomeSourceRequestError("Json validation error while parsing request")
           },
           valid => {
-            logger.info("[UpdateIncomeSourceController][updateIncomeSource] - successfully parsed response to UpdateIncomeSourceRequestModel")
+            logger.info("successfully parsed response to UpdateIncomeSourceRequestModel")
             valid
           }
         ) match {
           case x: UpdateIncomeSourceRequestError =>
-            logger.error("[UpdateIncomeSourceController][updateIncomeSource] - Bad Request")
+            logger.error("Bad Request")
             Future(BadRequest(Json.toJson(x)))
           case x: UpdateIncomeSourceRequestModel => connector.updateIncomeSource(x).map {
             case error: UpdateIncomeSourceResponseError =>
-              logger.error(s"[UpdateIncomeSourceController][updateIncomeSource] - Error Response: $error")
+              logger.error(s"Error Response: $error")
               Status(error.status)(Json.toJson(error))
             case success: UpdateIncomeSourceResponseModel =>
-              logger.debug(s"[UpdateIncomeSourceController][updateIncomeSource] - Successful Response: $success")
+              logger.debug(s"Successful Response: $success")
               Ok(Json.toJson(success))
           }
         }

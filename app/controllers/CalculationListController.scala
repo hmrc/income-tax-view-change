@@ -36,10 +36,10 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
   def getCalculationList(nino: String, taxYearEnd: String): Action[AnyContent] = authentication.async {
     implicit request =>
       if (isInvalidNino(nino)) {
-        logger.error(s"[CalculationListController][getCalculationList] Invalid Nino '$nino' received in request.")
+        logger.error(s"Invalid Nino '$nino' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidNino)))
       } else if (isInvalidTaxYearEnd(taxYearEnd)) {
-        logger.error(s"[CalculationListController][getCalculationList] Invalid tax year '$taxYearEnd' received in request.")
+        logger.error(s"Invalid tax year '$taxYearEnd' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
         getCalculationList(nino, taxYearEnd)
@@ -50,10 +50,10 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
   def getCalculationListTYS(nino: String, taxYearRange: String): Action[AnyContent] = authentication.async {
     implicit request =>
       if (isInvalidNino(nino)) {
-        logger.error(s"[CalculationListController][getCalculationListTYS] Invalid Nino '$nino' received in request.")
+        logger.error(s"Invalid Nino '$nino' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidNino)))
       } else if (isInvalidTaxYearRange(taxYearRange)) {
-        logger.error(s"[CalculationListController][getCalculationListTYS] Invalid Tax Year '$taxYearRange' received in request.")
+        logger.error(s"Invalid Tax Year '$taxYearRange' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
         getCalculationListTYS(nino, taxYearRange)
@@ -61,42 +61,42 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
   }
 
   private def getCalculationList(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
-    logger.debug("[CalculationListController][getCalculationList] Calling CalculationListService.getCalculationList")
+    logger.debug("Calling CalculationListService.getCalculationList")
     calculationListService.getCalculationList(nino, taxYear).map {
       case Right(calculationList) if calculationList.calculations.isEmpty =>
-        logger.info("[CalculationListController][getCalculationList] no content")
+        logger.info("no content")
         Status(NO_CONTENT)
       case Right(calculationList) =>
         val calculation = calculationList.calculations.head
         Ok(Json.toJson(calculation))
       case Left(error) => error.error match {
         case singleError: Error =>
-          logger.error(s"[CalculationListController][getCalculationList] returned a single error ${singleError.reason}")
+          logger.error(s"returned a single error ${singleError.reason}")
           Status(error.status)(Json.toJson(singleError))
         case multiError: MultiError =>
           multiError.failures.foreach(singleError =>
-            logger.error(s"[CalculationListController][getCalculationList] returned multiple errors ${singleError.reason}"))
+            logger.error(s"returned multiple errors ${singleError.reason}"))
           Status(error.status)(Json.toJson(multiError))
       }
     }
   }
 
   private def getCalculationListTYS(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
-    logger.debug("[CalculationListController][getCalculationList] Calling CalculationListService.getCalculationList")
+    logger.debug("Calling CalculationListService.getCalculationList")
     calculationListService.getCalculationListTYS(nino, taxYear).map {
       case Right(calculationList) if calculationList.calculations.isEmpty =>
-        logger.info("[CalculationListController][getCalculationListTYS] no content")
+        logger.info("no content")
         Status(NO_CONTENT)
       case Right(calculationList) =>
         val calculation = calculationList.calculations.head
         Ok(Json.toJson(calculation))
       case Left(error) => error.error match {
         case singleError: Error =>
-          logger.error(s"[CalculationListController][getCalculationList] returned a single error ${singleError.reason}")
+          logger.error(s"returned a single error ${singleError.reason}")
           Status(error.status)(Json.toJson(singleError))
         case multiError: MultiError =>
           multiError.failures.foreach(singleError =>
-            logger.error(s"[CalculationListController][getCalculationList] returned multiple errors ${singleError.reason}"))
+            logger.error(s"returned multiple errors ${singleError.reason}"))
           Status(error.status)(Json.toJson(multiError))
       }
     }

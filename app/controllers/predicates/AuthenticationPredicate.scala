@@ -47,11 +47,11 @@ class AuthenticationPredicate @Inject()(val authConnector: MicroserviceAuthConne
         case _ ~ userConfidence if userConfidence.level >= minimumConfidenceLevel =>
           action(request)
         case _ ~ _ =>
-          logger.info(s"[AuthenticationPredicate][authenticated] User has confidence level below ${minimumConfidenceLevel}")
+          logger.info(s"User has confidence level below ${minimumConfidenceLevel}")
           Future(Unauthorized)
       } recover {
         case ex: AuthorisationException =>
-          logger.error(s"[AuthenticationPredicate][authenticated] Unauthorised Request to Backend. Propagating Unauthorised Response, ${ex.getMessage}")
+          logger.error(s"Unauthorised Request to Backend. Propagating Unauthorised Response, ${ex.getMessage}")
           Unauthorized
       }
     }

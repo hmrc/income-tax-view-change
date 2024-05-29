@@ -29,17 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 class IncomeSourceDetailsService @Inject()(val getBusinessDetailsConnector: GetBusinessDetailsConnector)(implicit ec: ExecutionContext) extends Logging {
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
-    logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Requesting Income Source Details from Connector")
+    logger.debug("Requesting Income Source Details from Connector")
     getBusinessDetailsConnector.getBusinessDetails(mtdRef, MtdId).map {
       case success: IncomeSourceDetailsModel =>
-        logger.debug(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$success")
-        logger.debug("[IncomeSourceDetailsService][getIncomeSourceDetails] - Converting to IncomeSourceDetails Model")
+        logger.debug(s"Retrieved Income Source Details:\n\n$success")
+        logger.debug("Converting to IncomeSourceDetails Model")
         success
       case error: IncomeSourceDetailsError =>
-        logger.error(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details:\n\n$error")
+        logger.error(s"Retrieved Income Source Details:\n\n$error")
         IncomeSourceDetailsError(error.status, error.reason)
       case notFound: IncomeSourceDetailsNotFound =>
-        logger.warn(s"[IncomeSourceDetailsService][getIncomeSourceDetails] - Retrieved Income Source Details: \n\n$notFound")
+        logger.warn(s"Retrieved Income Source Details: \n\n$notFound")
         IncomeSourceDetailsNotFound(notFound.status, notFound.reason)
     }
   }
@@ -47,11 +47,11 @@ class IncomeSourceDetailsService @Inject()(val getBusinessDetailsConnector: GetB
   def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[NinoResponse] = {
     getIncomeSourceDetails(mtdRef).map {
       case success: IncomeSourceDetailsModel =>
-        logger.debug("[IncomeSourceDetailsService][getNino] - Converting to Nino Model")
+        logger.debug("Converting to Nino Model")
         NinoModel(success.nino)
       case error: IncomeSourceDetailsError => NinoErrorModel(error.status, error.reason)
       case notFound: IncomeSourceDetailsNotFound =>
-        logger.warn(s"[IncomeSourceDetailsService][getNino] - Income tax details not found: $notFound")
+        logger.warn(s"Income tax details not found: $notFound")
         NinoErrorModel(notFound.status, notFound.reason)
     }
   }

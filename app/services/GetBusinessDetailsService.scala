@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBusinessDetailsConnector) extends Logging {
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
-    logger.debug("[getBusinessDetailsService][getBusinessDetails] - Requesting Income Source Details from Connector")
+    logger.debug("Requesting Income Source Details from Connector")
     getBusinessDetailsConnector.getBusinessDetails(nino, Nino)
   }
 

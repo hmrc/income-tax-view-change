@@ -40,7 +40,7 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationListUrl(nino, taxYear)
 
-    logger.debug(s"[CalculationListConnector][getCalculationList] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET(url = url, headers = appConfig.desAuthHeaders)(CalculationListReads, headerCarrier, ec)
   }
 
@@ -48,7 +48,7 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationListTYSUrl(nino, taxYear)
 
-    logger.debug(s"[CalculationListConnector][getCalculationListTYS] - Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1896")}")
+    logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1896")}")
     http.GET(url = url, headers = appConfig.getIFHeaders("1896"))(CalculationListReads, headerCarrier, ec)
 
   }

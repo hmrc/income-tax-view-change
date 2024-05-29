@@ -35,28 +35,28 @@ object PaymentAllocationsHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): PaymentAllocationsResponse = {
       response.status match {
         case OK =>
-          logger.debug("[PaymentAllocationsReads][read] got OK PaymentAllocations response: " + response.json)
+          logger.debug("got OK PaymentAllocations response: " + response.json)
           response.json.validate[PaymentDetails] match {
             case JsSuccess(result, _) => result.paymentDetails.headOption match {
               case Some(paymentAllocations) =>
-                logger.info("[PaymentAllocationsReads][read] successfully parsed response to PaymentAllocations: " + result)
+                logger.info("successfully parsed response to PaymentAllocations: " + result)
                 Right(paymentAllocations)
               case None =>
-                logger.error("[PaymentAllocationsReads][read] could not parse response")
+                logger.error("could not parse response")
                 Left(UnexpectedResponse)
             }
             case JsError(errors) =>
-              logger.error(s"[PaymentAllocationsReads][read] Json validation error. Reasons: ${errors}")
+              logger.error(s"Json validation error. Reasons: ${errors}")
               Left(UnexpectedResponse)
           }
         case NOT_FOUND =>
-          logger.info("[PaymentAllocationsReads][read] no allocations found for payment")
+          logger.info("no allocations found for payment")
           Left(NotFoundResponse)
         case status if status >= 400 && status < 500 =>
-          logger.error(s"[PaymentAllocationsReads][read] Unexpected Response with status: $status")
+          logger.error(s"Unexpected Response with status: $status")
           Left(UnexpectedResponse)
         case status =>
-          logger.error(s"[PaymentAllocationsReads][read] $status returned from DES with body: ${response.body}")
+          logger.error(s"$status returned from DES with body: ${response.body}")
           Left(UnexpectedResponse)
       }
     }
