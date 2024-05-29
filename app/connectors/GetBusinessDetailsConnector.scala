@@ -45,33 +45,33 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
     val url = getUrl(accessType, ninoOrMtdRef)
     val jsonReads = IncomeSourceDetailsModel.ifReads
 
-    logger.debug("[GetBusinessDetailsConnector][getBusinessDetails] - " +
+    logger.debug("" +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
     http.GET[HttpResponse](url = url, headers = headers)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
           case OK =>
-            logger.debug(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status:${response.status}, body:${response.body}")
+            logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
             response.json.validate[IncomeSourceDetailsModel](jsonReads).fold(
               invalid => {
-                logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Validation Errors: $invalid")
+                logger.error(s"Validation Errors: $invalid")
                 IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
               },
               valid => {
-                logger.info("[GetBusinessDetailsConnector][getBusinessDetails] successfully parsed response to getBusinessDetails")
+                logger.info("successfully parsed response to getBusinessDetails")
                 valid
               }
             )
           case NOT_FOUND =>
-            logger.warn(s"[GetBusinessDetailsConnector][getBusinessDetails] -  RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.warn(s" RESPONSE status: ${response.status}, body: ${response.body}")
             IncomeSourceDetailsNotFound(response.status, response.body)
           case _ =>
-            logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - RESPONSE status: ${response.status}, body: ${response.body}")
+            logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
             IncomeSourceDetailsError(response.status, response.body)
         }
     } recover {
       case ex =>
-        logger.error(s"[GetBusinessDetailsConnector][getBusinessDetails] - Unexpected failed future, ${ex.getMessage}")
+        logger.error(s"Unexpected failed future, ${ex.getMessage}")
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
     }
   }

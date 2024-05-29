@@ -41,16 +41,16 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
         to = to
       ) map {
         case Right(chargeDetails) =>
-          logger.debug("[FinancialDetailChargesController][getChargeDetails] - Successful Response: " + chargeDetails)
+          logger.debug("Successful Response: " + chargeDetails)
           Ok(Json.toJson(chargeDetails))
         case Left(error: UnexpectedChargeResponse) if error.code == NOT_FOUND =>
-          logger.info("[FinancialDetailChargesController][getChargeDetails] - 404: " + error)
+          logger.info("404: " + error)
           Status(error.code)(error.response)
         case Left(error: UnexpectedChargeResponse) if error.code >= BAD_REQUEST && error.code < INTERNAL_SERVER_ERROR =>
-          logger.error("[FinancialDetailChargesController][getChargeDetails] - error: " + error)
+          logger.error("error: " + error)
           Status(error.code)(error.response)
         case Left(otherError) =>
-          logger.error("[FinancialDetailChargesController][getChargeDetails] - other error: " + otherError)
+          logger.error("other error: " + otherError)
           InternalServerError("Failed to retrieve charge details")
       }
     }
@@ -63,13 +63,13 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
         documentId = documentId
       ) map {
         case Right(chargeDetails) =>
-          logger.debug("[FinancialDetailChargesController][getPaymentAllocationDetails] - Successful Response: " + chargeDetails)
+          logger.debug("Successful Response: " + chargeDetails)
           Ok(Json.toJson(chargeDetails))
         case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 =>
-          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - error: " + error)
+          logger.error("error: " + error)
           Status(error.code)(error.response)
         case Left(otherError) =>
-          logger.error("[FinancialDetailChargesController][getPaymentAllocationDetails] - other error: " + otherError)
+          logger.error("other error: " + otherError)
           InternalServerError("Failed to retrieve payment allocation details")
       }
     }

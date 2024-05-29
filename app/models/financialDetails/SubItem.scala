@@ -89,7 +89,7 @@ object SubItem extends Logging {
       true
     } catch {
       case _: Exception =>
-        logger.warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
+        logger.warn(s"The returned 'subItem' field <$s> could not be parsed as an integer")
         false
     }
   }

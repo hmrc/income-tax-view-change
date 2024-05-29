@@ -44,16 +44,16 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
       taxYear = taxYear,
       futureYears = futureYears, history = history).map {
       case Left(error: ITSAStatusResponseNotFound) =>
-        logger.warn(s"[ITSAStatusController][getITSAStatus] - ITSA Status not found: $error")
+        logger.warn(s"ITSA Status not found: $error")
         Status(error.status)(Json.toJson(error))
       case Left(error: ITSAStatusResponseError) =>
-        logger.error(s"[ITSAStatusController][getITSAStatus] - Error Response: $error")
+        logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case Left(error) =>
-        logger.error(s"[ITSAStatusController][getITSAStatus][ITSAStatusResponseModel] - Error fetching ITSA Status: $error")
+        logger.error(s"Error fetching ITSA Status: $error")
         InternalServerError("[ITSAStatusController][getITSAStatus]")
       case Right(result) =>
-        logger.debug(s"[ITSAStatusController][getITSAStatus] - Successful Response: $result")
+        logger.debug(s"Successful Response: $result")
         Ok(Json.toJson(result))
     }
   }

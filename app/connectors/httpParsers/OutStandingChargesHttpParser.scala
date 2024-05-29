@@ -35,17 +35,17 @@ object OutStandingChargesHttpParser extends ResponseHttpParsers {
       response.status match {
         case OK =>
           val outstandingCharges = response.json.as[List[OutStandingCharge]]
-          logger.info("[OutStandingChargesResponse][read] successfully parsed response to List[OutStandingCharge]")
+          logger.info("successfully parsed response to List[OutStandingCharge]")
 
           Right(OutstandingChargesSuccessResponse(outstandingCharges))
         case status if status == NOT_FOUND =>
-          logger.info(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
+          logger.info(s"$status returned from DES with body: ${response.body}")
           Left(UnexpectedOutStandingChargeResponse(status, response.body))
         case status if status >= BAD_REQUEST && status < INTERNAL_SERVER_ERROR =>
-          logger.error(s"[OutStandingChargesResponse][read] $status returned from DES with body: ${response.body}")
+          logger.error(s"$status returned from DES with body: ${response.body}")
           Left(UnexpectedOutStandingChargeResponse(status, response.body))
         case status =>
-          logger.error(s"[OutStandingChargesResponse][read] Unexpected Response with status: $status")
+          logger.error(s"Unexpected Response with status: $status")
           Left(OutStandingChargeErrorResponse)
       }
     }

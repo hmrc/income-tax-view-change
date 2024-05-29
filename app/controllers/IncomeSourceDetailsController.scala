@@ -37,10 +37,10 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getNino(mtdRef).map {
       case error: NinoErrorModel =>
-        logger.error(s"[IncomeSourceDetailsController][getNino] - Error Response: $error")
+        logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: NinoModel =>
-        logger.debug(s"[IncomeSourceDetailsController][getNino] - Successful Response: $success")
+        logger.debug(s"Successful Response: $success")
         Ok(Json.toJson(success))
     }
   }
@@ -48,13 +48,13 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
   def getIncomeSourceDetails(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
     incomeSourceDetailsService.getIncomeSourceDetails(mtdRef).map {
       case error: IncomeSourceDetailsError =>
-        logger.error(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Error Response: $error")
+        logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
       case success: IncomeSourceDetailsModel =>
-        logger.debug(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Successful Response: $success")
+        logger.debug(s"Successful Response: $success")
         Ok(Json.toJson(success))
       case notFound: IncomeSourceDetailsNotFound =>
-        logger.warn(s"[IncomeSourceDetailsController][getIncomeSourceDetails] - Not Found Response: $notFound")
+        logger.warn(s"Not Found Response: $notFound")
         Status(notFound.status)(Json.toJson(notFound))
     }
   }

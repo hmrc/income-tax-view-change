@@ -45,7 +45,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
 
   def getAllRepaymentHistoryDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
     val url = listRepaymentHistoryDetailsUrl(nino)
-    logger.info(s"[RepaymentHistoryDetailsConnector][getAllRepaymentHistoryDetails] - Calling GET $url " +
+    logger.info(s"Calling GET $url " +
       s"\nHeaders: $headerCarrier \nIsMigrated: ${if (appConfig.useRepaymentHistoryDetailsIFPlatform) "YES" else "NO"}")
     http.GET(
       url = url,
@@ -57,7 +57,7 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
   def getRepaymentHistoryDetailsById(nino: String,
                                      repaymentId: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
     val url = listRepaymentHistoryDetailsUrl(nino)
-    logger.info(s"[RepaymentHistoryDetailsConnector][getRepaymentHistoryDetailsById] - Calling GET $url " +
+    logger.info(s"Calling GET $url " +
       s"\nHeaders: $headerCarrier \nIsMigrated: ${if (appConfig.useRepaymentHistoryDetailsIFPlatform) "YES" else "NO"}")
     http.GET(
       url = url,
