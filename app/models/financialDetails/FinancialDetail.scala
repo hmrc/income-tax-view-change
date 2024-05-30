@@ -25,7 +25,7 @@ case class FinancialDetail(taxYear: String,
                            transactionId: String,
                            transactionDate: Option[LocalDate],
                            `type`: Option[String],
-                           chargeReference: String,
+                           chargeReference: Option[String],
                            totalAmount: Option[BigDecimal],
                            originalAmount: Option[BigDecimal],
                            outstandingAmount: Option[BigDecimal],
@@ -44,7 +44,7 @@ object FinancialDetail {
       (JsPath \ "documentId").read[String] and
       (JsPath \ "documentDate").readNullable[LocalDate] and
       (JsPath \ "documentDescription").readNullable[String] and
-      (JsPath \ "chargeReference").read[String] and
+      (JsPath \ "chargeReference").readNullable[String] and
       (JsPath \ "totalAmount").readNullable[BigDecimal] and
       (JsPath \ "originalAmount").readNullable[BigDecimal] and
       (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal] and
