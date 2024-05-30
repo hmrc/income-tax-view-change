@@ -25,7 +25,7 @@ import java.time.LocalDate
 
 class FinancialDetailSpec extends AnyWordSpec with Matchers {
 
-  val financialDetailEmpty: FinancialDetail = FinancialDetail("2019", "id", None, None, None, None, None, None, None, None, None, None, None)
+  val financialDetailEmpty: FinancialDetail = FinancialDetail("2019", "id", None, None, None, None, None, None, None, None, None, None, None, None)
 
   val financialDetailEmptyJsonRead: JsObject = Json.obj("taxYear" -> "2019", "documentId" -> "id")
   val financialDetailEmptyJsonWrite: JsObject = Json.obj("taxYear" -> "2019", "transactionId" -> "id")
@@ -35,6 +35,7 @@ class FinancialDetailSpec extends AnyWordSpec with Matchers {
     "documentId" -> "id",
     "documentDate" -> LocalDate.parse("2022-06-23"),
     "documentDescription" -> "type",
+    "chargeReference" -> "chargeRef",
     "totalAmount" -> 1000.00,
     "originalAmount" -> 500.00,
     "clearedAmount" -> 500.00,
