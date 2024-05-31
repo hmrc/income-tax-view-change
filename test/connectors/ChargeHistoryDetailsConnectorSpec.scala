@@ -26,7 +26,7 @@ import utils.TestSupport
 
 class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
 
-  val idType: String = "MTDBSA"
+  val idType: String = "NINO"
   val idNumber: String = "1234567890"
   val regimeType: String = "ITSA"
   val docNumber: String = "XM0026100121"
