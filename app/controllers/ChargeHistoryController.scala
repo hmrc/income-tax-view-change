@@ -33,10 +33,10 @@ class ChargeHistoryController @Inject()(authentication: AuthenticationPredicate,
                                        (implicit ec: ExecutionContext) extends BackendController(cc) {
 
 
-  def getChargeHistoryDetails(mtdBsa: String, chargeReference: String): Action[AnyContent] =
+  def getChargeHistoryDetails(nino: String, chargeReference: String): Action[AnyContent] =
     authentication.async { implicit request =>
       chargeHistoryDetailsConnector.getChargeHistoryDetails(
-        mtdBsa = mtdBsa,
+        nino = nino,
         chargeReference = chargeReference
       ) map {
         case Right(chargeHistory) => Ok(Json.toJson(chargeHistory))
