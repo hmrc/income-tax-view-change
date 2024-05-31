@@ -33,7 +33,7 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
   val chargeHistoryJson: JsValue = {
     Json.parse(
       s"""|{
-   			 	|	"idType" : "MTDBSA",
+   			 	|	"idType" : "NINO",
    			 	|	"idValue" : "${mtdBsa}",
    			 	|	"regimeType" : "ITSA",
    			 	|	"chargeHistoryDetails" : [{
@@ -61,7 +61,7 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
         val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, chargeReference)
 
         val expectedResponseBody: JsValue = Json.toJson(ChargeHistorySuccessResponse(
-          idType = "MTDBSA",
+          idType = "NINO",
           idValue = mtdBsa,
           regimeType = "ITSA",
           chargeHistoryDetails = Some(List(

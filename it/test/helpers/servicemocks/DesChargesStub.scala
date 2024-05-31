@@ -33,8 +33,8 @@ object DesChargesStub {
     s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?onlyOpenItems=true&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
   }
 
-  private def historyUrl(mtdBsa: String, chargeReference: String): String = {
-    s"/cross-regime/charges/MTDBSA/$mtdBsa/ITSA?chargeReference=$chargeReference"
+  private def historyUrl(nino: String, chargeReference: String): String = {
+    s"/cross-regime/charges/NINO/$nino/ITSA?chargeReference=$chargeReference"
   }
 
   private def repaymentHistoryByIdUrl(nino: String, repaymentId: String): String = {

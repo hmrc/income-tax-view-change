@@ -96,7 +96,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     }
 
     def getChargeHistory(mtdBsa: String, chargeReference: String): WSResponse = {
-      get(s"/charge-history/$mtdBsa/chargeRef/$chargeReference")
+      get(s"/charge-history/$mtdBsa/chargeReference/$chargeReference")
     }
 
     def getPaymentDetails(nino: String, from: String, to: String): WSResponse = {
