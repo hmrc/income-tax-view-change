@@ -32,16 +32,16 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
   def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String): String =
     s"${appConfig.ifUrl}/cross-regime/charges/$idType/$idNumber/$regimeType"
 
-  private[connectors] def queryParameters(docNumber: String): Seq[(String, String)] = {
+  private[connectors] def queryParameters(chargeReference: String): Seq[(String, String)] = {
     Seq(
-      "docNumber" -> docNumber
+      "chargeReference" -> chargeReference
     )
   }
 
-  def getChargeHistoryDetails(mtdBsa: String, docNumber: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
+  def getChargeHistoryDetails(nino: String, chargeReference: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
     http.GET(
-      url = listChargeHistoryDetailsUrl("MTDBSA", mtdBsa, "ITSA"),
-      queryParams = queryParameters(docNumber),
+      url = listChargeHistoryDetailsUrl("NINO", nino, "ITSA"),
+      queryParams = queryParameters(chargeReference),
       headers = appConfig.ifAuthHeaders
     )(ChargeHistoryReads, headerCarrier, ec)
   }

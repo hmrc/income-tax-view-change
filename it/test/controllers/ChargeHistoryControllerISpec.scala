@@ -28,12 +28,12 @@ import java.time.LocalDate
 class ChargeHistoryControllerISpec extends ComponentSpecBase {
 
   val mtdBsa = "XAIT000000000000"
-  val documentId = "DOCID01"
+  val chargeReference = "chargeRef"
 
   val chargeHistoryJson: JsValue = {
     Json.parse(
       s"""|{
-   			 	|	"idType" : "MTDBSA",
+   			 	|	"idType" : "NINO",
    			 	|	"idValue" : "${mtdBsa}",
    			 	|	"regimeType" : "ITSA",
    			 	|	"chargeHistoryDetails" : [{
@@ -48,20 +48,20 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
 					|}""".stripMargin)
   }
 
-  s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, documentId)}" should {
+  s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, chargeReference)}" should {
     s"return $OK" when {
       "charge details are successfully retrieved" in {
 
         isAuthorised(true)
 
-        stubChargeHistory(mtdBsa, documentId)(
+        stubChargeHistory(mtdBsa, chargeReference)(
           status = OK,
           response = chargeHistoryJson)
 
-        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, chargeReference)
 
         val expectedResponseBody: JsValue = Json.toJson(ChargeHistorySuccessResponse(
-          idType = "MTDBSA",
+          idType = "NINO",
           idValue = mtdBsa,
           regimeType = "ITSA",
           chargeHistoryDetails = Some(List(
@@ -90,11 +90,11 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
         isAuthorised(true)
 
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        stubChargeHistory(mtdBsa, documentId)(
+        stubChargeHistory(mtdBsa, chargeReference)(
           status = NOT_FOUND, response = errorJson
         )
 
-        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, chargeReference)
 
         res should have(
           httpStatus(NOT_FOUND),
@@ -108,11 +108,11 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
 
         isAuthorised(true)
 
-        stubChargeHistory(mtdBsa, documentId)(
+        stubChargeHistory(mtdBsa, chargeReference)(
           status = SERVICE_UNAVAILABLE
         )
 
-        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, documentId)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, chargeReference)
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
