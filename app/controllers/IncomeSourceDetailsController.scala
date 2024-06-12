@@ -35,10 +35,12 @@ class IncomeSourceDetailsController @Inject()(val authentication: Authentication
                                              )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
+
     incomeSourceDetailsService.getNino(mtdRef).map {
       case error: NinoErrorModel =>
         logger.error(s"Error Response: $error")
         Status(error.status)(Json.toJson(error))
+
       case success: NinoModel =>
         logger.debug(s"Successful Response: $success")
         Ok(Json.toJson(success))
