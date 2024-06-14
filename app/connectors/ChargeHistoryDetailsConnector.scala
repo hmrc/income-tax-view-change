@@ -42,7 +42,7 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClient,
     http.GET(
       url = listChargeHistoryDetailsUrl("NINO", nino, "ITSA"),
       queryParams = queryParameters(chargeReference),
-      headers = appConfig.ifAuthHeaders
+      headers = appConfig.getIFHeaders("1554")
     )(ChargeHistoryReads, headerCarrier, ec)
   }
 }
