@@ -17,9 +17,9 @@
 package assets
 
 import java.time.LocalDate
-
 import models.reportDeadlines.{ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import BaseIntegrationTestConstants._
+import models.reportDeadlines
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 
@@ -32,14 +32,16 @@ object ReportDeadlinesIntegrationTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = None,
-    obligationType = "Quarterly"
+    obligationType = "Quarterly",
+    status = reportDeadlines.Status.Fulfilled
   )
 
   val testDeadlineFromJson: JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
-    "periodKey" -> "#001"
+    "periodKey" -> "#001",
+    "status" -> "F"
   )
 
   //ReportDeadlinesModels

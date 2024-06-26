@@ -17,8 +17,8 @@
 package assets
 
 import java.time.LocalDate
-
 import assets.BaseTestConstants._
+import models.reportDeadlines
 import models.reportDeadlines.{ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
@@ -33,7 +33,8 @@ object ReportDeadlinesTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "Quarterly"
+    obligationType = "Quarterly",
+    status = reportDeadlines.Status.Fulfilled
   )
 
   val testReceivedDeadlineEOPS: ReportDeadlineModel = ReportDeadlineModel(
@@ -42,7 +43,8 @@ object ReportDeadlinesTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "EOPS",
     dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "EOPS"
+    obligationType = "EOPS",
+    status = reportDeadlines.Status.Fulfilled
   )
 
   val testReceivedDeadlineCrystallised: ReportDeadlineModel = ReportDeadlineModel(
@@ -51,7 +53,8 @@ object ReportDeadlinesTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "Crystallised"
+    obligationType = "Crystallised",
+    status = reportDeadlines.Status.Fulfilled
   )
 
   val testReceivedDeadlineFromJson: JsValue = Json.obj(
@@ -59,7 +62,8 @@ object ReportDeadlinesTestConstants {
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
     "periodKey" -> "#001",
-    "inboundCorrespondenceDateReceived" -> "2018-05-01"
+    "inboundCorrespondenceDateReceived" -> "2018-05-01",
+    "status" -> "F"
   )
 
   val testReceivedEOPSDeadlineFromJson: JsValue = Json.obj(
@@ -67,7 +71,8 @@ object ReportDeadlinesTestConstants {
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
     "periodKey" -> "EOPS",
-    "inboundCorrespondenceDateReceived" -> "2018-05-01"
+    "inboundCorrespondenceDateReceived" -> "2018-05-01",
+    "status" -> "F"
   )
 
   val testReceivedDeadlineToJson: JsValue = Json.obj(
@@ -76,7 +81,8 @@ object ReportDeadlinesTestConstants {
     "due" -> "2018-06-01",
     "periodKey" -> "#001",
     "dateReceived" -> "2018-05-01",
-    "obligationType" -> "Quarterly"
+    "obligationType" -> "Quarterly",
+    "status" -> reportDeadlines.Status.Fulfilled
   )
 
   val testDeadline: ReportDeadlineModel = ReportDeadlineModel(
@@ -85,7 +91,8 @@ object ReportDeadlinesTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = None,
-    obligationType = "Quarterly"
+    obligationType = "Quarterly",
+    status = reportDeadlines.Status.Fulfilled
   )
 
   val testCrystallised: ReportDeadlineModel = ReportDeadlineModel(
@@ -94,14 +101,16 @@ object ReportDeadlinesTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = None,
-    obligationType = "Crystallised"
+    obligationType = "Crystallised",
+    status = reportDeadlines.Status.Fulfilled
   )
 
   val testDeadlineFromJson: JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
-    "periodKey" -> "#001"
+    "periodKey" -> "#001",
+    "status" -> "F"
   )
 
   val testDeadlineToJson: JsValue = Json.obj(
@@ -109,7 +118,8 @@ object ReportDeadlinesTestConstants {
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
     "periodKey" -> "#001",
-    "obligationType" -> "Quarterly"
+    "obligationType" -> "Quarterly",
+    "status" -> reportDeadlines.Status.Fulfilled
   )
 
   //Report Deadlines
