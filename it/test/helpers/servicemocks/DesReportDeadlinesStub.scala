@@ -16,10 +16,10 @@
 
 package helpers.servicemocks
 
-import play.api.http.Status
-import services.DateService
 import assets.ReportDeadlinesIntegrationTestConstants._
 import helpers.WiremockHelper
+import play.api.http.Status
+import services.DateService
 
 import java.time.LocalDate
 
@@ -65,6 +65,11 @@ object DesReportDeadlinesStub {
 
   def stubGetDesAllObligations(nino: String, from: String, to: String): Unit = {
     val desReportDeadlinesResponse = successResponse(nino).toString
+    WiremockHelper.stubGet(allObligationsUrl(nino, from, to), Status.OK, desReportDeadlinesResponse)
+  }
+
+  def stubGetDesAllObligations(nino: String, from: String, to: String, statusCode: String): Unit = {
+    val desReportDeadlinesResponse = successResponseWithStatus(nino, statusCode).toString
     WiremockHelper.stubGet(allObligationsUrl(nino, from, to), Status.OK, desReportDeadlinesResponse)
   }
 
