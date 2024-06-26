@@ -32,14 +32,16 @@
 
   package models.reportDeadlines
 
-  import java.time.LocalDate
+  import models.reportDeadlines.ObligationStatus.{Fulfilled, Open}
 
+  import java.time.LocalDate
   import play.api.libs.functional.syntax._
   import play.api.libs.json.{Json, Reads, _}
 
-  object Status {
-    val Open = "Open"
-    val Fulfilled = "Fulfilled"
+  case class ObligationStatus(code: String, name: String)
+  object ObligationStatus {
+    val Open = ObligationStatus("O", "Open")
+    val Fulfilled = ObligationStatus("F", "Fulfilled")
   }
 
   case class ReportDeadlineModel( start: LocalDate,
@@ -67,8 +69,8 @@
           }
         }) and
         (__ \ "status").read[String].map {
-          case "O" => Status.Open
-          case "F" => Status.Fulfilled
+          case Open.code => Open.name
+          case Fulfilled.code => Fulfilled.name
           case v => v
         }
       ) (ReportDeadlineModel.apply _)
