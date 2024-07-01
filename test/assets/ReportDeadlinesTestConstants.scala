@@ -17,9 +17,9 @@
 package assets
 
 import java.time.LocalDate
-
 import assets.BaseTestConstants._
-import models.reportDeadlines.{ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import models.reportDeadlines.ObligationStatus._
+import models.reportDeadlines.{ObligationStatus, ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
@@ -27,13 +27,14 @@ import uk.gov.hmrc.http.HttpResponse
 object ReportDeadlinesTestConstants {
 
   //Report Deadline
-  val testReceivedDeadlineQuarterly: ReportDeadlineModel = ReportDeadlineModel(
+  def testReceivedDeadlineQuarterly(status: String = ObligationStatus.Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "Quarterly"
+    obligationType = "Quarterly",
+    status = status
   )
 
   val testReceivedDeadlineEOPS: ReportDeadlineModel = ReportDeadlineModel(
@@ -42,88 +43,97 @@ object ReportDeadlinesTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "EOPS",
     dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "EOPS"
+    obligationType = "EOPS",
+    status = Fulfilled.name
   )
 
-  val testReceivedDeadlineCrystallised: ReportDeadlineModel = ReportDeadlineModel(
+  def testReceivedDeadlineCrystallised(status: String = ObligationStatus.Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "Crystallised"
+    obligationType = "Crystallised",
+    status = status
   )
 
-  val testReceivedDeadlineFromJson: JsValue = Json.obj(
+  def testReceivedDeadlineFromJson(status: String = ObligationStatus.Fulfilled.name): JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
     "periodKey" -> "#001",
-    "inboundCorrespondenceDateReceived" -> "2018-05-01"
+    "inboundCorrespondenceDateReceived" -> "2018-05-01",
+    "status" -> status
   )
 
-  val testReceivedEOPSDeadlineFromJson: JsValue = Json.obj(
+  def testReceivedEOPSDeadlineFromJson(status: String = ObligationStatus.Fulfilled.code): JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
     "periodKey" -> "EOPS",
-    "inboundCorrespondenceDateReceived" -> "2018-05-01"
+    "inboundCorrespondenceDateReceived" -> "2018-05-01",
+    "status" -> status
   )
 
-  val testReceivedDeadlineToJson: JsValue = Json.obj(
+  def testReceivedDeadlineToJson(status: String = ObligationStatus.Fulfilled.name): JsValue = Json.obj(
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
     "periodKey" -> "#001",
     "dateReceived" -> "2018-05-01",
-    "obligationType" -> "Quarterly"
+    "obligationType" -> "Quarterly",
+    "status" -> status
   )
 
-  val testDeadline: ReportDeadlineModel = ReportDeadlineModel(
+  def testDeadline(status: String = Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = None,
-    obligationType = "Quarterly"
+    obligationType = "Quarterly",
+    status = status
   )
 
-  val testCrystallised: ReportDeadlineModel = ReportDeadlineModel(
+  def testCrystallised(status: String = Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-01-01"),
     end = LocalDate.parse("2018-01-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = None,
-    obligationType = "Crystallised"
+    obligationType = "Crystallised",
+    status = status
   )
 
-  val testDeadlineFromJson: JsValue = Json.obj(
+  def testDeadlineFromJson(status: String = Fulfilled.name): JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
-    "periodKey" -> "#001"
+    "periodKey" -> "#001",
+    "status" -> status
   )
 
-  val testDeadlineToJson: JsValue = Json.obj(
+  def testDeadlineToJson(status: String = Fulfilled.name): JsValue = Json.obj(
     "start" -> "2017-06-01",
     "end" -> "2018-05-31",
     "due" -> "2018-06-01",
     "periodKey" -> "#001",
-    "obligationType" -> "Quarterly"
+    "obligationType" -> "Quarterly",
+    "status" -> status
   )
 
   //Report Deadlines
   val testReportDeadlines_1: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
+    ReportDeadlinesModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
 
   val testReportDeadlines_2: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
+    ReportDeadlinesModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
 
   val testReportDeadlines_3: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testDeadline, testDeadline, testReceivedDeadlineQuarterly, testDeadline))
+    ReportDeadlinesModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
 
   val testReportDeadlines_4: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testCrystallised))
+    ReportDeadlinesModel(testNino, Seq(testCrystallised()))
 
   val testReportDeadlinesFromJson: JsValue =
     Json.obj(
@@ -132,16 +142,16 @@ object ReportDeadlinesTestConstants {
         "referenceNumber" -> testNino
       ),
       "obligationDetails" -> Json.arr(
-        testDeadlineFromJson,
-        testDeadlineFromJson,
-        testReceivedDeadlineFromJson,
-        testDeadlineFromJson
+        testDeadlineFromJson(),
+        testDeadlineFromJson(),
+        testReceivedDeadlineFromJson(),
+        testDeadlineFromJson()
       )
     )
 
   val testReportDeadlinesToJson: JsValue = Json.obj(
     "identification" -> testNino,
-    "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+    "obligations" -> Json.toJson(Seq(testDeadlineToJson(), testDeadlineToJson(), testReceivedDeadlineToJson(), testDeadlineToJson()))
   )
 
   val testReportDeadlinesError: ReportDeadlinesErrorModel =
@@ -166,10 +176,10 @@ object ReportDeadlinesTestConstants {
           "referenceNumber" -> testNino
         ),
         "obligationDetails" -> Json.arr(
-          testDeadlineFromJson,
-          testDeadlineFromJson,
-          testReceivedDeadlineFromJson,
-          testDeadlineFromJson
+          testDeadlineFromJson(),
+          testDeadlineFromJson(),
+          testReceivedDeadlineFromJson(),
+          testDeadlineFromJson()
         )
       ),
       Json.obj(
@@ -178,10 +188,10 @@ object ReportDeadlinesTestConstants {
           "referenceNumber" -> testNino
         ),
         "obligationDetails" -> Json.arr(
-          testDeadlineFromJson,
-          testDeadlineFromJson,
-          testReceivedDeadlineFromJson,
-          testDeadlineFromJson
+          testDeadlineFromJson(),
+          testDeadlineFromJson(),
+          testReceivedDeadlineFromJson(),
+          testDeadlineFromJson()
         )
       ),
       Json.obj(
@@ -190,10 +200,10 @@ object ReportDeadlinesTestConstants {
           "referenceNumber" -> testNino
         ),
         "obligationDetails" -> Json.arr(
-          testDeadlineFromJson,
-          testDeadlineFromJson,
-          testReceivedDeadlineFromJson,
-          testDeadlineFromJson
+          testDeadlineFromJson(),
+          testDeadlineFromJson(),
+          testReceivedDeadlineFromJson(),
+          testDeadlineFromJson()
         )
       )
     )
@@ -203,15 +213,15 @@ object ReportDeadlinesTestConstants {
     "obligations" -> Json.arr(
       Json.obj(
         "identification" -> testNino,
-        "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+        "obligations" -> Json.toJson(Seq(testDeadlineToJson(), testDeadlineToJson(), testReceivedDeadlineToJson(), testDeadlineToJson()))
       ),
       Json.obj(
         "identification" -> testNino,
-        "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+        "obligations" -> Json.toJson(Seq(testDeadlineToJson(), testDeadlineToJson(), testReceivedDeadlineToJson(), testDeadlineToJson()))
       ),
       Json.obj(
         "identification" -> testNino,
-        "obligations" -> Json.toJson(Seq(testDeadlineToJson, testDeadlineToJson, testReceivedDeadlineToJson, testDeadlineToJson))
+        "obligations" -> Json.toJson(Seq(testDeadlineToJson(), testDeadlineToJson(), testReceivedDeadlineToJson(), testDeadlineToJson()))
       )
     )
   )

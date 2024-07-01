@@ -16,38 +16,44 @@
 
 package assets
 
-import java.time.LocalDate
-
+import assets.BaseIntegrationTestConstants._
+import models.reportDeadlines.ObligationStatus.Fulfilled
 import models.reportDeadlines.{ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
-import BaseIntegrationTestConstants._
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
+
+import java.time.LocalDate
 
 object ReportDeadlinesIntegrationTestConstants {
 
   //ReportDeadlineModels
-  val testReportDeadline: ReportDeadlineModel = ReportDeadlineModel(
+  def testReportDeadline(status: String = Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = None,
-    obligationType = "Quarterly"
+    obligationType = "Quarterly",
+    status = status
   )
 
-  val testDeadlineFromJson: JsValue = Json.obj(
+  def testDeadlineFromJson(status: String = Fulfilled.code): JsValue = Json.obj(
     "inboundCorrespondenceFromDate" -> "2017-06-01",
     "inboundCorrespondenceToDate" -> "2018-05-31",
     "inboundCorrespondenceDueDate" -> "2018-06-01",
-    "periodKey" -> "#001"
+    "periodKey" -> "#001",
+    "status" -> status
   )
 
   //ReportDeadlinesModels
-  val reportDeadlinesNino = ReportDeadlinesModel(testNino, Seq(testReportDeadline, testReportDeadline))
+  val reportDeadlinesNino = ReportDeadlinesModel(testNino, Seq(testReportDeadline(), testReportDeadline()))
 
-  def reportDeadlinesId(id: String): ReportDeadlinesModel = ReportDeadlinesModel(id, Seq(testReportDeadline, testReportDeadline))
+  def reportDeadlinesId(id: String, status: String = Fulfilled.name): ReportDeadlinesModel = ReportDeadlinesModel(id, Seq(testReportDeadline(status), testReportDeadline(status)))
 
   val obligationsModel = ObligationsModel(Seq(reportDeadlinesId("XAIS009998898"), reportDeadlinesNino, reportDeadlinesId("XAIS0000067890")))
+
+  def obligationsModelWithStatus(nino: String, status: String) = ObligationsModel(Seq(reportDeadlinesId(nino, status)))
+
   val reportDeadlinesError = ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "ISE")
 
   def successResponse(nino: String): JsValue = {
@@ -59,7 +65,7 @@ object ReportDeadlinesIntegrationTestConstants {
             "referenceNumber" -> "XAIS009998898",
             "referenceType" -> "MTDBIS"
           ),
-          "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson))
+          "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson(), testDeadlineFromJson()))
         ),
         Json.obj(
           "identification" -> Json.obj(
@@ -67,7 +73,7 @@ object ReportDeadlinesIntegrationTestConstants {
             "referenceNumber" -> nino,
             "referenceType" -> "MTDBIS"
           ),
-          "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson))
+          "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson(), testDeadlineFromJson()))
         ),
         Json.obj(
           "identification" -> Json.obj(
@@ -75,7 +81,22 @@ object ReportDeadlinesIntegrationTestConstants {
             "referenceNumber" -> "XAIS0000067890",
             "referenceType" -> "MTDBIS"
           ),
-          "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson, testDeadlineFromJson))
+          "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson(), testDeadlineFromJson()))
+        )
+      )
+    )
+  }
+
+  def successResponseWithStatus(nino: String, statusCode: String): JsValue = {
+    Json.obj(
+      "obligations" -> Json.arr(
+        Json.obj(
+          "identification" -> Json.obj(
+            "incomeSourceType" -> "ITSB",
+            "referenceNumber" -> nino,
+            "referenceType" -> "MTDBIS"
+          ),
+          "obligationDetails" -> Json.toJson(Seq(testDeadlineFromJson(statusCode), testDeadlineFromJson(statusCode)))
         )
       )
     )
