@@ -18,10 +18,11 @@ package controllers
 
 import assets.BaseIntegrationTestConstants._
 import assets.ReportDeadlinesIntegrationTestConstants._
-import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
-import play.api.http.Status._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesReportDeadlinesStub
+import models.reportDeadlines.ObligationStatus.Open
+import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel}
+import play.api.http.Status._
 
 class ReportDeadlinesControllerISpec extends ComponentSpecBase {
 
@@ -44,6 +45,21 @@ class ReportDeadlinesControllerISpec extends ComponentSpecBase {
             res should have(
               httpStatus(OK),
               jsonBodyAs[ObligationsModel](obligationsModel)
+            )
+          }
+
+          "valid obligations are retrieved when status is Open" in {
+            isAuthorised(true)
+
+            DesReportDeadlinesStub.stubGetDesAllObligations(testNino, from, to, Open.code)
+
+            val res = IncomeTaxViewChange.getAllObligations(testNino, from, to)
+
+            DesReportDeadlinesStub.verifyGetDesAllObligations(testNino, from, to)
+
+            res should have(
+              httpStatus(OK),
+              jsonBodyAs[ObligationsModel](obligationsModelWithStatus(testNino, Open.name))
             )
           }
         }
