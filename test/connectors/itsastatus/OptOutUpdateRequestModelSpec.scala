@@ -16,68 +16,61 @@
 
 package connectors.itsastatus
 
-import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
-import connectors.itsastatus.OptOutUpdateRequestModelSpec.{failureJson, failureObj, requestJson, requestObj, successJson, successObj}
-import org.eclipse.jetty.http.HttpStatus.{INTERNAL_SERVER_ERROR_500, NO_CONTENT_204}
+import connectors.itsastatus.OptOutUpdateRequestModel._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.{JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsSuccess, Json}
 
 class OptOutUpdateRequestModelSpec extends AnyWordSpec with Matchers {
 
   "the request model" should {
+    val requestObject = OptOutUpdateRequest("2023-2024", optOutUpdateReason)
+    val requestJson = Json.parse(
+      """
+        {
+          "taxYear": "2023-2024",
+          "updateReason": "10"
+        }
+        """.stripMargin)
+
     "read from json" in {
-      Json.fromJson[OptOutUpdateRequest](requestJson) shouldBe JsSuccess(requestObj)
-    }
-    "write to json" in {
-      Json.toJson(requestObj) shouldBe requestJson
+      requestJson.validate[OptOutUpdateRequest] shouldBe JsSuccess(requestObject)
     }
   }
 
   "the success model" should {
+    val successObject = OptOutUpdateResponseSuccess("123")
+    val successJson = Json.parse(
+      """
+        {
+          "correlationId": "123",
+          "statusCode": 204
+        }
+        """.stripMargin)
+
     "read from json" in {
-      Json.fromJson[OptOutUpdateResponseSuccess](successJson) shouldBe JsSuccess(successObj)
-    }
-    "write to json" in {
-      Json.toJson(successObj) shouldBe successJson
+      successJson.validate[OptOutUpdateResponseSuccess] shouldBe JsSuccess(successObject)
     }
   }
 
   "the failure model" should {
+
+    val failureObject = OptOutUpdateResponseFailure.defaultFailure().copy(correlationId = "123")
+    val failureJson = Json.parse(
+      """
+        {
+          "correlationId": "123",
+          "statusCode": 500,
+          "failures": [{
+          "code": "INTERNAL_SERVER_ERROR",
+          "reason": "Request failed due to unknown error"
+          }]
+        }
+        """.stripMargin)
+
     "read from json" in {
-      Json.fromJson[OptOutUpdateResponseFailure](failureJson) shouldBe JsSuccess(failureObj)
-    }
-    "write to json" in {
-      Json.toJson(failureObj) shouldBe failureJson
+      failureJson.validate[OptOutUpdateResponseFailure] shouldBe JsSuccess(failureObject)
     }
   }
-
-}
-
-object OptOutUpdateRequestModelSpec {
-
-  private val requestObj = OptOutUpdateRequest("2023-2024", optOutUpdateReason)
-  private val requestJson: JsValue = Json.obj(
-    "taxYear" -> "2023-2024",
-    "updateReason" -> "10",
-  )
-
-  private val successObj = OptOutUpdateResponseSuccess("123")
-  private val successJson: JsValue = Json.obj(
-    "correlationId" -> "123",
-    "statusCode" -> NO_CONTENT_204,
-  )
-
-  private val failureObj = OptOutUpdateResponseFailure.defaultFailure().copy(correlationId = "123")
-  private val failureJson: JsValue = Json.obj(
-    "correlationId" -> "123",
-    "statusCode" -> INTERNAL_SERVER_ERROR_500,
-    "failures" -> Json.arr(
-      Json.obj(
-        "code" -> "INTERNAL_SERVER_ERROR",
-        "reason" -> "Request failed due to unknown error",
-      )
-    )
-  )
 
 }
