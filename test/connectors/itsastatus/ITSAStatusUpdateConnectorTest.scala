@@ -63,6 +63,7 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
     reset(appConfig)
     reset(headerCarrier)
 
+    stubApiToken("2149")
     when(appConfig.ifUrl).thenReturn(s"http://localhost:9084")
   }
 
@@ -126,7 +127,18 @@ class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with B
     }
   }
 
-  def setupHttpClientMock[R](url: String, headers: Seq[(String, String)] = Seq())(body: R, response: HttpResponse): Unit = {
+  private def stubApiToken(api: String): Any = {
+    when(appConfig.getIFHeaders(api)).thenReturn(apiHeaders(api))
+  }
+
+  private def apiHeaders(api: String): Seq[(String, String)] = {
+    Seq(
+      "Environment" -> (api + "-test-token"),
+      "Authorization" -> ("Bearer " + api + "-test-token")
+    )
+  }
+
+  def setupHttpClientMock[R](url: String, headers: Seq[(String, String)] = apiHeaders("2149"))(body: R, response: HttpResponse): Unit = {
     when(httpClient.PUT[R, HttpResponse](ArgumentMatchers.eq(url), ArgumentMatchers.eq(body), ArgumentMatchers.eq(headers))
       (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(response))
   }

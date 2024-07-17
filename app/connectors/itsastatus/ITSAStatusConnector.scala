@@ -86,7 +86,9 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
                              (implicit headerCarrier: HeaderCarrier): Future[OptOutUpdateResponse] = {
 
     http.PUT[OptOutUpdateRequest, HttpResponse](
-      buildUpdateRequestUrlWith(taxableEntityId), optOutUpdateRequest, Seq[(String, String)]()
+      url = buildUpdateRequestUrlWith(taxableEntityId),
+      body = optOutUpdateRequest,
+      headers = appConfig.getIFHeaders("2149")
     ).map { response =>
       val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
       response.status match {

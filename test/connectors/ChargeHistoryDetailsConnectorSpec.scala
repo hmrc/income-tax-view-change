@@ -42,7 +42,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockGet(
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.ifAuthHeaders
+          headers = microserviceAppConfig.getIFHeaders("1554")
         )(Right(ChargeHistorySuccessResponse(
           idType = "MTDBSA",
           idValue = "XAIT000000000000",
@@ -66,7 +66,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.ifAuthHeaders
+          headers = microserviceAppConfig.getIFHeaders("1554")
         )(Left(UnexpectedChargeHistoryResponse(404, errorJson.toString())))
 
         val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
@@ -77,7 +77,7 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
         mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
           url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
           queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.ifAuthHeaders
+          headers = microserviceAppConfig.getIFHeaders("1554")
         )(Left(ChargeHistoryErrorResponse))
 
         val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue

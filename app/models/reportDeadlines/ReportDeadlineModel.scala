@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package models.reportDeadlines
+
+import models.reportDeadlines.ObligationStatus.{Fulfilled, Open}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 import java.time.LocalDate
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, _}
+case class ObligationStatus(code: String, name: String)
 
-case class ReportDeadlineModel(
-                                start: LocalDate,
-                                end: LocalDate,
-                                due: LocalDate,
-                                periodKey: String,
-                                dateReceived: Option[LocalDate],
-                                obligationType: String
+object ObligationStatus {
+  val Open = ObligationStatus("O", "Open")
+  val Fulfilled = ObligationStatus("F", "Fulfilled")
+}
+
+case class ReportDeadlineModel(start: LocalDate,
+                               end: LocalDate,
+                               due: LocalDate,
+                               periodKey: String,
+                               dateReceived: Option[LocalDate],
+                               obligationType: String,
+                               status: String
                               )
 
 object ReportDeadlineModel {
@@ -44,8 +51,13 @@ object ReportDeadlineModel {
           case "EOPS" => "EOPS"
           case _ => "Quarterly"
         }
-      })
-    ) (ReportDeadlineModel.apply _)
+      }) and
+      (__ \ "status").read[String].map {
+        case Open.code => Open.name
+        case Fulfilled.code => Fulfilled.name
+        case v => v
+      }
+    )(ReportDeadlineModel.apply _)
 
   implicit val format: Format[ReportDeadlineModel] = Json.format[ReportDeadlineModel]
 }
