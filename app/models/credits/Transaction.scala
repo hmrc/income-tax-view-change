@@ -20,7 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
-case class Transaction(creditType: TransactionType,
+case class Transaction(transactionType: TransactionType,
                        amount: BigDecimal,
                        taxYear: Option[String],
                        dueDate: Option[LocalDate])

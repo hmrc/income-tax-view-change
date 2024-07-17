@@ -55,7 +55,7 @@ object CreditsModel {
         transactionType <- TransactionType.fromCode(mainTransaction)
       } yield {
         Transaction(
-          creditType = transactionType,
+          transactionType = transactionType,
           amount = getCreditOrPaymentAmount(documentDetail),
           taxYear = Some(s"${documentDetail.taxYear}"),
           dueDate = documentDetail.documentDueDate

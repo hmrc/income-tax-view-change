@@ -54,13 +54,13 @@ class CreditsModelSpec extends TestSupport with Matchers {
           case _ => fail("transactions should be JsArray")
         }
 
-        (json \ "transactions" \ 0 \ "creditType").get shouldBe JsString("cutOver")
-        (json \ "transactions" \ 1 \ "creditType").get shouldBe JsString("balancingCharge")
-        (json \ "transactions" \ 2 \ "creditType").get shouldBe JsString("mfa")
-        (json \ "transactions" \ 3 \ "creditType").get shouldBe JsString("payment")
-        (json \ "transactions" \ 4 \ "creditType").get shouldBe JsString("repaymentInterest")
-        (json \ "transactions" \ 5 \ "creditType").get shouldBe JsString("refund")
-        (json \ "transactions" \ 6 \ "creditType").get shouldBe JsString("refund")
+        (json \ "transactions" \ 0 \ "transactionType").get shouldBe JsString("cutOver")
+        (json \ "transactions" \ 1 \ "transactionType").get shouldBe JsString("balancingCharge")
+        (json \ "transactions" \ 2 \ "transactionType").get shouldBe JsString("mfa")
+        (json \ "transactions" \ 3 \ "transactionType").get shouldBe JsString("payment")
+        (json \ "transactions" \ 4 \ "transactionType").get shouldBe JsString("repaymentInterest")
+        (json \ "transactions" \ 5 \ "transactionType").get shouldBe JsString("refund")
+        (json \ "transactions" \ 6 \ "transactionType").get shouldBe JsString("refund")
     }
   }
 
@@ -95,10 +95,10 @@ class CreditsModelSpec extends TestSupport with Matchers {
       val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
 
       creditsModel.transactions.size shouldBe 2
-      creditsModel.transactions.foreach(t => t.creditType shouldBe Repayment)
+      creditsModel.transactions.foreach(t => t.transactionType shouldBe Repayment)
       creditsModel.transactions.head.amount shouldBe 200.0
       creditsModel.transactions(1).amount shouldBe 100.0
-      creditsModel.transactions.foreach(t => t.creditType shouldBe Repayment)
+      creditsModel.transactions.foreach(t => t.transactionType shouldBe Repayment)
     }
 
     "convert negative amounts of outstanding amount (i.e. credit) to absolute values" in {
