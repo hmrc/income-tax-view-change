@@ -87,6 +87,10 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
       get(s"/$nino/financial-details/charges/from/$from/to/$to")
     }
 
+    def getCreditDetails(nino: String, from: String, to: String): WSResponse = {
+      get(s"/$nino/financial-details/credits/from/$from/to/$to")
+    }
+
     def getPaymentAllocationDetails(nino: String, documentId: String): WSResponse = {
       get(s"/$nino/financial-details/charges/documentId/$documentId")
     }
