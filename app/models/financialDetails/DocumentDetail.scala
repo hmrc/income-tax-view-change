@@ -16,7 +16,7 @@
 
 package models.financialDetails
 
-import play.api.libs.functional.syntax.{toFunctionalBuilderOps}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{Json, Reads, Writes, __}
 
 import java.time.LocalDate
@@ -44,7 +44,6 @@ case class DocumentDetail(taxYear: Int,
                          )
 
 object DocumentDetail {
-
   implicit val writes: Writes[DocumentDetail] = Json.writes[DocumentDetail]
   implicit val reads: Reads[DocumentDetail] = (
     (__ \ "taxYear").read[String].map(_.toInt) and

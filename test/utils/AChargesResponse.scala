@@ -142,9 +142,3 @@ case class AChargesResponse(model: ChargesResponse = ChargesResponse(
     (dd, fd)
   }
 }
-
-
-
-
-
-

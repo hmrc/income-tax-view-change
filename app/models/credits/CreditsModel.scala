@@ -37,8 +37,8 @@ object CreditsModel {
 
   private def createPendingRefundTransactions(chargesResponse: ChargesResponse): List[Transaction] = {
     Seq(
-      chargesResponse.balanceDetails.firstPendingAmountRequested,
-      chargesResponse.balanceDetails.secondPendingAmountRequested)
+      chargesResponse.balanceDetails.firstPendingAmountRequested.map(_.abs),
+      chargesResponse.balanceDetails.secondPendingAmountRequested.map(_.abs))
       .flatten.map(amount => Transaction(
         Repayment,
         amount,
@@ -66,8 +66,8 @@ object CreditsModel {
 
   def fromChargesResponse(chargesResponse: ChargesResponse): CreditsModel = {
     CreditsModel(
-      chargesResponse.balanceDetails.availableCredit.getOrElse(0.0),
-      chargesResponse.balanceDetails.allocatedCredit.getOrElse(0.0),
+      chargesResponse.balanceDetails.availableCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCredit.map(_.abs).getOrElse(0.0),
       getCreditTransactions(chargesResponse) :++ createPendingRefundTransactions(chargesResponse)
     )
   }
