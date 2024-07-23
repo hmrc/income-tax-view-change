@@ -79,11 +79,11 @@ class CreditsModelSpec extends TestSupport with Matchers {
       val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
 
       creditsModel.transactions.size shouldBe 5
-      creditsModel.transactions.head shouldBe Transaction(CutOverCreditType, 100.0, Some("2024"), Some(LocalDate.of(2024, 6, 20)))
-      creditsModel.transactions(1) shouldBe Transaction(BalancingChargeCreditType, 200.0, Some("2024"), Some(LocalDate.of(2024, 6, 19)))
-      creditsModel.transactions(2) shouldBe Transaction(MfaCreditType, 300.0, Some("2024"), Some(LocalDate.of(2024, 6, 18)))
-      creditsModel.transactions(3) shouldBe Transaction(PaymentType, 400.0, Some("2024"), Some(LocalDate.of(2024, 6, 17)))
-      creditsModel.transactions(4) shouldBe Transaction(RepaymentInterest, 500.0, Some("2024"), Some(LocalDate.of(2024, 6, 16)))
+      creditsModel.transactions.head shouldBe Transaction(CutOverCreditType, 100.0, Some(2024), Some(LocalDate.of(2024, 6, 20)))
+      creditsModel.transactions(1) shouldBe Transaction(BalancingChargeCreditType, 200.0, Some(2024), Some(LocalDate.of(2024, 6, 19)))
+      creditsModel.transactions(2) shouldBe Transaction(MfaCreditType, 300.0, Some(2024), Some(LocalDate.of(2024, 6, 18)))
+      creditsModel.transactions(3) shouldBe Transaction(PaymentType, 400.0, Some(2024), Some(LocalDate.of(2024, 6, 17)))
+      creditsModel.transactions(4) shouldBe Transaction(RepaymentInterest, 500.0, Some(2024), Some(LocalDate.of(2024, 6, 16)))
     }
 
     "parse refund requests as transactions" in {

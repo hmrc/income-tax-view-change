@@ -22,7 +22,7 @@ import java.time.LocalDate
 
 case class Transaction(transactionType: TransactionType,
                        amount: BigDecimal,
-                       taxYear: Option[String],
+                       taxYear: Option[Int],
                        dueDate: Option[LocalDate])
 
 object Transaction {
