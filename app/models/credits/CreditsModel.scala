@@ -57,7 +57,7 @@ object CreditsModel {
         Transaction(
           transactionType = transactionType,
           amount = getCreditOrPaymentAmount(documentDetail),
-          taxYear = Some(s"${documentDetail.taxYear}"),
+          taxYear = Some(documentDetail.taxYear),
           dueDate = documentDetail.documentDueDate
         )
       }

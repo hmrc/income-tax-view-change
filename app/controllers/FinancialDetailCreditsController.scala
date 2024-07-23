@@ -34,7 +34,7 @@ class FinancialDetailCreditsController @Inject()(authentication: AuthenticationP
                                                  financialDetailsConnector: FinancialDetailsConnector)
                                                 (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def getCreditsAndRefunds(nino: String, from: String, to: String): Action[AnyContent] = {
+  def getCredits(nino: String, from: String, to: String): Action[AnyContent] = {
     authentication.async { implicit request =>
       financialDetailsConnector.getChargeDetails(
         nino = nino,

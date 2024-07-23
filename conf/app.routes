@@ -24,7 +24,7 @@ GET        /:nino/financial-details/charges/documentId/:documentId   controllers
 
 GET        /:nino/financial-details/payments/from/:from/to/:to       controllers.FinancialDetailPaymentsController.getPaymentDetails(nino, from, to)
 
-GET        /:nino/financial-details/credits/from/:from/to/:to        controllers.FinancialDetailCreditsController.getCreditsAndRefunds(nino, from, to)
+GET        /:nino/financial-details/credits/from/:from/to/:to        controllers.FinancialDetailCreditsController.getCredits(nino, from, to)
 
 GET         /out-standing-charges/:idType/:idNumber/:taxYear         controllers.OutStandingChargesController.listOutStandingCharges(idType, idNumber, taxYear)
 

@@ -122,7 +122,7 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
   val to: String = "to"
   val documentId: String = "123456789"
 
-  s"GET ${controllers.routes.FinancialDetailCreditsController.getCreditsAndRefunds(testNino, from, to)}" should {
+  s"GET ${controllers.routes.FinancialDetailCreditsController.getCredits(testNino, from, to)}" should {
     s"return $OK" when {
       "charge details are successfully retrieved" in {
 

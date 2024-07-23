@@ -63,7 +63,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
         mockAuth()
         mockListCharges(nino, from, to)(Right(chargesResponse))
 
-        val result = FinancialDetailCreditsController.getCreditsAndRefunds(nino, from, to)(FakeRequest())
+        val result = FinancialDetailCreditsController.getCredits(nino, from, to)(FakeRequest())
 
         val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
 
@@ -78,7 +78,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
         val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
         mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
 
-        val result = FinancialDetailCreditsController.getCreditsAndRefunds(nino, from, to)(FakeRequest())
+        val result = FinancialDetailCreditsController.getCredits(nino, from, to)(FakeRequest())
 
         status(result) shouldBe NOT_FOUND
         contentAsString(result) shouldBe errorJson
@@ -89,7 +89,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
         mockAuth()
         mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
-        val result = FinancialDetailCreditsController.getCreditsAndRefunds(nino, from, to)(FakeRequest())
+        val result = FinancialDetailCreditsController.getCredits(nino, from, to)(FakeRequest())
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
         contentAsString(result) shouldBe "Failed to retrieve charge details"
