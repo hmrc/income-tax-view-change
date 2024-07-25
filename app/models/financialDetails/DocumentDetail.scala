@@ -41,7 +41,12 @@ case class DocumentDetail(taxYear: Int,
                           effectiveDateOfPayment: Option[LocalDate],
                           documentDueDate: Option[LocalDate] = None,
                           poaRelevantAmount: Option[BigDecimal]
-                         )
+                         ) {
+
+  def isPartPaid: Boolean = ???
+
+  def isPaid: Boolean = ???
+}
 
 object DocumentDetail {
   implicit val writes: Writes[DocumentDetail] = Json.writes[DocumentDetail]
@@ -67,4 +72,6 @@ object DocumentDetail {
       (__ \ "documentDueDate").readNullable[LocalDate] and
       (__ \ "poaRelevantAmount").readNullable[BigDecimal]
     ) (DocumentDetail.apply _)
+
+
 }
