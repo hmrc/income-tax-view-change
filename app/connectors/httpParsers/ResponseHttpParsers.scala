@@ -30,10 +30,11 @@ trait ResponseHttpParsers extends Logging {
   protected def handleErrorResponse(httpResponse: HttpResponse): Left[ErrorResponse, Nothing] = {
     logger.debug(s"Body received: ${httpResponse.body}")
     Left(Try(Json.parse(httpResponse.body)) match {
-      case Success(json) => json.asOpt[MultiError].orElse(json.asOpt[Error]) match {
-        case Some(error) => ErrorResponse(httpResponse.status, error)
-        case _ => UnexpectedJsonFormat
-      }
+      case Success(json) =>
+        json.asOpt[MultiError].orElse(json.asOpt[Error]) match {
+          case Some(error) => ErrorResponse(httpResponse.status, error)
+          case _ => UnexpectedJsonFormat
+        }
       case Failure(_) => InvalidJsonResponse
     })
   }

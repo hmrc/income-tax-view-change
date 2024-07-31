@@ -17,8 +17,9 @@
 package helpers.servicemocks
 
 import assets.CalculationListIntegrationTestConstants.{failureResponse, successResponse}
-import play.api.http.Status
 import helpers.WiremockHelper
+import play.api.http.Status
+import play.api.libs.json.Json
 
 object DesCalculationListStub {
   def url(nino: String, taxYear: String): String = s"""/income-tax/list-of-calculation-results/$nino?taxYear=$taxYear"""
@@ -36,6 +37,20 @@ object DesCalculationListStub {
     WiremockHelper.stubGet(url(nino, taxYear), Status.NO_CONTENT, "")
   }
 
+  def stubGetDesCalculationListNotFound(nino: String, taxYear: String): Unit = {
+    WiremockHelper.stubGet(
+      url(nino, taxYear),
+      Status.NOT_FOUND,
+      Json.obj(
+        "failures" ->
+          Json.arr(
+            Json.obj(
+              "code" -> "NOT_FOUND",
+              "reason" -> "The remote endpoint has indicated that the requested resource could not be found.")
+          )
+      ).toString())
+  }
+
   def stubGetDesCalculationListTYS(nino: String, taxYear: String): Unit = {
     val calculationListResponse = successResponse.toString
 
@@ -44,6 +59,20 @@ object DesCalculationListStub {
 
   def stubGetDesCalculationListTYSNoContent(nino: String, taxYear: String): Unit = {
     WiremockHelper.stubGet(urlTYS(nino, taxYear), Status.NO_CONTENT, "")
+  }
+
+  def stubGetDesCalculationListTYSNotFound(nino: String, taxYear: String): Unit = {
+    WiremockHelper.stubGet(
+      urlTYS(nino, taxYear),
+      Status.NOT_FOUND,
+      Json.obj(
+        "failures" ->
+          Json.arr(
+            Json.obj(
+              "code" -> "NOT_FOUND",
+              "reason" -> "The remote endpoint has indicated that the requested resource could not be found.")
+          )
+      ).toString())
   }
 
   def stubGetCalculationListError(nino: String, taxYear: String): Unit = {
