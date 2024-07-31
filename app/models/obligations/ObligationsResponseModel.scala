@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package models.reportDeadlines
+package models.obligations
 
 import play.api.libs.json.{Json, Reads, _}
 
-sealed trait ReportDeadlinesResponseModel
+sealed trait ObligationsResponseModel
 
-case class ObligationsModel(obligations: Seq[ReportDeadlinesModel]) extends ReportDeadlinesResponseModel
+case class ObligationsModel(obligations: Seq[GroupedObligationsModel]) extends ObligationsResponseModel
 
-case class ReportDeadlinesErrorModel(status: Int, reason: String) extends ReportDeadlinesResponseModel
+case class ObligationsErrorModel(status: Int, reason: String) extends ObligationsResponseModel
 
 
-object ReportDeadlinesErrorModel {
-  implicit val format: Format[ReportDeadlinesErrorModel] = Json.format[ReportDeadlinesErrorModel]
+object ObligationsErrorModel {
+  implicit val format: Format[ObligationsErrorModel] = Json.format[ObligationsErrorModel]
 }
 
 object ObligationsModel {
 
   val desReadsApi1330: Reads[ObligationsModel] =
-    (__ \ "obligations").read(Reads.seq(ReportDeadlinesModel.desReadsApi1330)).map(ObligationsModel(_))
+    (__ \ "obligations").read(Reads.seq(GroupedObligationsModel.desReadsApi1330)).map(ObligationsModel(_))
 
   implicit val format: Format[ObligationsModel] = Json.format[ObligationsModel]
 }

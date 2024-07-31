@@ -17,37 +17,32 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.reportDeadlines.{ObligationsModel, ReportDeadlinesErrorModel, ReportDeadlinesResponseModel}
+import models.obligations.{ObligationsErrorModel, ObligationsModel, ObligationsResponseModel}
 import play.api.http.Status
 import play.api.http.Status._
 import services.DateService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
-import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ReportDeadlinesConnector @Inject()(val http: HttpClient,
-                                         val appConfig: MicroserviceAppConfig,
-                                         val dateService: DateService
+class ObligationsConnector @Inject()(val http: HttpClient,
+                                     val appConfig: MicroserviceAppConfig,
+                                     val dateService: DateService
                                         )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  private[connectors] def getReportDeadlinesUrl(nino: String, openObligations: Boolean): String = {
-    val status: String = if (openObligations) "O" else "F"
-    val toDate: LocalDate = dateService.getCurrentDate
-    val fromDate: LocalDate = toDate.minusDays(365)
-    val dateParameters: String = if (openObligations) "" else s"&from=$fromDate&to=$toDate"
-    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
+  private[connectors] def getOpenObligationsUrl(nino: String): String = {
+    s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?status=O"
   }
 
-  private[connectors] def getAllReportDeadlinesUrl(nino: String, from: String, to: String): String = {
+  private[connectors] def getAllObligationsDateRangeUrl(nino: String, from: String, to: String): String = {
     s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?from=$from&to=$to"
   }
 
-  def getReportDeadlines(nino: String, openObligations: Boolean)
-                        (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
-    val url = getReportDeadlinesUrl(nino, openObligations)
+  def getOpenObligations(nino: String)
+                        (implicit headerCarrier: HeaderCarrier): Future[ObligationsResponseModel] = {
+    val url = getOpenObligationsUrl(nino)
 
     logger.info(s"URL - $url ")
     logger.debug(s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
@@ -59,7 +54,7 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
             response.json.validate[ObligationsModel](ObligationsModel.desReadsApi1330).fold(
               invalid => {
                 logger.error(s"Json validation error: $invalid")
-                ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
+                ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
               },
               valid => {
                 logger.info("successfully parsed response to ObligationsModel")
@@ -68,18 +63,18 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
             )
           case _ =>
             logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
-            ReportDeadlinesErrorModel(response.status, response.body)
+            ObligationsErrorModel(response.status, response.body)
         }
     } recover {
       case ex =>
         logger.error(s"Unexpected failed future, ${ex.getMessage}")
-        ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
+        ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
     }
   }
 
-  def getAllObligations(nino: String, from: String, to: String)
-                       (implicit headerCarrier: HeaderCarrier): Future[ReportDeadlinesResponseModel] = {
-    val url = getAllReportDeadlinesUrl(nino, from, to)
+  def getAllObligationsWithinDateRange(nino: String, from: String, to: String)
+                                      (implicit headerCarrier: HeaderCarrier): Future[ObligationsResponseModel] = {
+    val url = getAllObligationsDateRangeUrl(nino, from, to)
 
     logger.info(s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
     http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
@@ -90,7 +85,7 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
             response.json.validate[ObligationsModel](ObligationsModel.desReadsApi1330).fold(
               invalid => {
                 logger.error(s"Json validation error: $invalid")
-                ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
+                ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
               },
               valid => {
                 logger.info("successfully parsed response to ObligationsModel")
@@ -99,12 +94,12 @@ class ReportDeadlinesConnector @Inject()(val http: HttpClient,
             )
           case _ =>
             logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
-            ReportDeadlinesErrorModel(response.status, response.body)
+            ObligationsErrorModel(response.status, response.body)
         }
     } recover {
       case ex =>
         logger.error(s"Unexpected failed future, ${ex.getMessage}")
-        ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
+        ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
     }
   }
 }

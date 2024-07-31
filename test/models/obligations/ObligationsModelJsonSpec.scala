@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package models.reportDeadlines
+package models.obligations
 
-import assets.ReportDeadlinesTestConstants._
+import assets.ObligationsTestConstants._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
 
-class ObligationsModelSpec extends TestSupport with Matchers {
+class ObligationsModelJsonSpec extends TestSupport with Matchers {
 
   "The ObligationsModel" should {
 

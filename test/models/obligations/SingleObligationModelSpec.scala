@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package models.reportDeadlines
+package models.obligations
 
-import assets.ReportDeadlinesTestConstants._
-import models.reportDeadlines.ObligationStatus.{Fulfilled, Open}
+import assets.ObligationsTestConstants._
+import models.obligations.ObligationStatus.{Fulfilled, Open}
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
-import models.reportDeadlines.ReportDeadlineModel._
+import models.obligations.SingleObligationModel._
 
-class ReportDeadlineModelSpec extends TestSupport with Matchers {
+class SingleObligationModelSpec extends TestSupport with Matchers {
 
   "The ReportDeadlineModel" when {
 
     "a Deadline is Received" should {
 
       "read from the json with an incomeSourceType of ITSA" in {
-        Json.fromJson(testReceivedDeadlineFromJson())(ReportDeadlineModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised())
+        Json.fromJson(testReceivedDeadlineFromJson())(SingleObligationModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised())
       }
 
       "read from the json with an incomeSourceType that is not ITSA and periodKey is EOPS" in {
-        Json.fromJson(testReceivedEOPSDeadlineFromJson())(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineEOPS)
+        Json.fromJson(testReceivedEOPSDeadlineFromJson())(SingleObligationModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineEOPS)
       }
 
       "read from the json with an incomeSourceType that is not ITSA and periodKey is not EOPS" in {
-        Json.fromJson(testReceivedDeadlineFromJson())(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineQuarterly())
+        Json.fromJson(testReceivedDeadlineFromJson())(SingleObligationModel.desReadsApi("ITSB")) shouldBe JsSuccess(testReceivedDeadlineQuarterly())
       }
 
       "write to Json" in {
@@ -49,7 +49,7 @@ class ReportDeadlineModelSpec extends TestSupport with Matchers {
     "a Deadline is Not Received" should {
 
       "read from the DES Json" in {
-        Json.fromJson(testDeadlineFromJson())(ReportDeadlineModel.desReadsApi("ITSB")) shouldBe JsSuccess(testDeadline())
+        Json.fromJson(testDeadlineFromJson())(SingleObligationModel.desReadsApi("ITSB")) shouldBe JsSuccess(testDeadline())
       }
 
       "write to Json" in {
@@ -60,15 +60,15 @@ class ReportDeadlineModelSpec extends TestSupport with Matchers {
     "a Deadline is Received with Status" should {
 
       s"where status is ${Open.code}" in {
-        Json.fromJson(testReceivedDeadlineFromJson(status =  Open.code))(ReportDeadlineModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised(Open.name))
+        Json.fromJson(testReceivedDeadlineFromJson(status =  Open.code))(SingleObligationModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised(Open.name))
       }
 
       s"where status is ${Fulfilled.code}" in {
-        Json.fromJson(testReceivedDeadlineFromJson(status =  Fulfilled.code))(ReportDeadlineModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised(Fulfilled.name))
+        Json.fromJson(testReceivedDeadlineFromJson(status =  Fulfilled.code))(SingleObligationModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised(Fulfilled.name))
       }
 
       s"where status is X" in {
-        Json.fromJson(testReceivedDeadlineFromJson(status =  "X"))(ReportDeadlineModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised(status = "X"))
+        Json.fromJson(testReceivedDeadlineFromJson(status =  "X"))(SingleObligationModel.desReadsApi("ITSA")) shouldBe JsSuccess(testReceivedDeadlineCrystallised(status = "X"))
       }
     }
 
