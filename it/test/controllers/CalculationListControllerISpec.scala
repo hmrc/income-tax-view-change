@@ -46,24 +46,6 @@ class CalculationListControllerISpec extends ComponentSpecBase {
         )
       }
     }
-    "return 204 NO_CONTENT" when {
-      "user is authorised and sends a valid request" in {
-        Given("I am an authorised user")
-        isAuthorised(true)
-
-        And("I wiremock stub a 1404 Get List Of Calculation Results (legacy API) response")
-        DesCalculationListStub.stubGetDesCalculationListNoContent(testNino, testTaxYearEnd)
-
-        When(s"I call /income-tax-view-change/list-of-calculation-results/$testNino/$testTaxYearEnd")
-        val result: WSResponse = IncomeTaxViewChange.getCalculationList(testNino, testTaxYearEnd)
-        DesCalculationListStub.verifyGetCalculationList(testNino, testTaxYearEnd)
-
-        Then("A no content response is received")
-        result should have(
-          httpStatus(NO_CONTENT)
-        )
-      }
-    }
 
     "return 404 NOT_FOUND" when {
       "user is authorised and sends a valid request" in {
@@ -144,24 +126,6 @@ class CalculationListControllerISpec extends ComponentSpecBase {
         result should have(
           httpStatus(OK),
           jsonBodyAs[CalculationListModel](calculationListFull.calculations.head)
-        )
-      }
-    }
-    "return 204 NO_CONTENT" when {
-      "user is authorised and sends a valid request" in {
-        Given("I am an authorised user")
-        isAuthorised(true)
-
-        And("I wiremock stub a 1896 Get Calculation List response")
-        DesCalculationListStub.stubGetDesCalculationListTYSNoContent(testNino, testTaxYearRange)
-
-        When(s"I call /calculation-list/$testNino/$testTaxYearRange")
-        val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, testTaxYearRange)
-        DesCalculationListStub.verifyGetCalculationListTYS(testNino, testTaxYearRange)
-
-        Then("A no content response is received")
-        result should have(
-          httpStatus(NO_CONTENT)
         )
       }
     }

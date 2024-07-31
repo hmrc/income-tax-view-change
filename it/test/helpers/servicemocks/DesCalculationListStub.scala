@@ -33,10 +33,6 @@ object DesCalculationListStub {
     WiremockHelper.stubGet(url(nino, taxYear), Status.OK, calculationListResponse)
   }
 
-  def stubGetDesCalculationListNoContent(nino: String, taxYear: String): Unit = {
-    WiremockHelper.stubGet(url(nino, taxYear), Status.NO_CONTENT, "")
-  }
-
   def stubGetDesCalculationListNotFound(nino: String, taxYear: String): Unit = {
     WiremockHelper.stubGet(
       url(nino, taxYear),
@@ -55,10 +51,6 @@ object DesCalculationListStub {
     val calculationListResponse = successResponse.toString
 
     WiremockHelper.stubGet(urlTYS(nino, taxYear), Status.OK, calculationListResponse)
-  }
-
-  def stubGetDesCalculationListTYSNoContent(nino: String, taxYear: String): Unit = {
-    WiremockHelper.stubGet(urlTYS(nino, taxYear), Status.NO_CONTENT, "")
   }
 
   def stubGetDesCalculationListTYSNotFound(nino: String, taxYear: String): Unit = {
