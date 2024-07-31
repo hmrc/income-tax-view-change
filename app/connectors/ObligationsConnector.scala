@@ -40,12 +40,7 @@ class ObligationsConnector @Inject()(val http: HttpClient,
     s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?from=$from&to=$to"
   }
 
-  def getOpenObligations(nino: String)
-                        (implicit headerCarrier: HeaderCarrier): Future[ObligationsResponseModel] = {
-    val url = getOpenObligationsUrl(nino)
-
-    logger.info(s"URL - $url ")
-    logger.debug(s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+  private def callObligationsAPI(url: String)(implicit headerCarrier: HeaderCarrier): Future[ObligationsResponseModel] = {
     http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
       response =>
         response.status match {
@@ -72,34 +67,20 @@ class ObligationsConnector @Inject()(val http: HttpClient,
     }
   }
 
+  def getOpenObligations(nino: String)
+                        (implicit headerCarrier: HeaderCarrier): Future[ObligationsResponseModel] = {
+    val url = getOpenObligationsUrl(nino)
+
+    logger.info(s"URL - $url ")
+    logger.debug(s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    callObligationsAPI(url)
+  }
+
   def getAllObligationsWithinDateRange(nino: String, from: String, to: String)
                                       (implicit headerCarrier: HeaderCarrier): Future[ObligationsResponseModel] = {
     val url = getAllObligationsDateRangeUrl(nino, from, to)
 
     logger.info(s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
-    http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
-      response =>
-        response.status match {
-          case OK =>
-            logger.info(s"RESPONSE status: ${response.status}, body: ${response.body}")
-            response.json.validate[ObligationsModel](ObligationsModel.desReadsApi1330).fold(
-              invalid => {
-                logger.error(s"Json validation error: $invalid")
-                ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
-              },
-              valid => {
-                logger.info("successfully parsed response to ObligationsModel")
-                valid
-              }
-            )
-          case _ =>
-            logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
-            ObligationsErrorModel(response.status, response.body)
-        }
-    } recover {
-      case ex =>
-        logger.error(s"Unexpected failed future, ${ex.getMessage}")
-        ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
-    }
+    callObligationsAPI(url)
   }
 }
