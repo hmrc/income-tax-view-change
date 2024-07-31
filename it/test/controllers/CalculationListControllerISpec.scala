@@ -18,11 +18,12 @@ package controllers
 
 import assets.BaseIntegrationTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
 import assets.CalculationListIntegrationTestConstants.calculationListFull
-import models.calculationList.CalculationListModel
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, UNAUTHORIZED}
-import play.api.libs.ws.WSResponse
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesCalculationListStub
+import models.calculationList.CalculationListModel
+import models.errors.{MultiError, Error}
+import play.api.http.Status._
+import play.api.libs.ws.WSResponse
 
 class CalculationListControllerISpec extends ComponentSpecBase {
   "CalculationListController.getCalculationList" should {
@@ -45,24 +46,30 @@ class CalculationListControllerISpec extends ComponentSpecBase {
         )
       }
     }
-    "return 204 NO_CONTENT" when {
+
+    "return 404 NOT_FOUND" when {
       "user is authorised and sends a valid request" in {
         Given("I am an authorised user")
         isAuthorised(true)
 
-        And("I wiremock stub a 1404 Get List Of Calculation Results (legacy API) response")
-        DesCalculationListStub.stubGetDesCalculationListNoContent(testNino, testTaxYearEnd)
+        And("I wiremock stub a 1404 Get List Of Calculation Results (legacy API) response to have no calculations")
+        DesCalculationListStub.stubGetDesCalculationListNotFound(testNino, testTaxYearEnd)
 
         When(s"I call /income-tax-view-change/list-of-calculation-results/$testNino/$testTaxYearEnd")
         val result: WSResponse = IncomeTaxViewChange.getCalculationList(testNino, testTaxYearEnd)
-        DesCalculationListStub.verifyGetCalculationList(testNino, testTaxYearEnd)
 
         Then("A no content response is received")
         result should have(
-          httpStatus(NO_CONTENT)
+          httpStatus(NOT_FOUND),
+          jsonBodyAs[MultiError](
+            MultiError(
+              Seq(Error("NOT_FOUND", "The remote endpoint has indicated that the requested resource could not be found."))
+            )
+          )
         )
       }
     }
+
     "return 500 INTERNAL SERVER ERROR" when {
       "1404 Get List Of Calculation Results (legacy API) returns an error response" in {
         Given("I am an authorised user")
@@ -122,24 +129,30 @@ class CalculationListControllerISpec extends ComponentSpecBase {
         )
       }
     }
-    "return 204 NO_CONTENT" when {
+
+    "return 404 NOT_FOUND" when {
       "user is authorised and sends a valid request" in {
         Given("I am an authorised user")
         isAuthorised(true)
 
-        And("I wiremock stub a 1896 Get Calculation List response")
-        DesCalculationListStub.stubGetDesCalculationListTYSNoContent(testNino, testTaxYearRange)
+        And("I wiremock stub a 1896 Get Calculation List response to have no calculations")
+        DesCalculationListStub.stubGetDesCalculationListTYSNotFound(testNino, testTaxYearRange)
 
         When(s"I call /calculation-list/$testNino/$testTaxYearRange")
         val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, testTaxYearRange)
-        DesCalculationListStub.verifyGetCalculationListTYS(testNino, testTaxYearRange)
 
         Then("A no content response is received")
         result should have(
-          httpStatus(NO_CONTENT)
+          httpStatus(NOT_FOUND),
+          jsonBodyAs[MultiError](
+            MultiError(
+              Seq(Error("NOT_FOUND", "The remote endpoint has indicated that the requested resource could not be found."))
+            )
+          )
         )
       }
     }
+
     "return 500 INTERNAL SERVER ERROR" when {
       "1896 Get Calculation List returns an error response" in {
         Given("I am an authorised user")
