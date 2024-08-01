@@ -33,8 +33,8 @@ class OptOutUpdateRequestModelSpec extends AnyWordSpec with Matchers {
         }
         """.stripMargin)
 
-    "read from json" in {
-      requestJson.validate[OptOutUpdateRequest] shouldBe JsSuccess(requestObject)
+    "write to json" in {
+      Json.toJson(requestObject) shouldBe requestJson
     }
   }
 
