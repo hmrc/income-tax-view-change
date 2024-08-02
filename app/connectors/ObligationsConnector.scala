@@ -20,7 +20,6 @@ import config.MicroserviceAppConfig
 import models.obligations.{ObligationsErrorModel, ObligationsModel, ObligationsResponseModel}
 import play.api.http.Status
 import play.api.http.Status._
-import services.DateService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.{Inject, Singleton}
@@ -28,8 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ObligationsConnector @Inject()(val http: HttpClient,
-                                     val appConfig: MicroserviceAppConfig,
-                                     val dateService: DateService
+                                     val appConfig: MicroserviceAppConfig
                                         )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   private[connectors] def getOpenObligationsUrl(nino: String): String = {

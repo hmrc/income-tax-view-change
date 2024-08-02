@@ -23,7 +23,6 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, eq => matches}
 import org.mockito.Mockito._
 import play.api.http.Status._
-import services.DateService
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import utils.TestSupport
 
@@ -33,13 +32,10 @@ class ObligationsConnectorSpec extends TestSupport {
 
   trait Setup {
     val httpClient: HttpClient = mock(classOf[HttpClient])
-    val dateService = new DateService()
 
     val connector: ObligationsConnector = new ObligationsConnector(
       httpClient,
-      microserviceAppConfig,
-      dateService
-
+      microserviceAppConfig
     )
   }
 
