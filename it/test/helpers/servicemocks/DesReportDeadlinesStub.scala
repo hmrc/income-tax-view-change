@@ -19,18 +19,13 @@ package helpers.servicemocks
 import assets.ReportDeadlinesIntegrationTestConstants._
 import helpers.WiremockHelper
 import play.api.http.Status
-import services.DateService
 
 import java.time.LocalDate
 
 object DesReportDeadlinesStub {
 
   def url(nino: String, openObligations: Boolean = true): String = {
-    val status: String = if (openObligations) "O" else "F"
-    val toDate: LocalDate = new DateService().getCurrentDate
-    val fromDate: LocalDate = toDate.minusDays(365)
-    val dateParameters: String = if (openObligations) "" else s"&from=$fromDate&to=$toDate"
-    s"/enterprise/obligation-data/nino/$nino/ITSA?status=$status$dateParameters"
+    s"/enterprise/obligation-data/nino/$nino/ITSA?status=O"
   }
 
   def allObligationsUrl(nino: String, from: String, to: String): String = {
