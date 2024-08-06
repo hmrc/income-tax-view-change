@@ -38,7 +38,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
     }
   }
 
-  def headers: Seq[(String, String)] = appConfig.getIFHeaders("1171")
+  def headers: Seq[(String, String)] = Seq(("key", "value"))
 
   def getBusinessDetails(ninoOrMtdRef: String, accessType: BusinessDetailsAccessType)
                         (implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
@@ -50,7 +50,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
     http
       .get(url"$url")
-      .setHeader(headers.head)
+      .setHeader(headers:_*)
       .execute[HttpResponse]
       .map {
         response =>
