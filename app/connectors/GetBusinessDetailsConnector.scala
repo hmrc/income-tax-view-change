@@ -50,7 +50,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
     http
       .get(url"$url")
-      .setHeader(headers :_*)
+      .setHeader(headers: _*)
       .execute[HttpResponse]
       .map {
         response =>
