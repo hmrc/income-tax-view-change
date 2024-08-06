@@ -65,7 +65,7 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
 
     when(
       mockRequestBuilder
-        .setHeader(headers.head)
+        .setHeader(headers :_*)
     ).thenReturn(mockRequestBuilder)
 
     when(mockRequestBuilder
