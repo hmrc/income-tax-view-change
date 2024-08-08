@@ -19,7 +19,7 @@ package controllers
 import assets.BaseTestConstants.testNino
 import assets.IncomeSourceDetailsTestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockGetBusinessDetailsService, MockMicroserviceAuthConnector}
+import mocks.{MockBusinessDetailsService, MockMicroserviceAuthConnector}
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers.stubControllerComponents
@@ -27,22 +27,22 @@ import uk.gov.hmrc.auth.core.MissingBearerToken
 
 import scala.concurrent.Future
 
-class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBusinessDetailsService with MockMicroserviceAuthConnector {
+class BusinessDetailsControllerSpec extends ControllerBaseSpec with MockBusinessDetailsService with MockMicroserviceAuthConnector {
 
-  "The GetBusinessDetailsController" when {
+  "The BusinessDetailsController" when {
 
 
     "getBusinessDetails called with an Authenticated user" when {
       val mockCC = stubControllerComponents()
-      object TestGetBusinessDetailsController extends GetBusinessDetailsController(
+      object TestBusinessDetailsController extends BusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
-        getBusinessDetailsService = mockGetBusinessDetailsService, mockCC
+        businessDetailsService = mockBusinessDetailsService, mockCC
       )
 
-      "a valid response from the GetBusinessDetailsService" should {
+      "a valid response from the BusinessDetailsService" should {
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsModel)
         mockAuth()
-        val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+        val futureResult = TestBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
         whenReady(futureResult) { result =>
           checkStatusOf(result)(Status.OK)
           checkContentTypeOf(result)("application/json")
@@ -53,7 +53,7 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
       "an invalid response from the IncomeSourceDetailsService" should {
         mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
         mockAuth()
-        val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+        val futureResult = TestBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
         whenReady(futureResult) { result =>
           checkStatusOf(result)(Status.INTERNAL_SERVER_ERROR)
           checkContentTypeOf(result)("application/json")
@@ -64,13 +64,13 @@ class GetBusinessDetailsControllerSpec extends ControllerBaseSpec with MockGetBu
 
     "called with an unauthenticated user" should {
       val mockCC = stubControllerComponents()
-      object TestGetBusinessDetailsController extends GetBusinessDetailsController(
+      object TestBusinessDetailsController extends BusinessDetailsController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
-        getBusinessDetailsService = mockGetBusinessDetailsService, mockCC
+        businessDetailsService = mockBusinessDetailsService, mockCC
       )
 
       mockAuth(Future.failed(new MissingBearerToken))
-      val futureResult = TestGetBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
+      val futureResult = TestBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
       whenReady(futureResult) { result =>
         checkStatusOf(result)(Status.UNAUTHORIZED)
       }

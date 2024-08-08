@@ -18,23 +18,23 @@ package services
 
 import assets.BaseTestConstants.testNino
 import assets.IncomeSourceDetailsTestConstants._
-import mocks.MockGetBusinessDetailsConnector
+import mocks.MockBusinessDetailsConnector
 import models.incomeSourceDetails.{Nino, IncomeSourceDetailsResponseModel}
 import utils.TestSupport
 
 import scala.concurrent.Future
 
-class GetBusinessDetailsServiceSpec extends TestSupport with MockGetBusinessDetailsConnector {
+class BusinessDetailsServiceSpec extends TestSupport with MockBusinessDetailsConnector {
 
-  object TestGetBusinessDetailsService extends GetBusinessDetailsService(mockGetBusinessDetailsConnector)
+  object TestBusinessDetailsService extends BusinessDetailsService(mockBusinessDetailsConnector)
 
-  "The GetBusinessDetailsService" when {
+  "The BusinessDetailsService" when {
 
     "getBusinessDetails method is called" when {
 
-      def result: Future[IncomeSourceDetailsResponseModel] = TestGetBusinessDetailsService.getBusinessDetails(testNino)
+      def result: Future[IncomeSourceDetailsResponseModel] = TestBusinessDetailsService.getBusinessDetails(testNino)
 
-      "a successful response is returned from the GetBusinessDetailsConnector" should {
+      "a successful response is returned from the BusinessDetailsConnector" should {
 
         "return a correctly formatted IncomeSourceDetailsModel" in {
           val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
@@ -43,7 +43,7 @@ class GetBusinessDetailsServiceSpec extends TestSupport with MockGetBusinessDeta
         }
       }
 
-      "an Error Response is returned from the GetBusinessDetailsConnector" should {
+      "an Error Response is returned from the BusinessDetailsConnector" should {
 
         "return a correctly formatted DesBusinessDetailsError model" in {
           mockGetBusinessDetailsResult(testIncomeSourceDetailsError, Nino)

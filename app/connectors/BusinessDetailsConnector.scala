@@ -17,17 +17,18 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import models.incomeSourceDetails.{Nino, BusinessDetailsAccessType, MtdId, IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound, IncomeSourceDetailsResponseModel}
+import models.incomeSourceDetails._
 import play.api.http.Status
 import play.api.http.Status._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
-                                            val appConfig: MicroserviceAppConfig
+class BusinessDetailsConnector @Inject()(val http: HttpClientV2,
+                                         val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   def getUrl(accessType: BusinessDetailsAccessType, ninoOrMtdRef: String) = {
@@ -47,29 +48,33 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClient,
 
     logger.debug("" +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
-    http.GET[HttpResponse](url = url, headers = headers)(httpReads, headerCarrier, implicitly) map {
-      response =>
-        response.status match {
-          case OK =>
-            logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
-            response.json.validate[IncomeSourceDetailsModel](jsonReads).fold(
-              invalid => {
-                logger.error(s"Validation Errors: $invalid")
-                IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
-              },
-              valid => {
-                logger.info("successfully parsed response to getBusinessDetails")
-                valid
-              }
-            )
-          case NOT_FOUND =>
-            logger.warn(s" RESPONSE status: ${response.status}, body: ${response.body}")
-            IncomeSourceDetailsNotFound(response.status, response.body)
-          case _ =>
-            logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
-            IncomeSourceDetailsError(response.status, response.body)
-        }
-    } recover {
+    http
+      .get(url"$url")
+      .setHeader(headers: _*)
+      .execute[HttpResponse]
+      .map {
+        response =>
+          response.status match {
+            case OK =>
+              logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
+              response.json.validate[IncomeSourceDetailsModel](jsonReads).fold(
+                invalid => {
+                  logger.error(s"Validation Errors: $invalid")
+                  IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")
+                },
+                valid => {
+                  logger.info("successfully parsed response to getBusinessDetails")
+                  valid
+                }
+              )
+            case NOT_FOUND =>
+              logger.warn(s" RESPONSE status: ${response.status}, body: ${response.body}")
+              IncomeSourceDetailsNotFound(response.status, response.body)
+            case _ =>
+              logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
+              IncomeSourceDetailsError(response.status, response.body)
+          }
+      } recover {
       case ex =>
         logger.error(s"Unexpected failed future, ${ex.getMessage}")
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")

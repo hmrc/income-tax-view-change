@@ -16,7 +16,7 @@
 
 package services
 
-import connectors.GetBusinessDetailsConnector
+import connectors.BusinessDetailsConnector
 import models.core.{NinoErrorModel, NinoModel, NinoResponse}
 import models.incomeSourceDetails._
 import play.api.Logging
@@ -26,11 +26,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IncomeSourceDetailsService @Inject()(val getBusinessDetailsConnector: GetBusinessDetailsConnector)(implicit ec: ExecutionContext) extends Logging {
+class IncomeSourceDetailsService @Inject()(val businessDetailsConnector: BusinessDetailsConnector)(implicit ec: ExecutionContext) extends Logging {
 
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     logger.debug("Requesting Income Source Details from Connector")
-    getBusinessDetailsConnector.getBusinessDetails(mtdRef, MtdId).map {
+    businessDetailsConnector.getBusinessDetails(mtdRef, MtdId).map {
       case success: IncomeSourceDetailsModel =>
         logger.debug(s"Retrieved Income Source Details:\n\n$success")
         logger.debug("Converting to IncomeSourceDetails Model")
