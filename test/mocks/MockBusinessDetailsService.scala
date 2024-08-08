@@ -24,22 +24,21 @@ import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
-import services.GetBusinessDetailsService
+import services.BusinessDetailsService
 
 import scala.concurrent.Future
 
+trait MockBusinessDetailsService extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-trait MockGetBusinessDetailsService extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
-
-  val mockGetBusinessDetailsService: GetBusinessDetailsService = mock(classOf[GetBusinessDetailsService])
+  val mockBusinessDetailsService: BusinessDetailsService = mock(classOf[BusinessDetailsService])
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockGetBusinessDetailsService)
+    reset(mockBusinessDetailsService)
   }
 
   def setupMockIncomeSourceDetailsResponse(testNino: String)(response: IncomeSourceDetailsResponseModel):
-  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockGetBusinessDetailsService.getBusinessDetails(
+  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockBusinessDetailsService.getBusinessDetails(
     ArgumentMatchers.eq(testNino))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
   def mockIncomeSourceDetailsResponse(desResponse: IncomeSourceDetailsResponseModel):

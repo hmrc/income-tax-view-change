@@ -2,7 +2,7 @@
 
 GET        /nino-lookup/:mtdRef                                      controllers.IncomeSourceDetailsController.getNino(mtdRef)
 
-GET        /get-business-details/nino/:nino                          controllers.GetBusinessDetailsController.getBusinessDetails(nino)
+GET        /get-business-details/nino/:nino                          controllers.BusinessDetailsController.getBusinessDetails(nino)
 
 GET        /income-sources/:mtdRef                                   controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
 

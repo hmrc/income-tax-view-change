@@ -17,7 +17,7 @@
 package mocks
 
 import assets.BaseTestConstants.{mtdRef, testNino}
-import connectors.GetBusinessDetailsConnector
+import connectors.BusinessDetailsConnector
 import models.incomeSourceDetails.{Nino, BusinessDetailsAccessType, MtdId, IncomeSourceDetailsResponseModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
@@ -29,13 +29,13 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import scala.concurrent.Future
 
 
-trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockGetBusinessDetailsConnector: GetBusinessDetailsConnector = mock(classOf[GetBusinessDetailsConnector])
+  val mockBusinessDetailsConnector: BusinessDetailsConnector = mock(classOf[BusinessDetailsConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockGetBusinessDetailsConnector)
+    reset(mockBusinessDetailsConnector)
   }
 
   def setupMockGetBusinessDetailsResult(accessMode: BusinessDetailsAccessType)(response: IncomeSourceDetailsResponseModel)
@@ -44,7 +44,7 @@ trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with
       case Nino => testNino
       case MtdId => mtdRef
     }
-    when(mockGetBusinessDetailsConnector.getBusinessDetails(
+    when(mockBusinessDetailsConnector.getBusinessDetails(
       ArgumentMatchers.eq(mtdRefOrNino), ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
   }

@@ -24,13 +24,13 @@ import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
+class BusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
 
-  object TestGetBusinessDetailsConnector extends GetBusinessDetailsConnector(mockHttpClientV2, microserviceAppConfig)
+  object TestBusinessDetailsConnector extends BusinessDetailsConnector(mockHttpClientV2, microserviceAppConfig)
 
-  import TestGetBusinessDetailsConnector._
+  import TestBusinessDetailsConnector._
 
-  "GetBusinessDetailsConnector.getBusinessDetails(BusinessAccess)" should {
+  "BusinessDetailsConnector.getBusinessDetails(BusinessAccess)" should {
 
     lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getUrl(Nino, testNino), microserviceAppConfig.getIFHeaders("1171"))(_)
 
@@ -61,7 +61,7 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
   }
-  "GetBusinessDetailsConnector.getBusinessDetails(IncomeSourceAccess)" should {
+  "BusinessDetailsConnector.getBusinessDetails(IncomeSourceAccess)" should {
 
     lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getUrl(MtdId, mtdRef), microserviceAppConfig.getIFHeaders("1171"))(_)
 

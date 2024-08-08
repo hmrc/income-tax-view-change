@@ -21,21 +21,21 @@ import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetails
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.GetBusinessDetailsService
+import services.BusinessDetailsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class GetBusinessDetailsController @Inject()(val authentication: AuthenticationPredicate,
-                                             val getBusinessDetailsService: GetBusinessDetailsService,
-                                             cc: ControllerComponents
+class BusinessDetailsController @Inject()(val authentication: AuthenticationPredicate,
+                                          val businessDetailsService: BusinessDetailsService,
+                                          cc: ControllerComponents
                                             )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
 
   def getBusinessDetails(nino: String): Action[AnyContent] = authentication.async { implicit request =>
-    getBusinessDetailsService.getBusinessDetails(nino).map {
+    businessDetailsService.getBusinessDetails(nino).map {
       case notFound: IncomeSourceDetailsNotFound =>
         logger.warn(s"Income tax details not found: $notFound")
         Status(notFound.status)(Json.toJson(notFound))

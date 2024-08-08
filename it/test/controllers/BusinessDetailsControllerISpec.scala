@@ -24,10 +24,9 @@ import play.api.http.Status._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.BusinessDetailsCallWithNinoStub
 
-class GetBusinessDetailsControllerISpec extends ComponentSpecBase {
+class BusinessDetailsControllerISpec extends ComponentSpecBase {
 
-
-  "Calling the GetBusinessDetailsController.getBusinessDetails method" when {
+  "Calling the BusinessDetailsController.getBusinessDetails method" when {
     "authorised with a valid request" when {
       "A successful response is returned from IF" should {
         "return a valid IncomeSourceDetails model" in {

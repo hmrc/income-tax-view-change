@@ -16,7 +16,7 @@
 
 package services
 
-import connectors.GetBusinessDetailsConnector
+import connectors.BusinessDetailsConnector
 import models.incomeSourceDetails.{Nino, IncomeSourceDetailsResponseModel}
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
@@ -25,11 +25,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class GetBusinessDetailsService @Inject()(val getBusinessDetailsConnector: GetBusinessDetailsConnector) extends Logging {
+class BusinessDetailsService @Inject()(val businessDetailsConnector: BusinessDetailsConnector) extends Logging {
 
   def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
     logger.debug("Requesting Income Source Details from Connector")
-    getBusinessDetailsConnector.getBusinessDetails(nino, Nino)
+    businessDetailsConnector.getBusinessDetails(nino, Nino)
   }
 
 }

@@ -18,16 +18,16 @@ package services
 
 import assets.BaseTestConstants.mtdRef
 import assets.IncomeSourceDetailsTestConstants._
-import mocks.MockGetBusinessDetailsConnector
+import mocks.MockBusinessDetailsConnector
 import models.core.NinoResponse
 import models.incomeSourceDetails.{MtdId, IncomeSourceDetailsResponseModel}
 import utils.TestSupport
 
 import scala.concurrent.Future
 
-class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDetailsConnector {
+class IncomeSourceDetailsServiceSpec extends TestSupport with MockBusinessDetailsConnector {
 
-  object TestIncomeSourceDetailsService extends IncomeSourceDetailsService(mockGetBusinessDetailsConnector)
+  object TestIncomeSourceDetailsService extends IncomeSourceDetailsService(mockBusinessDetailsConnector)
 
   "The IncomeSourceDetailsService" when {
 

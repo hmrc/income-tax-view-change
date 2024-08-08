@@ -27,8 +27,8 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
-                                            val appConfig: MicroserviceAppConfig
+class BusinessDetailsConnector @Inject()(val http: HttpClientV2,
+                                         val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   def getUrl(accessType: BusinessDetailsAccessType, ninoOrMtdRef: String) = {
