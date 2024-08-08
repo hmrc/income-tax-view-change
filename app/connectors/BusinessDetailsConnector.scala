@@ -38,7 +38,7 @@ class BusinessDetailsConnector @Inject()(val http: HttpClientV2,
     }
   }
 
-  def headers: Seq[(String, String)] = Seq(("key", "value"))
+  def headers: Seq[(String, String)] = appConfig.getIFHeaders("1171")
 
   def getBusinessDetails(ninoOrMtdRef: String, accessType: BusinessDetailsAccessType)
                         (implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
