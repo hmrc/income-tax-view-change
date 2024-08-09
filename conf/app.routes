@@ -6,9 +6,8 @@ GET        /get-business-details/nino/:nino                          controllers
 
 GET        /income-sources/:mtdRef                                   controllers.IncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)
 
-GET        /:nino/report-deadlines                                   controllers.ReportDeadlinesController.getOpenObligations(nino)
-GET        /:nino/fulfilled-report-deadlines                         controllers.ReportDeadlinesController.getFulfilledObligations(nino)
-GET        /:nino/report-deadlines/from/:from/to/:to                 controllers.ReportDeadlinesController.getAllObligations(nino, from, to)
+GET        /:nino/open-obligations                                   controllers.ObligationsController.getOpenObligations(nino)
+GET        /:nino/obligations/from/:from/to/:to                      controllers.ObligationsController.getAllObligations(nino, from, to)
 
 GET        /list-of-calculation-results/:nino/:taxYear               controllers.CalculationListController.getCalculationList(nino, taxYear)
 

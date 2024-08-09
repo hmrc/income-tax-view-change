@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package models.reportDeadlines
+package models.obligations
 
-import assets.ReportDeadlinesTestConstants._
+import assets.ObligationsTestConstants._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
 
-class ObligationsModelSpec extends TestSupport with Matchers {
+class GroupedObligationsJsonModelSpec extends TestSupport with Matchers {
 
-  "The ObligationsModel" should {
+  "The GroupedObligationsModel" should {
 
     "read from the DES Json" in {
-      Json.fromJson(testObligationsFromJson)(ObligationsModel.desReadsApi1330).fold(
+      Json.fromJson(testGroupedObligationsModelFromJson)(GroupedObligationsModel.desReadsApi1330).fold(
         invalid => invalid,
         valid => valid
-      ) shouldBe testObligations
+      ) shouldBe testGroupedObligationsModel_1
     }
 
     "write to Json" in {
-      Json.toJson(testObligations) shouldBe testObligationsToJson
+      Json.toJson(testGroupedObligationsModel_1) shouldBe testReportDeadlinesToJson
     }
   }
 

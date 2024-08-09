@@ -18,16 +18,16 @@ package assets
 
 import java.time.LocalDate
 import assets.BaseTestConstants._
-import models.reportDeadlines.ObligationStatus._
-import models.reportDeadlines.{ObligationStatus, ObligationsModel, ReportDeadlineModel, ReportDeadlinesErrorModel, ReportDeadlinesModel}
+import models.obligations.ObligationStatus._
+import models.obligations.{GroupedObligationsModel, ObligationStatus, ObligationsErrorModel, ObligationsModel, SingleObligationModel}
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 
-object ReportDeadlinesTestConstants {
+object ObligationsTestConstants {
 
   //Report Deadline
-  def testReceivedDeadlineQuarterly(status: String = ObligationStatus.Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
+  def testReceivedDeadlineQuarterly(status: String = ObligationStatus.Fulfilled.name): SingleObligationModel = SingleObligationModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
@@ -37,7 +37,7 @@ object ReportDeadlinesTestConstants {
     status = status
   )
 
-  val testReceivedDeadlineEOPS: ReportDeadlineModel = ReportDeadlineModel(
+  val testReceivedDeadlineEOPS: SingleObligationModel = SingleObligationModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
@@ -47,7 +47,7 @@ object ReportDeadlinesTestConstants {
     status = Fulfilled.name
   )
 
-  def testReceivedDeadlineCrystallised(status: String = ObligationStatus.Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
+  def testReceivedDeadlineCrystallised(status: String = ObligationStatus.Fulfilled.name): SingleObligationModel = SingleObligationModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
@@ -85,7 +85,7 @@ object ReportDeadlinesTestConstants {
     "status" -> status
   )
 
-  def testDeadline(status: String = Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
+  def testDeadline(status: String = Fulfilled.name): SingleObligationModel = SingleObligationModel(
     start = LocalDate.parse("2017-06-01"),
     end = LocalDate.parse("2018-05-31"),
     due = LocalDate.parse("2018-06-01"),
@@ -95,7 +95,7 @@ object ReportDeadlinesTestConstants {
     status = status
   )
 
-  def testCrystallised(status: String = Fulfilled.name): ReportDeadlineModel = ReportDeadlineModel(
+  def testCrystallised(status: String = Fulfilled.name): SingleObligationModel = SingleObligationModel(
     start = LocalDate.parse("2017-01-01"),
     end = LocalDate.parse("2018-01-31"),
     due = LocalDate.parse("2018-06-01"),
@@ -123,19 +123,16 @@ object ReportDeadlinesTestConstants {
   )
 
   //Report Deadlines
-  val testReportDeadlines_1: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
+  val testGroupedObligationsModel_1: GroupedObligationsModel =
+    GroupedObligationsModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
 
-  val testReportDeadlines_2: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
+  val testGroupedObligationsModel_2: GroupedObligationsModel =
+    GroupedObligationsModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
 
-  val testReportDeadlines_3: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
+  val testGroupedObligationsModel_3: GroupedObligationsModel =
+    GroupedObligationsModel(testNino, Seq(testDeadline(), testDeadline(), testReceivedDeadlineQuarterly(), testDeadline()))
 
-  val testReportDeadlines_4: ReportDeadlinesModel =
-    ReportDeadlinesModel(testNino, Seq(testCrystallised()))
-
-  val testReportDeadlinesFromJson: JsValue =
+  val testGroupedObligationsModelFromJson: JsValue =
     Json.obj(
       "identification" -> Json.obj(
         "incomeSourceType" -> "ITSB",
@@ -154,19 +151,19 @@ object ReportDeadlinesTestConstants {
     "obligations" -> Json.toJson(Seq(testDeadlineToJson(), testDeadlineToJson(), testReceivedDeadlineToJson(), testDeadlineToJson()))
   )
 
-  val testReportDeadlinesError: ReportDeadlinesErrorModel =
-    ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message")
+  val testReportDeadlinesError: ObligationsErrorModel =
+    ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, "Error Message")
 
-  val testReportDeadlinesErrorJson: ReportDeadlinesErrorModel =
-    ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
+  val testReportDeadlinesErrorJson: ObligationsErrorModel =
+    ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
 
-  def testReportDeadlinesErrorFutureFailed(exceptionMessage: String): ReportDeadlinesErrorModel =
-    ReportDeadlinesErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, $exceptionMessage")
+  def testReportDeadlinesErrorFutureFailed(exceptionMessage: String): ObligationsErrorModel =
+    ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, $exceptionMessage")
 
-  val testReportDeadlinesNoContentNino: ReportDeadlinesErrorModel =
-    ReportDeadlinesErrorModel(Status.NO_CONTENT, "Could not retrieve report deadlines for nino provided")
+  val testReportDeadlinesNoContentNino: ObligationsErrorModel =
+    ObligationsErrorModel(Status.NO_CONTENT, "Could not retrieve report deadlines for nino provided")
 
-  val testObligations: ObligationsModel = ObligationsModel(Seq(testReportDeadlines_1, testReportDeadlines_2, testReportDeadlines_3))
+  val testObligations: ObligationsModel = ObligationsModel(Seq(testGroupedObligationsModel_1, testGroupedObligationsModel_2, testGroupedObligationsModel_3))
 
   val testObligationsFromJson: JsValue = Json.obj(
     "obligations" -> Json.arr(

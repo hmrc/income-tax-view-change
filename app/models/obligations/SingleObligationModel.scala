@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package models.reportDeadlines
+package models.obligations
 
-import models.reportDeadlines.ObligationStatus.{Fulfilled, Open}
+import models.obligations.ObligationStatus.{Fulfilled, Open}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -29,18 +29,18 @@ object ObligationStatus {
   val Fulfilled = ObligationStatus("F", "Fulfilled")
 }
 
-case class ReportDeadlineModel(start: LocalDate,
-                               end: LocalDate,
-                               due: LocalDate,
-                               periodKey: String,
-                               dateReceived: Option[LocalDate],
-                               obligationType: String,
-                               status: String
+case class SingleObligationModel(start: LocalDate,
+                                 end: LocalDate,
+                                 due: LocalDate,
+                                 periodKey: String,
+                                 dateReceived: Option[LocalDate],
+                                 obligationType: String,
+                                 status: String
                               )
 
-object ReportDeadlineModel {
+object SingleObligationModel {
 
-  def desReadsApi(incomeSourceType: String): Reads[ReportDeadlineModel] = (
+  def desReadsApi(incomeSourceType: String): Reads[SingleObligationModel] = (
     (__ \ "inboundCorrespondenceFromDate").read[LocalDate] and
       (__ \ "inboundCorrespondenceToDate").read[LocalDate] and
       (__ \ "inboundCorrespondenceDueDate").read[LocalDate] and
@@ -58,7 +58,7 @@ object ReportDeadlineModel {
         case Fulfilled.code => Fulfilled.name
         case v => v
       }
-    )(ReportDeadlineModel.apply _)
+    )(SingleObligationModel.apply _)
 
-  implicit val format: Format[ReportDeadlineModel] = Json.format[ReportDeadlineModel]
+  implicit val format: Format[SingleObligationModel] = Json.format[SingleObligationModel]
 }

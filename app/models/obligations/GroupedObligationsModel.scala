@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package models.reportDeadlines
+package models.obligations
 
 import play.api.libs.json.{Format, Json, Reads, __}
 import play.api.libs.functional.syntax._
 
-case class ReportDeadlinesModel(identification: String, obligations: Seq[ReportDeadlineModel])
+case class GroupedObligationsModel(identification: String, obligations: Seq[SingleObligationModel])
 
-object ReportDeadlinesModel {
+object GroupedObligationsModel {
 
-  val desReadsApi1330: Reads[ReportDeadlinesModel] = (
+  val desReadsApi1330: Reads[GroupedObligationsModel] = (
+
 
     (__ \\ "identification" \\ "referenceNumber").read[String] and
       (__ \\ "identification" \\ "incomeSourceType").read[String].flatMap { incomeSourceType =>
         (__ \\ "obligationDetails").read(
           Reads.seq(
-            ReportDeadlineModel.desReadsApi(incomeSourceType)
+            SingleObligationModel.desReadsApi(incomeSourceType)
           )
         )
       }
-    ) (ReportDeadlinesModel.apply _)
+    ) (GroupedObligationsModel.apply _)
 
-  implicit val format: Format[ReportDeadlinesModel] = Json.format[ReportDeadlinesModel]
+  implicit val format: Format[GroupedObligationsModel] = Json.format[GroupedObligationsModel]
 }

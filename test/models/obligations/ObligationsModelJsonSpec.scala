@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package services
+package models.obligations
 
-import java.time.LocalDate
-import javax.inject.{Inject, Singleton}
+import assets.ObligationsTestConstants._
+import org.scalatest.matchers.should.Matchers
+import play.api.libs.json._
+import utils.TestSupport
 
-@Singleton
-class DateService @Inject() extends DateServiceInterface {
+class ObligationsModelJsonSpec extends TestSupport with Matchers {
 
-  def getCurrentDate: LocalDate = LocalDate.now()
+  "The ObligationsModel" should {
 
-}
+    "read from the DES Json" in {
+      Json.fromJson(testObligationsFromJson)(ObligationsModel.desReadsApi1330).fold(
+        invalid => invalid,
+        valid => valid
+      ) shouldBe testObligations
+    }
 
-trait DateServiceInterface {
-  def getCurrentDate: LocalDate
+    "write to Json" in {
+      Json.toJson(testObligations) shouldBe testObligationsToJson
+    }
+  }
 
 }
