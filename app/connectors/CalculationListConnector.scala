@@ -17,7 +17,8 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import connectors.httpParsers.CalculationListHttpParser.{CalculationListReads, HttpGetResult}
+import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
+import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -28,24 +29,19 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) extends Logging {
 
-  private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String = {
-    val platformUrl = if (appConfig.useGetCalcListIFPlatform) appConfig.ifUrl else appConfig.desUrl
-    s"$platformUrl/income-tax/list-of-calculation-results/$nino?taxYear=$taxYearEnd"
-  }
+  private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String =
+    s"${appConfig.desUrl}/income-tax/list-of-calculation-results/$nino?taxYear=$taxYearEnd"
 
   private[connectors] def getCalculationListTYSUrl(nino: String, taxYearRange: String): String =
     s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
 
-  def getHeaders(api: String): Seq[(String, String)] = {
-    if (appConfig.useGetCalcListIFPlatform) appConfig.getIFHeaders(api = api) else appConfig.desAuthHeaders
-  }
 
   def getCalculationList(nino: String, taxYear: String)
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationListUrl(nino, taxYear)
 
-    logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${getHeaders("1404")} \nIsMigratedToIF: ${if (appConfig.useGetCalcListIFPlatform) "YES" else "NO"}")
-    http.GET(url = url, headers = getHeaders(api = "1404"))(CalculationListReads, headerCarrier, ec)
+    logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    http.GET(url = url, headers = appConfig.desAuthHeaders)(CalculationListReads, headerCarrier, ec)
   }
 
   def getCalculationListTYS(nino: String, taxYear: String)

@@ -16,9 +16,8 @@
 
 package config
 
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
@@ -57,10 +56,9 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
 
   val claimToAdjustTimeout: Int = servicesConfig.getInt("claim-to-adjust.timeout")
 
-  val confidenceLevel: Int = servicesConfig.getInt("auth.confidenceLevel")
+  val confidenceLevel:Int = servicesConfig.getInt("auth.confidenceLevel")
 
   val incomeTaxSubmissionStubUrl: String = loadConfig("submissionStubUrl")
   val useBusinessDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useBusinessDetailsIFPlatform")
   val useRepaymentHistoryDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useRepaymentHistoryDetailsIFPlatform")
-  val useGetCalcListIFPlatform: Boolean = servicesConfig.getBoolean("useGetCalcListIFPlatform")
 }

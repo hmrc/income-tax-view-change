@@ -32,10 +32,8 @@ import scala.concurrent.Future
 class CalculationListConnectorSpec extends TestSupport with MockHttp {
 
   object TestCalculationListConnector extends CalculationListConnector(mockHttpGet, microserviceAppConfig)
-  val platform: String = if (microserviceAppConfig.useGetCalcListIFPlatform) microserviceAppConfig.ifUrl else microserviceAppConfig.desUrl
-  val url1404 = s"$platform/income-tax/list-of-calculation-results/$testNino?taxYear=$testTaxYearEnd"
+  val url1404 = s"${microserviceAppConfig.desUrl}/income-tax/list-of-calculation-results/$testNino?taxYear=$testTaxYearEnd"
   val url1896 = s"${microserviceAppConfig.desUrl}/income-tax/view/calculations/liability/$testTaxYearRange/$testNino"
-  val header1404: Seq[(String, String)] = if (microserviceAppConfig.useGetCalcListIFPlatform) microserviceAppConfig.getIFHeaders("1404") else microserviceAppConfig.desAuthHeaders
 
   "The CalculationListConnector" should {
     "format API URLs correctly" when {
@@ -44,11 +42,6 @@ class CalculationListConnectorSpec extends TestSupport with MockHttp {
       }
       "getCalculationListTYSUrl is called" in {
         TestCalculationListConnector.getCalculationListTYSUrl(testNino, testTaxYearRange) shouldBe url1896
-      }
-    }
-    "format API Headers correctly" when {
-      "getHeaders is called" in {
-        TestCalculationListConnector.getHeaders(api = "1404") shouldBe header1404
       }
     }
     "return a CalculationList model" when {
