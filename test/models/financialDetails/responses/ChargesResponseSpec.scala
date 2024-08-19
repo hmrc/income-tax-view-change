@@ -267,7 +267,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
             financialDetails = List(financial(items = Some(List(subItem()))))
           ).payments shouldBe List(
             Payment(reference = Some("ref"), amount = -1000.00, outstandingAmount = 700.00,
-              documentDescription = None, method = Some("method"), lot = Some("lot01"), lotItem = Some("lot01"),
+              documentDescription = None, method = Some("method"), lot = Some("lot01"), lotItem = Some("item01"),
               dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
               transactionId = "DOCID01", mainType = Some("mainType1"), mainTransaction = Some("4920"))
           )
@@ -281,14 +281,14 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
               document2("DOCID02")),
             financialDetails = List(
               financial(items = Some(List(subItem()))),
-              financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"))))))
+              financial("DOCID02", items = Some(List(subItem(paymentLot = Some("lot02"), paymentLotItem = Some("item02"))))))
           ).payments shouldBe List(
             Payment(reference = Some("ref"), amount = -1000.00, outstandingAmount = 700.00,
-              documentDescription = None, method = Some("method"), lot = Some("lot01"), lotItem = Some("lot01"),
+              documentDescription = None, method = Some("method"), lot = Some("lot01"), lotItem = Some("item01"),
               dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
               transactionId = "DOCID01", mainType = Some("mainType1"), mainTransaction = Some("4920")),
             Payment(reference = Some("ref"), amount = -1000.00, outstandingAmount = 700.00,
-              documentDescription = None, method = Some("method"), lot = Some("lot02"), lotItem = Some("lot02"),
+              documentDescription = None, method = Some("method"), lot = Some("lot02"), lotItem = Some("item02"),
               dueDate = Some(LocalDate.parse("2018-03-29")), documentDate = LocalDate.parse("2022-06-23"),
               transactionId = "DOCID02", mainType = Some("mainType1"), mainTransaction = Some("4920"))
           )
