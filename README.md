@@ -20,7 +20,7 @@ This service is written in [Scala](http://www.scala-lang.org/) and [Play](http:/
 To update from Nexus and start all services from the RELEASE version instead of snapshot:
 
 ```
-sm --start ITVC_BACKEND_ALL -f
+sm2 --start ITVC_BACKEND_ALL -r
 ```
 
 
