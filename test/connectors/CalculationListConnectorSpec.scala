@@ -17,25 +17,26 @@
 package connectors
 
 import assets.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import assets.CalculationListTestConstants.{badRequestSingleError, calculationListFull}
-import connectors.httpParsers.CalculationListHttpParser
-import mocks.MockHttp
-import models.calculationList.CalculationListResponseModel
-import models.errors.ErrorResponse
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.contains
-import org.mockito.Mockito.when
+import assets.CalculationListTestConstants._
+import mocks.MockHttpV2
+import models.errors.{ErrorResponse, UnexpectedJsonFormat}
+import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-import scala.concurrent.Future
+class CalculationListConnectorSpec extends TestSupport with MockHttpV2 {
 
-class CalculationListConnectorSpec extends TestSupport with MockHttp {
-
-  object TestCalculationListConnector extends CalculationListConnector(mockHttpGet, microserviceAppConfig)
+  object TestCalculationListConnector extends CalculationListConnector(mockHttpClientV2, microserviceAppConfig)
   val platform: String = if (microserviceAppConfig.useGetCalcListIFPlatform) microserviceAppConfig.ifUrl else microserviceAppConfig.desUrl
   val url1404 = s"$platform/income-tax/list-of-calculation-results/$testNino?taxYear=$testTaxYearEnd"
   val url1896 = s"${microserviceAppConfig.desUrl}/income-tax/view/calculations/liability/$testTaxYearRange/$testNino"
   val header1404: Seq[(String, String)] = if (microserviceAppConfig.useGetCalcListIFPlatform) microserviceAppConfig.getIFHeaders("1404") else microserviceAppConfig.desAuthHeaders
+
+  lazy val mockUrl1404: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(url1404, microserviceAppConfig.getIFHeaders("1404"))(_)
+  lazy val mockUrl1404Failed: Either[ErrorResponse, Nothing] => Unit =
+    setupMockFailedHttpGetWithHeaderCarrier(url1404, microserviceAppConfig.getIFHeaders("1404"))(_)
+  lazy val mockUrl1896: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(url1896, microserviceAppConfig.getIFHeaders("1896"))(_)
+  lazy val mockUrl1896Failed: Either[ErrorResponse, Nothing] => Unit =
+    setupMockFailedHttpGetWithHeaderCarrier(url1896, microserviceAppConfig.getIFHeaders("1896"))(_)
 
   "The CalculationListConnector" should {
     "format API URLs correctly" when {
@@ -52,33 +53,28 @@ class CalculationListConnectorSpec extends TestSupport with MockHttp {
       }
     }
     "return a CalculationList model" when {
-      val successResponse: Either[Nothing, CalculationListResponseModel] =
-        Right(calculationListFull)
-      "calling getCalculationList with a valid NINO" in {
-        when(mockHttpGet.GET[CalculationListHttpParser.HttpGetResult[CalculationListResponseModel]](contains(url1404),
-          ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(successResponse))
 
+      "calling getCalculationList with a valid NINO" in {
+       mockUrl1404(successResponse)
         TestCalculationListConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe successResponse
       }
-      "calling getCalculationListTYS with a valid NINO and tax year" in {
-        when(mockHttpGet.GET[CalculationListHttpParser.HttpGetResult[CalculationListResponseModel]](contains(url1896),
-          ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(successResponse))
 
+      "calling getCalculationListTYS with a valid NINO and tax year" in {
+        mockUrl1896(successResponse)
         TestCalculationListConnector.getCalculationListTYS(testNino, testTaxYearRange).futureValue shouldBe successResponse
       }
     }
+
     "return an ErrorResponse model" when {
       "calling getCalculationList and a non-success response is received" in {
-        when(mockHttpGet.GET[Either[ErrorResponse, Nothing]](contains(url1404),
-          ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(badRequestSingleError))
-
-        TestCalculationListConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe badRequestSingleError
+        mockUrl1404Failed(Left(UnexpectedJsonFormat))
+        TestCalculationListConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe unexpectedJsonFormat
       }
+
       "calling getCalculationListTYS and a non-success response is received" in {
-        when(mockHttpGet.GET[Either[ErrorResponse, Nothing]](contains(url1896),
-          ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(badRequestSingleError))
+        mockUrl1896Failed(Left(UnexpectedJsonFormat))
         val result = TestCalculationListConnector.getCalculationListTYS(testNino, testTaxYearRange)
-        result.futureValue shouldBe badRequestSingleError
+        result.futureValue shouldBe unexpectedJsonFormat
       }
     }
   }
