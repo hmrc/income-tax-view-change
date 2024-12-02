@@ -43,15 +43,18 @@ class CalculationListConnectorSpec extends TestSupport with MockHttpV2 {
       "getCalculationListUrl is called" in {
         TestCalculationListConnector.getCalculationListUrl(testNino, testTaxYearEnd) shouldBe url1404
       }
+
       "getCalculationListTYSUrl is called" in {
         TestCalculationListConnector.getCalculationListTYSUrl(testNino, testTaxYearRange) shouldBe url1896
       }
     }
+
     "format API Headers correctly" when {
       "getHeaders is called" in {
         TestCalculationListConnector.getHeaders(api = "1404") shouldBe header1404
       }
     }
+
     "return a CalculationList model" when {
 
       "calling getCalculationList with a valid NINO" in {
@@ -78,5 +81,4 @@ class CalculationListConnectorSpec extends TestSupport with MockHttpV2 {
       }
     }
   }
-
 }
