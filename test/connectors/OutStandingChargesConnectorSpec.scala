@@ -18,7 +18,7 @@ package connectors
 
 
 import assets.OutStandingChargesConstant._
-import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeErrorResponse, OutStandingChargeResponse, UnexpectedOutStandingChargeResponse}
+import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeErrorResponse, UnexpectedOutStandingChargeResponse}
 import mocks.MockHttpV2
 import models.outStandingCharges.OutstandingChargesSuccessResponse
 import play.api.http.Status._
@@ -37,12 +37,18 @@ class OutStandingChargesConnectorSpec extends TestSupport with MockHttpV2 {
 
     import TestOutStandingChargesConnector.{listOutStandingCharges, listOutStandingChargesUrl}
 
+    val url =  s"${microserviceAppConfig.desUrl}/income-tax/charges/outstanding/$idType/$idNumber/$taxYearEndDate"
+
+    val header = microserviceAppConfig.desAuthHeaders
+
+    val mock = setupMockHttpGetWithHeaderCarrierEither(url, header)(_)
+
 
     "return a list of out standing charges" when {
 
       s"$OK is received from ETMP with outstanding charges" in {
 
-        setupMockHttpVTwoGet[OutStandingChargeResponse](listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Right(OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo))))
+        mock(Right(OutstandingChargesSuccessResponse(List(outStandingChargeModelOne, outStandingChargeModelTwo))))
 
         val result = listOutStandingCharges(idType, idNumber, taxYearEndDate).futureValue
 
@@ -53,14 +59,14 @@ class OutStandingChargesConnectorSpec extends TestSupport with MockHttpV2 {
       s"when $NOT_FOUND is returned" in {
         val responseBody = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.").toString()
 
-        setupMockHttpVTwoGet(listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Left(UnexpectedOutStandingChargeResponse(NOT_FOUND, responseBody)))
+        setupMockHttpV2Get(listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Left(UnexpectedOutStandingChargeResponse(NOT_FOUND, responseBody)))
 
         val result = listOutStandingCharges(idType, idNumber, taxYearEndDate).futureValue
 
         result shouldBe Left(UnexpectedOutStandingChargeResponse(NOT_FOUND, responseBody))
       }
       s"when $INTERNAL_SERVER_ERROR is returned" in {
-        setupMockHttpVTwoGet(listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Left(OutStandingChargeErrorResponse))
+        setupMockHttpV2Get(listOutStandingChargesUrl(idType, idNumber, taxYearEndDate))(Left(OutStandingChargeErrorResponse))
 
         val result = listOutStandingCharges(idType, idNumber, taxYearEndDate).futureValue
 
