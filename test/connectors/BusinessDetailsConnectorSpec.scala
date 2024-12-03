@@ -56,7 +56,7 @@ class BusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
-      setupMockFailedHttpVTwoGet(getUrl(Nino,testNino))
+      setupMockFailedHttpV2Get(getUrl(Nino,testNino))
       getBusinessDetails(testNino, Nino).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }
@@ -82,7 +82,7 @@ class BusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
     }
 
     "return LastTaxCalculationError model in case of failed future" in {
-      setupMockFailedHttpVTwoGet(getUrl(MtdId, mtdRef))
+      setupMockFailedHttpV2Get(getUrl(MtdId, mtdRef))
       getBusinessDetails(mtdRef, MtdId).futureValue shouldBe
         IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
     }

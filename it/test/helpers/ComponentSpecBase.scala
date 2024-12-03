@@ -25,6 +25,9 @@ import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
 import helpers.servicemocks.AuthStub
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
+
+import scala.concurrent.ExecutionContext
 
 trait ComponentSpecBase extends TestSuite with CustomMatchers
   with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience with Matchers
@@ -34,12 +37,17 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
   val mockPort = WiremockHelper.wiremockPort.toString
   val mockUrl = s"http://$mockHost:$mockPort"
 
+  val testSessionId = "xsession-12345"
+  implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(testSessionId)))
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+
   def config: Map[String, String] = Map(
     "microservice.services.auth.host" -> mockHost,
     "microservice.services.auth.port" -> mockPort,
     "microservice.services.if.url" -> mockUrl,
     "microservice.services.des.url" -> mockUrl,
-    "useBusinessDetailsIFPlatform" -> "false"
+    "useBusinessDetailsIFPlatform" -> "false",
+    "useGetCalcListIFPlatform" -> "false"
   )
 
   def configWithBusinessDetailsOnIf: Map[String, String] = Map(

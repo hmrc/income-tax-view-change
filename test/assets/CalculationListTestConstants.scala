@@ -18,8 +18,9 @@ package assets
 
 import models.calculationList.{CalculationListModel, CalculationListResponseModel}
 import models.errors.{Error, ErrorResponse, MultiError}
-import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
+import play.mvc.Http.Status
+import uk.gov.hmrc.http.HttpResponse
 
 object CalculationListTestConstants {
 
@@ -73,8 +74,13 @@ object CalculationListTestConstants {
 
   val jsonSingleError: JsValue = Json.obj("code" -> "CODE", "reason" -> "ERROR MESSAGE")
 
+  val unexpectedJsonError: Error = Error(code = "UNEXPECTED_JSON_FORMAT", reason = "The downstream service responded with json which did not match the expected format.")
+
   val badRequestSingleError: Either[ErrorResponse, Nothing] =
     Left(ErrorResponse(Status.BAD_REQUEST, singleError))
+
+  val unexpectedJsonFormat: Either[ErrorResponse, Nothing] =
+    Left(ErrorResponse(Status.INTERNAL_SERVER_ERROR, unexpectedJsonError))
 
   val multiError: MultiError = MultiError(
     failures = Seq(
@@ -87,5 +93,9 @@ object CalculationListTestConstants {
     Status.BAD_REQUEST,
     multiError
   ))
+
+  val successResponse: HttpResponse = HttpResponse(Status.OK, jsonResponseFull, Map.empty)
+  val badJson = HttpResponse(Status.OK, Json.toJson("{}"), Map.empty)
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
 
 }
