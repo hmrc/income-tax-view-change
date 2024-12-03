@@ -24,7 +24,7 @@ import play.api.libs.json.{JsValue, Json}
 
 class CalculationListConnectorISpec extends ComponentSpecBase {
 
-  lazy val connector: CalculationListConnector = app.injector.instanceOf[CalculationListConnector]
+  val connector: CalculationListConnector = app.injector.instanceOf[CalculationListConnector]
   val nino = "AA123456A"
   val taxYear = "2023"
   val taxYearRange = "23-24"

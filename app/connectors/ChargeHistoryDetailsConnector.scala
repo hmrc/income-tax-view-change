@@ -35,23 +35,11 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClientV2,
 
   def headers: Seq[(String, String)] = appConfig.getIFHeaders("1554")
 
-//  private[connectors] def queryParameters(chargeReference: String): Seq[(String, String)] = {
-//    Seq(
-//      "chargeReference" -> chargeReference
-//    )
-//  }
-
   def getChargeHistoryDetails(nino: String, chargeReference: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
 
     val url = listChargeHistoryDetailsUrl("NINO", nino, "ITSA", chargeReference)
     http.get(url"$url")
       .setHeader(headers: _*)
       .execute[ChargeHistoryResponse](ChargeHistoryReads, ec)
-
-//    http.GET(
-//      url = listChargeHistoryDetailsUrl("NINO", nino, "ITSA"),
-//      queryParams = queryParameters(chargeReference),
-//      headers = appConfig.getIFHeaders("1554")
-//    )(ChargeHistoryReads, headerCarrier, ec)
   }
 }

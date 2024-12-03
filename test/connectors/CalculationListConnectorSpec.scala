@@ -33,10 +33,10 @@ class CalculationListConnectorSpec extends TestSupport with MockHttpV2 {
 
   lazy val mockUrl1404: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(url1404, microserviceAppConfig.getIFHeaders("1404"))(_)
   lazy val mockUrl1404Failed: Either[ErrorResponse, Nothing] => Unit =
-    setupMockFailedHttpGetWithHeaderCarrier(url1404, microserviceAppConfig.getIFHeaders("1404"))(_)
+    setupMockHttpGetWithHeaderCarrier(url1404, microserviceAppConfig.getIFHeaders("1404"))(_)
   lazy val mockUrl1896: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(url1896, microserviceAppConfig.getIFHeaders("1896"))(_)
   lazy val mockUrl1896Failed: Either[ErrorResponse, Nothing] => Unit =
-    setupMockFailedHttpGetWithHeaderCarrier(url1896, microserviceAppConfig.getIFHeaders("1896"))(_)
+    setupMockHttpGetWithHeaderCarrier(url1896, microserviceAppConfig.getIFHeaders("1896"))(_)
 
   "The CalculationListConnector" should {
     "format API URLs correctly" when {
