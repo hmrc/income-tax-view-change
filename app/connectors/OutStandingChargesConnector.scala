@@ -38,10 +38,12 @@ class OutStandingChargesConnector @Inject()(val http: HttpClientV2,
                             (implicit headerCarrier: HeaderCarrier): Future[OutStandingChargeResponse] = {
 
     val url = listOutStandingChargesUrl(idType, idNumber, taxYearEndDate)
+
     http
       .get(url"$url")
       .setHeader(headers: _*)
-      .execute(OutStandingChargesReads, ec)
+      .execute[OutStandingChargeResponse](OutStandingChargesReads, ec)
+
   }
 
 }
