@@ -16,6 +16,7 @@
 
 package mocks
 
+import models.errors.ErrorResponse
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
@@ -37,7 +38,7 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
     reset(mockHttpClientV2)
   }
 
-  def setupMockHttpVTwoGet[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
+  def setupMockHttpV2Get[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
     when(mockHttpClientV2
       .get(ArgumentMatchers.eq(url"$url"))(ArgumentMatchers.any()))
       .thenReturn(mockRequestBuilder)
@@ -48,7 +49,7 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
   }
 
 
-  def setupMockFailedHttpVTwoGet[T](url: String): OngoingStubbing[Future[T]] = {
+  def setupMockFailedHttpV2Get[T](url: String): OngoingStubbing[Future[T]] = {
     when(mockHttpClientV2
       .get(ArgumentMatchers.eq(url"$url"))(ArgumentMatchers.any())).thenReturn(mockRequestBuilder)
 
@@ -70,6 +71,22 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
 
     when(mockRequestBuilder
       .execute[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any()))
+      .thenReturn(Future.successful(response))
+  }
+
+  def setupMockFailedHttpGetWithHeaderCarrier(url: String, headers: Seq[(String, String)])(response: Either[ErrorResponse, Nothing]): OngoingStubbing[Future[Either[ErrorResponse, Nothing]]] = {
+    when(
+      mockHttpClientV2
+        .get(ArgumentMatchers.eq(url"$url"))(ArgumentMatchers.any())
+    ).thenReturn(mockRequestBuilder)
+
+    when(
+      mockRequestBuilder
+        .setHeader(ArgumentMatchers.any[(String, String)]())
+    ).thenReturn(mockRequestBuilder)
+
+    when(mockRequestBuilder
+      .execute[Either[ErrorResponse, Nothing]](ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
   }
 

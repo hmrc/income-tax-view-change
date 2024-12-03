@@ -17,16 +17,18 @@
 package connectors
 
 import config.MicroserviceAppConfig
-import connectors.httpParsers.CalculationListHttpParser.{CalculationListReads, HttpGetResult}
+import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
+import connectors.httpParsers.ChargeHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
 import play.api.Logging
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: MicroserviceAppConfig) extends Logging {
+class CalculationListConnector @Inject()(val http: HttpClientV2, val appConfig: MicroserviceAppConfig) extends Logging {
 
   private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String = {
     val platformUrl = if (appConfig.useGetCalcListIFPlatform) appConfig.ifUrl else appConfig.desUrl
@@ -45,7 +47,9 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
     val url = getCalculationListUrl(nino, taxYear)
 
     logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${getHeaders("1404")} \nIsMigratedToIF: ${if (appConfig.useGetCalcListIFPlatform) "YES" else "NO"}")
-    http.GET(url = url, headers = getHeaders(api = "1404"))(CalculationListReads, headerCarrier, ec)
+    http.get(url"$url")
+      .setHeader(getHeaders("1404"): _*)
+      .execute[HttpGetResult[CalculationListResponseModel]](CalculationListReads, ec)
   }
 
   def getCalculationListTYS(nino: String, taxYear: String)
@@ -53,7 +57,9 @@ class CalculationListConnector @Inject()(val http: HttpClient, val appConfig: Mi
     val url = getCalculationListTYSUrl(nino, taxYear)
 
     logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1896")}")
-    http.GET(url = url, headers = appConfig.getIFHeaders("1896"))(CalculationListReads, headerCarrier, ec)
+    http.get(url"$url")
+      .setHeader(appConfig.getIFHeaders("1896"): _*)
+      .execute[HttpGetResult[CalculationListResponseModel]](CalculationListReads, ec)
 
   }
 
