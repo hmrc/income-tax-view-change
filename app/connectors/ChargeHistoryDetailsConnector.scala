@@ -30,10 +30,10 @@ class ChargeHistoryDetailsConnector @Inject()(val http: HttpClientV2,
                                              )(implicit ec: ExecutionContext) extends RawResponseReads {
 
 
-  def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String, chargeReference: String): String =
+  private def listChargeHistoryDetailsUrl(idType: String, idNumber: String, regimeType: String, chargeReference: String): String =
     s"${appConfig.ifUrl}/cross-regime/charges/$idType/$idNumber/$regimeType?chargeReference=$chargeReference"
 
-  def headers: Seq[(String, String)] = appConfig.getIFHeaders("1554")
+  private def headers: Seq[(String, String)] = appConfig.getIFHeaders("1554")
 
   def getChargeHistoryDetails(nino: String, chargeReference: String)(implicit headerCarrier: HeaderCarrier): Future[ChargeHistoryResponse] = {
 

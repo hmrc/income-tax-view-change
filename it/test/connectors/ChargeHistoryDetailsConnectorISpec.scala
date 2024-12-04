@@ -106,7 +106,7 @@ class ChargeHistoryDetailsConnectorISpec extends ComponentSpecBase {
         "the response is a 404 - NotFound" should {
 
           "return an UnexpectedChargeHistoryResponse when there has been an error returned" in {
-            val jsonError = Json.obj("code" -> 404, "reason" -> "The remote endpoint has indicated that no match found for the reference provided.")
+            val jsonError = Json.obj("code" -> NOT_FOUND, "reason" -> "The remote endpoint has indicated that no match found for the reference provided.")
 
             WiremockHelper.stubGet(url, NOT_FOUND, jsonError.toString())
             val result = connector.getChargeHistoryDetails(nino, docNumber).futureValue
