@@ -18,7 +18,7 @@ package connectors
 
 import assets.FinancialDataTestConstants._
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
-import mocks.MockHttp
+import mocks.MockHttpV2
 import models.financialDetails.responses.ChargesResponse
 import models.financialDetails.{DocumentDetail, FinancialDetail}
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -29,13 +29,13 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.TestSupport
 
 
-class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
+class FinancialDetailsConnectorSpec extends TestSupport with MockHttpV2 {
 
-  val TestFinancialDetailsConnector = new FinancialDetailsConnector(mockHttpGet, microserviceAppConfig)
+  val TestFinancialDetailsConnector = new FinancialDetailsConnector(mockHttpClientV2, microserviceAppConfig)
 
   val expectedBaseUrl: String = microserviceAppConfig.ifUrl
 
-  val expectedApiHeaders = Seq(
+  val expectedApiHeaders: Seq[(String, String)] = Seq(
     "Environment" -> "localIFEnvironment",
     "Authorization" -> "Bearer localIFToken1553"
   )
@@ -43,12 +43,40 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   override implicit val hc: HeaderCarrier =
     HeaderCarrierConverter.fromRequest(FakeRequest())
 
-  val testNino: String = "testNino"
-  val testFrom: String = "testFrom"
-  val testTo: String = "testTo"
+  val testNino: String = "AA123456A"
+  val testFrom: String = "2021-12-12"
+  val testTo: String = "2022-12-12"
   val documentId: String = "123456789"
 
+  val queryParametersOnlyOpenItemsTrue: Seq[(String, String)] = Seq(
+    "onlyOpenItems" -> "true",
+    "includeLocks" -> "true",
+    "calculateAccruedInterest" -> "true",
+    "removePOA" -> "false",
+    "customerPaymentInformation" -> "true",
+    "includeStatistical" -> "false"
+  )
+
+  val queryParametersPaymentAllocation: Seq[(String, String)] = Seq(
+    "docNumber" -> documentId,
+    "onlyOpenItems" -> "false",
+    "includeLocks" -> "true",
+    "calculateAccruedInterest" -> "true",
+    "removePOA" -> "false",
+    "customerPaymentInformation" -> "true",
+    "includeStatistical" -> "false"
+  )
+
   lazy val expectedUrl: String = s"$expectedBaseUrl/enterprise/02.00.00/financial-data/NINO/$testNino/ITSA"
+  lazy val queryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo)
+  val fullUrl: String = expectedUrl + TestFinancialDetailsConnector.makeQueryString(queryParameters)
+  val fullUrlPaymentAllocation: String = expectedUrl + TestFinancialDetailsConnector.makeQueryString(queryParametersPaymentAllocation)
+  val fullUrlOnlyOpenItems: String = expectedUrl + TestFinancialDetailsConnector.makeQueryString(queryParametersOnlyOpenItemsTrue)
+  val header: Seq[(String, String)] = microserviceAppConfig.getIFHeaders("1553")
+
+  val mock = setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesResponse]](fullUrl, header)(_)
+  val mockPaymentAllocation = setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesResponse]](fullUrlPaymentAllocation, header)(_)
+  val mockOnlyOpenItems = setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesResponse]](fullUrlOnlyOpenItems, header)(_)
 
   "financialDetailUrl" should {
     "return the correct url" in {
@@ -80,41 +108,32 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
   "getChargeDetails" should {
     "return a list of charges" when {
       s"$OK is received from ETMP with charges " in {
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = expectedApiHeaders
-        )(Right(testChargesResponse))
+        val response = Right(testChargesResponse)
 
+        mock(response)
         val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
 
-        result shouldBe Right(testChargesResponse)
+        result shouldBe response
       }
     }
 
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = expectedApiHeaders
-        )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
+        val response = Left(UnexpectedChargeResponse(404, errorJson.toString()))
+        mock(response)
 
         val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
 
-        result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
+        result shouldBe response
       }
-      "something went wrong" in {
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.chargeDetailsQuery(testFrom, testTo),
-          headers = expectedApiHeaders
-        )(Left(UnexpectedChargeErrorResponse))
 
+      "something went wrong" in {
+        val response = Left(UnexpectedChargeErrorResponse)
+        mock(response)
         val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
 
-        result shouldBe Left(UnexpectedChargeErrorResponse)
+        result shouldBe response
       }
     }
   }
@@ -143,12 +162,9 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
       s"$OK is received from ETMP with charges " in {
         val documentDetails: List[DocumentDetail] = List(documentDetail)
         val financialDetails: List[FinancialDetail] = List(financialDetail)
-
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = expectedApiHeaders
-        )(Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails)))
+        val response = Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails))
+        mockPaymentAllocation(response)
+        println(mock(response))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
@@ -159,22 +175,17 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = expectedApiHeaders
-        )(Left(UnexpectedChargeResponse(404, errorJson.toString())))
+        val response = Left(UnexpectedChargeResponse(404, errorJson.toString()))
+        mockPaymentAllocation(response)
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
-        result shouldBe Left(UnexpectedChargeResponse(404, errorJson.toString()))
+        result shouldBe response
       }
+
       "something went wrong" in {
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = TestFinancialDetailsConnector.financialDetailsUrl(testNino),
-          queryParameters = TestFinancialDetailsConnector.paymentAllocationQuery(documentId),
-          headers = expectedApiHeaders
-        )(Left(UnexpectedChargeErrorResponse))
+        val response = Left(UnexpectedChargeErrorResponse)
+        mockPaymentAllocation(response)
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
@@ -205,11 +216,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
           documentDetails = List(documentDetail),
           financialDetails = List(financialDetail)))
 
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = expectedUrl,
-          queryParameters = expectedOnlyOpenItemsQueryParameters,
-          headers = expectedApiHeaders
-        )(expectedResponse)
+        mockOnlyOpenItems(expectedResponse)
 
         val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
 
@@ -222,11 +229,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
         val expectedErrorResponse = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString))
 
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = expectedUrl,
-          queryParameters = expectedOnlyOpenItemsQueryParameters,
-          headers = expectedApiHeaders
-        )(expectedErrorResponse)
+        mockOnlyOpenItems(expectedErrorResponse)
 
         val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
 
@@ -236,11 +239,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttp {
       "something went wrong" in {
         val expectedErrorResponse = Left(UnexpectedChargeErrorResponse)
 
-        mockGet[ChargeResponseError, ChargesResponse](
-          url = expectedUrl,
-          queryParameters = expectedOnlyOpenItemsQueryParameters,
-          headers = expectedApiHeaders
-        )(expectedErrorResponse)
+        mockOnlyOpenItems(expectedErrorResponse)
 
         val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
 
