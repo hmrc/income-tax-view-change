@@ -24,8 +24,11 @@ import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
+//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+@nowarn("cat=deprecation")
 class UpdateIncomeSourceConnector @Inject()(val http: HttpClient,
                                             val appConfig: MicroserviceAppConfig)
                                            (implicit ec: ExecutionContext) extends RawResponseReads {

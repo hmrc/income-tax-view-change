@@ -26,11 +26,14 @@ import play.api.http.Status._
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import utils.TestSupport
 
+import scala.annotation.nowarn
 import scala.concurrent.Future
 
 class ObligationsConnectorSpec extends TestSupport {
 
   trait Setup {
+    //TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+    @nowarn("cat=deprecation")
     val httpClient: HttpClient = mock(classOf[HttpClient])
 
     val connector: ObligationsConnector = new ObligationsConnector(

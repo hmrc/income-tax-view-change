@@ -45,11 +45,14 @@ import play.api.libs.json.Json
 import play.mvc.Http.Status.{BAD_REQUEST, NO_CONTENT}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
+import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ITSAStatusUpdateConnectorTest extends AnyWordSpecLike with Matchers with BeforeAndAfter with ScalaFutures {
 
+  //TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+  @nowarn("cat=deprecation")
   val httpClient: HttpClient = mock(classOf[HttpClient])
   val appConfig: MicroserviceAppConfig = mock(classOf[MicroserviceAppConfig])
   implicit val headerCarrier: HeaderCarrier = mock(classOf[HeaderCarrier])
