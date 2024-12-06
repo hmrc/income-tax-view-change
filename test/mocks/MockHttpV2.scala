@@ -17,6 +17,7 @@
 package mocks
 
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.matchers.should.Matchers
@@ -71,5 +72,18 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
     when(mockRequestBuilder
       .execute[T](ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
+  }
+
+  def setupMockHttpV2PostWithHeaderCarrier[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
+    when(mockHttpClientV2.post(ArgumentMatchers.eq(url"$url"))(any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.setHeader(any[(String, String)]())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.withBody(any())(any(), any(), any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.execute[T](any(), any())).thenReturn(Future.successful(response))
+  }
+
+  def setupMockHttpV2PostFailed[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
+    when(mockHttpClientV2.post(ArgumentMatchers.eq(url"$url"))(any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.withBody(any())(any(), any(), any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.execute[T](any(), any())).thenReturn(Future.failed(new Exception("error")))
   }
 }
