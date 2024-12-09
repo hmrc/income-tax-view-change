@@ -19,12 +19,14 @@ package connectors
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
 import play.api.Logging
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
+//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+@nowarn("cat=deprecation")
 @Singleton
 class FinancialDetailsConnector  @Inject()(val http: HttpClient,
                                             appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging {

@@ -21,8 +21,11 @@ import connectors.httpParsers.RepaymentHistoryHttpParser.{RepaymentHistoryReads,
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
+//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+@nowarn("cat=deprecation")
 @Singleton
 class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
                                                  val appConfig: MicroserviceAppConfig
