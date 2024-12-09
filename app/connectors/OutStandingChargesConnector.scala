@@ -18,16 +18,14 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeResponse, OutStandingChargesReads}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import javax.inject.{Inject, Singleton}
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-@nowarn("cat=deprecation")
 @Singleton
-class OutStandingChargesConnector @Inject()(val http: HttpClient,
+class OutStandingChargesConnector @Inject()(val http: HttpClientV2,
                                             val appConfig: MicroserviceAppConfig
                                            )(implicit ec: ExecutionContext) extends RawResponseReads {
 
@@ -37,10 +35,11 @@ class OutStandingChargesConnector @Inject()(val http: HttpClient,
   def listOutStandingCharges(idType: String, idNumber: String, taxYearEndDate: String)
                             (implicit headerCarrier: HeaderCarrier): Future[OutStandingChargeResponse] = {
 
-    http.GET(
-      url = listOutStandingChargesUrl(idType, idNumber, taxYearEndDate),
-      headers = appConfig.desAuthHeaders
-    )(OutStandingChargesReads, headerCarrier, ec)
-  }
+    val url = listOutStandingChargesUrl(idType, idNumber, taxYearEndDate)
 
+    http
+      .get(url"$url")
+      .setHeader(appConfig.desAuthHeaders: _*)
+      .execute[OutStandingChargeResponse](OutStandingChargesReads, ec)
+  }
 }
