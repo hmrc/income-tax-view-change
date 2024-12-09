@@ -27,11 +27,8 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-@nowarn("cat=deprecation")
 @Singleton
 class CreateBusinessDetailsConnector @Inject()(val http: HttpClientV2,
                                                val appConfig: MicroserviceAppConfig)
