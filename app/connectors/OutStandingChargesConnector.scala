@@ -32,8 +32,6 @@ class OutStandingChargesConnector @Inject()(val http: HttpClientV2,
   def listOutStandingChargesUrl(idType: String, idNumber: String, taxYearEndDate: String): String =
     s"${appConfig.desUrl}/income-tax/charges/outstanding/$idType/$idNumber/$taxYearEndDate"
 
-  def headers: Seq[(String, String)] = appConfig.desAuthHeaders
-
   def listOutStandingCharges(idType: String, idNumber: String, taxYearEndDate: String)
                             (implicit headerCarrier: HeaderCarrier): Future[OutStandingChargeResponse] = {
 
@@ -41,9 +39,7 @@ class OutStandingChargesConnector @Inject()(val http: HttpClientV2,
 
     http
       .get(url"$url")
-      .setHeader(headers: _*)
+      .setHeader(appConfig.desAuthHeaders: _*)
       .execute[OutStandingChargeResponse](OutStandingChargesReads, ec)
-
   }
-
 }
