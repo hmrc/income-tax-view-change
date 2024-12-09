@@ -31,13 +31,6 @@ class OutStandingChargesConnectorISpec extends ComponentSpecBase {
   val taxYearEndDate = "taxYearEndDate"
   val url = s"/income-tax/charges/outstanding/$idType/$idNumber/$taxYearEndDate"
 
-  //  val outStandingChargeResponse: List[OutStandingCharge] = List(OutStandingCharge(
-  //    chargeName = "LATE",
-  //    relevantDueDate:  = Some("2021-01-31"),
-  //    chargeAmount =  123456.78,
-  //    tieBreaker =  1234,
-  //  ))
-
   "OutstandingChargesConnector" when {
 
     ".listOutStandingCharges() is called" when {
@@ -98,7 +91,6 @@ class OutStandingChargesConnectorISpec extends ComponentSpecBase {
 
           result shouldBe expected
         }
-
       }
     }
   }
