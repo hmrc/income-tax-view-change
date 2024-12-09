@@ -22,24 +22,30 @@ import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusi
 import play.api.Logger
 import play.api.http.Status
 import play.api.http.Status._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
+class CreateBusinessDetailsConnector @Inject()(val http: HttpClientV2,
                                                val appConfig: MicroserviceAppConfig)
                                               (implicit ec: ExecutionContext) extends RawResponseReads {
 
-  val url: String => String = mtdbsaRef => s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
+  val getUrl: String => String = mtdbsaRef => s"${appConfig.desUrl}/income-tax/income-sources/mtdbsa/$mtdbsaRef/ITSA/business"
 
   def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)
             (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
-    logWithDebug(s"Calling POST ${url(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
+    logWithDebug(s"Calling POST ${getUrl(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
 
-    http.POST[CreateIncomeSourceRequest, HttpResponse](url(mtdbsaRef), body, appConfig.desAuthHeaders) map {
+    http.post(url"${getUrl(mtdbsaRef)}")
+      .withBody(Json.toJson[CreateIncomeSourceRequest](body))
+      .execute[HttpResponse]
+      .map {
       case response if response.status == OK =>
         logWithInfo(s"SUCCESS - ${response.json}")
         response.json.validate[List[IncomeSource]].fold(
@@ -59,7 +65,7 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClient,
     }
   }
 
-  private val logWithError: String => Unit = suffix => Logger("application").error("" + suffix)
-  private val logWithDebug: String => Unit = suffix => Logger("application").debug("" + suffix)
-  private val logWithInfo: String => Unit = suffix => Logger("application").info("" + suffix)
+  private val logWithError: String => Unit = message => Logger("application").error(message)
+  private val logWithDebug: String => Unit = message => Logger("application").debug(message)
+  private val logWithInfo:  String => Unit = message => Logger("application").info(message)
 }

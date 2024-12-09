@@ -17,21 +17,21 @@
 package connectors
 
 import assets.CreateBusinessDetailsTestConstants._
-import mocks.MockHttp
+import mocks.MockHttpV2
 import models.createIncomeSource.CreateIncomeSourceRequest
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-class CreateBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
+class CreateBusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
 
-  object TestCreateBusinessDetailsConnector extends CreateBusinessDetailsConnector(mockHttpGet, microserviceAppConfig)
+  object TestCreateBusinessDetailsConnector extends CreateBusinessDetailsConnector(mockHttpClientV2, microserviceAppConfig)
 
   import TestCreateBusinessDetailsConnector._
 
   "CreateBusinessDetailsConnector.create" should {
 
-    lazy val mock: (CreateIncomeSourceRequest, HttpResponse) => Unit =
-      setupMockHttpPostWithHeaderCarrier[CreateIncomeSourceRequest](url(testMtdRef), microserviceAppConfig.desAuthHeaders)
+    lazy val mock: (CreateIncomeSourceRequest, HttpResponse) => Unit = (_, response) =>
+      setupMockHttpV2PostWithHeaderCarrier(getUrl(testMtdRef))(response)
 
     "return an IncomeSource model if status (OK) is returned by API with valid json body" in {
       mock(validCreateSelfEmploymentRequest, successHttpResponse)
@@ -44,7 +44,7 @@ class CreateBusinessDetailsConnectorSpec extends TestSupport with MockHttp {
     }
 
     "return CreateBusinessDetailsErrorResponse model if future fails to complete" in {
-      setupMockHttpPostFailed[CreateIncomeSourceRequest](url(testMtdRef), microserviceAppConfig.desAuthHeaders)(validCreateSelfEmploymentRequest)
+      setupMockHttpV2PostFailed[CreateIncomeSourceRequest](getUrl(testMtdRef))(validCreateSelfEmploymentRequest)
       create(testMtdRef, validCreateSelfEmploymentRequest).futureValue shouldBe Left(internalServerErrorFailureResponse)
     }
   }

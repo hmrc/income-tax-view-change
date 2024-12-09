@@ -16,15 +16,14 @@
 
 package mocks
 
-import models.errors.ErrorResponse
-import models.outStandingCharges.OutstandingChargesSuccessResponse
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
-import uk.gov.hmrc.http.{HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import scala.concurrent.Future
@@ -59,7 +58,7 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
       .thenReturn(Future.failed(new Exception("error")))
   }
 
-  def setupMockHttpGetWithHeaderCarrier(url: String, headers: Seq[(String, String)])(response: HttpResponse): OngoingStubbing[Future[HttpResponse]] = {
+  def setupMockHttpGetWithHeaderCarrier[T](url: String, headers: Seq[(String, String)])(response: T): OngoingStubbing[Future[T]] = {
     when(
       mockHttpClientV2
       .get(ArgumentMatchers.eq(url"$url"))(ArgumentMatchers.any())
@@ -71,40 +70,20 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
     ).thenReturn(mockRequestBuilder)
 
     when(mockRequestBuilder
-      .execute[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any()))
+      .execute[T](ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
   }
 
-  def setupMockHttpGetWithHeaderCarrierEither(url: String, headers: Seq[(String, String)])(response: Either[Nothing, OutstandingChargesSuccessResponse]): OngoingStubbing[Future[Either[Nothing, OutstandingChargesSuccessResponse]]] = {
-    when(
-      mockHttpClientV2
-        .get(ArgumentMatchers.eq(url"$url"))(ArgumentMatchers.any())
-    ).thenReturn(mockRequestBuilder)
-
-    when(
-      mockRequestBuilder
-        .setHeader(ArgumentMatchers.any[(String, String)]())
-    ).thenReturn(mockRequestBuilder)
-
-    when(mockRequestBuilder
-      .execute[Either[Nothing, OutstandingChargesSuccessResponse]](ArgumentMatchers.any(), ArgumentMatchers.any()))
-      .thenReturn(Future.successful(response))
+  def setupMockHttpV2PostWithHeaderCarrier[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
+    when(mockHttpClientV2.post(ArgumentMatchers.eq(url"$url"))(any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.setHeader(any[(String, String)]())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.withBody(any())(any(), any(), any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.execute[T](any(), any())).thenReturn(Future.successful(response))
   }
 
-  def setupMockFailedHttpGetWithHeaderCarrier(url: String, headers: Seq[(String, String)])(response: Either[ErrorResponse, Nothing]): OngoingStubbing[Future[Either[ErrorResponse, Nothing]]] = {
-    when(
-      mockHttpClientV2
-        .get(ArgumentMatchers.eq(url"$url"))(ArgumentMatchers.any())
-    ).thenReturn(mockRequestBuilder)
-
-    when(
-      mockRequestBuilder
-        .setHeader(ArgumentMatchers.any[(String, String)]())
-    ).thenReturn(mockRequestBuilder)
-
-    when(mockRequestBuilder
-      .execute[Either[ErrorResponse, Nothing]](ArgumentMatchers.any(), ArgumentMatchers.any()))
-      .thenReturn(Future.successful(response))
+  def setupMockHttpV2PostFailed[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
+    when(mockHttpClientV2.post(ArgumentMatchers.eq(url"$url"))(any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.withBody(any())(any(), any(), any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.execute[T](any(), any())).thenReturn(Future.failed(new Exception("error")))
   }
-
 }

@@ -25,11 +25,14 @@ import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import uk.gov.hmrc.http.{HttpClient, HttpReads, HttpResponse}
 
+import scala.annotation.nowarn
 import scala.concurrent.Future
 
 
 trait MockHttp extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
+  //TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+  @nowarn("cat=deprecation")
   val mockHttpGet: HttpClient = mock(classOf[HttpClient])
 
   override def beforeEach(): Unit = {

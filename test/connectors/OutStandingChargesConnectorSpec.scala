@@ -41,7 +41,7 @@ class OutStandingChargesConnectorSpec extends TestSupport with MockHttpV2 {
 
     val header = microserviceAppConfig.desAuthHeaders
 
-    val mock = setupMockHttpGetWithHeaderCarrierEither(url, header)(_)
+    val mock = setupMockHttpGetWithHeaderCarrier(url, header)(_)
 
 
     "return a list of out standing charges" when {

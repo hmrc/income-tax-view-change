@@ -27,12 +27,15 @@ import play.mvc.Http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 object ITSAStatusConnector {
   val CorrelationIdHeader = "CorrelationId"
 }
 
+//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+@nowarn("cat=deprecation")
 class ITSAStatusConnector @Inject()(val http: HttpClient,
                                     val appConfig: MicroserviceAppConfig
                                    )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {

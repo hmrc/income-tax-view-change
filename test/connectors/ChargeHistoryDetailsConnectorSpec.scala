@@ -17,37 +17,40 @@
 package connectors
 
 import assets.ChargeHistoryTestConstants.chargeHistoryDetail
-import connectors.httpParsers.ChargeHistoryHttpParser.{ChargeHistoryError, ChargeHistoryErrorResponse, UnexpectedChargeHistoryResponse}
-import mocks.MockHttp
+import connectors.httpParsers.ChargeHistoryHttpParser._
+import mocks.MockHttpV2
 import models.chargeHistoryDetail.{ChargeHistoryDetailModel, ChargeHistorySuccessResponse}
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import utils.TestSupport
 
-class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
+class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttpV2 {
 
   val idType: String = "NINO"
   val idNumber: String = "1234567890"
   val regimeType: String = "ITSA"
   val docNumber: String = "XM0026100121"
 
-  object TestChargeHistoryConnector extends ChargeHistoryDetailsConnector(mockHttpGet, microserviceAppConfig)
+  val ifPlatform: String = microserviceAppConfig.ifUrl
+  val url = s"$ifPlatform/cross-regime/charges/$idType/$idNumber/$regimeType?chargeReference=$docNumber"
+  val header: Seq[(String, String)] = microserviceAppConfig.getIFHeaders("1554")
+
+  val mock = setupMockHttpGetWithHeaderCarrier[Either[Nothing, ChargeHistorySuccessResponse]](url, header)(_)
+
+  object TestChargeHistoryConnector extends ChargeHistoryDetailsConnector(mockHttpClientV2, microserviceAppConfig)
 
   "The chargeHistoryDetails connector" should {
     "return a list of charges" when {
       s"$OK is received with charge history " in {
 
         val chargeHistoryDetails: List[ChargeHistoryDetailModel] = List(chargeHistoryDetail)
-
-        mockGet(
-          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
-          queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.getIFHeaders("1554")
-        )(Right(ChargeHistorySuccessResponse(
+        val response = Right(ChargeHistorySuccessResponse(
           idType = "MTDBSA",
           idValue = "XAIT000000000000",
           regimeType = "ITSA",
-          chargeHistoryDetails = Some(chargeHistoryDetails))))
+          chargeHistoryDetails = Some(chargeHistoryDetails)))
+
+        mock(response)
 
         val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
 
@@ -63,28 +66,18 @@ class ChargeHistoryDetailsConnectorSpec extends TestSupport with MockHttp {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
-          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
-          queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.getIFHeaders("1554")
-        )(Left(UnexpectedChargeHistoryResponse(404, errorJson.toString())))
-
+        setupMockHttpGetWithHeaderCarrier(url, header)(Left(UnexpectedChargeHistoryResponse(404, errorJson.toString())))
         val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
 
         result shouldBe Left(UnexpectedChargeHistoryResponse(404, errorJson.toString()))
       }
-      "something went wrong" in {
-        mockGet[ChargeHistoryError, ChargeHistoryDetailModel](
-          url = TestChargeHistoryConnector.listChargeHistoryDetailsUrl(idType, idNumber, regimeType),
-          queryParameters = TestChargeHistoryConnector.queryParameters(docNumber),
-          headers = microserviceAppConfig.getIFHeaders("1554")
-        )(Left(ChargeHistoryErrorResponse))
 
+      "something went wrong" in {
+        setupMockHttpGetWithHeaderCarrier(url, header)(Left(ChargeHistoryErrorResponse))
         val result = TestChargeHistoryConnector.getChargeHistoryDetails(idNumber, docNumber).futureValue
 
         result shouldBe Left(ChargeHistoryErrorResponse)
       }
     }
   }
-
 }

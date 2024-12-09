@@ -23,8 +23,11 @@ import play.api.http.Status._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.{Inject, Singleton}
+import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
+//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
+@nowarn("cat=deprecation")
 @Singleton
 class ObligationsConnector @Inject()(val http: HttpClient,
                                      val appConfig: MicroserviceAppConfig
