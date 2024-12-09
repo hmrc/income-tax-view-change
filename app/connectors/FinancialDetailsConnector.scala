@@ -19,17 +19,16 @@ package connectors
 import config.MicroserviceAppConfig
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
 import play.api.Logging
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 
+import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-@nowarn("cat=deprecation")
 @Singleton
-class FinancialDetailsConnector  @Inject()(val http: HttpClient,
-                                            appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging {
+class FinancialDetailsConnector  @Inject()(val http: HttpClientV2,
+                                           appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging {
 
   val baseUrl: String = appConfig.ifUrl
 
@@ -44,6 +43,11 @@ class FinancialDetailsConnector  @Inject()(val http: HttpClient,
       "dateFrom" -> from,
       "dateTo" -> to
     ) ++: baseQueryParameters(onlyOpenItems = false)
+  }
+
+  def makeQueryString(queryParams: Seq[(String, String)]) = {
+    val paramPairs = queryParams.map { case (k, v) => s"$k=${URLEncoder.encode(v, "utf-8")}" }
+    if (paramPairs.isEmpty) "" else paramPairs.mkString("?", "&", "")
   }
 
   def getChargeDetails(nino: String, from: String, to: String)
@@ -69,8 +73,8 @@ class FinancialDetailsConnector  @Inject()(val http: HttpClient,
     getCharge(nino = nino, queryParameters = onlyOpenItemsQuery())
   }
 
-  private def baseQueryParameters(onlyOpenItems: Boolean): List[(String, String)] = {
-    List(
+  private def baseQueryParameters(onlyOpenItems: Boolean): Seq[(String, String)] = {
+    Seq(
       "onlyOpenItems" -> onlyOpenItems.toString,
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",
@@ -82,10 +86,12 @@ class FinancialDetailsConnector  @Inject()(val http: HttpClient,
 
   private[connectors] def getCharge(nino: String, queryParameters: Seq[(String, String)])
                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
-    val url = financialDetailsUrl(nino)
+    val url = financialDetailsUrl(nino) + makeQueryString(queryParameters)
     // TODO: downgrade to debug after fix
     logger.info(s"URL - $url - ${queryParameters.mkString("-")}")
-    http.GET(url, queryParameters, headers)(ChargeReads, hc, ec)
+    http.get(url"$url")
+      .setHeader(headers: _*)
+      .execute[ChargeResponse](ChargeReads, ec)
   }
 
 }
