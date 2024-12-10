@@ -18,54 +18,49 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.RepaymentHistoryHttpParser.{RepaymentHistoryReads, RepaymentHistoryResponse}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import javax.inject.{Inject, Singleton}
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-@nowarn("cat=deprecation")
 @Singleton
-class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClient,
+class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClientV2,
                                                  val appConfig: MicroserviceAppConfig
                                                 )(implicit ec: ExecutionContext) extends RawResponseReads {
 
   def listRepaymentHistoryDetailsUrl(nino: String): String = {
     val platformUrl = if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
-    s"${platformUrl}/income-tax/self-assessment/repayments-viewer/$nino"
+    s"$platformUrl/income-tax/self-assessment/repayments-viewer/$nino"
+  }
+
+  def getRepaymentHistoryDetailsByIdUrl(nino: String, repaymentId: String): String = {
+    val platformUrl = if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
+    s"$platformUrl/income-tax/self-assessment/repayments-viewer/$nino?repaymentRequestNumber=$repaymentId"
   }
 
   def headers: Seq[(String, String)] = {
     if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.getIFHeaders("1771") else appConfig.desAuthHeaders
   }
 
-  private[connectors] def IdQueryParameters(repaymentId: String): Seq[(String, String)] = {
-    Seq(
-      "repaymentRequestNumber" -> repaymentId
-    )
-  }
-
   def getAllRepaymentHistoryDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
     val url = listRepaymentHistoryDetailsUrl(nino)
     logger.info(s"Calling GET $url " +
       s"\nHeaders: $headerCarrier \nIsMigrated: ${if (appConfig.useRepaymentHistoryDetailsIFPlatform) "YES" else "NO"}")
-    http.GET(
-      url = url,
-      queryParams = Seq.empty,
-      headers = headers
-    )(RepaymentHistoryReads, headerCarrier, ec)
+
+    http.get(url"$url")
+      .setHeader(headers: _*)
+      .execute[RepaymentHistoryResponse](RepaymentHistoryReads, ec)
   }
 
   def getRepaymentHistoryDetailsById(nino: String,
                                      repaymentId: String)(implicit headerCarrier: HeaderCarrier): Future[RepaymentHistoryResponse] = {
-    val url = listRepaymentHistoryDetailsUrl(nino)
+    val url = getRepaymentHistoryDetailsByIdUrl(nino, repaymentId)
     logger.info(s"Calling GET $url " +
       s"\nHeaders: $headerCarrier \nIsMigrated: ${if (appConfig.useRepaymentHistoryDetailsIFPlatform) "YES" else "NO"}")
-    http.GET(
-      url = url,
-      queryParams = IdQueryParameters(repaymentId),
-      headers = headers
-    )(RepaymentHistoryReads, headerCarrier, ec)
+
+    http.get(url"$url")
+      .setHeader(headers: _*)
+      .execute[RepaymentHistoryResponse](RepaymentHistoryReads, ec)
   }
 }
