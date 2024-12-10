@@ -17,12 +17,12 @@
 package connectors
 
 import assets.UpdateIncomeSourceTestConstants._
-import mocks.{MockHttp, MockHttpV2}
+import mocks.MockHttpV2
 import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-class UpdateIncomeSourceConnectorSpec extends TestSupport with MockHttp with MockHttpV2 {
+class UpdateIncomeSourceConnectorSpec extends TestSupport with MockHttpV2 {
 
   object TestUpdateIncomeSourceConnector extends UpdateIncomeSourceConnector(mockHttpClientV2, microserviceAppConfig)
 
