@@ -29,12 +29,12 @@ class RepaymentHistoryDetailsConnector @Inject()(val http: HttpClientV2,
                                                  val appConfig: MicroserviceAppConfig
                                                 )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  private def listRepaymentHistoryDetailsUrl(nino: String): String = {
+  private[connectors] def listRepaymentHistoryDetailsUrl(nino: String): String = {
     val platformUrl = if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
     s"$platformUrl/income-tax/self-assessment/repayments-viewer/$nino"
   }
 
-  private def getRepaymentHistoryDetailsByIdUrl(nino: String, repaymentId: String): String = {
+  private[connectors] def getRepaymentHistoryDetailsByIdUrl(nino: String, repaymentId: String): String = {
     val platformUrl = if (appConfig.useRepaymentHistoryDetailsIFPlatform) appConfig.ifUrl else appConfig.desUrl
     s"$platformUrl/income-tax/self-assessment/repayments-viewer/$nino?repaymentRequestNumber=$repaymentId"
   }
