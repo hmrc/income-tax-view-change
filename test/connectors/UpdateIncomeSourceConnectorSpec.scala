@@ -17,38 +17,39 @@
 package connectors
 
 import assets.UpdateIncomeSourceTestConstants._
-import mocks.MockHttp
+import mocks.MockHttpV2
 import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-class UpdateIncomeSourceConnectorSpec extends TestSupport with MockHttp {
+class UpdateIncomeSourceConnectorSpec extends TestSupport with MockHttpV2 {
 
-  object TestUpdateIncomeSourceConnector extends UpdateIncomeSourceConnector(mockHttpGet, microserviceAppConfig)
+  object TestUpdateIncomeSourceConnector extends UpdateIncomeSourceConnector(mockHttpClientV2, microserviceAppConfig)
 
   "UpdateIncomeSourceConnector.updateCessationDate" should {
 
     import TestUpdateIncomeSourceConnector._
 
-    lazy val mock: (UpdateIncomeSourceRequestModel, HttpResponse) => Unit = setupMockHttpPutWithHeaderCarrier[UpdateIncomeSourceRequestModel](updateIncomeSourceUrl, microserviceAppConfig.getIFHeaders("1776"))
+    lazy val mockV2: (UpdateIncomeSourceRequestModel, HttpResponse) => Unit =
+      (_, response) => setupMockHttpV2PutWithHeaderCarrier(updateIncomeSourceUrl)(response)
 
     "return Status (OK) and a JSON body when successful" in {
-      mock(request, successHttpResponse)
+      mockV2(request, successHttpResponse)
       updateIncomeSource(request).futureValue shouldBe successResponse
     }
 
     "return UpdateIncomeSourceResponseError model in case of failure" in {
-      mock(badRequest, badHttpResponse)
+      mockV2(badRequest, badHttpResponse)
       updateIncomeSource(badRequest).futureValue shouldBe errorBadResponse
     }
 
     "return UpdateIncomeSourceResponseError model in case of bad JSON" in {
-      mock(badRequest, successInvalidJsonResponse)
+      mockV2(badRequest, successInvalidJsonResponse)
       updateIncomeSource(badRequest).futureValue shouldBe badJsonResponse
     }
 
     "return UpdateIncomeSourceResponseError model in case of failed future" in {
-      setupMockHttpPutFailed(updateIncomeSourceUrl, microserviceAppConfig.getIFHeaders("1776"))(badRequest)
+      setupMockHttpV2PutFailed(updateIncomeSourceUrl)(badRequest)
       updateIncomeSource(badRequest).futureValue shouldBe failureResponse
     }
   }

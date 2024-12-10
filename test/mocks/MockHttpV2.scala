@@ -81,6 +81,20 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
     when(mockRequestBuilder.execute[T](any(), any())).thenReturn(Future.successful(response))
   }
 
+  def setupMockHttpV2PutWithHeaderCarrier[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
+    when(mockHttpClientV2.put(ArgumentMatchers.eq(url"$url"))(any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.setHeader(any[(String, String)]())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.withBody(any())(any(), any(), any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.execute[T](any(), any())).thenReturn(Future.successful(response))
+    }
+
+  def setupMockHttpV2PutFailed[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
+    when(mockHttpClientV2.put(ArgumentMatchers.eq(url"$url"))(any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.setHeader(any[(String, String)]())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.withBody(any())(any(), any(), any())).thenReturn(mockRequestBuilder)
+    when(mockRequestBuilder.execute[T](any(), any())).thenReturn(Future.failed(new Exception("error")))
+  }
+
   def setupMockHttpV2PostFailed[T](url: String)(response: T): OngoingStubbing[Future[T]] = {
     when(mockHttpClientV2.post(ArgumentMatchers.eq(url"$url"))(any())).thenReturn(mockRequestBuilder)
     when(mockRequestBuilder.withBody(any())(any(), any(), any())).thenReturn(mockRequestBuilder)
