@@ -20,16 +20,14 @@ import config.MicroserviceAppConfig
 import models.obligations.{ObligationsErrorModel, ObligationsModel, ObligationsResponseModel}
 import play.api.http.Status
 import play.api.http.Status._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-@nowarn("cat=deprecation")
 @Singleton
-class ObligationsConnector @Inject()(val http: HttpClient,
+class ObligationsConnector @Inject()(val http: HttpClientV2,
                                      val appConfig: MicroserviceAppConfig
                                         )(implicit ec: ExecutionContext) extends RawResponseReads {
 
@@ -41,9 +39,13 @@ class ObligationsConnector @Inject()(val http: HttpClient,
     s"${appConfig.desUrl}/enterprise/obligation-data/nino/$nino/ITSA?from=$from&to=$to"
   }
 
+  def headers: Seq[(String, String)] = appConfig.desAuthHeaders
+
   private def callObligationsAPI(url: String)(implicit headerCarrier: HeaderCarrier): Future[ObligationsResponseModel] = {
-    http.GET[HttpResponse](url = url, headers = appConfig.desAuthHeaders)(httpReads, headerCarrier, implicitly) map {
-      response =>
+    http.get(url"$url")
+      .setHeader(headers: _*)
+      .execute[HttpResponse]
+      .map { response =>
         response.status match {
           case OK =>
             logger.info(s"RESPONSE status: ${response.status}, body: ${response.body}")
@@ -61,7 +63,7 @@ class ObligationsConnector @Inject()(val http: HttpClient,
             logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
             ObligationsErrorModel(response.status, response.body)
         }
-    } recover {
+      } recover {
       case ex =>
         logger.error(s"Unexpected failed future, ${ex.getMessage}")
         ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
