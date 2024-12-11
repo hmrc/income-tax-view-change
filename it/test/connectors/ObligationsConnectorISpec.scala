@@ -20,8 +20,7 @@ import assets.BaseIntegrationTestConstants.testNino
 import assets.ReportDeadlinesIntegrationTestConstants._
 import helpers.{ComponentSpecBase, WiremockHelper}
 import models.obligations.ObligationsErrorModel
-import play.api.http.Status
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
+import play.api.http.Status._
 import play.api.libs.json.Json
 
 class ObligationsConnectorISpec extends ComponentSpecBase {
@@ -54,7 +53,7 @@ class ObligationsConnectorISpec extends ComponentSpecBase {
           WiremockHelper.stubGet(getOpenObligationsUrl, OK, responseBody)
           val result = connector.getOpenObligations(testNino).futureValue
 
-          result shouldBe ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
+          result shouldBe ObligationsErrorModel(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
         }
       }
 
@@ -100,7 +99,7 @@ class ObligationsConnectorISpec extends ComponentSpecBase {
           WiremockHelper.stubGet(getAllObligationsDateRangeUrl, OK, responseBody)
           val result = connector.getAllObligationsWithinDateRange(testNino, dateFrom, dateTo).futureValue
 
-          result shouldBe ObligationsErrorModel(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
+          result shouldBe ObligationsErrorModel(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Report Deadlines Data")
         }
       }
 
