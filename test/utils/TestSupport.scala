@@ -31,7 +31,7 @@ import scala.concurrent.ExecutionContext
 
 
 trait TestSupport extends AnyWordSpec with AnyWordSpecLike with Matchers with OptionValues
-  with GuiceOneServerPerSuite with BeforeAndAfterAll  with MaterializerSupport with ScalaFutures {
+  with GuiceOneServerPerSuite with BeforeAndAfterAll with BeforeAndAfter with MaterializerSupport with ScalaFutures {
   this: Suite =>
 
   def fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("", "")
