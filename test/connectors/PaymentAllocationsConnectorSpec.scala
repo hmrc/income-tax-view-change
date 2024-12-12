@@ -16,16 +16,16 @@
 
 package connectors
 
-import connectors.httpParsers.PaymentAllocationsHttpParser.{NotFoundResponse, PaymentAllocationsError, UnexpectedResponse}
-import mocks.MockHttp
-import models.paymentAllocations.{PaymentAllocations, paymentAllocationsFull}
+import connectors.httpParsers.PaymentAllocationsHttpParser.{NotFoundResponse, UnexpectedResponse}
+import mocks.MockHttpV2
+import models.paymentAllocations.paymentAllocationsFull
 import play.api.http.Status._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TestSupport
 
-class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
+class PaymentAllocationsConnectorSpec extends TestSupport with MockHttpV2 {
 
-  object TestPaymentAllocationsConnector extends PaymentAllocationsConnector(mockHttpGet, microserviceAppConfig)
+  object TestPaymentAllocationsConnector extends PaymentAllocationsConnector(mockHttpClientV2, microserviceAppConfig)
 
   val testNino: String = "AA000000B"
   val testPaymentLot: String = "testPaymentLot"
@@ -59,13 +59,15 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
   "getPaymentAllocations" should {
     "return payment allocations" when {
       s"$OK is returned from the connector call with correct json" in {
-        mockGet(
+        setupMockHttpGetWithHeaderCarrier(
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
-          queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
-          headers = microserviceAppConfig.desAuthHeaders
-        )(Right(paymentAllocationsFull))
+          headers = microserviceAppConfig.desAuthHeaders,
+        )(
+          Right(paymentAllocationsFull)
+        )
 
-        val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
+        val result = TestPaymentAllocationsConnector
+          .getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
 
         result shouldBe Right(paymentAllocationsFull)
       }
@@ -73,11 +75,12 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
 
     "return a not found response" when {
       s"$NOT_FOUND is returned from the connector call" in {
-        mockGet(
+        setupMockHttpGetWithHeaderCarrier(
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
-          queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
           headers = microserviceAppConfig.desAuthHeaders
-        )(Left(NotFoundResponse))
+        )(
+          Left(NotFoundResponse)
+        )
 
         val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
 
@@ -87,11 +90,12 @@ class PaymentAllocationsConnectorSpec extends TestSupport with MockHttp {
 
     s"return an error" when {
       "something went wrong" in {
-        mockGet[PaymentAllocationsError, PaymentAllocations](
+        setupMockHttpGetWithHeaderCarrier(
           url = TestPaymentAllocationsConnector.paymentAllocationsUrl(testNino),
-          queryParameters = TestPaymentAllocationsConnector.queryParameters(testPaymentLot, testPaymentLotItem),
           headers = microserviceAppConfig.desAuthHeaders
-        )(Left(UnexpectedResponse))
+        )(
+          Left(UnexpectedResponse)
+        )
 
         val result = TestPaymentAllocationsConnector.getPaymentAllocations(testNino, testPaymentLot, testPaymentLotItem).futureValue
 

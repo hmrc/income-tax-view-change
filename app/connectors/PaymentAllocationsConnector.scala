@@ -18,15 +18,13 @@ package connectors
 
 import config.MicroserviceAppConfig
 import connectors.httpParsers.PaymentAllocationsHttpParser.{PaymentAllocationsReads, PaymentAllocationsResponse}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.Inject
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
-//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-@nowarn("cat=deprecation")
-class PaymentAllocationsConnector @Inject()(val http: HttpClient,
+class PaymentAllocationsConnector @Inject()(val http: HttpClientV2,
                                             val appConfig: MicroserviceAppConfig)
                                            (implicit ec: ExecutionContext) extends RawResponseReads {
 
@@ -42,12 +40,10 @@ class PaymentAllocationsConnector @Inject()(val http: HttpClient,
   }
 
   def getPaymentAllocations(nino: String, paymentLot: String, paymentLotItem: String)
-                           (implicit hc: HeaderCarrier): Future[PaymentAllocationsResponse] = {
-    http.GET(
-      url = paymentAllocationsUrl(nino),
-      queryParams = queryParameters(paymentLot, paymentLotItem),
-      headers = appConfig.desAuthHeaders
-    )(PaymentAllocationsReads, hc, ec)
-  }
-
+                           (implicit hc: HeaderCarrier): Future[PaymentAllocationsResponse] =
+    http
+      .get(url"${paymentAllocationsUrl(nino)}")
+      .setHeader(appConfig.desAuthHeaders: _*)
+      .transform(_.addQueryStringParameters(queryParameters(paymentLot, paymentLotItem): _*))
+      .execute[PaymentAllocationsResponse](PaymentAllocationsReads, ec)
 }
