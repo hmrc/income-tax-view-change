@@ -18,28 +18,35 @@ package connectors
 
 import assets.BaseTestConstants.testNino
 import assets.ObligationsTestConstants._
+import mocks.MockHttpV2
 import models.obligations.ObligationsResponseModel
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.{any, eq => matches}
-import org.mockito.Mockito._
 import play.api.http.Status._
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
-import scala.annotation.nowarn
-import scala.concurrent.Future
-
-class ObligationsConnectorSpec extends TestSupport {
+class ObligationsConnectorSpec extends TestSupport with MockHttpV2{
 
   trait Setup {
-    //TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-    @nowarn("cat=deprecation")
-    val httpClient: HttpClient = mock(classOf[HttpClient])
 
     val connector: ObligationsConnector = new ObligationsConnector(
-      httpClient,
+      mockHttpClientV2,
       microserviceAppConfig
     )
+
+    val desUrl: String = microserviceAppConfig.desUrl
+    val dateFrom = "2020-04-06"
+    val dateTo = "2021-04-05"
+
+    val headers: Seq[(String, String)] = microserviceAppConfig.desAuthHeaders
+    val getOpenObligationsUrl = s"$desUrl/enterprise/obligation-data/nino/$testNino/ITSA?status=O"
+    val getAllObligationsDateRangeUrl = s"$desUrl/enterprise/obligation-data/nino/$testNino/ITSA?from=$dateFrom&to=$dateTo"
+
+    val mockSuccessGetOpenObligations = setupMockHttpGetWithHeaderCarrier[HttpResponse](getOpenObligationsUrl, headers)(_)
+    val mockSuccessGetOpenObligationsDateRange = setupMockHttpGetWithHeaderCarrier[HttpResponse](getAllObligationsDateRangeUrl, headers)(_)
+
+    val mockFailedGetOpenObligations = setupMockHttpGetWithHeaderCarrier[HttpResponse](getOpenObligationsUrl, headers)(_)
+    val mockFailedGetOpenObligationsDateRange = setupMockHttpGetWithHeaderCarrier[HttpResponse](getAllObligationsDateRangeUrl, headers)(_)
+
   }
 
   "getOpenObligationsUrl" should {
@@ -56,44 +63,31 @@ class ObligationsConnectorSpec extends TestSupport {
   "getOpenObligations connector method" should {
     s"return a obligations model when the endpoint returns Status: $OK" when {
       "called for open obligations" in new Setup {
-        when(httpClient.GET[HttpResponse](matches(connector.getOpenObligationsUrl(testNino)),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))
-          (any(), any(), any()))
-          .thenReturn(Future.successful(successResponse))
-
+        mockSuccessGetOpenObligations(successResponse)
         val result: ObligationsResponseModel = connector.getOpenObligations(testNino).futureValue
 
         result shouldBe testObligations
       }
-
     }
 
     "return a report deadlines error model" when {
       s"the connector does not receive a Status:$OK response" in new Setup {
-        when(httpClient.GET[HttpResponse](matches(connector.getOpenObligationsUrl(testNino)),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
-          .thenReturn(Future.successful(badResponse))
-
+        mockFailedGetOpenObligations(badResponse)
         val result: ObligationsResponseModel = connector.getOpenObligations(testNino).futureValue
 
         result shouldBe testReportDeadlinesError
       }
-      "the json received can not be parsed into an obligations model" in new Setup {
-        when(httpClient.GET[HttpResponse](matches(connector.getOpenObligationsUrl(testNino)),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
-          .thenReturn(Future.successful(badJson))
 
+      "the json received can not be parsed into an obligations model" in new Setup {
+        mockFailedGetOpenObligations(badJson)
         val result: ObligationsResponseModel = connector.getOpenObligations(testNino).futureValue
 
         result shouldBe testReportDeadlinesErrorJson
       }
+
       "the http call failed and returned a future failed" in new Setup {
         val exceptionMessage: String = "Exception message"
-
-        when(httpClient.GET[HttpResponse](matches(connector.getOpenObligationsUrl(testNino)),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
-          .thenReturn(Future.failed(new Exception(exceptionMessage)))
-
+        setupMockFailedHttpV2Get(getOpenObligationsUrl, exceptionMessage)
         val result: ObligationsResponseModel = connector.getOpenObligations(testNino).futureValue
 
         result shouldBe testReportDeadlinesErrorFutureFailed(exceptionMessage)
@@ -104,48 +98,36 @@ class ObligationsConnectorSpec extends TestSupport {
   "getPreviousObligations" should {
     "return an obligations model" when {
       s"$OK is return with valid json" in new Setup {
-        when(httpClient.GET[HttpResponse](
-          matches(connector.getAllObligationsDateRangeUrl(testNino, "2020-04-06", "2021-04-05")),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
-          .thenReturn(Future.successful(successResponse))
-
-        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, "2020-04-06", "2021-04-05").futureValue
+        mockSuccessGetOpenObligationsDateRange(successResponse)
+        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, dateFrom, dateTo).futureValue
 
         result shouldBe testObligations
       }
     }
+
     "return a report deadline error model" when {
       s"$OK is returned but the json is invalid" in new Setup {
-        when(httpClient.GET[HttpResponse](
-          matches(connector.getAllObligationsDateRangeUrl(testNino, "2020-04-06", "2021-04-05")),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
-          .thenReturn(Future.successful(badJson))
+        mockFailedGetOpenObligationsDateRange(badJson)
 
-        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, "2020-04-06", "2021-04-05").futureValue
+        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, dateFrom, dateTo).futureValue
 
         result shouldBe testReportDeadlinesErrorJson
       }
-      s"a status which is not $OK is returned" in new Setup {
-        when(httpClient.GET[HttpResponse](
-          matches(connector.getAllObligationsDateRangeUrl(testNino, "2020-04-06", "2021-04-05")),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
-          .thenReturn(Future.successful(badResponse))
 
-        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, "2020-04-06", "2021-04-05").futureValue
+      s"a status which is not $OK is returned" in new Setup {
+        mockFailedGetOpenObligationsDateRange(badResponse)
+        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, dateFrom, dateTo).futureValue
 
         result shouldBe testReportDeadlinesError
       }
+
       s"there was a problem making the call" in new Setup {
-        when(httpClient.GET[HttpResponse](
-          matches(connector.getAllObligationsDateRangeUrl(testNino, "2020-04-06", "2021-04-05")),
-          any(), ArgumentMatchers.eq[Seq[(String, String)]](microserviceAppConfig.desAuthHeaders))(any(), any(), any()))
-          .thenReturn(Future.failed(new Exception("test exception")))
+        val exception = "test exception"
+        setupMockFailedHttpV2Get(getAllObligationsDateRangeUrl, exception)
+        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, dateFrom, dateTo).futureValue
 
-        val result: ObligationsResponseModel = connector.getAllObligationsWithinDateRange(testNino, "2020-04-06", "2021-04-05").futureValue
-
-        result shouldBe testReportDeadlinesErrorFutureFailed("test exception")
+        result shouldBe testReportDeadlinesErrorFutureFailed(exception)
       }
     }
   }
-
 }

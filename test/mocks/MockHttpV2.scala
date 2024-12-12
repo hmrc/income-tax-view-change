@@ -49,13 +49,13 @@ trait MockHttpV2 extends AnyWordSpecLike with Matchers with OptionValues with Be
   }
 
 
-  def setupMockFailedHttpV2Get[T](url: String): OngoingStubbing[Future[T]] = {
+  def setupMockFailedHttpV2Get[T](url: String, error: String = "error"): OngoingStubbing[Future[T]] = {
     when(mockHttpClientV2
       .get(ArgumentMatchers.eq(url"$url"))(ArgumentMatchers.any())).thenReturn(mockRequestBuilder)
 
     when(mockRequestBuilder
       .execute[T](ArgumentMatchers.any(), ArgumentMatchers.any()))
-      .thenReturn(Future.failed(new Exception("error")))
+      .thenReturn(Future.failed(new Exception(error)))
   }
 
   def setupMockHttpGetWithHeaderCarrier[T](url: String, headers: Seq[(String, String)])(response: T): OngoingStubbing[Future[T]] = {
