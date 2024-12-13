@@ -18,21 +18,21 @@ package connectors
 
 import assets.ITSAStatusTestConstants._
 import connectors.itsastatus.ITSAStatusConnector
-import mocks.MockHttp
+import mocks.MockHttpV2
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseModel}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
 import scala.concurrent.Future
 
-class ITSAStatusConnectorSpec extends TestSupport with MockHttp {
-  object TestITSAStatusConnector extends ITSAStatusConnector(mockHttpGet, microserviceAppConfig)
+class ITSAStatusConnectorSpec extends TestSupport with MockHttpV2 {
+  object TestITSAStatusConnector extends ITSAStatusConnector(mockHttpClientV2, microserviceAppConfig)
 
   "ITSAStatusConnector.getITSAStatus" should {
 
     import TestITSAStatusConnector._
 
-    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getITSAStatusUrl("", ""), microserviceAppConfig.getIFHeaders("1878"))
+    lazy val mock = setupMockHttpGetWithHeaderCarrier[HttpResponse](getITSAStatusUrl("", "", futureYears = "true", history = "true"), microserviceAppConfig.getIFHeaders("1878"))(_)
 
     def getITSAStatusCall: Future[Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]] = getITSAStatus("", "", true, true)
 
@@ -57,7 +57,7 @@ class ITSAStatusConnectorSpec extends TestSupport with MockHttp {
     }
 
     "return ITSAStatusResponseError model in case of failed future" in {
-      setupMockHttpGetFailed(getITSAStatusUrl("", ""))
+      setupMockFailedHttpV2Get(getITSAStatusUrl("", "", futureYears = "true", history = "true"))
       getITSAStatusCall.futureValue shouldBe Left(failedFutureITSAStatusError)
     }
   }

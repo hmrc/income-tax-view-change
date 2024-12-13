@@ -22,39 +22,41 @@ import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
 import play.api.Logging
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
-import play.mvc.Http.Status
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import play.api.http.Status._
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 object ITSAStatusConnector {
   val CorrelationIdHeader = "CorrelationId"
 }
 
-//TODO: Remove suppression annotation after upgrading this file to use HttpClientV2
-@nowarn("cat=deprecation")
-class ITSAStatusConnector @Inject()(val http: HttpClient,
+class ITSAStatusConnector @Inject()(val http: HttpClientV2,
                                     val appConfig: MicroserviceAppConfig
                                    )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {
 
-  def getITSAStatusUrl(taxableEntityId: String, taxYear: String): String =
-    s"${appConfig.ifUrl}/income-tax/$taxableEntityId/person-itd/itsa-status/$taxYear"
+  def getITSAStatusUrl(taxableEntityId: String, taxYear: String, futureYears: String, history: String): String =
+    s"${appConfig.ifUrl}/income-tax/$taxableEntityId/person-itd/itsa-status/$taxYear?futureYears=$futureYears&history=$history"
+
+  def headers1878: Seq[(String, String)] = appConfig.getIFHeaders("1878")
+
+  def headers2149: Seq[(String, String)] = appConfig.getIFHeaders("2149")
 
   def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean, history: Boolean)
                    (implicit headerCarrier: HeaderCarrier): Future[Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]] = {
 
-    val url = getITSAStatusUrl(taxableEntityId, taxYear)
+    val url = getITSAStatusUrl(taxableEntityId, taxYear, futureYears.toString, history.toString)
 
     logger.info("" +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1878")}")
 
-    val queryParams: Seq[(String, String)] = Seq(("futureYears", futureYears.toString), ("history", history.toString))
-
-    http.GET[HttpResponse](url = url, queryParams = queryParams, headers = appConfig.getIFHeaders("1878"))(httpReads, headerCarrier, implicitly) map {
-      response =>
+    http.get(url"$url")
+      .setHeader(headers1878: _*)
+      .execute[HttpResponse]
+      .map { response =>
         response.status match {
           case OK =>
             logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
@@ -75,7 +77,7 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
             logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}, hc: ${headerCarrier}")
             Left(ITSAStatusResponseError(response.status, response.body))
         }
-    } recover {
+      } recover {
       case ex =>
         logger.error(s"Unexpected failed future, ${ex.getMessage}")
         Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}"))
@@ -88,24 +90,29 @@ class ITSAStatusConnector @Inject()(val http: HttpClient,
   def requestOptOutForTaxYear(taxableEntityId: String, optOutUpdateRequest: OptOutUpdateRequest)
                              (implicit headerCarrier: HeaderCarrier): Future[OptOutUpdateResponse] = {
 
-    http.PUT[OptOutUpdateRequest, HttpResponse](
-      url = buildUpdateRequestUrlWith(taxableEntityId),
-      body = optOutUpdateRequest,
-      headers = appConfig.getIFHeaders("2149")
-    ).map { response =>
-      val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
-      response.status match {
-        case Status.NO_CONTENT => OptOutUpdateResponseSuccess(correlationId)
-        case _ =>
-          response.json.validate[OptOutUpdateResponseFailure].fold(
-            invalid => {
-              val msg = s"Json validation error parsing itsa-status update response, error $invalid"
-              logger.error(msg)
-              OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
-            },
-            valid => valid.copy(correlationId = correlationId, statusCode = response.status)
-          )
+    http.put(url"${buildUpdateRequestUrlWith(taxableEntityId)}")
+      .withBody(Json.toJson[OptOutUpdateRequest](optOutUpdateRequest))
+      .setHeader(headers2149: _*)
+      .execute[HttpResponse]
+      .map{ response =>
+        val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
+        response.status match {
+          case NO_CONTENT =>
+            logger.info("ITSA status successfully updated")
+            OptOutUpdateResponseSuccess(correlationId)
+          case _ =>
+            response.json.validate[OptOutUpdateResponseFailure].fold(
+              invalid => {
+                val msg = s"Json validation error parsing itsa-status update response, error $invalid"
+                logger.error(msg)
+                OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
+              },
+              valid => {
+                logger.debug(s"Unsuccessful response: $valid")
+                valid.copy(correlationId = correlationId, statusCode = response.status)
+              }
+            )
+        }
       }
-    }
   }
 }

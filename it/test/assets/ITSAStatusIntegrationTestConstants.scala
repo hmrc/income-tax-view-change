@@ -25,8 +25,10 @@ object ITSAStatusIntegrationTestConstants {
   val taxYear = "2020"
   val statusDetail = StatusDetail("2023-06-15T15:38:33.960Z", "No Status", "Sign up - return available", Some(8000.25))
   val successITSAStatusResponseModel = ITSAStatusResponseModel("2019-20", Some(List(statusDetail)))
-  val errorITSAStatusNotFoundError = ITSAStatusResponseNotFound(NOT_FOUND, "Dummy message")
+  val errorITSAStatusNotFoundError = ITSAStatusResponseNotFound(NOT_FOUND, "The remote endpoint has indicated that no match found for the reference provided.")
   val failedFutureITSAStatusError = ITSAStatusResponseError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
+
+  val listSuccessITSAStatusResponseModel = List(successITSAStatusResponseModel)
 
   val failureInvalidRequestResponse =
     """{
