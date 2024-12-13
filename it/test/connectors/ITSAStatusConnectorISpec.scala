@@ -16,13 +16,13 @@
 
 package connectors
 
-import connectors.itsastatus.ITSAStatusConnector
-import helpers.{ComponentSpecBase, WiremockHelper}
 import assets.ITSAStatusIntegrationTestConstants._
+import connectors.itsastatus.ITSAStatusConnector
 import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
-import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, NO_CONTENT, OK}
-import play.api.libs.json.{JsError, Json}
+import helpers.{ComponentSpecBase, WiremockHelper}
+import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, NO_CONTENT, OK}
+import play.api.libs.json.Json
 
 class ITSAStatusConnectorISpec extends ComponentSpecBase {
 
@@ -94,17 +94,17 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
         }
       }
 
-      "the response is a 400 - BadRequest" should {
+      "the response is a 500 - InternalServerError" should {
 
         "return an OptOutUpdateResponseFailure when there has been an error with the request" in {
-          val response = Map("fake" -> "data")
-          WiremockHelper.stubPutWithHeaders(updateRequestUrl, BAD_REQUEST, Json.toJson(response).toString(), Map("correlationId" -> correlationId))
+          val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
+          val headers = Map("correlationId" -> correlationId)
+          WiremockHelper.stubPutWithHeaders(updateRequestUrl, INTERNAL_SERVER_ERROR, expectedResponse, headers)
           val result = connector.requestOptOutForTaxYear(taxableEntityId, request).futureValue
 
-          result shouldBe Left(OptOutUpdateResponseFailure.defaultFailure())
+          result shouldBe OptOutUpdateResponseFailure.defaultFailure(correlationId)
         }
       }
     }
   }
-
 }
