@@ -32,13 +32,13 @@
 
 package connectors.itsastatus
 
-import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
+import connectors.itsastatus.ITSAStatusConnector._
 import connectors.itsastatus.OptOutUpdateRequestModel._
 import mocks.MockHttpV2
 import org.mockito.Mockito.mock
 import play.api.libs.json.Json
-import play.mvc.Http.Status.{BAD_REQUEST, NO_CONTENT}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import play.mvc.Http.Status._
+import uk.gov.hmrc.http._
 import utils.TestSupport
 
 import scala.concurrent.Future

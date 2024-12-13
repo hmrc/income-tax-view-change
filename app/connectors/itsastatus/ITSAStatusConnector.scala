@@ -97,7 +97,9 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
       .map{ response =>
         val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
         response.status match {
-          case NO_CONTENT => OptOutUpdateResponseSuccess(correlationId)
+          case NO_CONTENT =>
+            logger.info("ITSA status successfully updated")
+            OptOutUpdateResponseSuccess(correlationId)
           case _ =>
             response.json.validate[OptOutUpdateResponseFailure].fold(
               invalid => {
@@ -105,7 +107,10 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
                 logger.error(msg)
                 OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
               },
-              valid => valid.copy(correlationId = correlationId, statusCode = response.status)
+              valid => {
+                logger.debug(s"Unsuccessful response: $valid")
+                valid.copy(correlationId = correlationId, statusCode = response.status)
+              }
             )
         }
       }

@@ -18,10 +18,10 @@ package connectors
 
 import assets.ITSAStatusIntegrationTestConstants._
 import connectors.itsastatus.ITSAStatusConnector
-import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
-import helpers.{ComponentSpecBase, WiremockHelper}
-import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, NO_CONTENT, OK}
+import connectors.itsastatus.OptOutUpdateRequestModel._
+import helpers._
+import models.itsaStatus._
+import play.api.http.Status._
 import play.api.libs.json.Json
 
 class ITSAStatusConnectorISpec extends ComponentSpecBase {
