@@ -24,7 +24,7 @@ import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,9 +39,13 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClientV2,
   def create(mtdbsaRef: String, body: CreateIncomeSourceRequest)
             (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]] = {
 
+    val hc: HeaderCarrier = headerCarrier
+      .copy(authorization = Some(Authorization(appConfig.desToken)))
+      .withExtraHeaders("Environment" -> appConfig.desEnvironment)
+
     logWithDebug(s"Calling POST ${getUrl(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
 
-    http.post(url"${getUrl(mtdbsaRef)}")
+    http.post(url"${getUrl(mtdbsaRef)}")(hc)
       .withBody(Json.toJson[CreateIncomeSourceRequest](body))
       .execute[HttpResponse]
       .map {
