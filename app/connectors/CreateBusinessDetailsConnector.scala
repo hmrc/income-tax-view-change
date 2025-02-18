@@ -46,6 +46,7 @@ class CreateBusinessDetailsConnector @Inject()(val http: HttpClientV2,
     logWithDebug(s"Calling POST ${getUrl(mtdbsaRef)} \n\nHeaders: $headerCarrier \nAuth Headers: ${appConfig.desAuthHeaders}")
 
     http.post(url"${getUrl(mtdbsaRef)}")(hc)
+      .setHeader(appConfig.desAuthHeaders: _*)
       .withBody(Json.toJson[CreateIncomeSourceRequest](body))
       .execute[HttpResponse]
       .map {
