@@ -33,9 +33,15 @@ case class AChargesResponse(model: ChargesResponse = ChargesResponse(
     AChargesResponse(model.copy(balanceDetails = balanceDetails))
   }
 
-  def withAllocatedCredit(allocatedCredit: BigDecimal): AChargesResponse = {
+  def withUnallocatedCredit(unallocatedCredit: BigDecimal): AChargesResponse = {
     val balanceDetails = model.balanceDetails
-      .copy(allocatedCredit = Some(allocatedCredit))
+      .copy(unallocatedCredit = Some(unallocatedCredit))
+    AChargesResponse(model.copy(balanceDetails = balanceDetails))
+  }
+
+  def withBalanceDueWithin30Days(balanceDueWithin30Days: BigDecimal): AChargesResponse = {
+    val balanceDetails = model.balanceDetails
+      .copy(balanceDueWithin30Days = balanceDueWithin30Days)
     AChargesResponse(model.copy(balanceDetails = balanceDetails))
   }
 

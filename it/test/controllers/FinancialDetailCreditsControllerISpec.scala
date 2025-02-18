@@ -31,11 +31,12 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
 
   val apiResponseJson = """{
                |  "balanceDetails" : {
-               |    "balanceDueWithin30Days" : 0,
+               |    "balanceDueWithin30Days" : 100,
                |    "overDueAmount" : 0,
                |    "totalBalance" : 0,
                |    "availableCredit" : 200,
                |    "allocatedCredit" : 100,
+               |    "unallocatedCredit" : 400,
                |    "firstPendingAmountRequested" : 200,
                |    "secondPendingAmountRequested" : 100
                |  },
@@ -136,7 +137,8 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
 
         val expectedResponse = CreditsModel.fromChargesResponse(AChargesResponse()
           .withAvailableCredit(200.0)
-          .withAllocatedCredit(100.0)
+          .withUnallocatedCredit(400.0)
+          .withBalanceDueWithin30Days(100.0)
           .withFirstRefundRequest(200.0)
           .withSecondRefundRequest(100.0)
           .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)

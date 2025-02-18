@@ -21,7 +21,8 @@ import models.financialDetails.responses.ChargesResponse
 import play.api.libs.json.{Json, OFormat}
 
 case class CreditsModel(availableCredit: BigDecimal,
-                        allocatedCredit: BigDecimal,
+                        balanceDueWithin30Days: BigDecimal,
+                        unallocatedCredit: BigDecimal,
                         transactions: List[Transaction] )
 
 object CreditsModel {
@@ -67,7 +68,8 @@ object CreditsModel {
   def fromChargesResponse(chargesResponse: ChargesResponse): CreditsModel = {
     CreditsModel(
       chargesResponse.balanceDetails.availableCredit.map(_.abs).getOrElse(0.0),
-      chargesResponse.balanceDetails.allocatedCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.balanceDueWithin30Days.abs,
+      chargesResponse.balanceDetails.unallocatedCredit.map(_.abs).getOrElse(0.0),
       getCreditTransactions(chargesResponse) :++ createPendingRefundTransactions(chargesResponse)
     )
   }

@@ -50,7 +50,8 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
 
         val chargesResponse = AChargesResponse()
           .withAvailableCredit(200.0)
-          .withAllocatedCredit(100.0)
+          .withUnallocatedCredit(300.0)
+          .withBalanceDueWithin30Days(400.0)
           .withFirstRefundRequest(200.0)
           .withSecondRefundRequest(100.0)
           .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)
