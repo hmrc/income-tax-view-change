@@ -53,7 +53,7 @@ object ObligationsTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = Some(LocalDate.parse("2018-05-01")),
-    obligationType = "Crystallised",
+    obligationType = "Crystallisation",
     status = status
   )
 
@@ -101,7 +101,7 @@ object ObligationsTestConstants {
     due = LocalDate.parse("2018-06-01"),
     periodKey = "#001",
     dateReceived = None,
-    obligationType = "Crystallised",
+    obligationType = "Crystallisation",
     status = status
   )
 

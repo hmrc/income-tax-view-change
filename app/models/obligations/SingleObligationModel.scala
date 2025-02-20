@@ -47,7 +47,7 @@ object SingleObligationModel {
       (__ \ "periodKey").read[String] and
       (__ \ "inboundCorrespondenceDateReceived").readNullable[LocalDate] and
       (incomeSourceType match {
-        case "ITSA" => Reads.pure("Crystallised")
+        case "ITSA" => Reads.pure("Crystallisation")
         case _ => (__ \ "periodKey").read[String].map {
           case "EOPS" => "EOPS"
           case _ => "Quarterly"
