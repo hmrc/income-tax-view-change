@@ -43,6 +43,7 @@ object PropertyDetailsTestConstants {
     firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
     incomeSourceType = Some("property-unspecified"),
     tradingStartDate = Some(LocalDate.parse("2015-01-01")),
+    contextualTaxYear = Some("2021"),
     latencyDetails = Some(LatencyDetails(
       latencyEndDate = LocalDate.of(2022, 1, 1),
       taxYear1 = "2022",
@@ -63,6 +64,7 @@ object PropertyDetailsTestConstants {
     firstAccountingPeriodEndDate = None,
     incomeSourceType = None,
     tradingStartDate = None,
+    contextualTaxYear = None,
     latencyDetails = None,
     cashOrAccruals = true,
     quarterTypeElection = None
@@ -106,6 +108,7 @@ object PropertyDetailsTestConstants {
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "incomeSourceType" -> "property-unspecified",
     "tradingStartDate" -> "2015-01-01",
+    "contextualTaxYear" -> "2021",
     "latencyDetails" -> Json.obj(
       "latencyEndDate" -> "2022-01-01",
       "taxYear1" -> "2022",
@@ -134,6 +137,7 @@ object PropertyDetailsTestConstants {
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "incomeSourceType" -> "property-unspecified",
     "tradingStartDate" -> "2015-01-01",
+    "contextualTaxYear" -> "2021",
     "latencyDetails" -> Json.obj(
       "latencyEndDate" -> "2022-01-01",
       "taxYear1" -> "2022",
@@ -157,6 +161,7 @@ object PropertyDetailsTestConstants {
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "incomeSourceType" -> "property-unspecified",
     "tradingStartDate" -> "2015-01-01",
+    "contextualTaxYear" -> "2021",
     "latencyDetails" -> Json.obj(
       "latencyEndDate" -> "2022-01-01",
       "taxYear1" -> "2022",

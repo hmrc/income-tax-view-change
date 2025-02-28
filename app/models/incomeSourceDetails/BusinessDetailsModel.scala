@@ -29,6 +29,7 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 address: Option[AddressModel],
                                 contactDetails: Option[ContactDetailsModel],
                                 tradingStartDate: Option[LocalDate],
+                                contextualTaxYear: Option[String],
                                 cashOrAccruals: Boolean,
                                 seasonal: Option[Boolean],
                                 cessation: Option[CessationModel],
@@ -48,6 +49,7 @@ object BusinessDetailsModel {
       (__ \ "businessAddressDetails").readNullable(AddressModel.reads) and
       (__ \ "businessContactDetails").readNullable(ContactDetailsModel.reads) and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
+      (__ \ "contextualTaxYear").readNullable[String] and
       (__ \ "cashOrAccruals").read[Boolean] and
       (__ \ "seasonal").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
@@ -65,6 +67,7 @@ object BusinessDetailsModel {
                       address: Option[AddressModel],
                       contactDetails: Option[ContactDetailsModel],
                       tradingStartDate: Option[LocalDate],
+                      contextualTaxYear: Option[String],
                       cashOrAccruals: Boolean,
                       seasonal: Option[Boolean],
                       cessationDate: Option[LocalDate],
@@ -81,6 +84,7 @@ object BusinessDetailsModel {
       address,
       contactDetails,
       tradingStartDate,
+      contextualTaxYear,
       cashOrAccruals,
       seasonal,
       CessationModel.cessation(cessationDate, cessationReason),
