@@ -48,6 +48,25 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
             jsonBodyMatching(jsonSuccessOutput())
           )
         }
+
+        "return a NOT Found error" in {
+
+          isAuthorised(true)
+
+          And("I wiremock stub a successful getIncomeSourceDetails response")
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetailsNotFound(testNino, incomeSourceDetailsSuccess)
+
+          When(s"I call GET /get-business-details/nino/$testNino")
+          val res = IncomeTaxViewChange.getBusinessDetails(testNino)
+
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
+
+          Then("a successful response is returned with the correct business details")
+
+          res should have(
+            httpStatus(NOT_FOUND)
+          )
+        }
       }
       "An error response is returned from DES" should {
         "return an Error Response model" in {
