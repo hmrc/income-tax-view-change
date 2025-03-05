@@ -30,6 +30,11 @@ object BusinessDetailsCallWithNinoStub {
     WiremockHelper.stubGet(url(nino), Status.OK, ifBusinessDetailsResponse)
   }
 
+  def stubGetIfBusinessDetailsNotFound(nino: String, response: IncomeSourceDetailsModel): Unit = {
+    val ifBusinessDetailsResponse = successResponseIf(response.nino).toString
+    WiremockHelper.stubGet(url(nino), Status.NOT_FOUND, ifBusinessDetailsResponse)
+  }
+
   def stubGetIfBusinessDetailsError(nino: String): Unit = {
     val errorResponse = failureResponse("500", "ISE")
     WiremockHelper.stubGet(url(nino), Status.INTERNAL_SERVER_ERROR, errorResponse.toString)
