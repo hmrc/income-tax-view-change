@@ -44,7 +44,6 @@ class BusinessDetailsConnector @Inject()(val http: HttpClientV2,
                         (implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = getUrl(accessType, ninoOrMtdRef)
-//    val jsonReads = IncomeSourceDetailsModel.ifReads
 
     logger.debug("" +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
