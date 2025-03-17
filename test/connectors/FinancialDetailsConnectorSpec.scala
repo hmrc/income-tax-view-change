@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.FinancialDataTestConstants._
+import constants.FinancialDataTestConstants._
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import mocks.MockHttpV2
 import models.financialDetails.responses.ChargesResponse

@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesChargesStub._
 import models.credits.CreditsModel

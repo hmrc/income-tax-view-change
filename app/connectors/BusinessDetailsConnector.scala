@@ -29,9 +29,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class BusinessDetailsConnector @Inject()(val http: HttpClientV2,
                                          val appConfig: MicroserviceAppConfig
-                                           )(implicit ec: ExecutionContext) extends RawResponseReads {
+                                        )(implicit ec: ExecutionContext) extends RawResponseReads {
 
-  def getUrl(accessType: BusinessDetailsAccessType, ninoOrMtdRef: String) = {
+  def getUrl(accessType: BusinessDetailsAccessType, ninoOrMtdRef: String): String = {
     accessType match {
       case Nino => s"${appConfig.ifUrl}/registration/business-details/nino/$ninoOrMtdRef"
       case MtdId => s"${appConfig.ifUrl}/registration/business-details/mtdId/$ninoOrMtdRef"
@@ -44,7 +44,7 @@ class BusinessDetailsConnector @Inject()(val http: HttpClientV2,
                         (implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
 
     val url = getUrl(accessType, ninoOrMtdRef)
-    val jsonReads = IncomeSourceDetailsModel.ifReads
+//    val jsonReads = IncomeSourceDetailsModel.ifReads
 
     logger.debug("" +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $headers")
@@ -57,7 +57,7 @@ class BusinessDetailsConnector @Inject()(val http: HttpClientV2,
           response.status match {
             case OK =>
               logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
-              response.json.validate[IncomeSourceDetailsModel](jsonReads).fold(
+              response.json.validate[IncomeSourceDetailsModel].fold(
                 invalid => {
                   logger.error(s"Validation Errors: $invalid")
                   IncomeSourceDetailsError(Status.INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing Business Details")

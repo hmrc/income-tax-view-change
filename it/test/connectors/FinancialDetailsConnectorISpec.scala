@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.FinancialDetailIntegrationTestConstants._
+import constants.FinancialDetailIntegrationTestConstants._
 import connectors.httpParsers.ChargeHttpParser.{UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import helpers.{ComponentSpecBase, WiremockHelper}
 import models.financialDetails.responses.ChargesResponse

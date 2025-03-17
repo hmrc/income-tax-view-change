@@ -16,7 +16,7 @@
 
 package models.financialDetails
 
-import assets.FinancialDataTestConstants._
+import constants.FinancialDataTestConstants._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, JsPath, JsSuccess, Json}

@@ -16,8 +16,8 @@
 
 package services
 
-import assets.BaseTestConstants.mtdRef
-import assets.IncomeSourceDetailsTestConstants._
+import constants.BaseTestConstants.mtdRef
+import constants.IncomeSourceDetailsTestConstants._
 import mocks.MockBusinessDetailsConnector
 import models.core.NinoResponse
 import models.incomeSourceDetails.{MtdId, IncomeSourceDetailsResponseModel}

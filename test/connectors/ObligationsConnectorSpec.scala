@@ -16,8 +16,8 @@
 
 package connectors
 
-import assets.BaseTestConstants.testNino
-import assets.ObligationsTestConstants._
+import constants.BaseTestConstants.testNino
+import constants.ObligationsTestConstants._
 import mocks.MockHttpV2
 import models.obligations.ObligationsResponseModel
 import play.api.http.Status._

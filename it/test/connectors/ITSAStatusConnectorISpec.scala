@@ -16,9 +16,9 @@
 
 package connectors
 
-import assets.ITSAStatusIntegrationTestConstants._
 import connectors.itsastatus.ITSAStatusConnector
 import connectors.itsastatus.OptOutUpdateRequestModel._
+import constants.ITSAStatusIntegrationTestConstants._
 import helpers._
 import models.itsaStatus._
 import play.api.http.Status._
@@ -62,7 +62,7 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
 
         "return an ITSAStatusResponseNotFound model when no ITSA status was able to be retrieved" in {
           val jsonError = Json.obj("code" -> NOT_FOUND, "reason" -> "The remote endpoint has indicated that no match found for the reference provided.")
-          WiremockHelper.stubGet(getITSAStatusUrl, NOT_FOUND,  jsonError.toString())
+          WiremockHelper.stubGet(getITSAStatusUrl, NOT_FOUND, jsonError.toString())
           val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
 
           result shouldBe Left(ITSAStatusResponseNotFound(NOT_FOUND, jsonError.toString()))
@@ -73,7 +73,7 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
 
         "return an ITSAStatusResponseError when an unexpected error has occurred while trying to retrieve the ITSA status" in {
           val jsonError = Json.obj("code" -> INTERNAL_SERVER_ERROR, "reason" -> "Server Error, unexpected error has occurred")
-          WiremockHelper.stubGet(getITSAStatusUrl, INTERNAL_SERVER_ERROR,  jsonError.toString())
+          WiremockHelper.stubGet(getITSAStatusUrl, INTERNAL_SERVER_ERROR, jsonError.toString())
           val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
 
           result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, jsonError.toString()))

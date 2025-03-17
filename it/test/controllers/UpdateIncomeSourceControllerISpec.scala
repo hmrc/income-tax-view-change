@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.UpdateIncomeSourceIntegrationTestConstants._
+import constants.UpdateIncomeSourceIntegrationTestConstants._
 import models.updateIncomeSource.UpdateIncomeSourceResponseError
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import play.api.libs.json.Json

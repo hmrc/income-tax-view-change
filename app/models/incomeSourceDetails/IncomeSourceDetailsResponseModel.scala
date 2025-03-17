@@ -21,11 +21,13 @@ import play.api.libs.json._
 
 sealed trait IncomeSourceDetailsResponseModel
 
-case class IncomeSourceDetailsModel(nino: String,
-                                    mtdbsa: String,
-                                    yearOfMigration: Option[String],
-                                    businesses: List[BusinessDetailsModel],
-                                    properties: List[PropertyDetailsModel]) extends IncomeSourceDetailsResponseModel
+case class IncomeSourceDetailsModel(
+                                     nino: String,
+                                     mtdbsa: String,
+                                     yearOfMigration: Option[String],
+                                     businesses: List[BusinessDetailsModel],
+                                     properties: List[PropertyDetailsModel]
+                                   ) extends IncomeSourceDetailsResponseModel
 
 case class IncomeSourceDetailsError(status: Int, reason: String) extends IncomeSourceDetailsResponseModel
 
@@ -54,17 +56,17 @@ object IncomeSourceDetailsModel {
       propertyDetails
     )
   }
-  val ifReads: Reads[IncomeSourceDetailsModel] = (
+
+  implicit val ifReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "taxPayerDisplayResponse" \ "nino").read[String] and
       (__ \ "taxPayerDisplayResponse" \ "mtdId").read[String] and
       (__ \ "taxPayerDisplayResponse" \ "yearOfMigration").readNullable[String] and
       (__ \ "taxPayerDisplayResponse" \ "businessData").readNullable(Reads.list(BusinessDetailsModel.reads)) and
       (__ \ "taxPayerDisplayResponse" \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.reads))
-    ) (IncomeSourceDetailsModel.applyWithFields _)
+    )(IncomeSourceDetailsModel.applyWithFields _)
 
 
-  implicit val format: Format[IncomeSourceDetailsModel] = Json.format[IncomeSourceDetailsModel]
-
+  implicit val writes: OWrites[IncomeSourceDetailsModel] = Json.writes[IncomeSourceDetailsModel]
 }
 
 object IncomeSourceDetailsError {

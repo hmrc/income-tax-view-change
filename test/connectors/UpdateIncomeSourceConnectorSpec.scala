@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.UpdateIncomeSourceTestConstants._
+import constants.UpdateIncomeSourceTestConstants._
 import mocks.MockHttpV2
 import models.updateIncomeSource.request.UpdateIncomeSourceRequestModel
 import uk.gov.hmrc.http.HttpResponse

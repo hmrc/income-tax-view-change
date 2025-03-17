@@ -26,7 +26,7 @@
 
     <logger name="uk.gov" level="INFO"/>
 
-    <logger name="application" level="DEBUG"/>
+    <logger name="application" level="WARN"/>
 
     <logger name="org.asynchttpclient.netty" level="WARN"/>
     <logger name="play.shaded.ahc.org.asynchttpclient.netty" level="WARN"/>
@@ -39,7 +39,7 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <root level="DEBUG">
+    <root level="WARN">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

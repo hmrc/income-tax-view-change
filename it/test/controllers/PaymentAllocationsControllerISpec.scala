@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
 import helpers.servicemocks.DesPaymentAllocationsStub._
 import models.paymentAllocations.{AllocationDetail, PaymentAllocations}
 import play.api.http.Status._

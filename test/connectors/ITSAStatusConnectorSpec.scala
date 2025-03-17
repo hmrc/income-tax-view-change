@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.ITSAStatusTestConstants._
+import constants.ITSAStatusTestConstants._
 import connectors.itsastatus.ITSAStatusConnector
 import mocks.MockHttpV2
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseModel}

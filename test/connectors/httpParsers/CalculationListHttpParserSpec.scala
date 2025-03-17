@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import assets.CalculationListTestConstants.{badRequestSingleError, calculationListFull, calculationListMin, jsonResponseFull, jsonResponseMin, jsonSingleError}
+import constants.CalculationListTestConstants.{badRequestSingleError, calculationListFull, calculationListMin, jsonResponseFull, jsonResponseMin, jsonSingleError}
 import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
 import models.errors.{InvalidJsonResponse, UnexpectedResponse}

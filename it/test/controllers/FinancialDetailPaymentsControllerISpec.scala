@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
 import models.financialDetails.Payment
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}

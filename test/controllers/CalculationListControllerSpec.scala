@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import assets.CalculationListTestConstants._
+import constants.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
+import constants.CalculationListTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockCalculationListService, MockMicroserviceAuthConnector}
 import models.calculationList.CalculationListResponseModel

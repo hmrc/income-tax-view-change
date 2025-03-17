@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.ITSAStatusIntegrationTestConstants._
+import constants.ITSAStatusIntegrationTestConstants._
 import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel}
