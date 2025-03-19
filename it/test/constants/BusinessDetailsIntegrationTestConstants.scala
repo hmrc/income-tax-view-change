@@ -45,7 +45,7 @@ object BusinessDetailsIntegrationTestConstants {
         mobileNumber = Some("07782565326"),
         faxNumber = Some("01332754256"),
         emailAddress = Some("stephen@manncorpone.co.uk"))),
-      contextualTaxYear = Some(2015),
+      contextualTaxYear = Some("2015"),
       tradingStartDate = Some(LocalDate.parse("2017-01-01")),
       cashOrAccruals = false,
       seasonal = Some(true),
@@ -115,7 +115,7 @@ object BusinessDetailsIntegrationTestConstants {
             "faxNumber" -> "01332754256",
             "emailAddress" -> "stephen@manncorpone.co.uk"
           ),
-          "contextualTaxYear" -> 2015,
+          "contextualTaxYear" -> "2015",
           "tradingStartDate" -> "2017-01-01",
           "cashOrAccruals" -> false,
           "seasonal" -> true,
@@ -176,7 +176,7 @@ object BusinessDetailsIntegrationTestConstants {
         |                "faxNumber": "01332754256",
         |                "emailAddress": "stephen@manncorpone.co.uk"
         |            },
-        |            "contextualTaxYear": 2015,
+        |            "contextualTaxYear": "2015",
         |            "tradingStartDate": "2017-01-01",
         |            "cashOrAccruals": false,
         |            "seasonal": true,

@@ -28,7 +28,7 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 tradingName: Option[String],
                                 address: Option[AddressModel],
                                 contactDetails: Option[ContactDetailsModel],
-                                contextualTaxYear: Option[Int],
+                                contextualTaxYear: Option[String],
                                 tradingStartDate: Option[LocalDate],
                                 cashOrAccruals: Boolean,
                                 seasonal: Option[Boolean],
@@ -47,7 +47,7 @@ object BusinessDetailsModel extends CustomReads {
                       tradingName: Option[String],
                       address: Option[AddressModel],
                       contactDetails: Option[ContactDetailsModel],
-                      contextualTaxYear: Option[Int],
+                      contextualTaxYear: Option[String],
                       tradingStartDate: Option[LocalDate],
                       cashOrAccruals: Boolean,
                       seasonal: Option[Boolean],
@@ -82,7 +82,7 @@ object BusinessDetailsModel extends CustomReads {
       (__ \ "tradingName").readNullable[String] and
       (__ \ "businessAddressDetails").readNullable(AddressModel.reads) and
       (__ \ "businessContactDetails").readNullable(ContactDetailsModel.reads) and
-      (__ \ "contextualTaxYear").readNullable[Int](readInt) and
+      (__ \ "contextualTaxYear").readNullable[String] and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "cashOrAccruals").read[Boolean] and
       (__ \ "seasonal").readNullable[Boolean] and

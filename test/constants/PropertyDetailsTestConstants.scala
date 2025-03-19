@@ -42,7 +42,7 @@ object PropertyDetailsTestConstants {
     paperless = Some(true),
     firstAccountingPeriodEndDate = Some(LocalDate.of(2016, 1, 1)),
     incomeSourceType = Some("property-unspecified"),
-    contextualTaxYear = Some(2015),
+    contextualTaxYear = Some("2015"),
     tradingStartDate = Some(LocalDate.parse("2015-01-01")),
     latencyDetails = Some(LatencyDetails(
       latencyEndDate = LocalDate.of(2022, 1, 1),
@@ -160,7 +160,7 @@ object PropertyDetailsTestConstants {
     "paperless" -> true,
     "firstAccountingPeriodEndDate" -> "2016-01-01",
     "incomeSourceType" -> "property-unspecified",
-    "contextualTaxYear" -> 2015,
+    "contextualTaxYear" -> "2015",
     "tradingStartDate" -> "2015-01-01",
     "latencyDetails" -> Json.obj(
       "latencyEndDate" -> "2022-01-01",

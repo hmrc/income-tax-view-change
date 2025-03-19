@@ -30,7 +30,7 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 paperless: Option[Boolean],
                                 firstAccountingPeriodEndDate: Option[LocalDate],
                                 incomeSourceType: Option[String],
-                                contextualTaxYear: Option[Int],
+                                contextualTaxYear: Option[String],
                                 tradingStartDate: Option[LocalDate],
                                 latencyDetails: Option[LatencyDetails],
                                 cashOrAccruals: Boolean,
@@ -50,7 +50,7 @@ object PropertyDetailsModel extends CustomReads {
                       paperless: Option[Boolean],
                       firstAccountingPeriodEndDate: Option[LocalDate],
                       incomeSourceType: Option[String],
-                      contextualTaxYear: Option[Int],
+                      contextualTaxYear: Option[String],
                       tradingStartDate: Option[LocalDate],
                       latencyDetails: Option[LatencyDetails],
                       cashOrAccruals: Boolean,
@@ -84,7 +84,7 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "paperLess").readNullable[Boolean] and
       (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
       (__ \ "incomeSourceType").readNullable[String] and
-      (__ \ "contextualTaxYear").readNullable[Int](readInt) and
+      (__ \ "contextualTaxYear").readNullable[String] and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "latencyDetails").readNullable[LatencyDetails] and
       (__ \ "cashOrAccruals").read[Boolean] and
