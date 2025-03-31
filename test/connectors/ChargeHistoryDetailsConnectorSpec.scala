@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.ChargeHistoryTestConstants.chargeHistoryDetail
+import constants.ChargeHistoryTestConstants.chargeHistoryDetail
 import connectors.httpParsers.ChargeHistoryHttpParser._
 import mocks.MockHttpV2
 import models.chargeHistoryDetail.{ChargeHistoryDetailModel, ChargeHistorySuccessResponse}

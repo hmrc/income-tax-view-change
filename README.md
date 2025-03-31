@@ -1,23 +1,14 @@
 # Income Tax View and Change Microservice
 
-[![Build Status](https://travis-ci.org/hmrc/income-tax-view-change.svg)](https://travis-ci.org/hmrc/income-tax-view-change) [ ![Download](https://api.bintray.com/packages/hmrc/releases/income-tax-view-change/images/download.svg) ](https://bintray.com/hmrc/releases/income-tax-view-change/_latestVersion)
-
 This is the protected backend for the Quarterly Reporting Service (MTD ITSA). 
 
 Frontend: https://github.com/hmrc/income-tax-view-change-frontend
 Stub: https://github.com/hmrc/income-tax-view-change-dynamic-stub
 
-
-Requirements
-------------
-
-This service is written in [Scala](http://www.scala-lang.org/) and [Play](http://playframework.com/), so needs at least a [JRE] to run.
+### Run the application
 
 
-## Run the application
-
-
-To update from Nexus and start all services from the RELEASE version instead of snapshot:
+To run all income-view-and-change services via **service-manager-2**:
 
 ```
 sm2 --start ITVC_BACKEND_ALL -r
@@ -27,19 +18,28 @@ sm2 --start ITVC_BACKEND_ALL -r
 ### To run the application locally execute the following:
 
 ```
+./run.sh
+```
+
+or
+
+```
 sbt 'run 9082'
 ```
 
-
-
-## Test the application
+### Test the application
 
 To test the application execute
 
 ```
-sbt clean scalastyle coverage test it/test coverageOff coverageReport
+./run_all_tests.sh
 ```
 
+or
+
+```
+sbt clean compile scalastyle coverage Test/test it/test coverageOff coverageReport
+```
 
 
 ### License

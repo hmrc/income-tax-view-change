@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import assets.CalculationListIntegrationTestConstants.calculationListFull
+import constants.BaseIntegrationTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
+import constants.CalculationListIntegrationTestConstants.calculationListFull
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesCalculationListStub
 import models.calculationList.CalculationListModel

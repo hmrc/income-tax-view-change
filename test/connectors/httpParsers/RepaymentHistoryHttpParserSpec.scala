@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import assets.RepaymentHistoryTestConstants._
+import constants.RepaymentHistoryTestConstants._
 import connectors.httpParsers.RepaymentHistoryHttpParser._
 import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse, RepaymentItem, RepaymentSupplementItem}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}

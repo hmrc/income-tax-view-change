@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants._
-import assets.ReportDeadlinesIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
+import constants.ReportDeadlinesIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesReportDeadlinesStub
 import models.obligations.ObligationStatus.Open

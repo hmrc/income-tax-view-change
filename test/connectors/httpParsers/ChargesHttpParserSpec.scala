@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import assets.FinancialDataTestConstants.{testChargesResponse, validChargesJson}
+import constants.FinancialDataTestConstants.{testChargesResponse, validChargesJson}
 import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import play.api.http.Status._
 import uk.gov.hmrc.http.HttpResponse

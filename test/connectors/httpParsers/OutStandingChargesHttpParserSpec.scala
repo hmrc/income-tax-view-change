@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import assets.OutStandingChargesConstant._
+import constants.OutStandingChargesConstant._
 import connectors.httpParsers.OutStandingChargesHttpParser._
 import models.outStandingCharges.OutstandingChargesSuccessResponse
 import play.api.http.Status._

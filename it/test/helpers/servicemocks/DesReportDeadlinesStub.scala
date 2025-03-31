@@ -16,7 +16,7 @@
 
 package helpers.servicemocks
 
-import assets.ReportDeadlinesIntegrationTestConstants._
+import constants.ReportDeadlinesIntegrationTestConstants._
 import helpers.WiremockHelper
 import play.api.http.Status
 

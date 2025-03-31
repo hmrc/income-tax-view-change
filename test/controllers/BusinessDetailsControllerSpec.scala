@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.BaseTestConstants.testNino
-import assets.IncomeSourceDetailsTestConstants._
+import constants.BaseTestConstants.testNino
+import constants.IncomeSourceDetailsTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockBusinessDetailsService, MockMicroserviceAuthConnector}
 import play.api.http.Status

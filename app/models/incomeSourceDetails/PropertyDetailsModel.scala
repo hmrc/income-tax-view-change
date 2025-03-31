@@ -30,12 +30,46 @@ case class PropertyDetailsModel(incomeSourceId: String,
                                 paperless: Option[Boolean],
                                 firstAccountingPeriodEndDate: Option[LocalDate],
                                 incomeSourceType: Option[String],
+                                contextualTaxYear: Option[String],
                                 tradingStartDate: Option[LocalDate],
                                 latencyDetails: Option[LatencyDetails],
                                 cashOrAccruals: Boolean,
                                 quarterTypeElection: Option[QuarterTypeElection])
 
 object PropertyDetailsModel extends CustomReads {
+
+  def applyWithFields(incomeSourceId: String,
+                      accountingPeriod: AccountingPeriodModel,
+                      email: Option[String],
+                      uk: Option[Int],
+                      eea: Option[Int],
+                      nonEea: Option[Int],
+                      total: Option[Int],
+                      cessationDate: Option[LocalDate],
+                      cessationReason: Option[String],
+                      paperless: Option[Boolean],
+                      firstAccountingPeriodEndDate: Option[LocalDate],
+                      incomeSourceType: Option[String],
+                      contextualTaxYear: Option[String],
+                      tradingStartDate: Option[LocalDate],
+                      latencyDetails: Option[LatencyDetails],
+                      cashOrAccruals: Boolean,
+                      quarterTypeElection: Option[QuarterTypeElection]): PropertyDetailsModel =
+    PropertyDetailsModel(
+      incomeSourceId,
+      accountingPeriod,
+      ContactDetailsModel.propertyContactDetails(email),
+      PropertiesRentedModel.propertiesRented(uk, eea, nonEea, total),
+      CessationModel.cessation(cessationDate, cessationReason),
+      paperless,
+      firstAccountingPeriodEndDate,
+      incomeSourceType,
+      contextualTaxYear,
+      tradingStartDate,
+      latencyDetails,
+      cashOrAccruals,
+      quarterTypeElection
+    )
 
   implicit val reads: Reads[PropertyDetailsModel] = (
     (__ \ "incomeSourceId").read[String] and
@@ -50,41 +84,12 @@ object PropertyDetailsModel extends CustomReads {
       (__ \ "paperLess").readNullable[Boolean] and
       (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
       (__ \ "incomeSourceType").readNullable[String] and
+      (__ \ "contextualTaxYear").readNullable[String] and
       (__ \ "tradingStartDate").readNullable[LocalDate] and
       (__ \ "latencyDetails").readNullable[LatencyDetails] and
       (__ \ "cashOrAccruals").read[Boolean] and
       (__ \ "quarterTypeElection").readNullable[QuarterTypeElection]
-    ) (PropertyDetailsModel.applyWithFields _)
-
-  def applyWithFields(incomeSourceId: String,
-                      accountingPeriod: AccountingPeriodModel,
-                      email: Option[String],
-                      uk: Option[Int],
-                      eea: Option[Int],
-                      nonEea: Option[Int],
-                      total: Option[Int],
-                      cessationDate: Option[LocalDate],
-                      cessationReason: Option[String],
-                      paperless: Option[Boolean],
-                      firstAccountingPeriodEndDate: Option[LocalDate],
-                      incomeSourceType: Option[String],
-                      tradingStartDate: Option[LocalDate],
-                      latencyDetails: Option[LatencyDetails],
-                      cashOrAccruals: Boolean,
-                      quarterTypeElection: Option[QuarterTypeElection]): PropertyDetailsModel = PropertyDetailsModel(
-    incomeSourceId,
-    accountingPeriod,
-    ContactDetailsModel.propertyContactDetails(email),
-    PropertiesRentedModel.propertiesRented(uk, eea, nonEea, total),
-    CessationModel.cessation(cessationDate, cessationReason),
-    paperless,
-    firstAccountingPeriodEndDate,
-    incomeSourceType,
-    tradingStartDate,
-    latencyDetails,
-    cashOrAccruals,
-    quarterTypeElection
-  )
+    )(PropertyDetailsModel.applyWithFields _)
 
   implicit val writes: OWrites[PropertyDetailsModel] = Json.writes[PropertyDetailsModel]
 

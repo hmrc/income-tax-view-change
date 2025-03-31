@@ -16,8 +16,9 @@
 
 package models.incomeSourceDetails
 
-import assets.AccountingPeriodTestConstants.testAccountingPeriodModel
-import assets.BusinessDetailsTestConstants._
+import constants.AccountingPeriodTestConstants.testAccountingPeriodModel
+import constants.BusinessDetailsTestConstants._
+import models.incomeSourceDetails.BusinessDetailsModel._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
@@ -27,11 +28,11 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
   "The BusinessDetailsModel" should {
 
     "read from Json with all fields" in {
-      Json.fromJson(testBusinessDetailsJson)(BusinessDetailsModel.reads) shouldBe JsSuccess(testBusinessDetailsModel)
+      Json.fromJson(testBusinessDetailsJson) shouldBe JsSuccess(testBusinessDetailsModel)
     }
 
     "read from Json with minimum fields" in {
-      Json.fromJson(testMinimumBusinessDetailsJson)(BusinessDetailsModel.reads) shouldBe JsSuccess(testMinimumBusinessDetailsModel)
+      Json.fromJson(testMinimumBusinessDetailsJson) shouldBe JsSuccess(testMinimumBusinessDetailsModel)
     }
 
     "write to Json" in {
@@ -39,12 +40,15 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
     }
 
     "write cashOrAccruals `cash` (pre-R10 value) to Some(false) (post-R10 value)" in {
-      val businessDetailsJsonBeforeR10: JsObject = Json.obj(
-        "incomeSourceId" -> "111111111111111",
-        "incomeSource" -> "Fruit Ltd",
-        "accountingPeriodStartDate" -> "2017-06-01",
-        "accountingPeriodEndDate" -> "2018-05-31",
-        "cashOrAccruals" -> false)
+
+      val businessDetailsJsonBeforeR10: JsObject =
+        Json.obj(
+          "incomeSourceId" -> "111111111111111",
+          "incomeSource" -> "Fruit Ltd",
+          "accountingPeriodStartDate" -> "2017-06-01",
+          "accountingPeriodEndDate" -> "2018-05-31",
+          "cashOrAccruals" -> false
+        )
 
       val businessDetailsModelBeforeR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
@@ -53,6 +57,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         tradingName = None,
         address = None,
         contactDetails = None,
+        contextualTaxYear = None,
         tradingStartDate = None,
         cashOrAccruals = false,
         seasonal = None,
@@ -63,10 +68,11 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
+      Json.fromJson(businessDetailsJsonBeforeR10) shouldBe JsSuccess(businessDetailsModelBeforeR10)
     }
 
     "write cashOrAccruals `accruals` (pre-R10 value) to Some(true) (post-R10 value)" in {
+
       val businessDetailsJsonBeforeR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
         "incomeSource" -> "Fruit Ltd",
@@ -81,6 +87,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         tradingName = None,
         address = None,
         contactDetails = None,
+        contextualTaxYear = None,
         tradingStartDate = None,
         cashOrAccruals = true,
         seasonal = None,
@@ -91,7 +98,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonBeforeR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelBeforeR10)
+      Json.fromJson(businessDetailsJsonBeforeR10) shouldBe JsSuccess(businessDetailsModelBeforeR10)
     }
 
     "write cashOrAccruals true (post-R10 value) to Some(true) (post-R10 value)" in {
@@ -109,6 +116,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         tradingName = None,
         address = None,
         contactDetails = None,
+        contextualTaxYear = None,
         tradingStartDate = None,
         cashOrAccruals = true,
         seasonal = None,
@@ -119,7 +127,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelAfterR10)
+      Json.fromJson(businessDetailsJsonAfterR10) shouldBe JsSuccess(businessDetailsModelAfterR10)
     }
 
     "write cashOrAccruals false (post-R10 value) to Some(false) (post-R10 value)" in {
@@ -137,6 +145,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         tradingName = None,
         address = None,
         contactDetails = None,
+        contextualTaxYear = None,
         tradingStartDate = None,
         cashOrAccruals = false,
         seasonal = None,
@@ -147,7 +156,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         quarterTypeElection = None
       )
 
-      Json.fromJson(businessDetailsJsonAfterR10)(BusinessDetailsModel.reads) shouldBe JsSuccess(businessDetailsModelAfterR10)
+      Json.fromJson(businessDetailsJsonAfterR10) shouldBe JsSuccess(businessDetailsModelAfterR10)
     }
 
   }

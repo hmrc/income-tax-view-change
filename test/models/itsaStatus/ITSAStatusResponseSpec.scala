@@ -16,7 +16,7 @@
 
 package models.itsaStatus
 
-import assets.ITSAStatusTestConstants._
+import constants.ITSAStatusTestConstants._
 import org.scalatest.matchers.should.Matchers
 import play.api.http.Status
 import play.api.libs.json.{JsSuccess, Json}

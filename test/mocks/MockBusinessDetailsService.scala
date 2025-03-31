@@ -16,7 +16,7 @@
 
 package mocks
 
-import assets.BaseTestConstants.testNino
+import constants.BaseTestConstants.testNino
 import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}

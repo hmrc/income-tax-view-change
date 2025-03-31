@@ -16,7 +16,7 @@
 
 package helpers.servicemocks
 
-import assets.BusinessDetailsIntegrationTestConstants._
+import constants.BusinessDetailsIntegrationTestConstants._
 import models.incomeSourceDetails.IncomeSourceDetailsModel
 import play.api.http.Status
 import helpers.WiremockHelper

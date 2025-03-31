@@ -16,9 +16,9 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants._
-import assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
-import assets.IncomeSourceIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
+import constants.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
+import constants.IncomeSourceIntegrationTestConstants._
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
 import helpers.ComponentSpecBase

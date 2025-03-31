@@ -18,7 +18,7 @@ package models.core
 
 import java.time.LocalDate
 
-import assets.CessationTestConstants._
+import constants.CessationTestConstants._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
