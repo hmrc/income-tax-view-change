@@ -67,6 +67,11 @@ case class ErrorResponse(status: Int, jsonError: JsValue)
 
 object UnexpectedJsonResponse extends ErrorResponse(
   INTERNAL_SERVER_ERROR,
+  Json.toJson(CustomResponse("Unexpected json response"))
+)
+
+object UnexpectedResponse extends ErrorResponse(
+  INTERNAL_SERVER_ERROR,
   Json.toJson(CustomResponse("Unexpected response"))
 )
 

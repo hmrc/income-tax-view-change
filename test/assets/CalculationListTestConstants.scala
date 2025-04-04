@@ -104,11 +104,12 @@ object CalculationListTestConstants {
       |}
       |""".stripMargin), Map.empty)
   val badGatewayJson = HttpResponse(Status.BAD_GATEWAY, "", Map.empty)
+  val serviceUnavailableResponse = HttpResponse(Status.SERVICE_UNAVAILABLE, "{}", Map.empty)
   val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, Json.toJson(
     s"""
        |{
        |"test": "error"
        |}
        |""".stripMargin), Map.empty)
-
+  val nonJsonResponse = HttpResponse(Status.BAD_REQUEST, "non json response", Map.empty)
 }

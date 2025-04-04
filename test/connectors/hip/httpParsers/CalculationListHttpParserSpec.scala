@@ -19,9 +19,9 @@ package connectors.hip.httpParsers
 import assets.CalculationListTestConstants._
 import connectors.hip.httpParsers.CalculationListHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
-import models.hipErrors.{BadGatewayResponse, CustomResponse, ErrorResponse, UnexpectedJsonResponse}
+import models.hipErrors.{BadGatewayResponse, CustomResponse, ErrorResponse, UnexpectedJsonResponse, UnexpectedResponse}
 import play.api.http.Status
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE, UNAUTHORIZED}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
@@ -103,7 +103,23 @@ class CalculationListHttpParserSpec extends TestSupport {
         result shouldEqual Left(UnexpectedJsonResponse)
       }
 
+      "HTTP response is 503 SERVICE_UNAVAILABLE" in {
+        val httpResponse: HttpResponse = HttpResponse(SERVICE_UNAVAILABLE, internalServerErrorResponse, Map.empty)
+        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
+        result shouldEqual Left(ErrorResponse(SERVICE_UNAVAILABLE, internalServerErrorResponse))
+      }
+      "HTTP response is 503 SERVICE_UNAVAILABLE unexpected response" in {
+        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", serviceUnavailableResponse)
+
+        result shouldEqual Left(UnexpectedJsonResponse)
+      }
+
+      "HTTP response with non-json response" in {
+        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", nonJsonResponse)
+
+        result shouldEqual Left(UnexpectedResponse)
+      }
     }
   }
 }

@@ -16,11 +16,13 @@
 
 package connectors.hip.httpParsers.errorResponses
 
-import models.hipErrors.{BadGatewayResponse, CustomResponse, ErrorResponse, FailureResponse, OriginFailuresResponse, OriginWithErrorCodeAndResponse, UnexpectedJsonResponse}
+import models.hipErrors._
 import play.api.Logging
 import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE, UNAUTHORIZED}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
+
+import scala.util.Try
 
 trait ErrorResponseHttpParsers extends Logging {
 
@@ -28,11 +30,11 @@ trait ErrorResponseHttpParsers extends Logging {
 
   protected def handleErrorResponse(httpResponse: HttpResponse): Left[ErrorResponse, Nothing] = {
     logger.debug(s"Body received: ${httpResponse.body}")
-    httpResponse.status match {
+    Try(httpResponse.status match {
       case BAD_REQUEST =>
         httpResponse.json.validate[OriginFailuresResponse].orElse(httpResponse.json.validate[OriginWithErrorCodeAndResponse]).fold(
           invalid => {
-            logger.error(s"Unexpected response for status code: $BAD_REQUEST, response: $invalid")
+            logger.error(s"Unexpected response with status code: $BAD_REQUEST, response: $invalid")
             Left(UnexpectedJsonResponse)
           },
           {
@@ -48,7 +50,7 @@ trait ErrorResponseHttpParsers extends Logging {
       case UNAUTHORIZED | NOT_FOUND =>
         httpResponse.json.validate[Seq[FailureResponse]].fold(
           invalid => {
-            logger.error(s"Unexpected response for status code: ${httpResponse.status}, response: $invalid")
+            logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: $invalid")
             Left(ErrorResponse(httpResponse.status, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
           },
           expected => {
@@ -59,7 +61,7 @@ trait ErrorResponseHttpParsers extends Logging {
       case INTERNAL_SERVER_ERROR | SERVICE_UNAVAILABLE =>
         httpResponse.json.validate[OriginFailuresResponse].fold(
           invalid => {
-            logger.error(s"Unexpected response for status code: ${httpResponse.status}, response: $invalid")
+            logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: $invalid")
             Left(UnexpectedJsonResponse)
           },
           expected => {
@@ -69,9 +71,12 @@ trait ErrorResponseHttpParsers extends Logging {
         )
       case BAD_GATEWAY => Left(BadGatewayResponse)
       case _ =>
-        logger.error(s"Unexpected response for status code: ${httpResponse.status}, response: ${httpResponse.body}")
+        logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: ${httpResponse.body}")
         Left(UnexpectedJsonResponse)
 
+    }).getOrElse {
+      logger.error(s"Non Json response returned with status code: ${httpResponse.status}, response: ${httpResponse.body}")
+      Left(UnexpectedResponse)
     }
   }
 }
