@@ -17,12 +17,14 @@
 package controllers
 
 import assets.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import assets.CalculationListTestConstants._
+import assets.CalculationListDesTestConstants._
+import connectors.hip.CalculationListConnector
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockCalculationListService, MockMicroserviceAuthConnector}
 import models.calculationList.CalculationListResponseModel
 import models.errors
 import models.errors.{InvalidNino, InvalidTaxYear}
+import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
@@ -33,10 +35,12 @@ import scala.concurrent.Future
 
 class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroserviceAuthConnector with MockCalculationListService {
   val mockCC: ControllerComponents = stubControllerComponents()
+  val mockHipCalcListConnector = mock[CalculationListConnector]
   val authPredicate = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
   val successResponse: Either[Nothing, CalculationListResponseModel] = Right(calculationListFull)
 
-  object TestCalculationListController extends CalculationListController(authPredicate, mockCalculationListService, mockCC)
+  object TestCalculationListController extends CalculationListController(
+    authPredicate, mockCalculationListService, mockHipCalcListConnector, microserviceAppConfig, mockCC)
 
   "CalculationListController.getCalculationList" should {
     "return 200 OK" when {

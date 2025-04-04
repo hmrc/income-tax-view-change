@@ -16,8 +16,10 @@
 
 package config
 
+import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import java.util.{Base64, UUID}
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -56,12 +58,31 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     )
   }
 
+  val hipUrl: String = loadConfig("microservice.services.hip.url")
+  def getHipCredentials(api: String): String = {
+    val clientId = loadConfig(s"microservice.services.hip.$api.clientId")
+    val secret = loadConfig(s"microservice.services.hip.$api.secret")
+
+    val encoded = Base64.getEncoder.encodeToString(s"$clientId:$secret".getBytes("UTF-8"))
+
+    s"Basic $encoded"
+  }
+
+  def getHIPHeaders(api: String, requestId: Option[String]): Seq[(String, String)] = {
+    Seq(
+      (HeaderNames.authorisation, getHipCredentials(api)),
+      ("CorrelationId", requestId.getOrElse(UUID.randomUUID().toString))
+    )
+  }
+
+  def isHIPFeatureSwitchEnabled(api: String): Boolean = {
+    servicesConfig.getBoolean(s"microservice.services.hip.$api.feature-switch")
+  }
+
   val claimToAdjustTimeout: Int = servicesConfig.getInt("claim-to-adjust.timeout")
 
   val confidenceLevel: Int = servicesConfig.getInt("auth.confidenceLevel")
 
-  val incomeTaxSubmissionStubUrl: String = loadConfig("submissionStubUrl")
-  val useBusinessDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useBusinessDetailsIFPlatform")
   val useRepaymentHistoryDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useRepaymentHistoryDetailsIFPlatform")
   val useGetCalcListIFPlatform: Boolean = servicesConfig.getBoolean("useGetCalcListIFPlatform")
 }
