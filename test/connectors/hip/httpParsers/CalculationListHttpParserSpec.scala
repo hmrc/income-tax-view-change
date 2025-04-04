@@ -19,9 +19,10 @@ package connectors.hip.httpParsers
 import assets.CalculationListTestConstants._
 import connectors.hip.httpParsers.CalculationListHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
-import models.hipErrors.{ErrorResponse, UnexpectedJsonResponse}
+import models.hipErrors.{BadGatewayResponse, CustomResponse, ErrorResponse, UnexpectedJsonResponse}
 import play.api.http.Status
-import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, NOT_FOUND, UNAUTHORIZED}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -72,7 +73,7 @@ class CalculationListHttpParserSpec extends TestSupport {
       "HTTP response is 401 UNAUTHORIZED unexpected response" in {
         val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", unauthorizedUnexpectedJson)
 
-        result shouldEqual Left(UnexpectedJsonResponse)
+        result shouldEqual Left(ErrorResponse(UNAUTHORIZED, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
       }
       "HTTP response is 404 NOT_FOUND" in {
         val httpResponse: HttpResponse = HttpResponse(NOT_FOUND, notFoundErrorResponse, Map.empty)
@@ -83,18 +84,26 @@ class CalculationListHttpParserSpec extends TestSupport {
       "HTTP response is 404 NOT_FOUND unexpected response" in {
         val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", notFoundUnexpectedJson)
 
-        result shouldEqual Left(UnexpectedJsonResponse)
+        result shouldEqual Left(ErrorResponse(NOT_FOUND, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
       }
       "HTTP response is 502 BAD_GATEWAY" in {
         val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", badGatewayJson)
 
-        result shouldEqual Left(UnexpectedJsonResponse)
+        result shouldEqual Left(BadGatewayResponse)
       }
-      "HTTP response is 404 NOT_FOUND unexpected response" in {
-        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", notFoundUnexpectedJson)
+      "HTTP response is 500 INTERNAL_SERVER_ERROR" in {
+        val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, internalServerErrorResponse, Map.empty)
+        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
+
+        result shouldEqual Left(ErrorResponse(INTERNAL_SERVER_ERROR, internalServerErrorResponse))
+      }
+      "HTTP response is 500 INTERNAL_SERVER_ERROR unexpected response" in {
+        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", badResponse)
 
         result shouldEqual Left(UnexpectedJsonResponse)
       }
+
+
     }
   }
 }

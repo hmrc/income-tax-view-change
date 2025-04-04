@@ -16,7 +16,7 @@
 
 package models.hipErrors
 
-import play.api.http.Status.INTERNAL_SERVER_ERROR
+import play.api.http.Status.{BAD_GATEWAY, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.{Format, JsValue, Json}
 
 sealed trait Errors
@@ -68,4 +68,9 @@ case class ErrorResponse(status: Int, jsonError: JsValue)
 object UnexpectedJsonResponse extends ErrorResponse(
   INTERNAL_SERVER_ERROR,
   Json.toJson(CustomResponse("Unexpected response"))
+)
+
+object BadGatewayResponse extends ErrorResponse(
+  BAD_GATEWAY,
+  Json.toJson(CustomResponse("BAD_GATEWAY response"))
 )

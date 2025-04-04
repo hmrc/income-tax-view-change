@@ -16,7 +16,7 @@
 
 package connectors.hip.httpParsers.errorResponses
 
-import models.hipErrors.{ErrorResponse, FailureResponse, OriginFailuresResponse, OriginWithErrorCodeAndResponse, UnexpectedJsonResponse}
+import models.hipErrors.{BadGatewayResponse, CustomResponse, ErrorResponse, FailureResponse, OriginFailuresResponse, OriginWithErrorCodeAndResponse, UnexpectedJsonResponse}
 import play.api.Logging
 import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE, UNAUTHORIZED}
 import play.api.libs.json.Json
@@ -42,17 +42,14 @@ trait ErrorResponseHttpParsers extends Logging {
             case expected@(_: OriginWithErrorCodeAndResponse) =>
               logger.error(s"Bad request error response: $expected")
               Left(ErrorResponse(BAD_REQUEST, Json.toJson(expected)))
-            case other@_ => {
-              println(s" ====== ${other.toString} =====")
-              Left(UnexpectedJsonResponse)
-            }
+            case _ => Left(UnexpectedJsonResponse)
           }
         )
       case UNAUTHORIZED | NOT_FOUND =>
         httpResponse.json.validate[Seq[FailureResponse]].fold(
           invalid => {
             logger.error(s"Unexpected response for status code: ${httpResponse.status}, response: $invalid")
-            Left(UnexpectedJsonResponse)
+            Left(ErrorResponse(httpResponse.status, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
           },
           expected => {
             logger.error(s"Unauthorised or Not found error response, status: ${httpResponse.status}, response: $expected")
@@ -70,7 +67,7 @@ trait ErrorResponseHttpParsers extends Logging {
             Left(ErrorResponse(httpResponse.status, Json.toJson(expected)))
           }
         )
-      case BAD_GATEWAY =>
+      case BAD_GATEWAY => Left(BadGatewayResponse)
       case _ =>
         logger.error(s"Unexpected response for status code: ${httpResponse.status}, response: ${httpResponse.body}")
         Left(UnexpectedJsonResponse)

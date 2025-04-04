@@ -103,7 +103,12 @@ object CalculationListTestConstants {
       |"test": "error"
       |}
       |""".stripMargin), Map.empty)
-  val badGatewayJson = HttpResponse(Status.BAD_GATEWAY, Json.toJson(""), Map.empty)
-  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+  val badGatewayJson = HttpResponse(Status.BAD_GATEWAY, "", Map.empty)
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, Json.toJson(
+    s"""
+       |{
+       |"test": "error"
+       |}
+       |""".stripMargin), Map.empty)
 
 }
