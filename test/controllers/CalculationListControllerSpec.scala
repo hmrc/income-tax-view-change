@@ -18,7 +18,7 @@ package controllers
 
 import assets.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
 import assets.CalculationListDesTestConstants._
-import connectors.hip.CalculationListConnector
+import connectors.hip.CalculationListLegacyConnector
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockCalculationListService, MockMicroserviceAuthConnector}
 import models.calculationList.CalculationListResponseModel
@@ -35,7 +35,7 @@ import scala.concurrent.Future
 
 class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroserviceAuthConnector with MockCalculationListService {
   val mockCC: ControllerComponents = stubControllerComponents()
-  val mockHipCalcListConnector = mock[CalculationListConnector]
+  val mockHipCalcListConnector = mock[CalculationListLegacyConnector]
   val authPredicate = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
   val successResponse: Either[Nothing, CalculationListResponseModel] = Right(calculationListFull)
 

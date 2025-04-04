@@ -22,7 +22,7 @@ import models.hipErrors.UnexpectedJsonResponse
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-object CalculationListHttpParser extends ErrorResponseHttpParsers {
+object CalculationListLegacyHttpParser extends ErrorResponseHttpParsers {
 
   implicit object CalculationListReads extends HttpReads[HttpGetResult[CalculationListResponseModel]] {
     override def read(method: String, url: String, response: HttpResponse): HttpGetResult[CalculationListResponseModel] = {

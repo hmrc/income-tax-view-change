@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
 class CalculationListHttpParserSpec extends TestSupport {
-  "The CalculationListHttpParser" should {
+  "The CalculationListLegacyHttpParser" should {
     "return an instance of CalculationList" when {
       "HTTP response is 200 and matches schema" in {
         val httpResponse: HttpResponse = HttpResponse(Status.OK, jsonResponseFull, Map.empty)

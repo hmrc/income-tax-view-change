@@ -16,7 +16,7 @@
 
 package config
 
-import uk.gov.hmrc.http.HeaderNames
+import uk.gov.hmrc.http.{HeaderNames, RequestId}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import java.util.{Base64, UUID}
@@ -68,10 +68,10 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     s"Basic $encoded"
   }
 
-  def getHIPHeaders(api: String, requestId: Option[String]): Seq[(String, String)] = {
+  def getHIPHeaders(api: String, requestId: Option[RequestId]): Seq[(String, String)] = {
     Seq(
       (HeaderNames.authorisation, getHipCredentials(api)),
-      ("CorrelationId", requestId.getOrElse(UUID.randomUUID().toString))
+      ("correlationId", requestId.map(_.value).getOrElse(UUID.randomUUID().toString))
     )
   }
 

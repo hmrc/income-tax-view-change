@@ -17,7 +17,7 @@
 package controllers
 
 import config.MicroserviceAppConfig
-import connectors.hip.CalculationListConnector
+import connectors.hip.CalculationListLegacyConnector
 import controllers.predicates.AuthenticationPredicate
 import models.errors.{Error, InvalidNino, InvalidTaxYear, MultiError}
 import play.api.Logging
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CalculationListController @Inject()(val authentication: AuthenticationPredicate,
                                           val calculationListService: CalculationListService,
-                                          val hipCalculationListConnector: CalculationListConnector,
+                                          val hipCalculationListConnector: CalculationListLegacyConnector,
                                           val appConfig: MicroserviceAppConfig,
                                           cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
   // 1404
