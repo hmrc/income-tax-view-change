@@ -16,7 +16,7 @@
 
 package helpers.servicemocks
 
-import assets.CalculationListIntegrationTestConstants.{failureResponse, successResponse, successResponseHip}
+import constants.CalculationListIntegrationTestConstants.successResponseHip
 import helpers.WiremockHelper
 import play.api.http.Status
 import play.api.libs.json.Json

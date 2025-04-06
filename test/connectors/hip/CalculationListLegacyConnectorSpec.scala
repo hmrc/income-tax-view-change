@@ -16,8 +16,8 @@
 
 package connectors.hip
 
-import assets.BaseTestConstants.{testNino, testTaxYearEnd}
-import assets.CalculationListTestConstants._
+import constants.BaseTestConstants.{testNino, testTaxYearEnd}
+import constants.CalculationListTestConstants._
 import mocks.MockHttpV2
 import models.hipErrors.{ErrorResponse, UnexpectedJsonResponse}
 import uk.gov.hmrc.http.HttpResponse

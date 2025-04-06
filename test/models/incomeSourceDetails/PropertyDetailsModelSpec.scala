@@ -16,7 +16,8 @@
 
 package models.incomeSourceDetails
 
-import assets.PropertyDetailsTestConstants._
+import constants.PropertyDetailsTestConstants._
+import models.incomeSourceDetails.PropertyDetailsModel._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
@@ -26,15 +27,15 @@ class PropertyDetailsModelSpec extends TestSupport with Matchers {
   "The PropertyDetailsModel" should {
 
     "read from Json with all fields" in {
-      Json.fromJson(testPropertyDetailsJson)(PropertyDetailsModel.reads) shouldBe JsSuccess(testPropertyDetailsModel)
+      Json.fromJson(testPropertyDetailsJson) shouldBe JsSuccess(testPropertyDetailsModel)
     }
 
     "read from Json where Ints are Strings" in {
-      Json.fromJson(testPropertyDetailsJsonString)(PropertyDetailsModel.reads) shouldBe JsSuccess(testPropertyDetailsModel)
+      Json.fromJson(testPropertyDetailsJsonString) shouldBe JsSuccess(testPropertyDetailsModel)
     }
 
     "read from Json with minimum fields" in {
-      Json.fromJson(testMinimumPropertyDetailsJson)(PropertyDetailsModel.reads) shouldBe JsSuccess(testMinimumPropertyDetailsModel)
+      Json.fromJson(testMinimumPropertyDetailsJson) shouldBe JsSuccess(testMinimumPropertyDetailsModel)
     }
 
     "write to Json" in {

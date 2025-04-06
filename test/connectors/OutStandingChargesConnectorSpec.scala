@@ -17,7 +17,7 @@
 package connectors
 
 
-import assets.OutStandingChargesConstant._
+import constants.OutStandingChargesConstant._
 import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeErrorResponse, UnexpectedOutStandingChargeResponse}
 import mocks.MockHttpV2
 import models.outStandingCharges.OutstandingChargesSuccessResponse

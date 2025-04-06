@@ -16,8 +16,8 @@
 
 package services
 
-import assets.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import assets.CalculationListDesTestConstants.{badRequestMultiError, badRequestSingleError, calculationListFull}
+import constants.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
+import constants.CalculationListDesTestConstants.{badRequestMultiError, badRequestSingleError, calculationListFull}
 import mocks.MockCalculationListConnector
 import models.calculationList.CalculationListResponseModel
 import models.errors.ErrorResponse

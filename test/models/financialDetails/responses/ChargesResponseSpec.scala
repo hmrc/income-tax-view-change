@@ -16,7 +16,7 @@
 
 package models.financialDetails.responses
 
-import assets.FinancialDataTestConstants.{documentDetail, financialDetail}
+import constants.FinancialDataTestConstants.{documentDetail, financialDetail}
 import models.financialDetails._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

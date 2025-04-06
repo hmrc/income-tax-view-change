@@ -16,7 +16,7 @@
 
 package models.chargeHistoryDetail
 
-import assets.ChargeHistoryTestConstants._
+import constants.ChargeHistoryTestConstants._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsSuccess, Json}

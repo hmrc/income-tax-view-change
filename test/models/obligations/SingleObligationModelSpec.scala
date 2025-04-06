@@ -16,7 +16,7 @@
 
 package models.obligations
 
-import assets.ObligationsTestConstants._
+import constants.ObligationsTestConstants._
 import models.obligations.ObligationStatus.{Fulfilled, Open}
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._

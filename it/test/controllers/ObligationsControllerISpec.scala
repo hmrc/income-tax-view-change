@@ -16,12 +16,12 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants._
-import assets.ReportDeadlinesIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
+import constants.ReportDeadlinesIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesReportDeadlinesStub
 import models.obligations.ObligationStatus.Open
-import models.obligations.{GroupedObligationsModel, ObligationsErrorModel, ObligationsModel}
+import models.obligations.{ObligationsErrorModel, ObligationsModel}
 import play.api.http.Status._
 
 class ObligationsControllerISpec extends ComponentSpecBase {

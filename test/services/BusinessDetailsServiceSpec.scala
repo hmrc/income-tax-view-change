@@ -16,8 +16,8 @@
 
 package services
 
-import assets.BaseTestConstants.testNino
-import assets.IncomeSourceDetailsTestConstants._
+import constants.BaseTestConstants.testNino
+import constants.IncomeSourceDetailsTestConstants._
 import mocks.MockBusinessDetailsConnector
 import models.incomeSourceDetails.{Nino, IncomeSourceDetailsResponseModel}
 import utils.TestSupport

@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.RepaymentHistoryTestConstants._
+import constants.RepaymentHistoryTestConstants._
 import connectors.httpParsers.RepaymentHistoryHttpParser._
 import mocks.MockHttpV2
 import models.repaymentHistory.{RepaymentHistory, RepaymentHistorySuccessResponse}

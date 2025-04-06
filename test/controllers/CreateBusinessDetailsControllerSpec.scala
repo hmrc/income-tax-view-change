@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.BaseTestConstants.mtdRef
+import constants.BaseTestConstants.mtdRef
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockCreateBusinessDetailsService, MockMicroserviceAuthConnector}
 import models.createIncomeSource._

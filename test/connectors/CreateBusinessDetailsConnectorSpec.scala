@@ -16,7 +16,7 @@
 
 package connectors
 
-import assets.CreateBusinessDetailsTestConstants._
+import constants.CreateBusinessDetailsTestConstants._
 import mocks.MockHttpV2
 import models.createIncomeSource.CreateIncomeSourceRequest
 import uk.gov.hmrc.http.HttpResponse

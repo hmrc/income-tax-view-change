@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.FinancialDataTestConstants.{chargesResponseNoCodingDetails2, creditChargesResponse}
+import constants.FinancialDataTestConstants.{chargesResponseNoCodingDetails2, creditChargesResponse}
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockFinancialDetailsConnector, MockMicroserviceAuthConnector}

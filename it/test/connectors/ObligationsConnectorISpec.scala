@@ -16,8 +16,8 @@
 
 package connectors
 
-import assets.BaseIntegrationTestConstants.testNino
-import assets.ReportDeadlinesIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants.testNino
+import constants.ReportDeadlinesIntegrationTestConstants._
 import helpers.{ComponentSpecBase, WiremockHelper}
 import models.obligations.ObligationsErrorModel
 import play.api.http.Status._

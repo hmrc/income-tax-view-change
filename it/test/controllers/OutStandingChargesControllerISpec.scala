@@ -17,7 +17,7 @@
 package controllers
 
 import helpers.servicemocks.DesOutStandingChargesStub._
-import assets.OutStandingChargesIntegrationTestConstant._
+import constants.OutStandingChargesIntegrationTestConstant._
 import models.outStandingCharges.OutstandingChargesSuccessResponse
 import play.api.http.Status._
 import play.api.libs.json.Json

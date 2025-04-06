@@ -16,7 +16,7 @@
 
 package connectors
 
-import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeErrorResponse, OutStandingChargeResponse, UnexpectedOutStandingChargeResponse}
+import connectors.httpParsers.OutStandingChargesHttpParser.{OutStandingChargeErrorResponse, UnexpectedOutStandingChargeResponse}
 import helpers.{ComponentSpecBase, WiremockHelper}
 import models.outStandingCharges.{OutStandingCharge, OutstandingChargesSuccessResponse}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}

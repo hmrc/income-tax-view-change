@@ -16,7 +16,7 @@
 
 package connectors.hip.httpParsers
 
-import assets.CalculationListTestConstants._
+import constants.CalculationListTestConstants._
 import connectors.hip.httpParsers.CalculationListLegacyHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
 import models.hipErrors.{BadGatewayResponse, CustomResponse, ErrorResponse, UnexpectedJsonResponse, UnexpectedResponse}
