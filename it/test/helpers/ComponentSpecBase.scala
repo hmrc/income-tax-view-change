@@ -46,15 +46,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.auth.port" -> mockPort,
     "microservice.services.if.url" -> mockUrl,
     "microservice.services.des.url" -> mockUrl,
+    "microservice.services.hip.get-legacy-calc-list-1404.feature-switch" -> "false",
     "useBusinessDetailsIFPlatform" -> "false"
-  )
-
-  def configWithBusinessDetailsOnIf: Map[String, String] = Map(
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "microservice.services.if.url" -> mockUrl,
-    "submissionStubUrl" -> mockUrl,
-    "useBusinessDetailsIFPlatform" -> "true",
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()

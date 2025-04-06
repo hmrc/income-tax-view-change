@@ -28,7 +28,7 @@ class CalculationListLegacyConnectorSpec extends TestSupport with MockHttpV2 {
   object TestCalculationListLegacyConnector$ extends CalculationListLegacyConnector(mockHttpClientV2, microserviceAppConfig)
   val platform: String = microserviceAppConfig.hipUrl
   val url1404 = s"$platform/itsd/calculations/liability/$testNino?taxYear=$testTaxYearEnd"
-  val header1404: Seq[(String, String)] = microserviceAppConfig.getHIPHeaders("get-calc-list-1404", hc.requestId)
+  val header1404: Seq[(String, String)] = microserviceAppConfig.getHIPHeaders("get-legacy-calc-list-1404", hc.requestId)
 
   lazy val mockUrl1404: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(url1404, header1404)(_)
   lazy val mockUrl1404Failed: Either[ErrorResponse, Nothing] => Unit =

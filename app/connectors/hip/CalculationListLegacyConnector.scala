@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CalculationListLegacyConnector @Inject()(val http: HttpClientV2, val appConfig: MicroserviceAppConfig) extends Logging {
 
-  private val API_1404_CONFIG_NAME = "get-calc-list-1404"
+  private val API_1404_CONFIG_NAME = "get-legacy-calc-list-1404"
   private val isGetCalcApiEnabledInHip = appConfig.isHIPFeatureSwitchEnabled(API_1404_CONFIG_NAME)
 
   private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String =

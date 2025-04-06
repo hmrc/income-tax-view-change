@@ -69,6 +69,14 @@ object CalculationListTestConstants {
     )
   }
 
+  private val invalidNino: JsArray = Json.arr(
+    Json.obj("errorCode" -> "1215", "errorDescription" -> "Invalid taxable entity id")
+  )
+
+  private val invalidTaxYear: JsArray = Json.arr(
+    Json.obj("errorCode" -> "1117", "errorDescription" -> "The tax year provided is invalid")
+  )
+
   private val responseWithTypeReason: JsValue = Json.obj(
     "failures" -> Json.arr(
     Json.obj("type" -> "1117", "reason" -> "The tax year provided is invalid"),
@@ -89,6 +97,8 @@ object CalculationListTestConstants {
   )
 
   val badRequestErrorResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> responseWithTypeReason)
+  val invalidNinoResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> invalidNino)
+  val invalidTaxYearResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> invalidTaxYear)
   val badRequestErrorResponse2: JsValue = Json.obj("origin" -> "HIP", "response" -> responseWithErrorCodeAndDescription)
 
   val internalServerErrorResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> responseWithTypeReason)

@@ -46,7 +46,7 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
         logger.error(s"Invalid tax year '$taxYearEnd' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
-        if(appConfig.isHIPFeatureSwitchEnabled("get-calc-list-1404")) {
+        if(appConfig.isHIPFeatureSwitchEnabled("get-legacy-calc-list-1404")) {
           getCalculationListFromHip(nino, taxYearEnd)
         } else {
           getCalculationListFromDes(nino, taxYearEnd)
