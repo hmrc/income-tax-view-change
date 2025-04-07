@@ -20,6 +20,7 @@ import config.MicroserviceAppConfig
 import connectors.hip.CalculationListLegacyConnector
 import controllers.predicates.AuthenticationPredicate
 import models.errors.{Error, InvalidNino, InvalidTaxYear, MultiError}
+import models.hip.GetLegacyCalcListApiName
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
@@ -36,7 +37,7 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
                                           val hipCalculationListConnector: CalculationListLegacyConnector,
                                           val appConfig: MicroserviceAppConfig,
                                           cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
-  // 1404
+  // Get Legacy Calculation details DES API#1404(now moved to HIP API#5191)
   def getCalculationList(nino: String, taxYearEnd: String): Action[AnyContent] = authentication.async {
     implicit request =>
       if (isInvalidNino(nino)) {
@@ -46,7 +47,7 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
         logger.error(s"Invalid tax year '$taxYearEnd' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
-        if(appConfig.isHIPFeatureSwitchEnabled("get-legacy-calc-list-1404")) {
+        if(appConfig.hipFeatureSwitchEnabled(GetLegacyCalcListApiName())) {
           getCalculationListFromHip(nino, taxYearEnd)
         } else {
           getCalculationListFromDes(nino, taxYearEnd)

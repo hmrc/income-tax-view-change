@@ -16,7 +16,7 @@
 
 package connectors.hip.httpParsers.errorResponses
 
-import models.hipErrors._
+import models.hip.{BadGatewayResponse, CustomResponse, ErrorResponse, FailureResponse, OriginFailuresResponse, OriginWithErrorCodeAndResponse, UnexpectedJsonResponse, UnexpectedResponse}
 import play.api.Logging
 import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE, UNAUTHORIZED}
 import play.api.libs.json.Json

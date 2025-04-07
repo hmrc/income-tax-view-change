@@ -19,7 +19,7 @@ package connectors.hip.httpParsers
 import constants.CalculationListTestConstants._
 import connectors.hip.httpParsers.CalculationListLegacyHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
-import models.hipErrors.{BadGatewayResponse, CustomResponse, ErrorResponse, UnexpectedJsonResponse, UnexpectedResponse}
+import models.hip.{BadGatewayResponse, CustomResponse, ErrorResponse, UnexpectedJsonResponse, UnexpectedResponse}
 import play.api.http.Status
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE, UNAUTHORIZED}
 import play.api.libs.json.Json

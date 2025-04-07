@@ -19,6 +19,7 @@ package connectors.hip
 import config.MicroserviceAppConfig
 import connectors.hip.httpParsers.CalculationListLegacyHttpParser.{CalculationListReads, HttpGetResult}
 import models.calculationList.CalculationListResponseModel
+import models.hip.GetLegacyCalcListApiName
 import play.api.Logging
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
@@ -29,8 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CalculationListLegacyConnector @Inject()(val http: HttpClientV2, val appConfig: MicroserviceAppConfig) extends Logging {
 
-  private val API_1404_CONFIG_NAME = "get-legacy-calc-list-1404"
-  private val isGetCalcApiEnabledInHip = appConfig.isHIPFeatureSwitchEnabled(API_1404_CONFIG_NAME)
+  private val isGetCalcApiEnabledInHip = appConfig.hipFeatureSwitchEnabled(GetLegacyCalcListApiName())
 
   private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String =
     s"${appConfig.hipUrl}/itsd/calculations/liability/$nino?taxYear=$taxYearEnd"
@@ -40,13 +40,13 @@ class CalculationListLegacyConnector @Inject()(val http: HttpClientV2, val appCo
     val url = getCalculationListUrl(nino, taxYear)
 
     logger.debug(
-      s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getHIPHeaders(API_1404_CONFIG_NAME, headerCarrier.requestId)}" +
+      s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getHIPHeaders(GetLegacyCalcListApiName(), headerCarrier.requestId)}" +
         s" \nIs1404GetCalcApiEnabledInHip: ${if (isGetCalcApiEnabledInHip) "YES" else "NO"}"
     )
 
     http.get(url"$url")
       .setHeader(
-        appConfig.getHIPHeaders(API_1404_CONFIG_NAME, headerCarrier.requestId): _*
+        appConfig.getHIPHeaders(GetLegacyCalcListApiName(), headerCarrier.requestId): _*
       )
       .execute[HttpGetResult[CalculationListResponseModel]](CalculationListReads, ec)
   }

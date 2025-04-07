@@ -25,6 +25,7 @@ import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
 import helpers.servicemocks.AuthStub
+import models.hip.GetLegacyCalcListApiName
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 import scala.concurrent.ExecutionContext
@@ -46,7 +47,9 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.auth.port" -> mockPort,
     "microservice.services.if.url" -> mockUrl,
     "microservice.services.des.url" -> mockUrl,
-    "microservice.services.hip.get-legacy-calc-list-1404.feature-switch" -> "false",
+    "microservice.services.hip.host" -> mockHost,
+    "microservice.services.hip.port" -> mockPort,
+    s"microservice.services.hip.${GetLegacyCalcListApiName()}.feature-switch" -> "false",
     "useBusinessDetailsIFPlatform" -> "false"
   )
 

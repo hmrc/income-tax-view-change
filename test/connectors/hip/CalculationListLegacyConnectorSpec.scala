@@ -19,16 +19,16 @@ package connectors.hip
 import constants.BaseTestConstants.{testNino, testTaxYearEnd}
 import constants.CalculationListTestConstants._
 import mocks.MockHttpV2
-import models.hipErrors.{ErrorResponse, UnexpectedJsonResponse}
+import models.hip.{ErrorResponse, GetLegacyCalcListApiName, UnexpectedJsonResponse}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
 class CalculationListLegacyConnectorSpec extends TestSupport with MockHttpV2 {
 
-  object TestCalculationListLegacyConnector$ extends CalculationListLegacyConnector(mockHttpClientV2, microserviceAppConfig)
+  object TestCalculationListLegacyConnector extends CalculationListLegacyConnector(mockHttpClientV2, microserviceAppConfig)
   val platform: String = microserviceAppConfig.hipUrl
   val url1404 = s"$platform/itsd/calculations/liability/$testNino?taxYear=$testTaxYearEnd"
-  val header1404: Seq[(String, String)] = microserviceAppConfig.getHIPHeaders("get-legacy-calc-list-1404", hc.requestId)
+  val header1404: Seq[(String, String)] = microserviceAppConfig.getHIPHeaders(GetLegacyCalcListApiName(), hc.requestId)
 
   lazy val mockUrl1404: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(url1404, header1404)(_)
   lazy val mockUrl1404Failed: Either[ErrorResponse, Nothing] => Unit =
@@ -37,7 +37,7 @@ class CalculationListLegacyConnectorSpec extends TestSupport with MockHttpV2 {
   "The CalculationListLegacyConnector" should {
     "format API URLs correctly" when {
       "getCalculationListUrl is called" in {
-        TestCalculationListLegacyConnector$.getCalculationListUrl(testNino, testTaxYearEnd) shouldBe url1404
+        TestCalculationListLegacyConnector.getCalculationListUrl(testNino, testTaxYearEnd) shouldBe url1404
       }
     }
     "correlation id is in the right format" when {
@@ -50,14 +50,14 @@ class CalculationListLegacyConnectorSpec extends TestSupport with MockHttpV2 {
     "return a CalculationList model" when {
       "calling getCalculationList with a valid NINO" in {
        mockUrl1404(successResponse)
-        TestCalculationListLegacyConnector$.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe successResponse
+        TestCalculationListLegacyConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe successResponse
       }
     }
 
     "return an ErrorResponse model" when {
       "calling getCalculationList and a non-success response is received" in {
         mockUrl1404Failed(Left(UnexpectedJsonResponse))
-        TestCalculationListLegacyConnector$.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe Left(UnexpectedJsonResponse)
+        TestCalculationListLegacyConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe Left(UnexpectedJsonResponse)
       }
     }
   }

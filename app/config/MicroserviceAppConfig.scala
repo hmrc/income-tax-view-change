@@ -58,8 +58,9 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     )
   }
 
-  val hipUrl: String = loadConfig("microservice.services.hip.url")
-  def getHipCredentials(api: String): String = {
+  lazy val hipUrl: String = servicesConfig.baseUrl("hip")
+
+  private def getHipCredentials(api: String): String = {
     val clientId = loadConfig(s"microservice.services.hip.$api.clientId")
     val secret = loadConfig(s"microservice.services.hip.$api.secret")
 
@@ -75,7 +76,7 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     )
   }
 
-  def isHIPFeatureSwitchEnabled(api: String): Boolean = {
+  def hipFeatureSwitchEnabled(api: String): Boolean = {
     servicesConfig.getBoolean(s"microservice.services.hip.$api.feature-switch")
   }
 

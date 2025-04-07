@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.hipErrors
+package models.hip
 
 import play.api.http.Status.{BAD_GATEWAY, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.{Format, JsValue, Json}
