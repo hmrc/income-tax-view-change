@@ -35,7 +35,7 @@ class CalculationListLegacyHttpParserSpec extends TestSupport {
         val expected: Either[Nothing, CalculationListResponseModel] = Right(calculationListFull)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual expected
+        result shouldBe expected
       }
       "HTTP response is 200 and matches schema (minimal response)" in {
         val httpResponse: HttpResponse = HttpResponse(Status.OK, jsonResponseMin, Map.empty)
@@ -43,7 +43,7 @@ class CalculationListLegacyHttpParserSpec extends TestSupport {
         val expected: Either[Nothing, CalculationListResponseModel] = Right(calculationListMin)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual expected
+        result shouldBe expected
       }
     }
     "return an error" when {
@@ -51,74 +51,74 @@ class CalculationListLegacyHttpParserSpec extends TestSupport {
         val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, badRequestErrorResponse, Map.empty)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual Left(ErrorResponse(BAD_REQUEST, badRequestErrorResponse))
+        result shouldBe Left(ErrorResponse(BAD_REQUEST, badRequestErrorResponse))
       }
       "HTTP response is 400 BAD_REQUEST with errorCode and description" in {
         val httpResponse: HttpResponse = HttpResponse(Status.BAD_REQUEST, badRequestErrorResponse2, Map.empty)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual Left(ErrorResponse(BAD_REQUEST, badRequestErrorResponse2))
+        result shouldBe Left(ErrorResponse(BAD_REQUEST, badRequestErrorResponse2))
       }
       "HTTP response is 400 BAD_REQUEST unexpected response" in {
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", badRequestUnexpectedJson)
 
-        result shouldEqual Left(UnexpectedJsonResponse)
+        result shouldBe Left(UnexpectedJsonResponse)
       }
       "HTTP response is 401 UNAUTHORIZED" in {
         val httpResponse: HttpResponse = HttpResponse(UNAUTHORIZED, unAuthorizedErrorResponse, Map.empty)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual Left(ErrorResponse(UNAUTHORIZED, unAuthorizedErrorResponse))
+        result shouldBe Left(ErrorResponse(UNAUTHORIZED, unAuthorizedErrorResponse))
       }
       "HTTP response is 401 UNAUTHORIZED unexpected response" in {
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", unauthorizedUnexpectedJson)
 
-        result shouldEqual Left(ErrorResponse(UNAUTHORIZED, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
+        result shouldBe Left(ErrorResponse(UNAUTHORIZED, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
       }
       "HTTP response is 404 NOT_FOUND" in {
         val httpResponse: HttpResponse = HttpResponse(NOT_FOUND, notFoundErrorResponse, Map.empty)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual Left(ErrorResponse(NOT_FOUND, notFoundErrorResponse))
+        result shouldBe Left(ErrorResponse(NOT_FOUND, notFoundErrorResponse))
       }
       "HTTP response is 404 NOT_FOUND unexpected response" in {
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", notFoundUnexpectedJson)
 
-        result shouldEqual Left(ErrorResponse(NOT_FOUND, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
+        result shouldBe Left(ErrorResponse(NOT_FOUND, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
       }
       "HTTP response is 502 BAD_GATEWAY" in {
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", badGatewayJson)
 
-        result shouldEqual Left(BadGatewayResponse)
+        result shouldBe Left(BadGatewayResponse)
       }
       "HTTP response is 500 INTERNAL_SERVER_ERROR" in {
         val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, internalServerErrorResponse, Map.empty)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual Left(ErrorResponse(INTERNAL_SERVER_ERROR, internalServerErrorResponse))
+        result shouldBe Left(ErrorResponse(INTERNAL_SERVER_ERROR, internalServerErrorResponse))
       }
       "HTTP response is 500 INTERNAL_SERVER_ERROR unexpected response" in {
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", badResponse)
 
-        result shouldEqual Left(UnexpectedJsonResponse)
+        result shouldBe Left(UnexpectedJsonResponse)
       }
 
       "HTTP response is 503 SERVICE_UNAVAILABLE" in {
         val httpResponse: HttpResponse = HttpResponse(SERVICE_UNAVAILABLE, internalServerErrorResponse, Map.empty)
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
-        result shouldEqual Left(ErrorResponse(SERVICE_UNAVAILABLE, internalServerErrorResponse))
+        result shouldBe Left(ErrorResponse(SERVICE_UNAVAILABLE, internalServerErrorResponse))
       }
       "HTTP response is 503 SERVICE_UNAVAILABLE unexpected response" in {
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", serviceUnavailableResponse)
 
-        result shouldEqual Left(UnexpectedJsonResponse)
+        result shouldBe Left(UnexpectedJsonResponse)
       }
 
       "HTTP response with non-json response" in {
         val result: CalculationListLegacyHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", nonJsonResponse)
 
-        result shouldEqual Left(UnexpectedResponse)
+        result shouldBe Left(UnexpectedResponse)
       }
     }
   }
