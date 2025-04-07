@@ -16,6 +16,7 @@
 
 package config
 
+import models.hip.HipApi
 import uk.gov.hmrc.http.{HeaderNames, RequestId}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -60,24 +61,24 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
 
   lazy val hipUrl: String = servicesConfig.baseUrl("hip")
 
-  private def getHipCredentials(api: String): String = {
-    val clientId = loadConfig(s"microservice.services.hip.$api.clientId")
-    val secret = loadConfig(s"microservice.services.hip.$api.secret")
+  private def getHipCredentials(hipApi: HipApi): String = {
+    val clientId = loadConfig(s"microservice.services.hip.${hipApi.name}.clientId")
+    val secret = loadConfig(s"microservice.services.hip.${hipApi.name}.secret")
 
     val encoded = Base64.getEncoder.encodeToString(s"$clientId:$secret".getBytes("UTF-8"))
 
     s"Basic $encoded"
   }
 
-  def getHIPHeaders(api: String, requestId: Option[RequestId]): Seq[(String, String)] = {
+  def getHIPHeaders(hipApi: HipApi, requestId: Option[RequestId]): Seq[(String, String)] = {
     Seq(
-      (HeaderNames.authorisation, getHipCredentials(api)),
+      (HeaderNames.authorisation, getHipCredentials(hipApi)),
       ("correlationId", requestId.map(_.value).getOrElse(UUID.randomUUID().toString))
     )
   }
 
-  def hipFeatureSwitchEnabled(api: String): Boolean = {
-    servicesConfig.getBoolean(s"microservice.services.hip.$api.feature-switch")
+  def hipFeatureSwitchEnabled(hipApi: HipApi): Boolean = {
+    servicesConfig.getBoolean(s"microservice.services.hip.${hipApi.name}.feature-switch")
   }
 
   val claimToAdjustTimeout: Int = servicesConfig.getInt("claim-to-adjust.timeout")

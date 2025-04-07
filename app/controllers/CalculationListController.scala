@@ -20,7 +20,7 @@ import config.MicroserviceAppConfig
 import connectors.hip.CalculationListLegacyConnector
 import controllers.predicates.AuthenticationPredicate
 import models.errors.{Error, InvalidNino, InvalidTaxYear, MultiError}
-import models.hip.GetLegacyCalcListApiName
+import models.hip.GetLegacyCalcListHipApi
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
@@ -47,7 +47,7 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
         logger.error(s"Invalid tax year '$taxYearEnd' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
-        if(appConfig.hipFeatureSwitchEnabled(GetLegacyCalcListApiName())) {
+        if(appConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)) {
           getCalculationListFromHip(nino, taxYearEnd)
         } else {
           getCalculationListFromDes(nino, taxYearEnd)

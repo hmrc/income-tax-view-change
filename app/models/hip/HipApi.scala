@@ -16,11 +16,11 @@
 
 package models.hip
 
-sealed trait ApiName {
+sealed trait HipApi {
   val name: String
 }
 
-case object GetLegacyCalcListApiName extends ApiName {
-  val name = "get-legacy-calc-list-1404"
+case object GetLegacyCalcListHipApi extends HipApi {
+  val name = "get-legacy-calc-list"
   def apply(): String = name
 }

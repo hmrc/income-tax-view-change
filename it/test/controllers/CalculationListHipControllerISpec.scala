@@ -21,7 +21,7 @@ import constants.CalculationListIntegrationTestConstants.calculationListHipFull
 import helpers.ComponentSpecBase
 import helpers.servicemocks.HipLegacyCalculationListStub
 import models.calculationList.CalculationListModel
-import models.hip.{FailureResponse, Failures, GetLegacyCalcListApiName, OriginFailuresResponse, OriginWithErrorCodeAndResponse, Response}
+import models.hip.{FailureResponse, Failures, GetLegacyCalcListHipApi, OriginFailuresResponse, OriginWithErrorCodeAndResponse, Response}
 import play.api.http.Status._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -39,7 +39,7 @@ class CalculationListHipControllerISpec extends ComponentSpecBase {
       "microservice.services.des.url" -> mockUrl,
       "microservice.services.hip.host" -> mockHost,
       "microservice.services.hip.port" -> mockPort,
-      s"microservice.services.hip.${GetLegacyCalcListApiName()}.feature-switch" -> "true",
+      s"microservice.services.hip.${GetLegacyCalcListHipApi()}.feature-switch" -> "true",
       "useBusinessDetailsIFPlatform" -> "true"
     ))
     .build()
