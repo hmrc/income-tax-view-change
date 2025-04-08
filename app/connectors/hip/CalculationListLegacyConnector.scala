@@ -40,13 +40,13 @@ class CalculationListLegacyConnector @Inject()(val http: HttpClientV2, val appCo
     val url = getCalculationListUrl(nino, taxYear)
 
     logger.debug(
-      s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getHIPHeaders(GetLegacyCalcListHipApi, headerCarrier.requestId)}" +
+      s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getHIPHeaders(GetLegacyCalcListHipApi)}" +
         s" \nIs1404GetCalcApiEnabledInHip: ${if (isGetCalcApiEnabledInHip) "YES" else "NO"}"
     )
 
     http.get(url"$url")
       .setHeader(
-        appConfig.getHIPHeaders(GetLegacyCalcListHipApi, headerCarrier.requestId): _*
+        appConfig.getHIPHeaders(GetLegacyCalcListHipApi): _*
       )
       .execute[HttpGetResult[CalculationListResponseModel]](CalculationListReads, ec)
   }
