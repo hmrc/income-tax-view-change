@@ -17,7 +17,7 @@
 package connectors
 
 import constants.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import constants.CalculationListTestConstants._
+import constants.CalculationListDesTestConstants._
 import mocks.MockHttpV2
 import models.errors.{ErrorResponse, UnexpectedJsonFormat}
 import uk.gov.hmrc.http.HttpResponse

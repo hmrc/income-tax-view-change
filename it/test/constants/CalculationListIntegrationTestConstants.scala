@@ -31,6 +31,16 @@ object CalculationListIntegrationTestConstants {
       )
     )
 
+  val successResponseHip: JsValue =
+    Json.arr(
+      Json.obj(
+        "calculationId" -> "c432a56d-e811-474c-a26a-76fc3bcaefe5",
+        "calculationTimestamp" -> "2023-10-31T12:55:51Z",
+        "calculationType" -> "crystallisation",
+        "crystallised" -> JsBoolean(true)
+      )
+    )
+
   val failureResponse: (String, String) => JsObject = (code: String, reason: String) =>
     Json.obj("code" -> code, "reason" -> reason)
 
@@ -40,6 +50,17 @@ object CalculationListIntegrationTestConstants {
         calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
         calculationTimestamp = "2023-10-31T12:55:51.159Z",
         calculationType = "finalDeclaration",
+        crystallised = Some(true)
+      ))
+    )
+  }
+
+  val calculationListHipFull: CalculationListResponseModel = {
+    CalculationListResponseModel(
+      calculations = Seq(CalculationListModel(
+        calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
+        calculationTimestamp = "2023-10-31T12:55:51Z",
+        calculationType = "crystallisation",
         crystallised = Some(true)
       ))
     )

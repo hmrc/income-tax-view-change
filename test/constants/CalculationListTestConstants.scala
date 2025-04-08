@@ -17,8 +17,7 @@
 package constants
 
 import models.calculationList.{CalculationListModel, CalculationListResponseModel}
-import models.errors.{Error, ErrorResponse, MultiError}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsArray, JsValue, Json}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 
@@ -29,8 +28,8 @@ object CalculationListTestConstants {
       |[
       | {
       |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
-      |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
-      |   "calculationType":"finalDeclaration",
+      |   "calculationTimestamp":"2023-10-31T12:55:51Z",
+      |   "calculationType":"crystallisation",
       |   "crystallised": true
       | }
       |]
@@ -41,8 +40,8 @@ object CalculationListTestConstants {
     CalculationListResponseModel(
       calculations = Seq(CalculationListModel(
         calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
-        calculationTimestamp = "2023-10-31T12:55:51.159Z",
-        calculationType = "finalDeclaration",
+        calculationTimestamp = "2023-10-31T12:55:51Z",
+        calculationType = "crystallisation",
         crystallised = Some(true)
       ))
     )
@@ -53,8 +52,8 @@ object CalculationListTestConstants {
       |[
       | {
       |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
-      |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
-      |   "calculationType":"finalDeclaration"
+      |   "calculationTimestamp":"2023-10-31T12:55:51Z",
+      |   "calculationType":"crystallisation"
       | }
       |]
       |""".stripMargin)
@@ -63,39 +62,64 @@ object CalculationListTestConstants {
     CalculationListResponseModel(
       calculations = Seq(CalculationListModel(
         calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
-        calculationTimestamp = "2023-10-31T12:55:51.159Z",
-        calculationType = "finalDeclaration",
+        calculationTimestamp = "2023-10-31T12:55:51Z",
+        calculationType = "crystallisation",
         crystallised = None
       ))
     )
   }
 
-  val singleError: Error = Error(code = "CODE", reason = "ERROR MESSAGE")
-
-  val jsonSingleError: JsValue = Json.obj("code" -> "CODE", "reason" -> "ERROR MESSAGE")
-
-  val unexpectedJsonError: Error = Error(code = "UNEXPECTED_JSON_FORMAT", reason = "The downstream service responded with json which did not match the expected format.")
-
-  val badRequestSingleError: Either[ErrorResponse, Nothing] =
-    Left(ErrorResponse(Status.BAD_REQUEST, singleError))
-
-  val unexpectedJsonFormat: Either[ErrorResponse, Nothing] =
-    Left(ErrorResponse(Status.INTERNAL_SERVER_ERROR, unexpectedJsonError))
-
-  val multiError: MultiError = MultiError(
-    failures = Seq(
-      Error(code = "ERROR CODE 1", reason = "ERROR MESSAGE 1"),
-      Error(code = "ERROR CODE 2", reason = "ERROR MESSAGE 2")
-    )
+  private val invalidNino: JsArray = Json.arr(
+    Json.obj("errorCode" -> "1215", "errorDescription" -> "Invalid taxable entity id")
   )
 
-  val badRequestMultiError: Either[ErrorResponse, Nothing] = Left(ErrorResponse(
-    Status.BAD_REQUEST,
-    multiError
+  private val invalidTaxYear: JsArray = Json.arr(
+    Json.obj("errorCode" -> "1117", "errorDescription" -> "The tax year provided is invalid")
+  )
+
+  private val responseWithTypeReason: JsValue = Json.obj(
+    "failures" -> Json.arr(
+    Json.obj("type" -> "1117", "reason" -> "The tax year provided is invalid"),
+    Json.obj("type" -> "1215", "reason" -> "Invalid taxable entity id")
   ))
 
-  val successResponse: HttpResponse = HttpResponse(Status.OK, jsonResponseFull, Map.empty)
-  val badJson = HttpResponse(Status.OK, Json.toJson("{}"), Map.empty)
-  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Dummy error message")
+  private val responseWithErrorCodeAndDescription: JsArray = Json.arr(
+    Json.obj("errorCode" -> "1117", "errorDescription" -> "The tax year provided is invalid"),
+    Json.obj("errorCode" -> "1215", "errorDescription" -> "Invalid taxable entity id")
+  )
 
+  val unAuthorizedErrorResponse: JsArray = Json.arr(
+    Json.obj("errorCode" -> "5009", "errorDescription" -> "Unsuccessful authorisation")
+  )
+
+  val notFoundErrorResponse: JsArray = Json.arr(
+    Json.obj("errorCode" -> "5010", "errorDescription" -> "The Requested resource could not be found")
+  )
+
+  val badRequestErrorResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> responseWithTypeReason)
+  val invalidNinoResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> invalidNino)
+  val invalidTaxYearResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> invalidTaxYear)
+  val badRequestErrorResponse2: JsValue = Json.obj("origin" -> "HIP", "response" -> responseWithErrorCodeAndDescription)
+
+  val internalServerErrorResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> responseWithTypeReason)
+
+
+  val successResponse: HttpResponse = HttpResponse(Status.OK, jsonResponseFull, Map.empty)
+  val badRequestUnexpectedJson = HttpResponse(Status.BAD_REQUEST, Json.toJson("{}"), Map.empty)
+  val unauthorizedUnexpectedJson = HttpResponse(Status.UNAUTHORIZED, Json.toJson("{}"), Map.empty)
+  val notFoundUnexpectedJson = HttpResponse(Status.NOT_FOUND, Json.toJson(
+    s"""
+      |{
+      |"test": "error"
+      |}
+      |""".stripMargin), Map.empty)
+  val badGatewayJson = HttpResponse(Status.BAD_GATEWAY, "", Map.empty)
+  val serviceUnavailableResponse = HttpResponse(Status.SERVICE_UNAVAILABLE, "{}", Map.empty)
+  val badResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, Json.toJson(
+    s"""
+       |{
+       |"test": "error"
+       |}
+       |""".stripMargin), Map.empty)
+  val nonJsonResponse = HttpResponse(Status.BAD_REQUEST, "non json response", Map.empty)
 }
