@@ -41,10 +41,10 @@ object CreateBusinessDetailsIntegrationTestConstants {
          |""".stripMargin)
   }
 
-  val testDate = LocalDate.of(2022, 5, 1).toString
+  val testDate: String = LocalDate.of(2022, 5, 1).toString
 
-  val testCreateSelfEmploymentIncomeSourceRequest =
-    Json.toJson(
+  def createBusinessIncomeSourceRequest
+    (cashOrAccFlag: Option[String]): CreateBusinessIncomeSourceRequest =
       CreateBusinessIncomeSourceRequest(
         List(
           BusinessDetails(
@@ -54,31 +54,44 @@ object CreateBusinessDetailsIntegrationTestConstants {
             addressDetails = AddressDetails("10 FooBar Street", None, None, None, None, None),
             typeOfBusiness = None,
             tradingStartDate = testDate,
-            cashOrAccrualsFlag = "CASH",
+            cashOrAccrualsFlag = cashOrAccFlag,
             cessationDate = None,
             cessationReason = None
           )
         )
       )
-    )
 
-  val testCreateUKPropertyRequest =
+  def testCreateSelfEmploymentIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("CASH")): JsValue =
+    Json.toJson(createBusinessIncomeSourceRequest(cashOrAccFlag))
+
+  val testCreateUKPropertyRequest: JsValue =
     Json.toJson(
       CreateUKPropertyIncomeSourceRequest(
         PropertyDetails(
           tradingStartDate = testDate,
-          cashOrAccrualsFlag = "CASH",
+          cashOrAccrualsFlag = Some("CASH"),
           startDate = testDate
         )
       )
     )
 
-  val testCreateForeignPropertyRequest =
+  val testCreateForeignPropertyRequest: JsValue =
     Json.toJson(
       CreateForeignPropertyIncomeSourceRequest(
         PropertyDetails(
           tradingStartDate = testDate,
-          cashOrAccrualsFlag = "ACCRUALS",
+          cashOrAccrualsFlag = Some("ACCRUALS"),
+          startDate = testDate
+        )
+      )
+    )
+
+  val testCreateForeignPropertyRequestNoFlag: JsValue =
+    Json.toJson(
+      CreateForeignPropertyIncomeSourceRequest(
+        PropertyDetails(
+          tradingStartDate = testDate,
+          cashOrAccrualsFlag = None,
           startDate = testDate
         )
       )

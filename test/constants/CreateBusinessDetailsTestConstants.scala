@@ -40,7 +40,7 @@ object CreateBusinessDetailsTestConstants {
           addressDetails = AddressDetails("10 FooBar Street", None, None, None, None, None),
           typeOfBusiness = None,
           tradingStartDate = testDate,
-          cashOrAccrualsFlag = "CASH",
+          cashOrAccrualsFlag = Some("CASH"),
           cessationDate = None,
           cessationReason = None
         )
