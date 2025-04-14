@@ -34,13 +34,32 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
+          val request = testCreateSelfEmploymentIncomeSourceRequest()
+
           DesCreateBusinessDetailsStub
-            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateSelfEmploymentIncomeSourceRequest, testCreateBusinessDetailsSuccessResponse)
+            .stubPostDesBusinessDetails(testMtdbsa, OK, request, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest)
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, request)
 
-          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest)
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, request)
+
+          res should have(httpStatus(OK))
+          res.body should include(testIncomeSourceId)
+        }
+
+        s"return $OK response with an incomeSourceId with a missing cashOrAccrualFlag" in {
+          isAuthorised(true)
+
+          val requestMissing = testCreateSelfEmploymentIncomeSourceRequest(None)
+
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, OK, requestMissing, testCreateBusinessDetailsSuccessResponse)
+
+          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, requestMissing)
+
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, requestMissing)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -83,6 +102,24 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
         }
+
+        s"return $OK with an incomeSourceId with no flag" in {
+
+          isAuthorised(true)
+          
+          val request = testCreateForeignPropertyRequestNoFlag
+
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, OK, request, testCreateBusinessDetailsSuccessResponse)
+
+          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, request)
+
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, request)
+
+          res should have(httpStatus(OK))
+          res.body should include(testIncomeSourceId)
+        }
       }
     }
     "authorised with a invalid request" should {
@@ -109,12 +146,12 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(
             testMtdbsa,
             INTERNAL_SERVER_ERROR,
-            testCreateSelfEmploymentIncomeSourceRequest,
+            testCreateSelfEmploymentIncomeSourceRequest(),
             Json.toJson(CreateBusinessDetailsErrorResponse(INTERNAL_SERVER_ERROR, "failed to create details"))
           )
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest)
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest())
 
           res should have(httpStatus(INTERNAL_SERVER_ERROR))
         }
