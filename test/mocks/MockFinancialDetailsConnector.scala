@@ -26,10 +26,13 @@ import scala.concurrent.Future
 import org.mockito.Mockito.mock
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
+import services.FinancialDetailChargesService
 
 trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
   val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
+  val mockFinancialDetailsService: FinancialDetailChargesService = mock(classOf[FinancialDetailChargesService])
+
 
   override def beforeEach(): Unit = {
     super.beforeEach()
