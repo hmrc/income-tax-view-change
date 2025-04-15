@@ -58,8 +58,8 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
 
   def mockOnlyOpenItems(nino: String)
                        (response: ChargeResponse): Unit = {
-    when(mockFinancialDetailsConnector.getOnlyOpenItems(
-      nino = ArgumentMatchers.eq(nino)
-    )(ArgumentMatchers.any(), ArgumentMatchers.any())) thenReturn Future.successful(response)
+    when(mockFinancialDetailsService.getOnlyOpenItems(
+      ArgumentMatchers.eq(nino)
+    )(ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 }
