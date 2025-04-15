@@ -16,7 +16,7 @@
 
 package models.core
 
-import assets.AddressDetailsTestConstants._
+import constants.AddressDetailsTestConstants._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport

@@ -16,7 +16,7 @@
 
 package helpers.servicemocks
 
-import assets.ITSAStatusIntegrationTestConstants.{errorITSAStatusError, failedFutureITSAStatusError, taxYear, taxableEntityId}
+import constants.ITSAStatusIntegrationTestConstants.{errorITSAStatusError, failedFutureITSAStatusError, taxYear, taxableEntityId}
 import play.mvc.Http.Status
 import helpers.WiremockHelper
 

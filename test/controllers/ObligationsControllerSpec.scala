@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.BaseTestConstants._
-import assets.ObligationsTestConstants._
+import constants.BaseTestConstants._
+import constants.ObligationsTestConstants._
 import connectors.ObligationsConnector
 import controllers.predicates.AuthenticationPredicate
 import mocks.MockMicroserviceAuthConnector

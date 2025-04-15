@@ -16,8 +16,11 @@
 
 package controllers
 
+import config.MicroserviceAppConfig
+import connectors.hip.CalculationListLegacyConnector
 import controllers.predicates.AuthenticationPredicate
 import models.errors.{Error, InvalidNino, InvalidTaxYear, MultiError}
+import models.hip.GetLegacyCalcListHipApi
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
@@ -31,8 +34,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CalculationListController @Inject()(val authentication: AuthenticationPredicate,
                                           val calculationListService: CalculationListService,
+                                          val hipCalculationListConnector: CalculationListLegacyConnector,
+                                          val appConfig: MicroserviceAppConfig,
                                           cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
-  // 1404
+  // Get Legacy Calculation details DES API#1404(now moved to HIP API#5191)
   def getCalculationList(nino: String, taxYearEnd: String): Action[AnyContent] = authentication.async {
     implicit request =>
       if (isInvalidNino(nino)) {
@@ -42,7 +47,11 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
         logger.error(s"Invalid tax year '$taxYearEnd' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
-        getCalculationList(nino, taxYearEnd)
+        if(appConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)) {
+          getCalculationListFromHip(nino, taxYearEnd)
+        } else {
+          getCalculationListFromDes(nino, taxYearEnd)
+        }
       }
   }
 
@@ -60,7 +69,7 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
       }
   }
 
-  private def getCalculationList(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
+  private def getCalculationListFromDes(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
     logger.debug("Calling CalculationListService.getCalculationList")
     calculationListService.getCalculationList(nino, taxYear).map {
       case Right(calculationList) =>
@@ -77,6 +86,15 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
       }
     }
   }
+
+  private def getCalculationListFromHip(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
+    hipCalculationListConnector.getCalculationList(nino, taxYear).map {
+      case Right(calculationList) =>
+        val calculation = calculationList.calculations.head
+        Ok(Json.toJson(calculation))
+      case Left(error) => Status(error.status)(error.jsonError)
+      }
+    }
 
   private def getCalculationListTYS(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
     logger.debug("Calling CalculationListService.getCalculationList")

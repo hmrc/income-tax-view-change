@@ -22,9 +22,13 @@ import scala.util.{Success, Try}
 
 trait CustomReads {
 
-  val readInt: Reads[Int] = implicitly[Reads[Int]].orElse(implicitly[Reads[String]]
-    .map(x => Try(x.toInt))
-    .collect(JsonValidationError(Seq("Parsing error"))) {
-      case Success(a) => a
-    })
+  val readInt: Reads[Int] =
+    implicitly[Reads[Int]]
+      .orElse(implicitly[Reads[String]]
+        .map(x => Try(x.toInt))
+        .collect(
+          JsonValidationError(Seq("Parsing error"))) {
+          case Success(a) => a
+        }
+      )
 }

@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import assets.ChargeHistoryTestConstants._
+import constants.ChargeHistoryTestConstants._
 import connectors.httpParsers.ChargeHistoryHttpParser._
 import models.chargeHistoryDetail.ChargeHistorySuccessResponse
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}

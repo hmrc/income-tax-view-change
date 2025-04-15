@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.BaseTestConstants.mtdRef
-import assets.IncomeSourceDetailsTestConstants._
+import constants.BaseTestConstants.mtdRef
+import constants.IncomeSourceDetailsTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockIncomeSourceDetailsService, MockMicroserviceAuthConnector}
 import play.api.http.Status

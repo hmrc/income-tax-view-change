@@ -16,8 +16,8 @@
 
 package connectors
 
-import assets.BaseTestConstants._
-import assets.IncomeSourceDetailsTestConstants._
+import constants.BaseTestConstants._
+import constants.IncomeSourceDetailsTestConstants._
 import mocks.MockHttpV2
 import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsNotFound, MtdId, Nino}
 import play.mvc.Http.Status

@@ -16,7 +16,7 @@
 
 package helpers.servicemocks
 
-import assets.BusinessDetailsIntegrationTestConstants._
+import constants.BusinessDetailsIntegrationTestConstants._
 import models.incomeSourceDetails.IncomeSourceDetailsModel
 import play.api.http.Status
 import helpers.WiremockHelper
@@ -28,6 +28,11 @@ object BusinessDetailsCallWithNinoStub {
   def stubGetIfBusinessDetails(nino: String, response: IncomeSourceDetailsModel): Unit = {
     val ifBusinessDetailsResponse = successResponseIf(response.nino).toString
     WiremockHelper.stubGet(url(nino), Status.OK, ifBusinessDetailsResponse)
+  }
+
+  def stubGetIfBusinessDetailsNotFound(nino: String, response: IncomeSourceDetailsModel): Unit = {
+    val ifBusinessDetailsResponse = successResponseIf(response.nino).toString
+    WiremockHelper.stubGet(url(nino), Status.NOT_FOUND, ifBusinessDetailsResponse)
   }
 
   def stubGetIfBusinessDetailsError(nino: String): Unit = {

@@ -16,7 +16,7 @@
 
 package connectors.httpParsers
 
-import assets.CalculationListTestConstants.{badRequestSingleError, calculationListFull, calculationListMin, jsonResponseFull, jsonResponseMin, jsonSingleError}
+import constants.CalculationListDesTestConstants.{badRequestSingleError, calculationListFull, calculationListMin, jsonResponseFull, jsonResponseMin, jsonSingleError}
 import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
 import models.errors.{InvalidJsonResponse, UnexpectedResponse}
@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
 class CalculationListHttpParserSpec extends TestSupport {
-  "The CalculationListHttpParser" should {
+  "The CalculationListLegacyHttpParser" should {
     "return an instance of CalculationList" when {
       "HTTP response is 200 and matches schema" in {
         val httpResponse: HttpResponse = HttpResponse(Status.OK, jsonResponseFull, Map.empty)

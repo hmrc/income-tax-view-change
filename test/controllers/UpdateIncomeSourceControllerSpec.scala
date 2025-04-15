@@ -16,7 +16,7 @@
 
 package controllers
 
-import assets.UpdateIncomeSourceTestConstants._
+import constants.UpdateIncomeSourceTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockUpdateIncomeSourceConnector}
 import play.api.http.Status.{BAD_REQUEST, OK, UNAUTHORIZED}

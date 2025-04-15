@@ -16,9 +16,9 @@
 
 package controllers
 
-import assets.BaseIntegrationTestConstants._
-import assets.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
-import assets.IncomeSourceIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
+import constants.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
+import constants.IncomeSourceIntegrationTestConstants._
 import models.incomeSourceDetails.IncomeSourceDetailsError
 import play.api.http.Status._
 import helpers.ComponentSpecBase
@@ -46,6 +46,25 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
           res should have(
             httpStatus(OK),
             jsonBodyMatching(jsonSuccessOutput())
+          )
+        }
+
+        "return a NOT Found error" in {
+
+          isAuthorised(true)
+
+          And("I wiremock stub a successful getIncomeSourceDetails response")
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetailsNotFound(testNino, incomeSourceDetailsSuccess)
+
+          When(s"I call GET /get-business-details/nino/$testNino")
+          val res = IncomeTaxViewChange.getBusinessDetails(testNino)
+
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
+
+          Then("a successful response is returned with the correct business details")
+
+          res should have(
+            httpStatus(NOT_FOUND)
           )
         }
       }

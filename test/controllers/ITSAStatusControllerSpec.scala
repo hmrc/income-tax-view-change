@@ -16,8 +16,8 @@
 
 package controllers
 
-import assets.BaseTestConstants.{testNino, testTaxYearRange}
-import assets.ITSAStatusTestConstants._
+import constants.BaseTestConstants.{testNino, testTaxYearRange}
+import constants.ITSAStatusTestConstants._
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockITSAStatusConnector, MockMicroserviceAuthConnector}
 import play.api.http.Status._

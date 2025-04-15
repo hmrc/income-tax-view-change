@@ -25,6 +25,7 @@ import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
 import helpers.servicemocks.AuthStub
+import models.hip.GetLegacyCalcListHipApi
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 import scala.concurrent.ExecutionContext
@@ -46,15 +47,10 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.auth.port" -> mockPort,
     "microservice.services.if.url" -> mockUrl,
     "microservice.services.des.url" -> mockUrl,
+    "microservice.services.hip.host" -> mockHost,
+    "microservice.services.hip.port" -> mockPort,
+    s"microservice.services.hip.${GetLegacyCalcListHipApi()}.feature-switch" -> "false",
     "useBusinessDetailsIFPlatform" -> "false"
-  )
-
-  def configWithBusinessDetailsOnIf: Map[String, String] = Map(
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "microservice.services.if.url" -> mockUrl,
-    "submissionStubUrl" -> mockUrl,
-    "useBusinessDetailsIFPlatform" -> "true",
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()

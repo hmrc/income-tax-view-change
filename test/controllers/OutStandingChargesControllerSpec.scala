@@ -16,14 +16,14 @@
 
 package controllers
 
-import assets.OutStandingChargesConstant._
+import constants.OutStandingChargesConstant._
 import connectors.httpParsers.OutStandingChargesHttpParser.UnexpectedOutStandingChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockOutStandingChargesConnector}
 import models.outStandingCharges.OutstandingChargesSuccessResponse
 import play.api.mvc.ControllerComponents
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{stubControllerComponents, _}
+import play.api.test.Helpers._
 
 class OutStandingChargesControllerSpec extends ControllerBaseSpec with MockOutStandingChargesConnector with MockMicroserviceAuthConnector {
 

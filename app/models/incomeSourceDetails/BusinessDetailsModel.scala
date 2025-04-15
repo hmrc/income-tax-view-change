@@ -16,7 +16,7 @@
 
 package models.incomeSourceDetails
 
-import models.core.{AccountingPeriodModel, AddressModel, CessationModel, ContactDetailsModel}
+import models.core.{AccountingPeriodModel, AddressModel, CessationModel, ContactDetailsModel, CustomReads}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -28,6 +28,7 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 tradingName: Option[String],
                                 address: Option[AddressModel],
                                 contactDetails: Option[ContactDetailsModel],
+                                contextualTaxYear: Option[String],
                                 tradingStartDate: Option[LocalDate],
                                 cashOrAccruals: Boolean,
                                 seasonal: Option[Boolean],
@@ -38,25 +39,7 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 quarterTypeElection: Option[QuarterTypeElection])
 
 
-object BusinessDetailsModel {
-
-  val reads: Reads[BusinessDetailsModel] = (
-    (__ \ "incomeSourceId").read[String] and
-    (__ \ "incomeSource").readNullable[String] and
-      __.read(AccountingPeriodModel.reads) and
-      (__ \ "tradingName").readNullable[String] and
-      (__ \ "businessAddressDetails").readNullable(AddressModel.reads) and
-      (__ \ "businessContactDetails").readNullable(ContactDetailsModel.reads) and
-      (__ \ "tradingStartDate").readNullable[LocalDate] and
-      (__ \ "cashOrAccruals").read[Boolean] and
-      (__ \ "seasonal").readNullable[Boolean] and
-      (__ \ "cessationDate").readNullable[LocalDate] and
-      (__ \ "cessationReason").readNullable[String] and
-      (__ \ "paperLess").readNullable[Boolean] and
-      (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
-      (__ \ "latencyDetails").readNullable[LatencyDetails] and
-      (__ \ "quarterTypeElection").readNullable[QuarterTypeElection]
-    ) (BusinessDetailsModel.applyWithFields _)
+object BusinessDetailsModel extends CustomReads {
 
   def applyWithFields(incomeSourceId: String,
                       incomeSource: Option[String],
@@ -64,6 +47,7 @@ object BusinessDetailsModel {
                       tradingName: Option[String],
                       address: Option[AddressModel],
                       contactDetails: Option[ContactDetailsModel],
+                      contextualTaxYear: Option[String],
                       tradingStartDate: Option[LocalDate],
                       cashOrAccruals: Boolean,
                       seasonal: Option[Boolean],
@@ -80,6 +64,7 @@ object BusinessDetailsModel {
       tradingName,
       address,
       contactDetails,
+      contextualTaxYear,
       tradingStartDate,
       cashOrAccruals,
       seasonal,
@@ -90,7 +75,25 @@ object BusinessDetailsModel {
       quarterTypeElection
     )
 
-  implicit val format: Format[BusinessDetailsModel] = Json.format[BusinessDetailsModel]
+  implicit val reads: Reads[BusinessDetailsModel] = (
+    (__ \ "incomeSourceId").read[String] and
+      (__ \ "incomeSource").readNullable[String] and
+      __.read(AccountingPeriodModel.reads) and
+      (__ \ "tradingName").readNullable[String] and
+      (__ \ "businessAddressDetails").readNullable(AddressModel.reads) and
+      (__ \ "businessContactDetails").readNullable(ContactDetailsModel.reads) and
+      (__ \ "contextualTaxYear").readNullable[String] and
+      (__ \ "tradingStartDate").readNullable[LocalDate] and
+      (__ \ "cashOrAccruals").read[Boolean] and
+      (__ \ "seasonal").readNullable[Boolean] and
+      (__ \ "cessationDate").readNullable[LocalDate] and
+      (__ \ "cessationReason").readNullable[String] and
+      (__ \ "paperLess").readNullable[Boolean] and
+      (__ \ "firstAccountingPeriodEndDate").readNullable[LocalDate] and
+      (__ \ "latencyDetails").readNullable[LatencyDetails] and
+      (__ \ "quarterTypeElection").readNullable[QuarterTypeElection]
+    )(BusinessDetailsModel.applyWithFields _)
 
 
+  implicit val writes: Writes[BusinessDetailsModel] = Json.writes[BusinessDetailsModel]
 }
