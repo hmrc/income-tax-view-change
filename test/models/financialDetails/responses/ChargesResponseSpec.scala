@@ -26,7 +26,7 @@ import java.time.LocalDate
 
 class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
-  val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
+  val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00), None)
 
   val chargeResponseMinWrite = ChargesResponse(balanceDetails, List(), List())
 
@@ -216,7 +216,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
       paymentId = Some("paymentId"),
-      clearingSAPDocument = Some("012345678912")
+      clearingSAPDocument = Some("012345678912"),
+      codedOutStatus = None
     )
   }
 
