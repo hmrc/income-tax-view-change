@@ -41,19 +41,19 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
 
   def mockListCharges(nino: String, from: String, to: String)
                      (response: ChargeResponse): Unit = {
-    when(mockFinancialDetailsConnector.getChargeDetails(
-      nino = ArgumentMatchers.eq(nino),
-      from = ArgumentMatchers.eq(from),
-      to = ArgumentMatchers.eq(to)
-    )(ArgumentMatchers.any(), ArgumentMatchers.any())) thenReturn Future.successful(response)
+    when(mockFinancialDetailsService.getChargeDetails(
+      ArgumentMatchers.eq(nino),
+      ArgumentMatchers.eq(from),
+      ArgumentMatchers.eq(to)
+    )(ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 
   def mockSingleDocumentDetails(nino: String, documentId: String)
                                (response: ChargeResponse): Unit = {
-    when(mockFinancialDetailsConnector.getPaymentAllocationDetails(
-      nino = ArgumentMatchers.eq(nino),
-      documentId = ArgumentMatchers.eq(documentId)
-    )(ArgumentMatchers.any(), ArgumentMatchers.any())) thenReturn Future.successful(response)
+    when(mockFinancialDetailsService.getPaymentAllocationDetails(
+      ArgumentMatchers.eq(nino),
+      ArgumentMatchers.eq(documentId)
+    )(ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 
   def mockOnlyOpenItems(nino: String)
