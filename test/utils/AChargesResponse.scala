@@ -23,7 +23,7 @@ import java.time.LocalDate
 
 
 case class AChargesResponse(model: ChargesResponse = ChargesResponse(
-  BalanceDetails(0.0, 0.0, 0.0, None, None, None, None, None),
+  BalanceDetails(0.0, 0.0, 0.0, None, None, None, None, None, None),
   Nil, Nil
 )) {
 

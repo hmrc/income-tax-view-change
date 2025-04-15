@@ -35,11 +35,12 @@ case class SubItem(subItemId: Option[String],
                    paymentMethod: Option[String],
                    paymentLot: Option[String],
                    paymentLotItem: Option[String],
-                   paymentId: Option[String])
+                   paymentId: Option[String],
+                   codedOutStatus: Option[String])
 
 object SubItem extends Logging {
 
-  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
 
@@ -58,6 +59,7 @@ object SubItem extends Logging {
     paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
     paymentLot <- (JsPath \ "paymentLot").readNullable[String]
     paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
+    codedOutStatus <- (JsPath \ "codedOutStatus").readNullable[String]
 
   } yield {
     val id: Option[String] = for {
@@ -79,7 +81,8 @@ object SubItem extends Logging {
       paymentMethod,
       paymentLot,
       paymentLotItem,
-      id
+      id,
+      codedOutStatus
     )
   }
 
