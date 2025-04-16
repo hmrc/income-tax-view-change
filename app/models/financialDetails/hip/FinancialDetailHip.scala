@@ -1,0 +1,67 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package models.financialDetails.hip.model
+
+import java.math.BigDecimal
+import java.time.LocalDate
+
+case class FinancialDetailHip(
+  /* Format: YYYY */
+  taxYear: String,
+  /* SAP document number or Form Bundle Number for zero amount documents */
+  documentID: String,
+  /* Description of charge type */
+  chargeType: Option[String] = None,
+  /* Description of main type */
+  mainType: Option[String] = None,
+  /* Period Key */
+  periodKey: Option[String] = None,
+  /* Period Key Description */
+  periodKeyDescription: Option[String] = None,
+  taxPeriodFrom: Option[LocalDate] = None,
+  taxPeriodTo: Option[LocalDate] = None,
+  /* Business Partner */
+  businessPartner: Option[String] = None,
+  /* Contract Account Category */
+  contractAccountCategory: Option[String] = None,
+  /* Contract Account */
+  contractAccount: Option[String] = None,
+  /* Contract Object Type */
+  contractObjectType: Option[String] = None,
+  /* Contract Object */
+  contractObject: Option[String] = None,
+  /* SAP Document Number */
+  sapDocumentNumber: Option[String] = None,
+  /* SAP Document Number Item */
+  sapDocumentNumberItem: Option[String] = None,
+  /* Charge Reference */
+  chargeReference: Option[String] = None,
+  /* Main Transaction */
+  mainTransaction: Option[String] = None,
+  /* Sub Transaction */
+  subTransaction: Option[String] = None,
+  /* Currency amount. 13-digits total with 2 decimal places */
+  originalAmount: Option[BigDecimal] = None,
+  /* Currency amount. 13-digits total with 2 decimal places */
+  outstandingAmount: Option[BigDecimal] = None,
+  /* Currency amount. 13-digits total with 2 decimal places */
+  clearedAmount: Option[BigDecimal] = None,
+  /* Currency amount. 13-digits total with 2 decimal places */
+  accruedInterest: Option[BigDecimal] = None,
+  items: Seq[SubItemHip]
+)
+
