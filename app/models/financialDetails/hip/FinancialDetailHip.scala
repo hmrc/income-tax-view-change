@@ -62,6 +62,6 @@ case class FinancialDetailHip(
   clearedAmount: Option[BigDecimal] = None,
   /* Currency amount. 13-digits total with 2 decimal places */
   accruedInterest: Option[BigDecimal] = None,
-  items: Seq[SubItemHip]
+  items: Option[Seq[SubItemHip]]
 )
 
