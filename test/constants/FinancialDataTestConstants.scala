@@ -107,7 +107,8 @@ object FinancialDataTestConstants {
       |       "dueDate": "2022-06-23",
       |       "paymentMethod": "paymentMethod",
       |       "paymentLot": "paymentLot",
-      |       "paymentLotItem": "paymentLotItem"
+      |       "paymentLotItem": "paymentLotItem",
+      |       "codedOutStatus": "I"
       |       }
       |     ]
       |   },
@@ -139,7 +140,8 @@ object FinancialDataTestConstants {
       |       "dueDate": "2022-06-23",
       |       "paymentMethod": "paymentMethod2",
       |       "paymentLot": "paymentLot2",
-      |       "paymentLotItem": "paymentLotItem2"
+      |       "paymentLotItem": "paymentLotItem2",
+      |       "codedOutStatus": "I"
       |       }
       |     ]
       |   }
@@ -178,7 +180,8 @@ object FinancialDataTestConstants {
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
 			|       "paymentLotItem": "paymentLotItem",
-			|       "paymentId": "paymentLot-paymentLotItem"
+			|       "paymentId": "paymentLot-paymentLotItem",
+      |       "codedOutStatus": "I"
 			|       }
 			|     ]
 			|}
@@ -281,7 +284,8 @@ object FinancialDataTestConstants {
         paymentMethod = None,
         paymentLot = None,
         paymentLotItem = None,
-        paymentId = None
+        paymentId = None,
+        codedOutStatus = Some("I")
       )))
   )
 
@@ -315,7 +319,8 @@ object FinancialDataTestConstants {
         paymentMethod = Some("paymentMethod"),
         paymentLot = Some("paymentLot"),
         paymentLotItem = Some("paymentLotItem"),
-        paymentId = Some("paymentLot-paymentLotItem")
+        paymentId = Some("paymentLot-paymentLotItem"),
+        codedOutStatus = Some("I")
       )))
   )
   val financialDetail2: FinancialDetail = FinancialDetail(
@@ -348,7 +353,8 @@ object FinancialDataTestConstants {
         paymentMethod = Some("paymentMethod2"),
         paymentLot = Some("paymentLot2"),
         paymentLotItem = Some("paymentLotItem2"),
-        paymentId = Some("paymentLot2-paymentLotItem2")
+        paymentId = Some("paymentLot2-paymentLotItem2"),
+        codedOutStatus = Some("I")
       )))
   )
 
@@ -390,7 +396,8 @@ object FinancialDataTestConstants {
 			|       "dueDate": "2022-06-23",
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
-			|       "paymentLotItem": "paymentLotItem"
+			|       "paymentLotItem": "paymentLotItem",
+      |       "codedOutStatus": "I"
 			|}
 			|""".stripMargin)
 
@@ -410,7 +417,8 @@ object FinancialDataTestConstants {
     paymentMethod = Some("paymentMethod"),
     paymentLot = Some("paymentLot"),
     paymentLotItem = Some("paymentLotItem"),
-    paymentId = Some("paymentLot-paymentLotItem")
+    paymentId = Some("paymentLot-paymentLotItem"),
+    codedOutStatus = Some("I")
   )
 
   val validSubItemJsonAfterWrites: JsValue = Json.parse(
@@ -430,7 +438,8 @@ object FinancialDataTestConstants {
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
 			|       "paymentLotItem": "paymentLotItem",
-			|       "paymentId": "paymentLot-paymentLotItem"
+			|       "paymentId": "paymentLot-paymentLotItem",
+      |       "codedOutStatus": "I"
 			|}
 			|""".stripMargin)
 
