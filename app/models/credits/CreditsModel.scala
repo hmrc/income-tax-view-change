@@ -29,6 +29,7 @@ object CreditsModel {
 
   implicit val format: OFormat[CreditsModel] = Json.format[CreditsModel ]
 
+  @deprecated("To be decommissioned after HiP migration", "MISUV-9576")
   private def getCreditOrPaymentAmount(documentDetail: DocumentDetail): BigDecimal = {
     Option(documentDetail.outstandingAmount)
       .filter(_ < 0)
@@ -43,6 +44,7 @@ object CreditsModel {
       .getOrElse(0.0)
   }
 
+  @deprecated("To be decommissioned after HiP migration", "MISUV-9576")
   private def createPendingRefundTransactions(chargesResponse: ChargesResponse): List[Transaction] = {
     Seq(
       chargesResponse.balanceDetails.firstPendingAmountRequested.map(_.abs),
@@ -67,6 +69,7 @@ object CreditsModel {
       )).toList
   }
 
+  @deprecated("To be decommissioned after HiP migration", "MISUV-9576")
   private def getCreditTransactions(chargesResponse: ChargesResponse): List[Transaction] = {
     chargesResponse.documentDetails.flatMap(documentDetail => {
       for {
@@ -102,6 +105,7 @@ object CreditsModel {
     })
   }
 
+  @deprecated("To be decommissioned after HiP migration", "MISUV-9576")
   def fromChargesResponse(chargesResponse: ChargesResponse): CreditsModel = {
     CreditsModel(
       chargesResponse.balanceDetails.availableCredit.map(_.abs).getOrElse(0.0),
