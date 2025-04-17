@@ -16,8 +16,8 @@
 
 package models.financialDetails.hip.model
 
-import java.math.BigDecimal
 import java.time.LocalDate
+import play.api.libs.json.{Json, Reads, Writes}
 
 
 case class BalanceDetailsHip (
@@ -37,7 +37,7 @@ case class BalanceDetailsHip (
   /* Currency amount. 13-digits total with 2 decimal places */
   totalBCDBalance: Option[BigDecimal] = None,
   /* BCD balance per year */
-  bcdBalancePerYear: Option[Seq[Any]] = None,
+  //bcdBalancePerYear: Option[Seq[Any]] = None,
   /* Currency amount. 13-digits total with 2 decimal places */
   unallocatedCredit: Option[BigDecimal] = None,
   /* Currency amount. 13-digits total with 2 decimal places */
@@ -51,4 +51,9 @@ case class BalanceDetailsHip (
   /* Currency amount. 13-digits total with 2 decimal places */
   availableCredit: Option[BigDecimal] = None
 )
+
+object BalanceDetailsHip {
+  implicit val writes: Writes[BalanceDetailsHip] = Json.writes[BalanceDetailsHip]
+  implicit val reads: Reads[BalanceDetailsHip] = Json.reads[BalanceDetailsHip]
+}
 

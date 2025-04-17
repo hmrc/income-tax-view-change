@@ -16,7 +16,9 @@
 
 package models.financialDetails.hip.model
 
-
+import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 case class TaxpayerDetailsHip (
   /* Id Type */
@@ -27,3 +29,14 @@ case class TaxpayerDetailsHip (
   regimeType: String
 )
 
+
+object TaxpayerDetailsHip {
+
+  implicit val writes: Writes[TaxpayerDetailsHip] = Json.writes[TaxpayerDetailsHip]
+  implicit val reads: Reads[TaxpayerDetailsHip] = (
+    (__ \ "idType").read[String] and
+      (__ \ "idNumber").read[String] and
+      (__ \ "regimeType").read[String]
+    ) (TaxpayerDetailsHip.apply _)
+
+}

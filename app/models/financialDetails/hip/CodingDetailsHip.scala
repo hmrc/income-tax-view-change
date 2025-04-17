@@ -16,8 +16,7 @@
 
 package models.financialDetails.hip.model
 
-import java.math.BigDecimal
-
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class CodingDetailsHip(
   /* Format: YYYY */
@@ -28,4 +27,9 @@ case class CodingDetailsHip(
   taxYearCoding: Option[String] = None,
   coded: Option[CodingDetailsInnerHip] = None
 )
+
+object CodingDetailsHip {
+  implicit val writes: Writes[CodingDetailsHip] = Json.writes[CodingDetailsHip]
+  implicit val reads: Reads[CodingDetailsHip] = Json.reads[CodingDetailsHip]
+}
 

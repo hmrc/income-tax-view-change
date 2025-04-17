@@ -16,7 +16,7 @@
 
 package models.financialDetails.hip.model
 
-import java.math.BigDecimal
+import play.api.libs.json.{Json, Reads, Writes}
 import java.time.LocalDate
 
 
@@ -26,3 +26,7 @@ case class CodingDetailsInnerHip(
   initiationDate: Option[LocalDate] = None
 )
 
+object CodingDetailsInnerHip {
+  implicit val writes: Writes[CodingDetailsInnerHip] = Json.writes[CodingDetailsInnerHip]
+  implicit val reads: Reads[CodingDetailsInnerHip] = Json.reads[CodingDetailsInnerHip]
+}

@@ -17,57 +17,71 @@
 package models.financialDetails.hip.model
 
 import models.financialDetails.Payment
+import models.readNullableList
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 case class ChargesHipResponse(
                                taxpayerDetails: TaxpayerDetailsHip,
                                balanceDetails: BalanceDetailsHip,
                                /* Coding Details */
-                               codingDetails: Option[Seq[CodingDetailsHip]] = None,
+                               codingDetails: List[CodingDetailsHip],
                                /* Document Details */
-                               documentDetails: Seq[DocumentDetailHip],
+                               documentDetails: List[DocumentDetailHip],
                                /* Financial Details Item */
-                               financialDetails: Seq[FinancialDetailHip]
-) {
-  val payments: List[Payment] = {
-    val paymentDocuments: List[DocumentDetailHip] = documentDetails.filter(document => document.totalAmount < 0).toList
-    paymentDocuments.map { document =>
-      val subItem = {
-        if (document.paymentLot.isDefined && document.paymentLotItem.isDefined) {
-          financialDetails.find(_.documentID.equals(document.documentID)).flatMap(
-            _.items.map(x => x.find(
-              item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
-            ))).flatten
-        } else {
-          financialDetails.find(_.documentID.equals(document.documentID)).flatMap(
-            _.items.map(_.find(
-              item => item.dueDate.isDefined
-            ))).flatten
+                               financialDetails: List[FinancialDetailHip]
+                             ) {
+    val payments: List[Payment] = {
+      val paymentDocuments: List[DocumentDetailHip] = documentDetails.filter(document => document.totalAmount < 0).toList
+      paymentDocuments.map { document =>
+        val subItem = {
+          if (document.paymentLot.isDefined && document.paymentLotItem.isDefined) {
+            financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+              _.items.map(x => x.find(
+                item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
+              ))).flatten
+          } else {
+            financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+              _.items.map(_.find(
+                item => item.dueDate.isDefined
+              ))).flatten
+          }
         }
+
+        val mainType: Option[String] = financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+          _.mainType
+        )
+
+        val mainTransaction: Option[String] = financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+          _.mainTransaction
+        )
+
+        Payment(
+          reference = subItem.flatMap(_.paymentReference),
+          amount = document.totalAmount,
+          outstandingAmount = document.totalAmount,
+          documentDescription = document.documentDescription,
+          method = subItem.flatMap(_.paymentMethod),
+          lot = document.paymentLot.fold(subItem.flatMap(_.paymentLot))(Some(_)),
+          lotItem = document.paymentLotItem.fold(subItem.flatMap(_.paymentLotItem))(Some(_)),
+          dueDate = document.effectiveDateOfPayment,
+          documentDate = document.documentDate,
+          transactionId = document.documentID,
+          mainType = mainType,
+          mainTransaction = mainTransaction
+        )
       }
-
-      val mainType: Option[String] = financialDetails.find(_.documentID.equals(document.documentID)).flatMap(
-        _.mainType
-      )
-
-      val mainTransaction: Option[String] = financialDetails.find(_.documentID.equals(document.documentID)).flatMap(
-        _.mainTransaction
-      )
-
-      Payment(
-        reference = subItem.flatMap(_.paymentReference),
-        amount = document.totalAmount,
-        outstandingAmount = document.totalAmount,
-        documentDescription = document.documentDescription,
-        method = subItem.flatMap(_.paymentMethod),
-        lot = document.paymentLot.fold(subItem.flatMap(_.paymentLot))(Some(_)),
-        lotItem = document.paymentLotItem.fold(subItem.flatMap(_.paymentLotItem))(Some(_)),
-        dueDate = document.effectiveDateOfPayment,
-        documentDate = document.documentDate,
-        transactionId = document.documentID,
-        mainType = mainType,
-        mainTransaction = mainTransaction
-      )
     }
-  }
 }
 
+object ChargesHipResponse {
+  implicit val writes: Writes[ChargesHipResponse] = Json.writes[ChargesHipResponse]
+  implicit val reads: Reads[ChargesHipResponse] = (
+    (__ \ "taxpayerDetails").read[TaxpayerDetailsHip] and
+      (__ \ "balanceDetails").read[BalanceDetailsHip] and
+      readNullableList[CodingDetailsHip](__ \ "CodingDetailsHip") and
+      readNullableList[DocumentDetailHip](__ \ "documentDetails") and
+      readNullableList[FinancialDetailHip](__ \ "financialDetails")
+    )(ChargesHipResponse.apply _)
+
+}
