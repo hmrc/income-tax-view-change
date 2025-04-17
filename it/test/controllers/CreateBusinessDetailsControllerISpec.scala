@@ -104,9 +104,8 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
         }
 
         s"return $OK with an incomeSourceId with no flag" in {
-
           isAuthorised(true)
-          
+
           val request = testCreateForeignPropertyRequestNoFlag
 
           DesCreateBusinessDetailsStub
