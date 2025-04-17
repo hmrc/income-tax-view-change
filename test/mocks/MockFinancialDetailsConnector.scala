@@ -18,6 +18,8 @@ package mocks
 
 import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.ChargeResponse
+import models.credits.CreditsModel
+import models.financialDetails.responses.ChargesResponse
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
@@ -69,6 +71,23 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
       }
     )
     //Future.successful(response)
+  }
+
+  def mockCredits(nino: String, from: String, to: String)
+                     (response: ChargeResponse): Unit = {
+    when(mockFinancialDetailsService.getCreditsModel(
+      ArgumentMatchers.eq(nino),
+      ArgumentMatchers.eq(from),
+      ArgumentMatchers.eq(to)
+    )(ArgumentMatchers.any())) thenReturn Future (
+      response match {
+        case Right(charges: ChargesResponse) =>
+          val creditsModel: CreditsModel = CreditsModel.fromChargesResponse(charges)
+          Right(Json.toJson(creditsModel))
+        case Left(err) =>
+          Left(err)
+      }
+    )
   }
 
   def mockSingleDocumentDetails(nino: String, documentId: String)
