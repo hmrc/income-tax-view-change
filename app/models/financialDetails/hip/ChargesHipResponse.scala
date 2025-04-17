@@ -79,7 +79,7 @@ object ChargesHipResponse {
   implicit val reads: Reads[ChargesHipResponse] = (
     (__ \ "taxpayerDetails").read[TaxpayerDetailsHip] and
       (__ \ "balanceDetails").read[BalanceDetailsHip] and
-      readNullableList[CodingDetailsHip](__ \ "CodingDetailsHip") and
+      readNullableList[CodingDetailsHip](__ \ "codingDetails") and
       readNullableList[DocumentDetailHip](__ \ "documentDetails") and
       readNullableList[FinancialDetailHip](__ \ "financialDetails")
     )(ChargesHipResponse.apply _)
