@@ -39,7 +39,7 @@ class FinancialDetailPaymentsController @Inject()(authentication: Authentication
         toDate
       ) map {
         case Right(paymentsAsJsonResponse) => Ok(paymentsAsJsonResponse)
-        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
+        case Left(error: UnexpectedChargeResponse) if error.code >= BAD_REQUEST && error.code < INTERNAL_SERVER_ERROR => Status(error.code)(error.response)
         case Left(_) => InternalServerError("Failed to retrieve charge details to get payments")
       }
     }
