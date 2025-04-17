@@ -24,3 +24,9 @@ case object GetLegacyCalcListHipApi extends HipApi {
   val name = "get-legacy-calc-list"
   def apply(): String = name
 }
+
+case object ITSAStatusHipApi extends HipApi {
+  val name = "get-itsa-status"
+
+  def apply(): String = name
+}

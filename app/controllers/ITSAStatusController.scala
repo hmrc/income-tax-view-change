@@ -16,16 +16,19 @@
 
 package controllers
 
-import connectors.itsastatus.ITSAStatusConnector
+import config.MicroserviceAppConfig
+import connectors.hip
 import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
+import connectors.itsastatus.{ITSAStatusConnector, ITSAStatusConnectorTrait}
 import controllers.predicates.AuthenticationPredicate
+import models.hip.ITSAStatusHipApi
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseNotFound}
 import org.apache.pekko.util.ByteString
 import play.api.Logging
 import play.api.http.HttpEntity
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents, ResponseHeader, Result}
+import play.api.mvc._
 import play.mvc.Http
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -34,8 +37,16 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
                                      cc: ControllerComponents,
-                                     connector: ITSAStatusConnector)
+                                     ifConnector: ITSAStatusConnector,
+                                     hipConnector: hip.ITSAStatusConnector,
+                                     appConfig: MicroserviceAppConfig)
                                     (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
+
+  private def connector: ITSAStatusConnectorTrait = if (appConfig.hipFeatureSwitchEnabled(ITSAStatusHipApi)) {
+    hipConnector
+  } else {
+    ifConnector
+  }
 
   def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean,
                     history: Boolean): Action[AnyContent] = authentication.async { implicit request =>
@@ -77,7 +88,7 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
       json <- request.body.asJson
       optOutUpdateRequest <- json.validate[OptOutUpdateRequest].asOpt
     } yield {
-      connector.requestOptOutForTaxYear(taxableEntityId, optOutUpdateRequest)
+      ifConnector.requestOptOutForTaxYear(taxableEntityId, optOutUpdateRequest)
     }
 
     connectorResponse.map(toResult).getOrElse(toResult(Future.successful(OptOutUpdateResponseFailure.defaultFailure())))
