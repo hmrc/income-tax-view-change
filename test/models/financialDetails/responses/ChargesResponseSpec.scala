@@ -122,7 +122,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         |       "paymentMethod": "paymentMethod",
         |       "paymentLot": "paymentLot",
         |       "paymentLotItem": "paymentLotItem",
-        |       "paymentId": "paymentLot-paymentLotItem"
+        |       "paymentId": "paymentLot-paymentLotItem",
+        |       "codedOutStatus": "I"
         |       }
         |     ]
         |}""".stripMargin))
@@ -216,7 +217,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
       paymentId = Some("paymentId"),
-      clearingSAPDocument = Some("012345678912")
+      clearingSAPDocument = Some("012345678912"),
+      codedOutStatus = Some("I")
     )
   }
 
