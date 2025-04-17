@@ -27,9 +27,12 @@ import org.mockito.Mockito.mock
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import services.FinancialDetailChargesService
+import play.api.libs.json.Json
+
+// TODO: Global EC to be removed ???
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
-
   val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
   val mockFinancialDetailsService: FinancialDetailChargesService = mock(classOf[FinancialDetailChargesService])
 
@@ -45,7 +48,27 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
       ArgumentMatchers.eq(nino),
       ArgumentMatchers.eq(from),
       ArgumentMatchers.eq(to)
-    )(ArgumentMatchers.any())) thenReturn Future.successful(response)
+    )(ArgumentMatchers.any())) thenReturn Future (
+      response match {
+        case Right(obj) => Right(Json.toJson(obj))
+        case Left(err) => Left(err)
+      }
+    )
+  }
+
+  def mockGetPayments(nino: String, from: String, to: String)
+                     (response: ChargeResponse): Unit = {
+    when(mockFinancialDetailsService.getPayments(
+      ArgumentMatchers.eq(nino),
+      ArgumentMatchers.eq(from),
+      ArgumentMatchers.eq(to)
+    )(ArgumentMatchers.any())) thenReturn Future (
+      response match {
+        case Right(obj) => Right(Json.toJson(obj.payments))
+        case Left(err) => Left(err)
+      }
+    )
+    //Future.successful(response)
   }
 
   def mockSingleDocumentDetails(nino: String, documentId: String)
@@ -53,13 +76,23 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
     when(mockFinancialDetailsService.getPaymentAllocationDetails(
       ArgumentMatchers.eq(nino),
       ArgumentMatchers.eq(documentId)
-    )(ArgumentMatchers.any())) thenReturn Future.successful(response)
+    )(ArgumentMatchers.any())) thenReturn Future (
+      response match {
+        case Right(obj) => Right(Json.toJson(obj))
+        case Left(err) => Left(err)
+      }
+    )
   }
 
   def mockOnlyOpenItems(nino: String)
                        (response: ChargeResponse): Unit = {
     when(mockFinancialDetailsService.getOnlyOpenItems(
       ArgumentMatchers.eq(nino)
-    )(ArgumentMatchers.any())) thenReturn Future.successful(response)
+    )(ArgumentMatchers.any())) thenReturn Future (
+      response match {
+        case Right(obj) => Right(Json.toJson(obj))
+        case Left(err) => Left(err)
+      }
+    )
   }
 }
