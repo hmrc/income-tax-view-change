@@ -16,11 +16,10 @@
 
 package controllers
 
-import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import play.api.libs.json.Json
 import play.api.mvc._
+import services.FinancialDetailChargesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
@@ -29,18 +28,18 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class FinancialDetailPaymentsController @Inject()(authentication: AuthenticationPredicate,
                                                   cc: ControllerComponents,
-                                                  financialDetailsConnector: FinancialDetailsConnector)
+                                                  financialDetailChargesService: FinancialDetailChargesService)
                                                  (implicit ec: ExecutionContext) extends BackendController(cc) {
 
-  def getPaymentDetails(nino: String, from: String, to: String): Action[AnyContent] = {
-    authentication.async { implicit request =>
-      financialDetailsConnector.getChargeDetails(
-        nino = nino,
-        from = from,
-        to = to
+  def getPaymentDetails(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {
+    authentication.async { implicit request=>
+      financialDetailChargesService.getPayments(
+        nino,
+        fromDate,
+        toDate
       ) map {
-        case Right(chargesResponse) => Ok(Json.toJson(chargesResponse.payments))
-        case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
+        case Right(paymentsAsJsonResponse) => Ok(paymentsAsJsonResponse)
+        case Left(error: UnexpectedChargeResponse) if error.code >= BAD_REQUEST && error.code < INTERNAL_SERVER_ERROR => Status(error.code)(error.response)
         case Left(_) => InternalServerError("Failed to retrieve charge details to get payments")
       }
     }

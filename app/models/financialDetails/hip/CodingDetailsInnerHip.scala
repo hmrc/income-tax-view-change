@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.financialDetails.hip.model
 
-sealed trait HipApi {
-  val name: String
-}
+import play.api.libs.json.{Json, Reads, Writes}
+import java.time.LocalDate
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
 
-case object GetFinancialDetailsHipApi extends HipApi {
-  val name = "get-financial-details"
-  def apply(): String = name
+case class CodingDetailsInnerHip(
+  /* Currency amount. 13-digits total with 2 decimal places */
+  amount: Option[BigDecimal] = None,
+  initiationDate: Option[LocalDate] = None
+)
+
+object CodingDetailsInnerHip {
+  implicit val writes: Writes[CodingDetailsInnerHip] = Json.writes[CodingDetailsInnerHip]
+  implicit val reads: Reads[CodingDetailsInnerHip] = Json.reads[CodingDetailsInnerHip]
 }

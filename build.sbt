@@ -71,6 +71,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(majorVersion := 1)
   .settings(RoutesKeys.routesImport -= "controllers.Assets.Asset")
   .settings(scalacOptions += "-Xfatal-warnings")
+  .settings(scalacOptions += "-deprecation:false")
   .settings(
     libraryDependencies ++= appDependencies,
     retrieveManaged := true

@@ -32,7 +32,7 @@ class FinancialDetailChargesControllerSpec extends ControllerBaseSpec with MockF
   object FinancialDetailChargesController extends FinancialDetailChargesController(
     authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents, microserviceAppConfig),
     cc = controllerComponents,
-    financialDetailsConnector = mockFinancialDetailsConnector
+    financialDetailChargesService = mockFinancialDetailsService
   )
 
   val nino: String = "AA000000A"
