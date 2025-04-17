@@ -18,7 +18,6 @@ package controllers
 
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import play.api.libs.json.Json
 import play.api.mvc._
 import services.FinancialDetailChargesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -34,12 +33,12 @@ class FinancialDetailPaymentsController @Inject()(authentication: Authentication
 
   def getPaymentDetails(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {
     authentication.async { implicit request=>
-      financialDetailChargesService.getChargeDetails(
+      financialDetailChargesService.getPayments(
         nino,
         fromDate,
         toDate
       ) map {
-        case Right(chargesResponse) => Ok(Json.toJson(chargesResponse.payments))
+        case Right(paymentsAsJsonResponse) => Ok(paymentsAsJsonResponse)
         case Left(error: UnexpectedChargeResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
         case Left(_) => InternalServerError("Failed to retrieve charge details to get payments")
       }

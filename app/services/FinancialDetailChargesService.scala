@@ -19,49 +19,133 @@ package services
 import config.MicroserviceAppConfig
 import connectors.FinancialDetailsConnector
 import connectors.hip.FinancialDetailsHipConnector
-import connectors.httpParsers.ChargeHttpParser.ChargeResponse
+import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError}
+import models.credits.CreditsModel
 import models.hip.GetFinancialDetailsHipApi
-import play.api.Logging
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 
+// TODO:    Tidy up story need to be created when HiP migration is over;
+// TODO-2:  Avoid using approach where we return Either[_, JsValue] as its very "fragile"
 class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsConnector,
-                                              hipConnector: FinancialDetailsHipConnector,
+                                              val hipConnector: FinancialDetailsHipConnector,
                                               val appConfig: MicroserviceAppConfig)
-                                             (implicit ec: ExecutionContext) extends Logging {
+                                             (implicit ec: ExecutionContext) {
+
+  type ChargeAsJsonResponse = Either[ChargeResponseError, JsValue]
+  type PaymentsAsJsonResponse = Either[ChargeResponseError, JsValue]
 
   private val isHipOn = appConfig.hipFeatureSwitchEnabled(GetFinancialDetailsHipApi)
 
   def getChargeDetails(nino: String, fromDate: String, toDate: String)
-                      (implicit hc: HeaderCarrier) : Future[ChargeResponse] = {
-    if (isHipOn){
-      // TODO: use HipConnector after testing
-      connector.getChargeDetails(nino, fromDate, toDate)
+                      (implicit hc: HeaderCarrier) : Future[ChargeAsJsonResponse] = {
+    if (isHipOn) {
+      hipConnector.getChargeDetails(nino, fromDate, toDate)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges))
+          case Left(err) =>
+           Left(err)
+        }
     } else {
       connector.getChargeDetails(nino, fromDate, toDate)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges))
+          case Left(err) =>
+            Left(err)
+        }
+    }
+  }
+
+  def getPayments(nino: String, fromDate: String, toDate: String)
+                      (implicit hc: HeaderCarrier) : Future[PaymentsAsJsonResponse] = {
+
+    if (isHipOn) {
+      hipConnector.getChargeDetails(nino, fromDate, toDate)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges.payments))
+          case Left(err) =>
+            Left(err)
+        }
+    } else {
+      connector.getChargeDetails(nino, fromDate, toDate)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges.payments))
+          case Left(err) =>
+            Left(err)
+        }
     }
   }
 
   def getPaymentAllocationDetails(nino: String, documentId: String)
-                                 (implicit hc: HeaderCarrier): Future[ChargeResponse] = {
+                                 (implicit hc: HeaderCarrier): Future[ChargeAsJsonResponse] = {
     if (isHipOn){
-      // TODO: use HipConnector after testing
-      connector.getPaymentAllocationDetails(nino, documentId)
+      hipConnector.getPaymentAllocationDetails(nino, documentId)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges))
+          case Left(err) =>
+            Left(err)
+        }
     } else {
       connector.getPaymentAllocationDetails(nino, documentId)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges))
+          case Left(err) =>
+            Left(err)
+        }
     }
   }
 
-  def getOnlyOpenItems(nino: String)(implicit hc: HeaderCarrier): Future[ChargeResponse] = {
+  def getOnlyOpenItems(nino: String)(implicit hc: HeaderCarrier): Future[ChargeAsJsonResponse] = {
     if (isHipOn){
-      // TODO: use HipConnector after testing
-      connector.getOnlyOpenItems(nino)
+      hipConnector.getOnlyOpenItems(nino)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges))
+          case Left(err) =>
+            Left(err)
+        }
     } else {
       connector.getOnlyOpenItems(nino)
+        .collect{
+          case Right(charges) =>
+            Right(Json.toJson(charges))
+          case Left(err) =>
+            Left(err)
+        }
     }
   }
 
+  def getCreditsModel(nino: String, fromDate: String, toDate: String)
+                     (implicit hc: HeaderCarrier) : Future[ChargeAsJsonResponse] = {
+    if (isHipOn) {
+      hipConnector
+        .getChargeDetails(nino, fromDate, toDate)
+        .collect{
+          case Right(charges) =>
+            val creditsModel: CreditsModel = CreditsModel.fromHipChargesResponse(charges)
+            Right(Json.toJson(creditsModel))
+          case Left(err) =>
+            Left(err)
+        }
+    } else {
+      connector.getChargeDetails(nino, fromDate, toDate)
+        .collect{
+          case Right(charges) =>
+            val creditsModel: CreditsModel = CreditsModel.fromChargesResponse(charges)
+            Right(Json.toJson(creditsModel))
+          case Left(err) =>
+            Left(err)
+        }
+    }
+  }
 }

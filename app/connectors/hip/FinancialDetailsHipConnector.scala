@@ -18,7 +18,7 @@ package connectors.hip
 
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
-import connectors.httpParsers.ChargeHttpParser.{ChargeReads, ChargeResponse}
+import connectors.hip.httpParsers.ChargeHipHttpParser.{ChargeHipReads, ChargeHipResponse}
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -54,7 +54,7 @@ class FinancialDetailsHipConnector  @Inject()(val http: HttpClientV2,
   }
 
   def getChargeDetails(nino: String, from: String, to: String)
-                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
     getCharge(nino, queryParameters = createQueryString(from, to))
   }
 
@@ -65,14 +65,14 @@ class FinancialDetailsHipConnector  @Inject()(val http: HttpClientV2,
   }
 
   def getPaymentAllocationDetails(nino: String, documentId: String)
-                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
     getCharge(nino = nino, queryParameters = paymentAllocationQuery(documentId))
   }
 
   private[connectors] def onlyOpenItemsQuery(): Seq[(String, String)] = baseQueryParameters(onlyOpenItems = true)
 
   def getOnlyOpenItems(nino: String)
-                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
     getCharge(nino = nino, queryParameters = onlyOpenItemsQuery())
   }
 
@@ -88,13 +88,13 @@ class FinancialDetailsHipConnector  @Inject()(val http: HttpClientV2,
   }
 
   private[connectors] def getCharge(nino: String, queryParameters: Seq[(String, String)])
-                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeResponse] = {
+                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
     val url = fullServicePath + makeQueryString(queryParameters)
     // TODO: downgrade to debug after fix
     logger.info(s"URL - $url - ${queryParameters.mkString("-")}")
     http.get(url"$url")
       .setHeader(headers: _*)
-      .execute[ChargeResponse](ChargeReads, ec)
+      .execute[ChargeHipResponse](ChargeHipReads, ec)
   }
 
 }

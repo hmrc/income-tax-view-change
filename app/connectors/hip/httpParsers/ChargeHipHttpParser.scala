@@ -16,6 +16,7 @@
 
 package connectors.hip.httpParsers
 
+import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import connectors.httpParsers.ResponseHttpParsers
 import models.financialDetails.hip.model.ChargesHipResponse
 
@@ -24,14 +25,6 @@ object ChargeHipHttpParser extends ResponseHttpParsers {
   import play.api.http.Status.OK
   import play.api.libs.json.{JsError, JsSuccess}
   import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-
-
-  // TODO: error need to re-worked as they are different now
-  sealed trait ChargeResponseError
-
-  case object UnexpectedChargeErrorResponse extends ChargeResponseError
-
-  case class UnexpectedChargeResponse(code: Int, response: String) extends ChargeResponseError
 
   type ChargeHipResponse = Either[ChargeResponseError, ChargesHipResponse]
 

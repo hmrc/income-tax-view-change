@@ -18,13 +18,10 @@ package controllers
 
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import models.credits.CreditsModel
 import play.api.Logging
-import play.api.libs.json.Json
 import play.api.mvc._
 import services.FinancialDetailChargesService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -36,15 +33,14 @@ class FinancialDetailCreditsController @Inject()(authentication: AuthenticationP
 
   def getCredits(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {
     authentication.async { implicit request =>
-      financialDetailChargesService.getChargeDetails(
+      financialDetailChargesService.getCreditsModel(
         nino,
         fromDate,
         toDate
       ) map {
-        case Right(chargeDetails) =>
-          logger.debug("Successful Response: " + chargeDetails)
-          val model = CreditsModel.fromChargesResponse(chargeDetails)
-          Ok(Json.toJson(model))
+        case Right(creditsAsJson) =>
+          logger.debug("Successful Response: " + creditsAsJson)
+          Ok(creditsAsJson)
         case Left(error: UnexpectedChargeResponse) if error.code == NOT_FOUND =>
           logger.info("404: " + error)
           Status(error.code)(error.response)

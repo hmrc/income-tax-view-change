@@ -36,23 +36,23 @@ case class ChargesHipResponse(
       paymentDocuments.map { document =>
         val subItem = {
           if (document.paymentLot.isDefined && document.paymentLotItem.isDefined) {
-            financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+            financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
               _.items.map(x => x.find(
                 item => item.paymentLot.exists(_.equals(document.paymentLot.get)) && item.paymentLotItem.exists(_.equals(document.paymentLotItem.get))
               ))).flatten
           } else {
-            financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+            financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
               _.items.map(_.find(
                 item => item.dueDate.isDefined
               ))).flatten
           }
         }
 
-        val mainType: Option[String] = financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+        val mainType: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
           _.mainType
         )
 
-        val mainTransaction: Option[String] = financialDetails.find(_.transactionId.equals(document.documentID)).flatMap(
+        val mainTransaction: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
           _.mainTransaction
         )
 
@@ -66,7 +66,7 @@ case class ChargesHipResponse(
           lotItem = document.paymentLotItem.fold(subItem.flatMap(_.paymentLotItem))(Some(_)),
           dueDate = document.effectiveDateOfPayment,
           documentDate = document.documentDate,
-          transactionId = document.documentID,
+          transactionId = document.transactionId,
           mainType = mainType,
           mainTransaction = mainTransaction
         )

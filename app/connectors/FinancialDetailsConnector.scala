@@ -27,6 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
+@deprecated("Connector to be decommissioned after HiP migration", "MISUV-9576")
 class FinancialDetailsConnector  @Inject()(val http: HttpClientV2,
                                            appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging {
 

@@ -26,7 +26,7 @@ case class DocumentDetailHip(
                               /* Format: YYYY */
                               taxYear: String,
                               /* SAP document number or Form Bundle Number for zero amount documents */
-                              documentID: String,
+                              transactionId: String,
                               /* If the document was created using the Form Bundle, the FB Number is provided */
                               //formBundleNumber: Option[String] = None,
                               /* Gives the reason as to why there is a credit on the account.  */

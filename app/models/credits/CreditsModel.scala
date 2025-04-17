@@ -17,6 +17,7 @@
 package models.credits
 
 import models.financialDetails.DocumentDetail
+import models.financialDetails.hip.model.{ChargesHipResponse, DocumentDetailHip}
 import models.financialDetails.responses.ChargesResponse
 import play.api.libs.json.{Json, OFormat}
 
@@ -35,7 +36,26 @@ object CreditsModel {
       .getOrElse(0.0)
   }
 
+  private def getCreditOrPaymentAmountForHip(documentDetail: DocumentDetailHip): BigDecimal = {
+    Option(documentDetail.documentOutstandingAmount)
+      .filter(_ < 0)
+      .map(_.abs)
+      .getOrElse(0.0)
+  }
+
   private def createPendingRefundTransactions(chargesResponse: ChargesResponse): List[Transaction] = {
+    Seq(
+      chargesResponse.balanceDetails.firstPendingAmountRequested.map(_.abs),
+      chargesResponse.balanceDetails.secondPendingAmountRequested.map(_.abs))
+      .flatten.map(amount => Transaction(
+        Repayment,
+        amount,
+        None,
+        None
+      )).toList
+  }
+
+  private def createPendingRefundTransactionsForHip(chargesResponse: ChargesHipResponse): List[Transaction] = {
     Seq(
       chargesResponse.balanceDetails.firstPendingAmountRequested.map(_.abs),
       chargesResponse.balanceDetails.secondPendingAmountRequested.map(_.abs))
@@ -64,6 +84,24 @@ object CreditsModel {
     })
   }
 
+  private def getCreditTransactionsForHip(chargesResponse: ChargesHipResponse): List[Transaction] = {
+    chargesResponse.documentDetails.flatMap(documentDetail => {
+      for {
+        fd <- chargesResponse.financialDetails.find(_.transactionId == documentDetail.transactionId)
+        mainTransaction <- fd.mainTransaction
+        transactionType <- TransactionType.fromCode(mainTransaction)
+      } yield {
+        Transaction(
+          transactionType = transactionType,
+          amount = getCreditOrPaymentAmountForHip(documentDetail),
+          // TODO: convert TaxYear to Int in the actual model?
+          taxYear = Some(documentDetail.taxYear.toInt),
+          dueDate = documentDetail.documentDueDate
+        )
+      }
+    })
+  }
+
   def fromChargesResponse(chargesResponse: ChargesResponse): CreditsModel = {
     CreditsModel(
       chargesResponse.balanceDetails.availableCredit.map(_.abs).getOrElse(0.0),
@@ -71,4 +109,13 @@ object CreditsModel {
       getCreditTransactions(chargesResponse) :++ createPendingRefundTransactions(chargesResponse)
     )
   }
+
+  def fromHipChargesResponse(chargesResponse: ChargesHipResponse): CreditsModel = {
+    CreditsModel(
+      chargesResponse.balanceDetails.availableCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCredit.map(_.abs).getOrElse(0.0),
+      getCreditTransactionsForHip(chargesResponse) :++ createPendingRefundTransactionsForHip(chargesResponse)
+    )
+  }
+
 }
