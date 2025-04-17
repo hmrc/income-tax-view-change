@@ -19,6 +19,7 @@ package connectors.hip.httpParsers
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import connectors.httpParsers.ResponseHttpParsers
 import models.financialDetails.hip.model.ChargesHipResponse
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 
 object ChargeHipHttpParser extends ResponseHttpParsers {
 
@@ -35,18 +36,18 @@ object ChargeHipHttpParser extends ResponseHttpParsers {
           logger.debug("successful: " + response.json)
           response.json.validate[ChargesHipResponse] match {
             case JsError(errors) =>
-              logger.error("Unable to parse response into ChargesResponse - " + errors)
+              logger.error("Unable to parse response into HipChargesResponse - " + errors)
               Left(UnexpectedChargeErrorResponse)
 
             case JsSuccess(value, _) =>
-              logger.info("successfully parsed response into ChargesResponse")
+              logger.info("successfully parsed response into HipChargesResponse")
               Right(value)
           }
-        case status if status >= 400 && status < 500 =>
-          logger.error(s"$status returned from DES with body: ${response.body}")
+        case status if status >= BAD_REQUEST && status < INTERNAL_SERVER_ERROR =>
+          logger.error(s"$status returned from HiP with body: ${response.body}")
           Left(UnexpectedChargeResponse(status, response.body))
         case status =>
-          logger.error(s"Unexpected Response with status: $status")
+          logger.error(s"Unexpected Response from Hip with status: $status")
           Left(UnexpectedChargeErrorResponse)
       }
     }
