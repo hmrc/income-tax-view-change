@@ -16,6 +16,9 @@
 
 package constants
 
+import constants.BaseTestConstants.testNino
+import models.financialDetails.hip.model.{BalanceDetailsHip, ChargesHipResponse,
+  CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
 import models.financialDetails.responses.ChargesResponse
 import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
@@ -184,7 +187,25 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
+  val taxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
+
   val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
+  val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
+    balanceDueWithin30days = 100.00,
+    nxtPymntDateChrgsDueIn30Days = Some(LocalDate.parse("2018-08-01")),
+    balanceNotDuein30Days = 200.00,
+    nextPaymntDateBalnceNotDue = Some(LocalDate.parse("2018-08-01")),
+    overDueAmount = 45.00,
+    earlistPymntDateOverDue = Some(LocalDate.parse("2018-08-01")),
+    totalBalance = 450.00,
+    amountCodedOut = Some(340.55),
+    totalBCDBalance = None,
+    unallocatedCredit = None,
+    allocatedCredit = None,
+    totalCredit = Some(123.00),
+    firstPendingAmountRequested = Some(120.00),
+    secondPendingAmountRequested = None,
+    availableCredit = None)
 
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = 2018,
@@ -208,6 +229,30 @@ object FinancialDataTestConstants {
     documentDueDate = Some(LocalDate.parse("2019-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
+
+  val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(taxYear = "2018",
+    transactionId = "id",
+    documentDate = LocalDate.parse("2018-03-29"),
+    documentText = Some("documentText"),
+    documentDueDate = Some(LocalDate.parse("2019-03-29")),
+    documentDescription = Some("documentDescription"),
+    totalAmount = 1000.00,
+    documentOutstandingAmount = 200.00,
+    poaRelevantAmount = Some(1000.00),
+    lastClearedAmount = None,
+    paymentLot = Some("paymentLot"),
+    paymentLotItem = Some("paymentLotItem"),
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    accruingInterestAmount = None,
+    interestRate = Some(2.60),
+    interestFromDate = Some(LocalDate.parse("2018-08-01")),
+    interestEndDate = Some(LocalDate.parse("2019-01-15")),
+    latePaymentInterestID = Some("latePaymentInterestID"),
+    latePaymentInterestAmount = Some(12.34),
+    lpiWithDunningLock = Some(12.50),
+    interestOutstandingAmount = Some(31.00),
+    amountCodedOut = Some(3.21))
+
 
   val documentDetail2: DocumentDetail = DocumentDetail(
     taxYear = 2019,
@@ -352,6 +397,25 @@ object FinancialDataTestConstants {
       )))
   )
 
+  val financialDetailsHip: FinancialDetailHip = FinancialDetailHip(
+    taxYear = "2018",
+    transactionId = "id",
+    mainType = Some("4920"),
+    periodKeyDescription = None,
+    taxPeriodFrom = Some(LocalDate.parse("2017-04-05")),
+    taxPeriodTo = Some(LocalDate.parse("2018-04-06")),
+    chargeReference = Some("chargeRef"),
+    mainTransaction =  Some("4920"),
+    originalAmount = Some(BigDecimal(500.00)),
+    outstandingAmount = Some(BigDecimal("500.00")),
+    clearedAmount =  Some(BigDecimal(500.00)),
+    accruedInterest = Some(BigDecimal("1000.00")),
+    items = Some(
+      Seq(
+        SubItemHip()
+      )
+    ))
+
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
     documentDetails = List(documentDetail),
@@ -372,6 +436,15 @@ object FinancialDataTestConstants {
     balanceDetails = testBalanceDetails,
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
+  )
+  val testChargeHipResponse: ChargesHipResponse = ChargesHipResponse(
+    taxpayerDetails = taxPayerHipDetails,
+    balanceDetails = testBalanceHipDetails,
+    codingDetails = List(
+      CodingDetailsHip(Some("2024"))
+    ),
+    documentDetails = List(documentDetailsHip),
+    financialDetails = List(financialDetailsHip)
   )
 
   val validSubItemJson: JsValue = Json.parse(

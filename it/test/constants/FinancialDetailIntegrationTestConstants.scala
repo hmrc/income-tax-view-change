@@ -199,7 +199,6 @@ object FinancialDetailIntegrationTestConstants {
     poaRelevantAmount = Some(1000.00)
   )
 
-
   val financialDetail: FinancialDetail = FinancialDetail(
     taxYear = "2018",
     transactionId = "transactionId",
