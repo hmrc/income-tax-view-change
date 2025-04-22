@@ -19,17 +19,7 @@ package models.financialDetails.hip.model
 
 
 case class FinancialDetailsResponseFailureSchemaOneOfError(
-                                                            code: FinancialDetailsResponseFailureSchemaOneOfErrorEnums.Code,
+                                                            code: String,
                                                             message: String,
                                                             logID: String
 )
-
-object FinancialDetailsResponseFailureSchemaOneOfErrorEnums {
-
-  type Code = Code.Value
-  object Code extends Enumeration {
-    val `400` = Value("400")
-    val `500` = Value("500")
-  }
-
-}

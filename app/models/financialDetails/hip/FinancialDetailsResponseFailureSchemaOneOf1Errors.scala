@@ -17,21 +17,8 @@
 package models.financialDetails.hip.model
 
 
-
 case class FinancialDetailsResponseFailureSchemaOneOf1Errors(
   processingDate: String,
-  code: ItsaFinancialDetailsQueryResponseFailureSchemaOneOf1ErrorsEnums.Code,
+  code: String,
   text: String
 )
-
-object ItsaFinancialDetailsQueryResponseFailureSchemaOneOf1ErrorsEnums {
-
-  type Code = Code.Value
-  object Code extends Enumeration {
-    val `002` = Value("002")
-    val `003` = Value("003")
-    val `005` = Value("005")
-    val `015` = Value("015")
-  }
-
-}

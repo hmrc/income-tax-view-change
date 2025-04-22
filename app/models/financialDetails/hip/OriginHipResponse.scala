@@ -16,13 +16,7 @@
 
 package models.financialDetails.hip.model
 
-
-
 case class OriginHipResponse(
-                              origin: OriginHipEnum,
+                              origin: String,
                               response: FailureHipResponse
 )
-
-object OriginHipResponseEnums {
-
-}

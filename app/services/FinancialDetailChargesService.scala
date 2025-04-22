@@ -29,8 +29,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 
-// TODO:    Tidy up story need to be created when HiP migration is over;
-// TODO-2:  Avoid using approach where we return Either[_, JsValue] as its very "fragile"
+// Tidy up story: MISUV-9627
 class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsConnector,
                                               val hipConnector: FinancialDetailsHipConnector,
                                               val appConfig: MicroserviceAppConfig)

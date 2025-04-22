@@ -32,7 +32,7 @@ trait HipConnectors {
     format.format(now)
   }
 
-  // Query string param constants
+  // Query string param constants for API number: #5277
   val calculateAccruedInterest: String = "true"
   val customerPaymentInformation: String = "true"
   val removePaymentonAccount: String = "false"

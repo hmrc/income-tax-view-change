@@ -17,10 +17,6 @@
 package models.financialDetails.hip.model
 
 case class GetFinancialDetails400Response (
-                                            origin: OriginHipEnum,
+                                            origin: String,
                                             response: GetFinancialDetails400ResponseResponse
 )
-
-object GetFinancialDetails400ResponseEnums {
-
-}
