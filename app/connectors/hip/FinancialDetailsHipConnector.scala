@@ -19,6 +19,7 @@ package connectors.hip
 import config.MicroserviceAppConfig
 import connectors.{HipConnectors, RawResponseReads}
 import connectors.hip.httpParsers.ChargeHipHttpParser.{ChargeHipReads, ChargeHipResponse}
+import models.hip.GetFinancialDetailsHipApi
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -28,24 +29,20 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FinancialDetailsHipConnector  @Inject()(val http: HttpClientV2,
-                                              appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging with HipConnectors {
+class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
+                                             appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging with HipConnectors {
 
   private val serviceBaseUrl: String = appConfig.hipUrl
-
-  // TODO: set up headers according to the spec / add spec number
-  def headers: Seq[(String, String)] = appConfig.getIFHeaders("1553")
 
   private[connectors] def fullServicePath: String = {
     s"$serviceBaseUrl/RESTAdapter/itsa/taxpayer/financial-details"
   }
 
-  // TODO: implement query string params creation
-  private[connectors] def getQueryStringParams(from: String, to: String): Seq[(String, String)] = {
+  private[connectors] def getQueryStringParams(nino: String, fromDate: String, toDate: String): Seq[(String, String)] = {
     Seq(
-      "dateFrom" -> from,
-      "dateTo" -> to
-    ) ++: baseQueryParameters(onlyOpenItems = false)
+      "dateFrom" -> fromDate,
+      "dateTo" -> toDate
+    ) ++: baseQueryParameters(nino, onlyOpenItems = false)
   }
 
   private def buildQueryString(queryParams: Seq[(String, String)]) = {
@@ -53,56 +50,57 @@ class FinancialDetailsHipConnector  @Inject()(val http: HttpClientV2,
     if (paramPairs.isEmpty) "" else paramPairs.mkString("?", "&", "")
   }
 
-  private[connectors] def paymentAllocationQuery(documentId: String): Seq[(String, String)] = {
+  private[connectors] def paymentAllocationQuery(nino:String, documentId: String): Seq[(String, String)] = {
     Seq(
-      "docNumber" -> documentId
-    ) ++: baseQueryParameters(onlyOpenItems = false)
+      "sapDocumentNumber" -> documentId
+    ) ++: baseQueryParameters(nino, onlyOpenItems = false)
   }
 
-  private[connectors] def onlyOpenItemsQuery(): Seq[(String, String)] = baseQueryParameters(onlyOpenItems = true)
+  private[connectors] def onlyOpenItemsQuery(nino: String): Seq[(String, String)] =
+    baseQueryParameters(nino, onlyOpenItems = true)
 
-  private def baseQueryParameters(onlyOpenItems: Boolean): Seq[(String, String)] = {
+  private def baseQueryParameters(nino:String, onlyOpenItems: Boolean): Seq[(String, String)] = {
     Seq(
       "calculateAccruedInterest" -> calculateAccruedInterest,
       "customerPaymentInformation" -> customerPaymentInformation,
-//    "idNumber", idNumber) // TODO: driven by idType / should be actual Nino value
-    "idType" -> idType,
-    "includeLocks" -> includeLocks,
-    "includeStatistical" -> includeStatistical,
-    "onlyOpenItems" -> onlyOpenItems.toString,
-    "regimeType" -> regimeType,
-    "removePaymentonAccount" -> removePaymentonAccount
-//    "sapDocumentNumber", sapDocumentNumber) // TODO: this value is optional
+      "idNumber" -> nino,
+      "idType" -> idType,
+      "includeLocks" -> includeLocks,
+      "includeStatistical" -> includeStatistical,
+      "onlyOpenItems" -> onlyOpenItems.toString,
+      "regimeType" -> regimeType,
+      "removePaymentonAccount" -> removePaymentonAccount
     )
   }
 
-  private[connectors] def getCharge(nino: String, queryParameters: Seq[(String, String)])
+  private[connectors] def getCharge(queryParameters: Seq[(String, String)])
                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
     val url = s"$fullServicePath${buildQueryString(queryParameters)}"
-    // TODO: downgrade to debug after fix
+    // TODO: downgrade to debug when PR will be in the review
     logger.info(s"URL - $url - ${queryParameters.mkString("-")}")
     http.get(url"$url")
-      .setHeader(headers: _*)
-      //.setHeader( ("correlationid", "correlationid") )
-      .setHeader( ("X-Message-Type", xMessageTypeFor1553) )
-      .setHeader( ("X-Originating-System", xOriginatingSystem) )
-      .setHeader( ("X-Receipt-Date", getMessageCreated) )
-      .setHeader( ("X-Transmitting-System", xTransmittingSystem) )
+      .setHeader( // set correlationId and basic auth
+        appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*
+      )
+      .setHeader(("X-Message-Type", xMessageTypeFor1553))
+      .setHeader(("X-Originating-System", xOriginatingSystem))
+      .setHeader(("X-Receipt-Date", getMessageCreated))
+      .setHeader(("X-Transmitting-System", xTransmittingSystem))
       .execute[ChargeHipResponse](ChargeHipReads, ec)
   }
 
   def getChargeDetails(nino: String, from: String, to: String)
                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
-    getCharge(nino, queryParameters = getQueryStringParams(from, to))
+    getCharge(queryParameters = getQueryStringParams(nino, from, to))
   }
 
   def getPaymentAllocationDetails(nino: String, documentId: String)
                                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
-    getCharge(nino = nino, queryParameters = paymentAllocationQuery(documentId))
+    getCharge( queryParameters = paymentAllocationQuery(nino, documentId))
   }
 
   def getOnlyOpenItems(nino: String)
                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
-    getCharge(nino = nino, queryParameters = onlyOpenItemsQuery())
+    getCharge(queryParameters = onlyOpenItemsQuery(nino))
   }
 }
