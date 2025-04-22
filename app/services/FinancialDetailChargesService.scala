@@ -19,9 +19,10 @@ package services
 import config.MicroserviceAppConfig
 import connectors.FinancialDetailsConnector
 import connectors.hip.FinancialDetailsHipConnector
-import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError}
+import connectors.httpParsers.ChargeHttpParser.ChargeResponseError
 import models.credits.CreditsModel
 import models.hip.GetFinancialDetailsHipApi
+import play.api.Logging
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -30,10 +31,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 // Tidy up story: MISUV-9627
-class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsConnector,
+class FinancialDetailChargesService @Inject()(val ifConnector: FinancialDetailsConnector,
                                               val hipConnector: FinancialDetailsHipConnector,
                                               val appConfig: MicroserviceAppConfig)
-                                             (implicit ec: ExecutionContext) {
+                                             (implicit ec: ExecutionContext) extends Logging{
 
   type ChargeAsJsonResponse = Either[ChargeResponseError, JsValue]
   type PaymentsAsJsonResponse = Either[ChargeResponseError, JsValue]
@@ -42,6 +43,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
 
   def getChargeDetails(nino: String, fromDate: String, toDate: String)
                       (implicit hc: HeaderCarrier) : Future[ChargeAsJsonResponse] = {
+    logger.info(s"Call::getChargeDetails")
     if (isHipOn) {
       hipConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
@@ -51,7 +53,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
            Left(err)
         }
     } else {
-      connector.getChargeDetails(nino, fromDate, toDate)
+      ifConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
           case Right(charges) =>
             Right(Json.toJson(charges))
@@ -63,7 +65,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
 
   def getPayments(nino: String, fromDate: String, toDate: String)
                       (implicit hc: HeaderCarrier) : Future[PaymentsAsJsonResponse] = {
-
+    logger.info(s"Call::getPayments")
     if (isHipOn) {
       hipConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
@@ -73,7 +75,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
             Left(err)
         }
     } else {
-      connector.getChargeDetails(nino, fromDate, toDate)
+      ifConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
           case Right(charges) =>
             Right(Json.toJson(charges.payments))
@@ -85,6 +87,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
 
   def getPaymentAllocationDetails(nino: String, documentId: String)
                                  (implicit hc: HeaderCarrier): Future[ChargeAsJsonResponse] = {
+    logger.info(s"Call::getPaymentAllocationDetails")
     if (isHipOn){
       hipConnector.getPaymentAllocationDetails(nino, documentId)
         .collect{
@@ -94,7 +97,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
             Left(err)
         }
     } else {
-      connector.getPaymentAllocationDetails(nino, documentId)
+      ifConnector.getPaymentAllocationDetails(nino, documentId)
         .collect{
           case Right(charges) =>
             Right(Json.toJson(charges))
@@ -105,6 +108,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
   }
 
   def getOnlyOpenItems(nino: String)(implicit hc: HeaderCarrier): Future[ChargeAsJsonResponse] = {
+    logger.info(s"Call::getOnlyOpenItems")
     if (isHipOn){
       hipConnector.getOnlyOpenItems(nino)
         .collect{
@@ -114,7 +118,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
             Left(err)
         }
     } else {
-      connector.getOnlyOpenItems(nino)
+      ifConnector.getOnlyOpenItems(nino)
         .collect{
           case Right(charges) =>
             Right(Json.toJson(charges))
@@ -126,6 +130,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
 
   def getCreditsModel(nino: String, fromDate: String, toDate: String)
                      (implicit hc: HeaderCarrier) : Future[ChargeAsJsonResponse] = {
+    logger.info(s"Call::getCreditsModel")
     if (isHipOn) {
       hipConnector
         .getChargeDetails(nino, fromDate, toDate)
@@ -137,7 +142,7 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
             Left(err)
         }
     } else {
-      connector.getChargeDetails(nino, fromDate, toDate)
+      ifConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
           case Right(charges) =>
             val creditsModel: CreditsModel = CreditsModel.fromChargesResponse(charges)
@@ -147,4 +152,5 @@ class FinancialDetailChargesService @Inject()(val connector: FinancialDetailsCon
         }
     }
   }
+
 }

@@ -26,10 +26,10 @@ trait HipConnectors {
   val xOriginatingSystem: String = "MDTP"
   val xTransmittingSystem : String = "HIP"
 
+  // We should not get current date/time in our BE, but consume it from upstream
   def getMessageCreated: String = {
-    val now = LocalDate.now
     val format = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ssZ")
-    format.format(now)
+    format.format(LocalDate.now)
   }
 
   // Query string param constants for API number: #5277
