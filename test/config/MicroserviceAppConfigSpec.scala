@@ -16,6 +16,7 @@
 
 package config
 
+import models.hip.{GetFinancialDetailsHipApi, GetLegacyCalcListHipApi}
 import utils.TestSupport
 
 class MicroserviceAppConfigSpec extends TestSupport {
@@ -50,6 +51,21 @@ class MicroserviceAppConfigSpec extends TestSupport {
       }
     }
 
+    "read from application.conf the values for calling HiP APIs" which {
+
+      "has a correct HiP base url" in {
+        microserviceAppConfig.ifUrl shouldBe "http://localhost:9084"
+      }
+
+      "has a correct Http Hip auth headers" in {
+        microserviceAppConfig.getHIPHeaders(GetLegacyCalcListHipApi).toMap should contain("Authorization" -> "Basic dGVzdENsaWVudElkQ29uZmlnOnRlc3RTZWNyZXRDb25maWc=")
+        microserviceAppConfig.getHIPHeaders(GetFinancialDetailsHipApi).toMap should contain("Authorization" -> "Basic Z2V0LWZpbmFuY2lhbC1kZXRhaWxzLUNsaWVudElkOmdldC1maW5hbmNpYWwtZGV0YWlscy1zZWNyZXQ=")
+
+        // because these are extracted from app~Config
+        microserviceAppConfig.getHIPHeaders(GetLegacyCalcListHipApi).toMap.keys.toList should contain theSameElementsAs List("Authorization", "correlationId")
+        microserviceAppConfig.getHIPHeaders(GetFinancialDetailsHipApi).toMap.keys.toList should contain theSameElementsAs List("Authorization", "correlationId")
+      }
+    }
   }
 
 }

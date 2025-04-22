@@ -45,7 +45,7 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
     ) ++: baseQueryParameters(nino, onlyOpenItems = false)
   }
 
-  private def buildQueryString(queryParams: Seq[(String, String)]) = {
+  def buildQueryString(queryParams: Seq[(String, String)]) = {
     val paramPairs = queryParams.map { case (k, v) => s"$k=${URLEncoder.encode(v, "utf-8")}" }
     if (paramPairs.isEmpty) "" else paramPairs.mkString("?", "&", "")
   }
@@ -59,7 +59,7 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
   private[connectors] def onlyOpenItemsQuery(nino: String): Seq[(String, String)] =
     baseQueryParameters(nino, onlyOpenItems = true)
 
-  private def baseQueryParameters(nino:String, onlyOpenItems: Boolean): Seq[(String, String)] = {
+  def baseQueryParameters(nino:String, onlyOpenItems: Boolean): Seq[(String, String)] = {
     Seq(
       "calculateAccruedInterest" -> calculateAccruedInterest,
       "customerPaymentInformation" -> customerPaymentInformation,
