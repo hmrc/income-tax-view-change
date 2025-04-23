@@ -21,9 +21,9 @@ import constants.FinancialDataTestConstants._
 import mocks.MockHttpV2
 import models.financialDetails.hip.model.{ChargesHipResponse, CodingDetailsHip}
 import models.financialDetails.responses.ChargesResponse
-import models.hip.{GetFinancialDetailsHipApi, HipApi}
+import models.hip.{GetFinancialDetailsHipApi, GetLegacyCalcListHipApi, HipApi}
 import org.mockito.stubbing.OngoingStubbing
-import play.api.http.Status.OK
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
@@ -120,6 +120,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
     setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesHipResponse]](fullUrlPaymentAllocationHip, headerHip(hipApi))(_)
 
   val mockOnlyOpenItems = setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesResponse]](fullUrlOnlyOpenItems, header)(_)
+
   def mockOnlyOpenItemsHip(hipApi: HipApi): Either[ChargeResponseError, ChargesHipResponse] => OngoingStubbing[Future[Either[ChargeResponseError, ChargesHipResponse]]] =
     setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesHipResponse]](fullUrlOnlyOpenItemsHip, headerHip(hipApi))(_)
 
@@ -255,7 +256,6 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
   "Getting only open items" should {
 
     val expectedOnlyOpenItemsQueryParameters: Seq[(String, String)] = Seq(
-      //"sapDocumentNumber" -> documentId,
       "calculateAccruedInterest" -> "true",
       "customerPaymentInformation" -> "true",
       "idNumber" -> "AA123456A",
@@ -279,7 +279,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
           documentDetails = List(documentDetailsHip),
           financialDetails = List(financialDetailsHip),
           codingDetails = List(CodingDetailsHip())
-          )
+        )
         )
 
         mockOnlyOpenItemsHip(GetFinancialDetailsHipApi)(expectedResponse)
@@ -290,28 +290,28 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
       }
     }
 
-//    s"return an error" when {
-//      "when no data found is returned" in {
-//        val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-//        val expectedErrorResponse = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString))
-//
-//        mockOnlyOpenItems(expectedErrorResponse)
-//
-//        val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
-//
-//        result shouldBe expectedErrorResponse
-//      }
-//
-//      "something went wrong" in {
-//        val expectedErrorResponse = Left(UnexpectedChargeErrorResponse)
-//
-//        mockOnlyOpenItems(expectedErrorResponse)
-//
-//        val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
-//
-//        result shouldBe expectedErrorResponse
-//      }
-//    }
+    s"return an error" when {
+      "when no data found is returned" in {
+        val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+        val expectedErrorResponse = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString))
+
+        mockOnlyOpenItemsHip(GetLegacyCalcListHipApi)(expectedErrorResponse)
+
+        val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
+
+        result shouldBe expectedErrorResponse
+      }
+
+      "something went wrong" in {
+        val expectedErrorResponse = Left(UnexpectedChargeErrorResponse)
+
+        mockOnlyOpenItemsHip(GetFinancialDetailsHipApi)(expectedErrorResponse)
+
+        val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
+
+        result shouldBe expectedErrorResponse
+      }
+    }
   }
 
 }
