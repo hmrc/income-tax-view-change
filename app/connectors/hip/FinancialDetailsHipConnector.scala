@@ -82,7 +82,7 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
       .setHeader( // set correlationId and basic auth
         appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*
       )
-      .setHeader(("X-Message-Type", xMessageTypeFor1553))
+      .setHeader(("X-Message-Type", xMessageTypeFor5277))
       .setHeader(("X-Originating-System", xOriginatingSystem))
       .setHeader(("X-Receipt-Date", getMessageCreated))
       .setHeader(("X-Transmitting-System", xTransmittingSystem))

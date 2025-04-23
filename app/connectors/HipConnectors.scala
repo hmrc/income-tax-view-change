@@ -21,14 +21,14 @@ import java.time.LocalDateTime
 trait HipConnectors {
 
   // Headers constants
-  val xMessageTypeFor1553 = "ETMPGetFinancialDetails"
+  val xMessageTypeFor5277 = "ETMPGetFinancialDetails" // <= HiP version for 1553
   val xOriginatingSystem: String = "MDTP"
   val xTransmittingSystem : String = "HIP"
 
-  // We should not get current date/time in our BE, but consume it from upstream
+  // Current date/time should be consumed from upstream
   def getMessageCreated: String = LocalDateTime.now.toString
 
-  // Query string param constants for API number: #5277
+  // Query string param constants for API number: #5277/1553
   val calculateAccruedInterest: String = "true"
   val customerPaymentInformation: String = "true"
   val removePaymentonAccount: String = "false"
