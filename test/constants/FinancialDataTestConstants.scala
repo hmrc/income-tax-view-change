@@ -190,6 +190,7 @@ object FinancialDataTestConstants {
   val testTaxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
 
   val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
+
   val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
     balanceDueWithin30days = 100.00,
     nxtPymntDateChrgsDueIn30Days = Some(LocalDate.parse("2018-08-01")),

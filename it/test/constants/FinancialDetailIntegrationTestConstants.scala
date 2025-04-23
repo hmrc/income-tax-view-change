@@ -17,6 +17,7 @@
 package constants
 
 import models.financialDetails._
+import models.financialDetails.hip.model.CodingDetailsHip
 import play.api.libs.json.{JsObject, Json}
 
 import java.time.LocalDate
@@ -144,7 +145,6 @@ object FinancialDetailIntegrationTestConstants {
     )
   )
 
-
   val balanceDetails: BalanceDetails = BalanceDetails(
     balanceDueWithin30Days = 100.00,
     overDueAmount = 200.00,
@@ -266,5 +266,6 @@ object FinancialDetailIntegrationTestConstants {
         paymentId = Some("paymentLot2-paymentLotItem2")
       )))
   )
+
 
 }

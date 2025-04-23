@@ -36,7 +36,7 @@ object ChargeHipHttpParser extends ResponseHttpParsers {
           logger.debug("successful: " + response.json)
           response.json.validate[ChargesHipResponse] match {
             case JsError(errors) =>
-              logger.error("Unable to parse response into HipChargesResponse - " + errors)
+              logger.info("Unable to parse response into HipChargesResponse - " + errors)
               Left(UnexpectedChargeErrorResponse)
 
             case JsSuccess(value, _) =>
