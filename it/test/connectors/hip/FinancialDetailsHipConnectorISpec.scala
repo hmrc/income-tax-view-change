@@ -18,70 +18,15 @@ package connectors.hip
 
 import connectors.httpParsers.ChargeHttpParser.{UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import constants.FinancialDetailHipIntegrationTestConstants._
-import helpers.{ComponentSpecBase, WiremockHelper}
-import models.financialDetails.hip.model.ChargesHipResponse
+import helpers.{ComponentSpecBase, FinancialDetailsHipItDataHelper, WiremockHelper}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 
-class FinancialDetailsHipConnectorISpec extends ComponentSpecBase {
+
+class FinancialDetailsHipConnectorISpec extends ComponentSpecBase with FinancialDetailsHipItDataHelper {
 
   val connector: FinancialDetailsHipConnector = app.injector.instanceOf[FinancialDetailsHipConnector]
   val baseUrl = "/RESTAdapter/itsa/taxpayer/financial-details"
-
-  val nino = "AA123456A"
-  val dateTo = "2019-12-12"
-  val dateFrom = "2018-12-12"
-  val documentId = "123456789"
-
-  val queryParamsChargeDetails: Seq[(String, String)] = Seq(
-    "dateFrom" -> dateFrom,
-    "dateTo" -> dateTo,
-    "calculateAccruedInterest" -> "true",
-    "customerPaymentInformation" -> "true",
-    "idNumber" -> "AA123456A",
-    "idType" -> "NINO",
-    "includeLocks" -> "true",
-    "includeStatistical" -> "false",
-    "onlyOpenItems" -> "false",
-    "regimeType" -> "ITSA",
-    "removePaymentonAccount" -> "false"
-  )
-
-  val queryParamsPaymentAllocation: Seq[(String, String)] = Seq(
-    "sapDocumentNumber" -> documentId,
-    "calculateAccruedInterest" -> "true",
-    "customerPaymentInformation" -> "true",
-    "idNumber" -> "AA123456A",
-    "idType" -> "NINO",
-    "includeLocks" -> "true",
-    "includeStatistical" -> "false",
-    "onlyOpenItems" -> "false",
-    "regimeType" -> "ITSA",
-    "removePaymentonAccount" -> "false"
-  )
-
-  val queryParamsGetOnlyOpenItems: Seq[(String, String)] = Seq(
-    "calculateAccruedInterest" -> "true",
-    "customerPaymentInformation" -> "true",
-    "idNumber" -> "AA123456A",
-    "idType" -> "NINO",
-    "includeLocks" -> "true",
-    "includeStatistical" -> "false",
-    "onlyOpenItems" -> "true",
-    "regimeType" -> "ITSA",
-    "removePaymentonAccount" -> "false"
-  )
-
-  val chargesResponse: ChargesHipResponse = ChargesHipResponse(
-    taxpayerDetails = testTaxPayerHipDetails,
-    balanceDetails = testBalanceHipDetails,
-    documentDetails = List(documentDetailsHip),
-    financialDetails = List(financialDetailsHip),
-    codingDetails = codingOutList
-  )
-
-  val chargesResponseJsonInvalid: JsValue = Json.obj("" -> "")
-
 
   val urlGetChargeDetails: String = baseUrl + connector.buildQueryString(queryParamsChargeDetails)
   val urlGetPaymentAllocationDetails: String = baseUrl + connector.buildQueryString(queryParamsPaymentAllocation)
