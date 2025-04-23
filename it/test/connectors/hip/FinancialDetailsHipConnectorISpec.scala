@@ -48,13 +48,16 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase {
   )
 
   val queryParamsPaymentAllocation: Seq[(String, String)] = Seq(
-    "docNumber" -> documentId,
-    "onlyOpenItems" -> "false",
-    "includeLocks" -> "true",
+    "sapDocumentNumber" -> documentId,
     "calculateAccruedInterest" -> "true",
-    "removePOA" -> "false",
     "customerPaymentInformation" -> "true",
-    "includeStatistical" -> "false"
+    "idNumber" -> "AA123456A",
+    "idType" -> "NINO",
+    "includeLocks" -> "true",
+    "includeStatistical" -> "false",
+    "onlyOpenItems" -> "false",
+    "regimeType" -> "ITSA",
+    "removePaymentonAccount" -> "false"
   )
 
   val queryParamsGetOnlyOpenItems: Seq[(String, String)] = Seq(
@@ -130,59 +133,59 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase {
       }
     }
 
-//    ".getPaymentAllocation() is called" when {
-//
-//      "the response is a 200 - OK" should {
-//
-//        "return a ChargeResponse when successful" in {
-//
-//          val responseBody = chargeJson
-//          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, OK, responseBody.toString())
-//          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
-//
-//          result shouldBe Right(chargesResponse)
-//        }
-//
-//        "return an UnexpectedChargeErrorResponse when unable to parse the date into a ChargesResponse" in {
-//
-//          val responseBody = chargesResponseJsonInvalid
-//          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, OK, responseBody.toString())
-//          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
-//
-//          result shouldBe Left(UnexpectedChargeErrorResponse)
-//        }
-//      }
-//
-//      "the response is a 404 - NotFound" should {
-//
-//        "return an UnexpectedChargeResponse error response when no data is found" in {
-//          val jsonError = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-//          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, NOT_FOUND, jsonError.toString())
-//          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
-//
-//          result shouldBe Left(UnexpectedChargeResponse(NOT_FOUND, jsonError.toString()))
-//        }
-//      }
-//
-//      "the response is a 500 - InternalServerError when there has been an issue retrieving the data" should {
-//
-//        "return an UnexpectedChargeResponse when there's been an unexpected error" in {
-//
-//          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, INTERNAL_SERVER_ERROR, "{}")
-//          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
-//
-//          result shouldBe Left(UnexpectedChargeErrorResponse)
-//        }
-//      }
-//    }
-//
+    ".getPaymentAllocation() is called" when {
+
+      "the response is a 200 - OK" should {
+
+        "return a ChargeResponse when successful" in {
+
+          val responseBody = chargeHipJson
+          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, OK, responseBody.toString())
+          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
+
+          result shouldBe Right(chargesResponse)
+        }
+
+        "return an UnexpectedChargeErrorResponse when unable to parse the date into a ChargesResponse" in {
+
+          val responseBody = chargesResponseJsonInvalid
+          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, OK, responseBody.toString())
+          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
+
+          result shouldBe Left(UnexpectedChargeErrorResponse)
+        }
+      }
+
+      "the response is a 404 - NotFound" should {
+
+        "return an UnexpectedChargeResponse error response when no data is found" in {
+          val jsonError = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, NOT_FOUND, jsonError.toString())
+          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
+
+          result shouldBe Left(UnexpectedChargeResponse(NOT_FOUND, jsonError.toString()))
+        }
+      }
+
+      "the response is a 500 - InternalServerError when there has been an issue retrieving the data" should {
+
+        "return an UnexpectedChargeResponse when there's been an unexpected error" in {
+
+          WiremockHelper.stubGet(urlGetPaymentAllocationDetails, INTERNAL_SERVER_ERROR, "{}")
+          val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
+
+          result shouldBe Left(UnexpectedChargeErrorResponse)
+        }
+      }
+    }
+
 //    ".getOnlyOpenItems() is called" when {
 //
 //      "the response is an Ok - 200" should {
 //
 //        "return a ChargesResponse when successful" in {
 //
-//          val responseBody = chargeJson
+//          val responseBody = chargeHipJson
 //          WiremockHelper.stubGet(urlGetOnlyOpenItems, OK, responseBody.toString())
 //          val result = connector.getOnlyOpenItems(nino).futureValue
 //
@@ -221,6 +224,7 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase {
 //          result shouldBe Left(UnexpectedChargeErrorResponse)
 //        }
 //      }
+//
 //    }
   }
 }
