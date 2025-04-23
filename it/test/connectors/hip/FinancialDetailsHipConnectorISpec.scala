@@ -61,12 +61,15 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase {
   )
 
   val queryParamsGetOnlyOpenItems: Seq[(String, String)] = Seq(
-    "onlyOpenItems" -> "true",
-    "includeLocks" -> "true",
     "calculateAccruedInterest" -> "true",
-    "removePOA" -> "false",
     "customerPaymentInformation" -> "true",
-    "includeStatistical" -> "false"
+    "idNumber" -> "AA123456A",
+    "idType" -> "NINO",
+    "includeLocks" -> "true",
+    "includeStatistical" -> "false",
+    "onlyOpenItems" -> "true",
+    "regimeType" -> "ITSA",
+    "removePaymentonAccount" -> "false"
   )
 
   val chargesResponse: ChargesHipResponse = ChargesHipResponse(
@@ -179,52 +182,52 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase {
       }
     }
 
-//    ".getOnlyOpenItems() is called" when {
-//
-//      "the response is an Ok - 200" should {
-//
-//        "return a ChargesResponse when successful" in {
-//
-//          val responseBody = chargeHipJson
-//          WiremockHelper.stubGet(urlGetOnlyOpenItems, OK, responseBody.toString())
-//          val result = connector.getOnlyOpenItems(nino).futureValue
-//
-//          result shouldBe Right(chargesResponse)
-//        }
-//
-//        "return an UnexpectedChargeErrorResponse when unable to parse the data into a ChargesResponse" in {
-//
-//          val responseBody = chargesResponseJsonInvalid
-//          WiremockHelper.stubGet(urlGetOnlyOpenItems, OK, responseBody.toString())
-//          val result = connector.getOnlyOpenItems(nino).futureValue
-//
-//          result shouldBe Left(UnexpectedChargeErrorResponse)
-//
-//        }
-//      }
-//
-//      "the response is a 404 - NotFound when no data can be found" should {
-//
-//        "return an UnexpectedChargeResponse error response when no data is found" in {
-//          val jsonError = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-//          WiremockHelper.stubGet(urlGetOnlyOpenItems, NOT_FOUND, jsonError.toString())
-//          val result = connector.getOnlyOpenItems(nino).futureValue
-//
-//          result shouldBe Left(UnexpectedChargeResponse(NOT_FOUND, jsonError.toString()))
-//        }
-//      }
-//
-//      "return a 500 - InternalServerError when there has been an issue retrieving the data" should {
-//
-//        "return an UnexpectedChargeResponse when there's been an unexpected error" in {
-//
-//          WiremockHelper.stubGet(urlGetOnlyOpenItems, INTERNAL_SERVER_ERROR, "{}")
-//          val result = connector.getOnlyOpenItems(nino).futureValue
-//
-//          result shouldBe Left(UnexpectedChargeErrorResponse)
-//        }
-//      }
-//
-//    }
+    ".getOnlyOpenItems() is called" when {
+
+      "the response is an Ok - 200" should {
+
+        "return a ChargesResponse when successful" in {
+
+          val responseBody = chargeHipJson
+          WiremockHelper.stubGet(urlGetOnlyOpenItems, OK, responseBody.toString())
+          val result = connector.getOnlyOpenItems(nino).futureValue
+
+          result shouldBe Right(chargesResponse)
+        }
+
+        "return an UnexpectedChargeErrorResponse when unable to parse the data into a ChargesResponse" in {
+
+          val responseBody = chargesResponseJsonInvalid
+          WiremockHelper.stubGet(urlGetOnlyOpenItems, OK, responseBody.toString())
+          val result = connector.getOnlyOpenItems(nino).futureValue
+
+          result shouldBe Left(UnexpectedChargeErrorResponse)
+
+        }
+      }
+
+      "the response is a 404 - NotFound when no data can be found" should {
+
+        "return an UnexpectedChargeResponse error response when no data is found" in {
+          val jsonError = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
+          WiremockHelper.stubGet(urlGetOnlyOpenItems, NOT_FOUND, jsonError.toString())
+          val result = connector.getOnlyOpenItems(nino).futureValue
+
+          result shouldBe Left(UnexpectedChargeResponse(NOT_FOUND, jsonError.toString()))
+        }
+      }
+
+      "return a 500 - InternalServerError when there has been an issue retrieving the data" should {
+
+        "return an UnexpectedChargeResponse when there's been an unexpected error" in {
+
+          WiremockHelper.stubGet(urlGetOnlyOpenItems, INTERNAL_SERVER_ERROR, "{}")
+          val result = connector.getOnlyOpenItems(nino).futureValue
+
+          result shouldBe Left(UnexpectedChargeErrorResponse)
+        }
+      }
+
+    }
   }
 }
