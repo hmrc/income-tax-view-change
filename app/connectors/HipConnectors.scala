@@ -16,8 +16,7 @@
 
 package connectors
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
 
 trait HipConnectors {
 
@@ -27,10 +26,7 @@ trait HipConnectors {
   val xTransmittingSystem : String = "HIP"
 
   // We should not get current date/time in our BE, but consume it from upstream
-  def getMessageCreated: String = {
-    val format = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ssZ")
-    format.format(LocalDate.now)
-  }
+  def getMessageCreated: String = LocalDateTime.now.toString
 
   // Query string param constants for API number: #5277
   val calculateAccruedInterest: String = "true"

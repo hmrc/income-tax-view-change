@@ -187,7 +187,7 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-  val taxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
+  val testTaxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
 
   val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
   val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
@@ -438,7 +438,7 @@ object FinancialDataTestConstants {
     financialDetails = List(financialDetail, financialDetail2)
   )
   val testChargeHipResponse: ChargesHipResponse = ChargesHipResponse(
-    taxpayerDetails = taxPayerHipDetails,
+    taxpayerDetails = testTaxPayerHipDetails,
     balanceDetails = testBalanceHipDetails,
     codingDetails = List(
       CodingDetailsHip(Some("2024"))
