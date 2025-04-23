@@ -20,7 +20,6 @@ import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedC
 import constants.FinancialDataTestConstants._
 import mocks.MockHttpV2
 import models.financialDetails.hip.model.{ChargesHipResponse, CodingDetailsHip}
-import models.financialDetails.responses.ChargesResponse
 import models.hip.{GetFinancialDetailsHipApi, GetLegacyCalcListHipApi, HipApi}
 import org.mockito.stubbing.OngoingStubbing
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -39,11 +38,6 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
 
   val expectedBaseUrl: String = microserviceAppConfig.hipUrl
 
-  val expectedApiHeaders: Seq[(String, String)] = Seq(
-    "Environment" -> "localIFEnvironment",
-    "Authorization" -> "Bearer localIFToken1553"
-  )
-
   override implicit val hc: HeaderCarrier =
     HeaderCarrierConverter.fromRequest(FakeRequest())
 
@@ -51,15 +45,6 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
   val testFrom: String = "2021-12-12"
   val testTo: String = "2022-12-12"
   val documentId: String = "123456789"
-
-  val queryParametersOnlyOpenItemsTrue: Seq[(String, String)] = Seq(
-    "onlyOpenItems" -> "true",
-    "includeLocks" -> "true",
-    "calculateAccruedInterest" -> "true",
-    "removePOA" -> "false",
-    "customerPaymentInformation" -> "true",
-    "includeStatistical" -> "false"
-  )
 
   val queryParametersOnlyOpenItemsTrueHip: Seq[(String, String)] = Seq(
     "calculateAccruedInterest" -> "true",
@@ -86,40 +71,23 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
     "removePaymentonAccount" -> "false"
   )
 
-  val queryParametersPaymentAllocation: Seq[(String, String)] = Seq(
-    "docNumber" -> documentId,
-    "onlyOpenItems" -> "false",
-    "includeLocks" -> "true",
-    "calculateAccruedInterest" -> "true",
-    "removePOA" -> "false",
-    "customerPaymentInformation" -> "true",
-    "includeStatistical" -> "false"
-  )
-
   lazy val expectedUrl: String = s"$expectedBaseUrl/RESTAdapter/itsa/taxpayer/financial-details"
   lazy val queryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.getQueryStringParams(testNino, testFrom, testTo)
   val fullUrl: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParameters)
-  val fullUrlPaymentAllocation: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParametersPaymentAllocation)
   val fullUrlPaymentAllocationHip: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParametersPaymentAllocationHip)
 
-  val fullUrlOnlyOpenItems: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParametersOnlyOpenItemsTrue)
   val fullUrlOnlyOpenItemsHip: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParametersOnlyOpenItemsTrueHip)
 
   val header: Seq[(String, String)] = microserviceAppConfig.getIFHeaders("1553")
 
   def headerHip(hipApi: HipApi): Seq[(String, String)] = microserviceAppConfig.getHIPHeaders(hipApi)
 
-  val mock = setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesResponse]](fullUrl, header)(_)
-
   def mockHip(hipApi: HipApi): Either[ChargeResponseError, ChargesHipResponse] => OngoingStubbing[Future[Either[ChargeResponseError, ChargesHipResponse]]] =
     setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesHipResponse]](fullUrl, headerHip(hipApi))(_)
-
-  val mockPaymentAllocation = setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesResponse]](fullUrlPaymentAllocation, header)(_)
 
   def mockPaymentAllocationHip(hipApi: HipApi): Either[ChargeResponseError, ChargesHipResponse] => OngoingStubbing[Future[Either[ChargeResponseError, ChargesHipResponse]]] =
     setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesHipResponse]](fullUrlPaymentAllocationHip, headerHip(hipApi))(_)
 
-  val mockOnlyOpenItems = setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesResponse]](fullUrlOnlyOpenItems, header)(_)
 
   def mockOnlyOpenItemsHip(hipApi: HipApi): Either[ChargeResponseError, ChargesHipResponse] => OngoingStubbing[Future[Either[ChargeResponseError, ChargesHipResponse]]] =
     setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesHipResponse]](fullUrlOnlyOpenItemsHip, headerHip(hipApi))(_)

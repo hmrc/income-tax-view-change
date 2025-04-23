@@ -51,7 +51,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
       }
     }
 
-    "read from application.conf the values for calling HiP APIs" which {
+    "read from application.conf values for calling HiP APIs" which {
 
       "has a correct HiP base url" in {
         microserviceAppConfig.ifUrl shouldBe "http://localhost:9084"
