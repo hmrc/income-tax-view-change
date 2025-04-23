@@ -27,12 +27,12 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import utils.TestSupport
+import utils.{FinancialDetailsHipDataHelper, TestSupport}
 
 import scala.concurrent.Future
 
 
-class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
+class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with FinancialDetailsHipDataHelper {
 
   val TestFinancialDetailsConnector = new FinancialDetailsHipConnector(mockHttpClientV2, microserviceAppConfig)
 
@@ -41,44 +41,13 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
   override implicit val hc: HeaderCarrier =
     HeaderCarrierConverter.fromRequest(FakeRequest())
 
-  val testNino: String = "AA123456A"
-  val testFrom: String = "2021-12-12"
-  val testTo: String = "2022-12-12"
-  val documentId: String = "123456789"
-
-  val queryParametersOnlyOpenItemsTrueHip: Seq[(String, String)] = Seq(
-    "calculateAccruedInterest" -> "true",
-    "customerPaymentInformation" -> "true",
-    "idNumber" -> "AA123456A",
-    "idType" -> "NINO",
-    "includeLocks" -> "true",
-    "includeStatistical" -> "false",
-    "onlyOpenItems" -> "true",
-    "regimeType" -> "ITSA",
-    "removePaymentonAccount" -> "false"
-  )
-
-  val queryParametersPaymentAllocationHip: Seq[(String, String)] = Seq(
-    "sapDocumentNumber" -> documentId,
-    "calculateAccruedInterest" -> "true",
-    "customerPaymentInformation" -> "true",
-    "idNumber" -> "AA123456A",
-    "idType" -> "NINO",
-    "includeLocks" -> "true",
-    "includeStatistical" -> "false",
-    "onlyOpenItems" -> "false",
-    "regimeType" -> "ITSA",
-    "removePaymentonAccount" -> "false"
-  )
-
   lazy val expectedUrl: String = s"$expectedBaseUrl/RESTAdapter/itsa/taxpayer/financial-details"
   lazy val queryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.getQueryStringParams(testNino, testFrom, testTo)
+
   val fullUrl: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParameters)
   val fullUrlPaymentAllocationHip: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParametersPaymentAllocationHip)
 
   val fullUrlOnlyOpenItemsHip: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParametersOnlyOpenItemsTrueHip)
-
-  val header: Seq[(String, String)] = microserviceAppConfig.getIFHeaders("1553")
 
   def headerHip(hipApi: HipApi): Seq[(String, String)] = microserviceAppConfig.getHIPHeaders(hipApi)
 
@@ -88,10 +57,8 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
   def mockPaymentAllocationHip(hipApi: HipApi): Either[ChargeResponseError, ChargesHipResponse] => OngoingStubbing[Future[Either[ChargeResponseError, ChargesHipResponse]]] =
     setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesHipResponse]](fullUrlPaymentAllocationHip, headerHip(hipApi))(_)
 
-
   def mockOnlyOpenItemsHip(hipApi: HipApi): Either[ChargeResponseError, ChargesHipResponse] => OngoingStubbing[Future[Either[ChargeResponseError, ChargesHipResponse]]] =
     setupMockHttpGetWithHeaderCarrier[Either[ChargeResponseError, ChargesHipResponse]](fullUrlOnlyOpenItemsHip, headerHip(hipApi))(_)
-
 
   "financialDetailUrl" should {
     "return the correct url" in {
@@ -101,19 +68,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
 
   "query string parameters for charge" should {
     "return the correct formatted query parameters" in {
-      val expectedQueryParameters: Seq[(String, String)] = Seq(
-        "dateFrom" -> testFrom,
-        "dateTo" -> testTo,
-        "onlyOpenItems" -> "false",
-        "includeLocks" -> "true",
-        "calculateAccruedInterest" -> "true",
-        "removePaymentonAccount" -> "false",
-        "customerPaymentInformation" -> "true",
-        "includeStatistical" -> "false",
-        "idNumber" -> "AA123456A",
-        "idType" -> "NINO",
-        "regimeType" -> "ITSA"
-      )
+
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.getQueryStringParams(
         testNino,
         testFrom,
@@ -139,7 +94,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        val response = Left(UnexpectedChargeResponse(404, errorJson.toString()))
+        val response = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString()))
         mockHip(GetFinancialDetailsHipApi)(response)
 
         val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
@@ -159,24 +114,13 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
 
   "paymentAllocationQuery parameters for Payment Allocation - documentId" should {
     "return the correct formatted query parameters" in {
-      val expectedQueryParameters: Seq[(String, String)] = Seq(
-        "sapDocumentNumber" -> documentId,
-        "onlyOpenItems" -> "false",
-        "includeLocks" -> "true",
-        "calculateAccruedInterest" -> "true",
-        "removePaymentonAccount" -> "false",
-        "customerPaymentInformation" -> "true",
-        "includeStatistical" -> "false",
-        "idNumber" -> "AA123456A",
-        "idType" -> "NINO",
-        "regimeType" -> "ITSA"
-      )
+
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.paymentAllocationQuery(
         testNino,
         documentId
       )
 
-      actualQueryParameters should contain theSameElementsAs expectedQueryParameters
+      actualQueryParameters should contain theSameElementsAs expectedQueryParametersWithDocumentId
     }
   }
 
@@ -200,7 +144,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
     s"return an error" when {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        val response = Left(UnexpectedChargeResponse(404, errorJson.toString()))
+        val response = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString()))
         mockPaymentAllocationHip(GetFinancialDetailsHipApi)(response)
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
@@ -223,17 +167,6 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
 
   "Getting only open items" should {
 
-    val expectedOnlyOpenItemsQueryParameters: Seq[(String, String)] = Seq(
-      "calculateAccruedInterest" -> "true",
-      "customerPaymentInformation" -> "true",
-      "idNumber" -> "AA123456A",
-      "idType" -> "NINO",
-      "includeLocks" -> "true",
-      "includeStatistical" -> "false",
-      "onlyOpenItems" -> "true",
-      "regimeType" -> "ITSA",
-      "removePaymentonAccount" -> "false"
-    )
 
     "have the correct formatted query parameters" in {
       TestFinancialDetailsConnector.onlyOpenItemsQuery(testNino) should contain theSameElementsAs expectedOnlyOpenItemsQueryParameters
@@ -247,13 +180,11 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
           documentDetails = List(documentDetailsHip),
           financialDetails = List(financialDetailsHip),
           codingDetails = List(CodingDetailsHip())
-        )
+          )
         )
 
         mockOnlyOpenItemsHip(GetFinancialDetailsHipApi)(expectedResponse)
-
         val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
-
         result shouldBe expectedResponse
       }
     }
@@ -262,21 +193,15 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 {
       "when no data found is returned" in {
         val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
         val expectedErrorResponse = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString))
-
         mockOnlyOpenItemsHip(GetLegacyCalcListHipApi)(expectedErrorResponse)
-
         val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
-
         result shouldBe expectedErrorResponse
       }
 
       "something went wrong" in {
         val expectedErrorResponse = Left(UnexpectedChargeErrorResponse)
-
         mockOnlyOpenItemsHip(GetFinancialDetailsHipApi)(expectedErrorResponse)
-
         val result = TestFinancialDetailsConnector.getOnlyOpenItems(testNino).futureValue
-
         result shouldBe expectedErrorResponse
       }
     }

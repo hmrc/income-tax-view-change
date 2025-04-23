@@ -17,7 +17,11 @@
 package services
 
 import utils.TestSupport
+import org.mockito.Mockito.{mock}
 
 // TODO: implement service spec~
 class FinancialDetailChargesServiceSpec  extends TestSupport {
+
+  val mockCalculationListConnector: FinancialDetailChargesService = mock(classOf[FinancialDetailChargesService])
+
 }
