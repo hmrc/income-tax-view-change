@@ -16,6 +16,9 @@
 
 package utils
 
+import constants.FinancialDataTestConstants.{documentDetailsHip, financialDetailsHip, testBalanceHipDetails, testTaxPayerHipDetails}
+import models.financialDetails.hip.model.{ChargesHipResponse, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip}
+
 /*
  * Copyright 2025 HM Revenue & Customs
  *
@@ -103,5 +106,12 @@ trait FinancialDetailsHipDataHelper {
     "regimeType" -> "ITSA",
     "removePaymentonAccount" -> "false"
   )
+
+  val documentDetails: List[DocumentDetailHip] = List(documentDetailsHip)
+  val financialDetails: List[FinancialDetailHip] = List(financialDetailsHip)
+  val successResponse: Right[Nothing, ChargesHipResponse] = Right(
+    ChargesHipResponse(testTaxPayerHipDetails,
+      testBalanceHipDetails, List(CodingDetailsHip()),
+      documentDetails, financialDetails))
 
 }
