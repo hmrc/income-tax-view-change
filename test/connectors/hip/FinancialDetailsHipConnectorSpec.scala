@@ -42,7 +42,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
     HeaderCarrierConverter.fromRequest(FakeRequest())
 
   lazy val expectedUrl: String = s"$expectedBaseUrl/RESTAdapter/itsa/taxpayer/financial-details"
-  lazy val queryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.getQueryStringParams(testNino, testFrom, testTo)
+  lazy val queryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.getQueryStringParams(testNino, testFromDate, testToDate)
 
   val fullUrl: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParameters)
   val fullUrlPaymentAllocationHip: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParametersPaymentAllocationHip)
@@ -71,8 +71,8 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
 
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.getQueryStringParams(
         testNino,
-        testFrom,
-        testTo
+        testFromDate,
+        testToDate
       )
 
       actualQueryParameters should contain theSameElementsAs expectedQueryParameters
@@ -85,7 +85,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
         val response = Right(testChargeHipResponse)
 
         mockHip(GetFinancialDetailsHipApi)(response)
-        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
+        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFromDate, testToDate).futureValue
 
         result shouldBe response
       }
@@ -97,7 +97,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
         val response = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString()))
         mockHip(GetFinancialDetailsHipApi)(response)
 
-        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
+        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFromDate, testToDate).futureValue
 
         result shouldBe response
       }
@@ -105,7 +105,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
       "something went wrong" in {
         val response = Left(UnexpectedChargeErrorResponse)
         mockHip(GetFinancialDetailsHipApi)(response)
-        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFrom, testTo).futureValue
+        val result = TestFinancialDetailsConnector.getChargeDetails(testNino, testFromDate, testToDate).futureValue
 
         result shouldBe response
       }
@@ -117,7 +117,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
 
       val actualQueryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.paymentAllocationQuery(
         testNino,
-        documentId
+        testDocumentId
       )
 
       actualQueryParameters should contain theSameElementsAs expectedQueryParametersWithDocumentId
@@ -134,7 +134,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
           Right(ChargesHipResponse(testTaxPayerHipDetails, testBalanceHipDetails, List(CodingDetailsHip()), documentDetails, financialDetails))
         mockPaymentAllocationHip(GetFinancialDetailsHipApi)(response)
 
-        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
+        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, testDocumentId).futureValue
 
         result shouldBe Right(ChargesHipResponse(testTaxPayerHipDetails, testBalanceHipDetails, List(CodingDetailsHip()), documentDetails, financialDetails))
 
@@ -147,7 +147,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
         val response = Left(UnexpectedChargeResponse(NOT_FOUND, errorJson.toString()))
         mockPaymentAllocationHip(GetFinancialDetailsHipApi)(response)
 
-        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
+        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, testDocumentId).futureValue
 
         result shouldBe response
       }
@@ -156,7 +156,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
         val response = Left(UnexpectedChargeErrorResponse)
         mockPaymentAllocationHip(GetFinancialDetailsHipApi)(response)
 
-        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
+        val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, testDocumentId).futureValue
 
         result shouldBe Left(UnexpectedChargeErrorResponse)
       }

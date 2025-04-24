@@ -75,7 +75,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
 
   def mockCredits(nino: String, from: String, to: String)
                      (response: ChargeResponse): Unit = {
-    when(mockFinancialDetailsService.getCreditsModel(
+    when(mockFinancialDetailsService.getCredits(
       ArgumentMatchers.eq(nino),
       ArgumentMatchers.eq(from),
       ArgumentMatchers.eq(to)

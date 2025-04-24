@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class FinancialDetailService @Inject()(val ifConnector: FinancialDetailsConnector,
                                        val hipConnector: FinancialDetailsHipConnector,
                                        val appConfig: MicroserviceAppConfig)
-                                      (implicit ec: ExecutionContext) extends Logging{
+                                      (implicit ec: ExecutionContext) extends Logging {
 
   type ChargeAsJsonResponse = Either[ChargeResponseError, JsValue]
   type PaymentsAsJsonResponse = Either[ChargeResponseError, JsValue]
@@ -128,8 +128,8 @@ class FinancialDetailService @Inject()(val ifConnector: FinancialDetailsConnecto
     }
   }
 
-  def getCreditsModel(nino: String, fromDate: String, toDate: String)
-                     (implicit hc: HeaderCarrier) : Future[ChargeAsJsonResponse] = {
+  def getCredits(nino: String, fromDate: String, toDate: String)
+                (implicit hc: HeaderCarrier) : Future[ChargeAsJsonResponse] = {
     logger.info(s"Call::getCreditsModel")
     if (isHipOn) {
       hipConnector

@@ -38,9 +38,9 @@ import models.financialDetails.hip.model.{ChargesHipResponse, CodingDetailsHip, 
 trait FinancialDetailsHipDataHelper {
 
   val testNino: String = "AA123456A"
-  val testFrom: String = "2021-12-12"
-  val testTo: String = "2022-12-12"
-  val documentId: String = "123456789"
+  val testFromDate: String = "2021-12-12"
+  val testToDate: String = "2022-12-12"
+  val testDocumentId: String = "123456789" // <== same as transactionId
 
   val queryParametersOnlyOpenItemsTrueHip: Seq[(String, String)] = Seq(
     "calculateAccruedInterest" -> "true",
@@ -55,7 +55,7 @@ trait FinancialDetailsHipDataHelper {
   )
 
   val queryParametersPaymentAllocationHip: Seq[(String, String)] = Seq(
-    "sapDocumentNumber" -> documentId,
+    "sapDocumentNumber" -> testDocumentId,
     "calculateAccruedInterest" -> "true",
     "customerPaymentInformation" -> "true",
     "idNumber" -> "AA123456A",
@@ -68,8 +68,8 @@ trait FinancialDetailsHipDataHelper {
   )
 
   val expectedQueryParameters: Seq[(String, String)] = Seq(
-    "dateFrom" -> testFrom,
-    "dateTo" -> testTo,
+    "dateFrom" -> testFromDate,
+    "dateTo" -> testToDate,
     "onlyOpenItems" -> "false",
     "includeLocks" -> "true",
     "calculateAccruedInterest" -> "true",
@@ -82,7 +82,7 @@ trait FinancialDetailsHipDataHelper {
   )
 
   val expectedQueryParametersWithDocumentId: Seq[(String, String)] = Seq(
-    "sapDocumentNumber" -> documentId,
+    "sapDocumentNumber" -> testDocumentId,
     "onlyOpenItems" -> "false",
     "includeLocks" -> "true",
     "calculateAccruedInterest" -> "true",
@@ -93,7 +93,6 @@ trait FinancialDetailsHipDataHelper {
     "idType" -> "NINO",
     "regimeType" -> "ITSA"
   )
-
 
   val expectedOnlyOpenItemsQueryParameters: Seq[(String, String)] = Seq(
     "calculateAccruedInterest" -> "true",
@@ -107,11 +106,15 @@ trait FinancialDetailsHipDataHelper {
     "removePaymentonAccount" -> "false"
   )
 
+  // Charges defs
   val documentDetails: List[DocumentDetailHip] = List(documentDetailsHip)
+
   val financialDetails: List[FinancialDetailHip] = List(financialDetailsHip)
-  val successResponse: Right[Nothing, ChargesHipResponse] = Right(
-    ChargesHipResponse(testTaxPayerHipDetails,
-      testBalanceHipDetails, List(CodingDetailsHip()),
-      documentDetails, financialDetails))
+
+  val chargeHipDef : ChargesHipResponse = ChargesHipResponse(testTaxPayerHipDetails,
+    testBalanceHipDetails, List(CodingDetailsHip()),
+    documentDetails, financialDetails)
+
+  val successResponse: Right[Nothing, ChargesHipResponse] = Right(chargeHipDef)
 
 }

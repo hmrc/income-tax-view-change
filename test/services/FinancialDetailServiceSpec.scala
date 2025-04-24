@@ -30,6 +30,9 @@ import utils.{FinancialDetailsHipDataHelper, TestSupport}
 import scala.concurrent.Future
 
 // TODO: implement service spec~
+/*
+  Testing only logic related to HipConnector;
+ */
 class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDataHelper{
 
   val mockFinancialDetailsHipConnector: FinancialDetailsHipConnector = mock(classOf[FinancialDetailsHipConnector])
@@ -50,24 +53,53 @@ class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDa
     ).thenReturn(Future.successful(response))
   }
 
+  def setUpMockPaymentAllocationDetails(nino: String, documentId: String)
+                         (response: ChargeHipResponse): OngoingStubbing[Future[ChargeHipResponse]] = {
+    when(
+      mockFinancialDetailsHipConnector.getPaymentAllocationDetails(
+        ArgumentMatchers.eq(nino),
+        ArgumentMatchers.eq(documentId)
+      )(ArgumentMatchers.any(), ArgumentMatchers.any())
+    ).thenReturn(Future.successful(response))
+  }
+
   def setHipConfigOn(): OngoingStubbing[Boolean] = {
     when(mockAppConfig.hipFeatureSwitchEnabled(GetFinancialDetailsHipApi))
       .thenReturn(true)
   }
 
-  "Hip::call getPayments" should {
+  "Call getChargeDetails" should {
     "return success response with Json" when {
       "correct params provided" in {
-          val fromDate: String = "2018-01-01"
-          val toDate: String = "2017-01-01"
-
         setHipConfigOn()
-        setupMockGetPayment(testNino, fromDate, toDate)(successResponse)
-        val expected = ServiceUnderTest.getChargeDetails(testNino, fromDate, toDate).futureValue
+        setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
+        val expected = ServiceUnderTest.getChargeDetails(testNino, testFromDate, testToDate).futureValue
         expected shouldBe successResponse.map(Json.toJson(_))
       }
     }
+  }
 
+// TODO: next data need to be added -> charges.payments !!!
+//  "Call getPayments" should {
+//    "return success response with Json" when {
+//      "correct params provided" in {
+//        setHipConfigOn()
+//        //setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
+//        val expected = ServiceUnderTest.getPayments(testNino, testFromDate, testToDate).futureValue
+//        expected shouldBe successResponse.map(Json.toJson(_))
+//      }
+//    }
+//  }
+
+  "Call getPaymentAllocationDetails" should {
+    "return success response with Json" when {
+      "correct params provided" in {
+        setHipConfigOn()
+        setUpMockPaymentAllocationDetails(testNino, testDocumentId)(successResponse)
+        val expected = ServiceUnderTest.getPaymentAllocationDetails(testNino, testDocumentId).futureValue
+        expected shouldBe successResponse.map(Json.toJson(_))
+      }
+    }
   }
 
 }

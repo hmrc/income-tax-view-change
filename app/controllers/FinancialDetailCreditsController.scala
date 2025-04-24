@@ -33,7 +33,7 @@ class FinancialDetailCreditsController @Inject()(authentication: AuthenticationP
 
   def getCredits(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {
     authentication.async { implicit request =>
-      financialDetailChargesService.getCreditsModel(
+      financialDetailChargesService.getCredits(
         nino,
         fromDate,
         toDate
