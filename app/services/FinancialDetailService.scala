@@ -30,11 +30,11 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 
-// Tidy up story: MISUV-9627
-class FinancialDetailChargesService @Inject()(val ifConnector: FinancialDetailsConnector,
-                                              val hipConnector: FinancialDetailsHipConnector,
-                                              val appConfig: MicroserviceAppConfig)
-                                             (implicit ec: ExecutionContext) extends Logging{
+// Tidy up story: MISUV-9627: drop IF/DES connector / revert return type to original
+class FinancialDetailService @Inject()(val ifConnector: FinancialDetailsConnector,
+                                       val hipConnector: FinancialDetailsHipConnector,
+                                       val appConfig: MicroserviceAppConfig)
+                                      (implicit ec: ExecutionContext) extends Logging{
 
   type ChargeAsJsonResponse = Either[ChargeResponseError, JsValue]
   type PaymentsAsJsonResponse = Either[ChargeResponseError, JsValue]

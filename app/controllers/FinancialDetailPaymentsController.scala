@@ -19,7 +19,7 @@ package controllers
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import play.api.mvc._
-import services.FinancialDetailChargesService
+import services.FinancialDetailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
@@ -28,7 +28,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class FinancialDetailPaymentsController @Inject()(authentication: AuthenticationPredicate,
                                                   cc: ControllerComponents,
-                                                  financialDetailChargesService: FinancialDetailChargesService)
+                                                  financialDetailChargesService: FinancialDetailService)
                                                  (implicit ec: ExecutionContext) extends BackendController(cc) {
 
   def getPaymentDetails(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {

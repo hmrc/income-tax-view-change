@@ -17,7 +17,7 @@
 package connectors.hip
 
 import config.MicroserviceAppConfig
-import connectors.{HipConnectors, RawResponseReads}
+import connectors.RawResponseReads
 import connectors.hip.httpParsers.ChargeHipHttpParser.{ChargeHipReads, ChargeHipResponse}
 import models.hip.GetFinancialDetailsHipApi
 import play.api.Logging
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
-                                             appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging with HipConnectors {
+                                             appConfig: MicroserviceAppConfig) extends RawResponseReads with Logging with HipConnectorDataHelper {
 
   private val serviceBaseUrl: String = appConfig.hipUrl
 

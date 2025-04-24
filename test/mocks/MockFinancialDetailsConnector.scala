@@ -28,7 +28,7 @@ import scala.concurrent.Future
 import org.mockito.Mockito.mock
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
-import services.FinancialDetailChargesService
+import services.FinancialDetailService
 import play.api.libs.json.Json
 
 // TODO: Global EC to be removed ???
@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
   val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
-  val mockFinancialDetailsService: FinancialDetailChargesService = mock(classOf[FinancialDetailChargesService])
+  val mockFinancialDetailsService: FinancialDetailService = mock(classOf[FinancialDetailService])
 
 
   override def beforeEach(): Unit = {

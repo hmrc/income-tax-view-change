@@ -30,14 +30,14 @@ import utils.{FinancialDetailsHipDataHelper, TestSupport}
 import scala.concurrent.Future
 
 // TODO: implement service spec~
-class FinancialDetailChargesServiceSpec  extends TestSupport with FinancialDetailsHipDataHelper{
+class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDataHelper{
 
   val mockFinancialDetailsHipConnector: FinancialDetailsHipConnector = mock(classOf[FinancialDetailsHipConnector])
   val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
   val mockAppConfig: MicroserviceAppConfig = mock(classOf[MicroserviceAppConfig])
 
   object ServiceUnderTest
-    extends FinancialDetailChargesService(mockFinancialDetailsConnector, mockFinancialDetailsHipConnector, mockAppConfig)
+    extends FinancialDetailService(mockFinancialDetailsConnector, mockFinancialDetailsHipConnector, mockAppConfig)
 
   def setupMockGetPayment(nino: String, fromDate: String, toDate: String)
                          (response: ChargeHipResponse): OngoingStubbing[Future[ChargeHipResponse]] = {

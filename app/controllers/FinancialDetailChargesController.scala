@@ -21,7 +21,7 @@ import controllers.predicates.AuthenticationPredicate
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.FinancialDetailChargesService
+import services.FinancialDetailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class FinancialDetailChargesController @Inject()(authentication: AuthenticationPredicate,
                                                  cc: ControllerComponents,
-                                                 financialDetailChargesService : FinancialDetailChargesService)
+                                                 financialDetailChargesService : FinancialDetailService)
                                                 (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getChargeDetails(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {

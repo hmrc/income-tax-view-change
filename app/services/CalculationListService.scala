@@ -28,6 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CalculationListService @Inject()(val calculationListConnector: CalculationListConnector) extends Logging {
 
+  @deprecated("Deprecated:: Calling branch to be remove after HiP migration", "MISUV-???")
   def getCalculationList(nino: String, taxYearEnd: String)
                             (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 

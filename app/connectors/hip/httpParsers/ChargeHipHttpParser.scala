@@ -16,12 +16,12 @@
 
 package connectors.hip.httpParsers
 
+import connectors.hip.httpParsers.errorResponses.ErrorResponseHttpParsers
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
-import connectors.httpParsers.ResponseHttpParsers
 import models.financialDetails.hip.model.ChargesHipResponse
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 
-object ChargeHipHttpParser extends ResponseHttpParsers {
+object ChargeHipHttpParser extends ErrorResponseHttpParsers {
 
   import play.api.http.Status.OK
   import play.api.libs.json.{JsError, JsSuccess}

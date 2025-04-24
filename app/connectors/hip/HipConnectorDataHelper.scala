@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package connectors
+package connectors.hip
 
 import java.time.LocalDateTime
 
-trait HipConnectors {
+trait HipConnectorDataHelper {
 
   // Headers constants
   val xMessageTypeFor5277 = "ETMPGetFinancialDetails" // <= HiP version for 1553
