@@ -43,6 +43,7 @@ object ChargeHttpParser extends ResponseHttpParsers {
 
             case JsSuccess(value, _) =>
               logger.info("successfully parsed response into ChargesResponse")
+              println("BEEP1 " + value.codingDetails)
               Right(value)
           }
         case status if status >= 400 && status < 500 =>
