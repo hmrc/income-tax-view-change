@@ -24,53 +24,57 @@ import java.time.LocalDate
 
 case class SubItemHip(
                        /* Custom identifier attribute */
-                       id: Option[String] = None,
-                       /* Sub Item */
-                       subItem: Option[String] = None,
-                       dueDate: Option[LocalDate] = None,
-                       /* Currency amount. 13-digits total with 2 decimal places */
+                       subItemId: Option[String] = None, // renamed
                        amount: Option[BigDecimal] = None,
                        clearingDate: Option[LocalDate] = None,
                        /* Clearing Reason */
                        clearingReason: Option[String] = None,
+                       /* Clearing SAP Document */
+                       clearingSAPDocument: Option[String] = None,
                        /* Outgoing payment method */
                        outgoingPaymentMethod: Option[String] = None,
-                       /* Payment Lock */
-                       paymentLock: Option[String] = None,
-                       /* Clearing Lock */
-                       clearingLock: Option[String] = None,
                        /* Interest Lock */
                        interestLock: Option[String] = None,
                        /* Dunning Lock */
                        dunningLock: Option[String] = None,
-                       /* Return Lock */
-                       returnFlag: Option[String] = None,
                        /* Payment Reference */
                        paymentReference: Option[String] = None,
                        /* Currency amount. 13-digits total with 2 decimal places */
                        paymentAmount: Option[BigDecimal] = None,
+                       dueDate: Option[LocalDate] = None,
                        /* Payment Method */
                        paymentMethod: Option[String] = None,
                        /* Payment Lot */
                        paymentLot: Option[String] = None,
                        /* Payment Lot Item */
                        paymentLotItem: Option[String] = None,
-                       /* Clearing SAP Document */
-                       clearingSAPDocument: Option[String] = None,
-                       codingInitiationDate: Option[LocalDate] = None,
+
+                       /* Sub Item */
+                       subItem: Option[String] = None,
+
+                       /* Currency amount. 13-digits total with 2 decimal places */
+                       /* Payment Lock */
+                       //paymentLock: Option[String] = None,
+                       /* Clearing Lock */
+                       //clearingLock: Option[String] = None,
+                       /* Return Lock */
+                       //returnFlag: Option[String] = None,
+                       //codingInitiationDate: Option[LocalDate] = None,
                        /* Statistical Document */
-                       statisticalDocument: Option[String] = None,
+                       //statisticalDocument: Option[String] = None,
                        /* Return reason */
-                       returnReason: Option[String] = None,
+                       //returnReason: Option[String] = None,
                        /* Promise to Pay */
                        //promisetoPay: Option[String] = None,
                        /* Coded Out Status */
-                       codedOutStatus: Option[String] = None
+                       //codedOutStatus: Option[String] = None
+                       paymentId: Option[String] = None, // custom field
                      )
 
 object SubItemHip extends Logging {
 
-  val empty: SubItemHip = SubItemHip(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+  val empty: SubItemHip = SubItemHip(None, None, None, None, None, None, None,
+    None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[SubItemHip] = Json.writes[SubItemHip]
 
@@ -91,7 +95,7 @@ object SubItemHip extends Logging {
     paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
 
   } yield {
-    val id: Option[String] = for {
+    val paymentId: Option[String] = for {
       pl <- paymentLot
       pli <- paymentLotItem
     } yield s"$pl-$pli"
@@ -108,7 +112,8 @@ object SubItemHip extends Logging {
       paymentReference = paymentReference,
       paymentAmount = paymentAmount,
       paymentMethod = paymentMethod,
-      id = id
+      subItemId = subItemId,
+      paymentId = paymentId
     )
   }
 
