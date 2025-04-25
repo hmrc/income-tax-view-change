@@ -38,7 +38,7 @@ object CreditsModel {
   }
 
   private def getCreditOrPaymentAmountForHip(documentDetail: DocumentDetailHip): BigDecimal = {
-    Option(documentDetail.documentOutstandingAmount)
+    Option(documentDetail.outstandingAmount)
       .filter(_ < 0)
       .map(_.abs)
       .getOrElse(0.0)
@@ -98,7 +98,7 @@ object CreditsModel {
           transactionType = transactionType,
           amount = getCreditOrPaymentAmountForHip(documentDetail),
           // TODO: convert TaxYear to Int in the actual model?
-          taxYear = Some(documentDetail.taxYear.toInt),
+          taxYear = Some(documentDetail.taxYear),
           dueDate = documentDetail.documentDueDate
         )
       }

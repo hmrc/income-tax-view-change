@@ -24,7 +24,7 @@ import java.time.LocalDate
 // TODO: enable disabled field after migration to Scala 3 => MISUV-7996
 case class DocumentDetailHip(
                               /* Format: YYYY */
-                              taxYear: String,
+                              taxYear: Int,
                               /* SAP document number or Form Bundle Number for zero amount documents */
                               transactionId: String,
                               /* If the document was created using the Form Bundle, the FB Number is provided */
@@ -38,9 +38,9 @@ case class DocumentDetailHip(
                               /* Document descriptiom */
                               documentDescription: Option[String] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
-                              totalAmount: BigDecimal,
+                              originalAmount: BigDecimal, // renamed from totalAmount
                               /* Currency amount. 13-digits total with 2 decimal places */
-                              documentOutstandingAmount: BigDecimal,
+                              outstandingAmount: BigDecimal, // renamed from documentOutstandingAmount
                               /* Currency amount. 13-digits total with 2 decimal places */
                               poaRelevantAmount: Option[BigDecimal] = None,
                               //lastClearingDate: Option[LocalDate] = None,
@@ -85,7 +85,7 @@ case class DocumentDetailHip(
 object DocumentDetailHip {
   implicit val writes: Writes[DocumentDetailHip] = Json.writes[DocumentDetailHip]
   implicit val reads: Reads[DocumentDetailHip] = (
-    (__ \ "taxYear").read[String] and
+    (__ \ "taxYear").read[String].map(_.toInt) and // <= RT conversion applied
       (__ \ "documentID").read[String] and
       (__ \ "documentDate").read[LocalDate] and
       (__ \ "documentText").readNullable[String] and

@@ -32,7 +32,7 @@ case class ChargesHipResponse(
                                financialDetails: List[FinancialDetailHip]
                              ) {
     val payments: List[Payment] = {
-      val paymentDocuments: List[DocumentDetailHip] = documentDetails.filter(document => document.totalAmount < 0).toList
+      val paymentDocuments: List[DocumentDetailHip] = documentDetails.filter(document => document.originalAmount < 0).toList
       paymentDocuments.map { document =>
         val subItem = {
           if (document.paymentLot.isDefined && document.paymentLotItem.isDefined) {
@@ -60,8 +60,8 @@ case class ChargesHipResponse(
 
         Payment(
           reference = subItem.flatMap(_.paymentReference),
-          amount = document.totalAmount,
-          outstandingAmount = document.totalAmount,
+          amount = document.originalAmount,
+          outstandingAmount = document.originalAmount,
           documentDescription = document.documentDescription,
           method = subItem.flatMap(_.paymentMethod),
           lot = document.paymentLot.fold(subItem.flatMap(_.paymentLot))(Some(_)),
