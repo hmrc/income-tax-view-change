@@ -70,6 +70,7 @@ class FinancialDetailService @Inject()(val ifConnector: FinancialDetailsConnecto
       hipConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
           case Right(charges) =>
+            logger.error(s"Call::getPaymentsD => ${charges}")
             Right(Json.toJson(charges.payments))
           case Left(err) =>
             Left(err)

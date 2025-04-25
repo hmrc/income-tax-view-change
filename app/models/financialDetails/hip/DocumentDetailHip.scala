@@ -86,7 +86,7 @@ object DocumentDetailHip {
   implicit val writes: Writes[DocumentDetailHip] = Json.writes[DocumentDetailHip]
   implicit val reads: Reads[DocumentDetailHip] = (
     (__ \ "taxYear").read[String] and
-      (__ \ "documentId").read[String] and
+      (__ \ "documentID").read[String] and
       (__ \ "documentDate").read[LocalDate] and
       (__ \ "documentText").readNullable[String] and
       (__ \ "documentDueDate").readNullable[LocalDate] and

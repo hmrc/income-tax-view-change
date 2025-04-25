@@ -71,7 +71,7 @@ object FinancialDetailHip {
 
   implicit val reads: Reads[FinancialDetailHip] = (
     (JsPath \ "taxYear").read[String] and
-      (JsPath \ "documentId").read[String] and
+      (JsPath \ "documentID").read[String] and
       (JsPath \ "mainType").readNullable[String] and
       (JsPath \ "periodKeyDescription").readNullable[String] and
       (JsPath \ "taxPeriodFrom").readNullable[LocalDate] and
