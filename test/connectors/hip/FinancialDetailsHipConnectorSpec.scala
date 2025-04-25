@@ -41,7 +41,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
   override implicit val hc: HeaderCarrier =
     HeaderCarrierConverter.fromRequest(FakeRequest())
 
-  lazy val expectedUrl: String = s"$expectedBaseUrl/RESTAdapter/itsa/taxpayer/financial-details"
+  lazy val expectedUrl: String = s"$expectedBaseUrl/etmp/RESTAdapter/itsa/taxpayer/financial-details"
   lazy val queryParameters: Seq[(String, String)] = TestFinancialDetailsConnector.getQueryStringParams(testNino, testFromDate, testToDate)
 
   val fullUrl: String = expectedUrl + TestFinancialDetailsConnector.buildQueryString(queryParameters)

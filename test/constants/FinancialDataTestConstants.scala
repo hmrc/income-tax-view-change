@@ -231,7 +231,7 @@ object FinancialDataTestConstants {
     poaRelevantAmount = Some(1000.00)
   )
 
-  val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(taxYear = "2018",
+  val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(taxYear = 2018,
     transactionId = "id",
     documentDate = LocalDate.parse("2018-03-29"),
     documentText = Some("documentText"),
