@@ -98,7 +98,7 @@ object FinancialDetailHipIntegrationTestConstants {
   val testTaxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
 
   val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
-    balanceDueWithin30days = 100.00,
+    balanceDueWithin30Days = 100.00,
     nxtPymntDateChrgsDueIn30Days = None,
     balanceNotDuein30Days = 200.00,
     nextPaymntDateBalnceNotDue = None,

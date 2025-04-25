@@ -18,6 +18,7 @@ package controllers
 
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
+import play.api.Logging
 import play.api.mvc._
 import services.FinancialDetailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -29,7 +30,7 @@ import scala.concurrent.ExecutionContext
 class FinancialDetailPaymentsController @Inject()(authentication: AuthenticationPredicate,
                                                   cc: ControllerComponents,
                                                   financialDetailChargesService: FinancialDetailService)
-                                                 (implicit ec: ExecutionContext) extends BackendController(cc) {
+                                                 (implicit ec: ExecutionContext) extends BackendController(cc) with Logging{
 
   def getPaymentDetails(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {
     authentication.async { implicit request=>
@@ -38,9 +39,12 @@ class FinancialDetailPaymentsController @Inject()(authentication: Authentication
         fromDate,
         toDate
       ) map {
-        case Right(paymentsAsJsonResponse) => Ok(paymentsAsJsonResponse)
+        case Right(paymentsAsJsonResponse) =>
+          logger.info(s"FinancialDetailPaymentsController =>  $paymentsAsJsonResponse")
+          Ok(paymentsAsJsonResponse)
         case Left(error: UnexpectedChargeResponse) if error.code >= BAD_REQUEST && error.code < INTERNAL_SERVER_ERROR => Status(error.code)(error.response)
-        case Left(_) => InternalServerError("Failed to retrieve charge details to get payments")
+        case Left(_) =>
+          InternalServerError("Failed to retrieve charge details to get payments")
       }
     }
   }

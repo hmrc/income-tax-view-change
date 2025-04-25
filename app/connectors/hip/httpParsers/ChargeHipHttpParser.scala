@@ -33,10 +33,10 @@ object ChargeHipHttpParser extends ErrorResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): ChargeHipResponse = {
       response.status match {
         case OK =>
-          logger.debug("successful: " + response.json)
+          logger.info("successfulR2: " + response.json)
           response.json.validate[ChargesHipResponse] match {
             case JsError(errors) =>
-              logger.info("Unable to parse response into HipChargesResponse - " + errors)
+              logger.error("Unable to parse response into HipChargesResponse - " + errors)
               Left(UnexpectedChargeErrorResponse)
 
             case JsSuccess(value, _) =>
@@ -47,7 +47,7 @@ object ChargeHipHttpParser extends ErrorResponseHttpParsers {
           logger.error(s"$status returned from HiP with body: ${response.body}")
           Left(UnexpectedChargeResponse(status, response.body))
         case status =>
-          logger.error(s"Unexpected Response from Hip with status: $status")
+          logger.info(s"Unexpected Response from Hip with status: $status")
           Left(UnexpectedChargeErrorResponse)
       }
     }

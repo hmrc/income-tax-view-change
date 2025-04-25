@@ -35,14 +35,16 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
   private val serviceBaseUrl: String = appConfig.hipUrl
 
   private[connectors] def fullServicePath: String = {
-    s"$serviceBaseUrl/RESTAdapter/itsa/taxpayer/financial-details"
+    s"$serviceBaseUrl/etmp/RESTAdapter/itsa/taxpayer/financial-details"
   }
 
   private[connectors] def getQueryStringParams(nino: String, fromDate: String, toDate: String): Seq[(String, String)] = {
-    Seq(
-      "dateFrom" -> fromDate,
-      "dateTo" -> toDate
-    ) ++: baseQueryParameters(nino, onlyOpenItems = false)
+    baseQueryParameters(nino, onlyOpenItems = false).take(2) ++:
+      Seq(
+        "dateFrom" -> fromDate,
+        "dateTo" -> toDate
+      ) ++: baseQueryParameters(nino, onlyOpenItems = false)
+      .takeRight(7)
   }
 
   def buildQueryString(queryParams: Seq[(String, String)]) = {
@@ -51,9 +53,7 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
   }
 
   private[connectors] def paymentAllocationQuery(nino:String, documentId: String): Seq[(String, String)] = {
-    Seq(
-      "sapDocumentNumber" -> documentId
-    ) ++: baseQueryParameters(nino, onlyOpenItems = false)
+    baseQueryParameters(nino, onlyOpenItems = false) ++: Seq( "sapDocumentNumber" -> documentId )
   }
 
   private[connectors] def onlyOpenItemsQuery(nino: String): Seq[(String, String)] =
@@ -78,6 +78,7 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
     val url = s"$fullServicePath${buildQueryString(queryParameters)}"
     // TODO: downgrade to debug when PR will be in the review
     logger.info(s"URL - $url")
+
     http.get(url"$url")
       .setHeader( // set correlationId and basic auth
         appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*
@@ -87,6 +88,13 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
       .setHeader(("X-Receipt-Date", getMessageCreated))
       .setHeader(("X-Transmitting-System", xTransmittingSystem))
       .execute[ChargeHipResponse](ChargeHipReads, ec)
+      .collect{
+        case Left(ex) =>
+          logger.error(s"Response: $ex")
+          Left(ex)
+        case Right(value) =>
+          Right(value)
+      }
   }
 
   def getChargeDetails(nino: String, from: String, to: String)

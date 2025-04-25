@@ -41,7 +41,7 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
         toDate
       ) map {
         case Right(chargeDetailsAsJson) =>
-          logger.debug("Successful Response: " + chargeDetailsAsJson)
+          logger.info("Successful Response: " + chargeDetailsAsJson)
           Ok(chargeDetailsAsJson)
         case Left(error: UnexpectedChargeResponse) if error.code == NOT_FOUND =>
           logger.info("404: " + error)
