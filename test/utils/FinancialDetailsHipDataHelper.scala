@@ -55,7 +55,6 @@ trait FinancialDetailsHipDataHelper {
   )
 
   val queryParametersPaymentAllocationHip: Seq[(String, String)] = Seq(
-    "sapDocumentNumber" -> testDocumentId,
     "calculateAccruedInterest" -> "true",
     "customerPaymentInformation" -> "true",
     "idNumber" -> "AA123456A",
@@ -64,7 +63,8 @@ trait FinancialDetailsHipDataHelper {
     "includeStatistical" -> "false",
     "onlyOpenItems" -> "false",
     "regimeType" -> "ITSA",
-    "removePaymentonAccount" -> "false"
+    "removePaymentonAccount" -> "false",
+    "sapDocumentNumber" -> testDocumentId
   )
 
   val expectedQueryParameters: Seq[(String, String)] = Seq(

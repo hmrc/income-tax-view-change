@@ -132,6 +132,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
         val financialDetails = List(financialDetailsHip)
         val response =
           Right(ChargesHipResponse(testTaxPayerHipDetails, testBalanceHipDetails, List(CodingDetailsHip()), documentDetails, financialDetails))
+
         mockPaymentAllocationHip(GetFinancialDetailsHipApi)(response)
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, testDocumentId).futureValue
