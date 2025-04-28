@@ -16,7 +16,7 @@
 
 package helpers.servicemocks
 
-import constants.CalculationListIntegrationTestConstants.{failureResponse, successResponse}
+import constants.CalculationListIntegrationTestConstants.{failureResponse, successResponse, successResponse2083Crys, successResponse2083NotCrys}
 import helpers.WiremockHelper
 import play.api.http.Status
 import play.api.libs.json.Json
@@ -25,6 +25,7 @@ object DesCalculationListStub {
   def url(nino: String, taxYear: String): String = s"""/income-tax/list-of-calculation-results/$nino?taxYear=$taxYear"""
 
   def urlTYS(nino: String, taxYear: String): String = s"""/income-tax/view/calculations/liability/$taxYear/$nino"""
+  def url2083(nino: String, taxYear: String): String = s"""/income-tax/$taxYear/view/$nino/calculations-summary"""
 
 
   def stubGetDesCalculationList(nino: String, taxYear: String): Unit = {
@@ -51,6 +52,12 @@ object DesCalculationListStub {
     val calculationListResponse = successResponse.toString
 
     WiremockHelper.stubGet(urlTYS(nino, taxYear), Status.OK, calculationListResponse)
+  }
+
+  def stubGetDesCalculationList2083(nino: String, taxYear: String, isCryst: Boolean): Unit = {
+    val resp = if(isCryst) successResponse2083Crys else successResponse2083NotCrys
+
+    WiremockHelper.stubGet(url2083(nino, taxYear), Status.OK, resp.toString())
   }
 
   def stubGetDesCalculationListTYSNotFound(nino: String, taxYear: String): Unit = {
@@ -82,4 +89,7 @@ object DesCalculationListStub {
 
   def verifyGetCalculationListTYS(nino: String, taxYear: String): Unit =
     WiremockHelper.verifyGet(urlTYS(nino, taxYear))
+
+  def verifyGetCalculationList8023(nino: String, taxYear: String): Unit =
+    WiremockHelper.verifyGet(url2083(nino, taxYear))
 }
