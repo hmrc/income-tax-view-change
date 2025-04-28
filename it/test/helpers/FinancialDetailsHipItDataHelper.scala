@@ -28,11 +28,24 @@ trait FinancialDetailsHipItDataHelper {
   val dateFrom = "2018-12-12"
   val documentId = "123456789"
 
+  /*
+/etmp/RESTAdapter/itsa/taxpayer/financial-details?
+calculateAccruedInterest=true
+&customerPaymentInformation=true
+&dateFrom=2018-12-12
+&dateTo=2019-12-12
+&idNumber=AA123456A&
+idType=NINO&includeLocks=true
+&includeStatistical=false
+&onlyOpenItems=false
+&regimeType=ITSA
+&removePaymentonAccount=false
+   */
   val queryParamsChargeDetails: Seq[(String, String)] = Seq(
-    "dateFrom" -> dateFrom,
-    "dateTo" -> dateTo,
     "calculateAccruedInterest" -> "true",
     "customerPaymentInformation" -> "true",
+    "dateFrom" -> dateFrom,
+    "dateTo" -> dateTo,
     "idNumber" -> "AA123456A",
     "idType" -> "NINO",
     "includeLocks" -> "true",
