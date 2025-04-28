@@ -19,7 +19,7 @@ package connectors.hip
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
 import connectors.hip.httpParsers.ChargeHipHttpParser.{ChargeHipReads, ChargeHipResponse}
-//import models.hip.GetFinancialDetailsHipApi
+import models.hip.GetFinancialDetailsHipApi
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -79,9 +79,9 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
     // TODO: downgrade to debug when PR will be in the review
     logger.info(s"URL - $url")
     http.get(url"$url")
-//      .setHeader( // set correlationId and basic auth
-//        appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*
-//      )
+      .setHeader( // set correlationId and basic auth
+        appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*
+      )
       .setHeader(("X-Message-Type", xMessageTypeFor5277))
       .setHeader(("X-Originating-System", xOriginatingSystem))
       .setHeader(("X-Receipt-Date", getMessageCreated))
