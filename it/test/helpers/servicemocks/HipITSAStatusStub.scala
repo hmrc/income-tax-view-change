@@ -23,7 +23,7 @@ import play.mvc.Http.Status
 object HipITSAStatusStub {
 
   def getITSAStatusUrl(taxableEntityId: String, taxYear: String): String =
-    s"/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=true&history=true"
+    s"/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=true&history=true"
 
   val url: String = getITSAStatusUrl(taxableEntityId, taxYear)
 

@@ -37,7 +37,7 @@ class HipITSAStatusControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful ITSAStatusDetails response")
-          HipITSAStatusStub.stubGetHipITSAStatusDetails(successITSAStatusListResponseJson.toString())
+          HipITSAStatusStub.stubGetHipITSAStatusDetails(successITSAStatusListHIPResponseJson("00", "00").toString())
 
           When(s"I call GET /itsa-status/status/$taxableEntityId/$taxYear")
           val res = IncomeTaxViewChange.getITSAStatus(taxableEntityId, taxYear)
