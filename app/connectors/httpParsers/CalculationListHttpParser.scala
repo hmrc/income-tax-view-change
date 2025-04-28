@@ -16,9 +16,10 @@
 
 package connectors.httpParsers
 
-import models.calculationList.{CalculationListModel, CalculationListResponseModel}
+import models.calculationList.{CalculationListModel, CalculationListResponseModel, CalculationSummaryResponseModel}
 import models.errors.{UnexpectedJsonFormat, UnexpectedResponse}
 import play.api.http.Status.OK
+import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object CalculationListHttpParser extends ResponseHttpParsers {
@@ -27,16 +28,19 @@ object CalculationListHttpParser extends ResponseHttpParsers {
     override def read(method: String, url: String, response: HttpResponse): HttpGetResult[CalculationListResponseModel] = {
       response.status match {
         case OK =>
-          response.json.validate[Seq[CalculationListModel]].fold(
-            invalid => {
-              logger.error(s"could not parse to CalculationListResponseModel. Invalid: $invalid")
-              Left(UnexpectedJsonFormat)
-            },
-            valid => {
-              logger.info("successfully parsed response to CalculationListResponseModel")
-              Right(CalculationListResponseModel(valid))
-            }
-          )
+          response.json.validateOpt[CalculationSummaryResponseModel] match {
+            case JsSuccess(Some(valid), _) => Right(valid.asCalculationListResponseModel())
+            case _ => response.json.validate[Seq[CalculationListModel]].fold(
+              invalid => {
+                logger.error(s"could not parse to CalculationListResponseModel. Invalid: $invalid")
+                Left(UnexpectedJsonFormat)
+              },
+              valid => {
+                logger.info("successfully parsed response to CalculationListResponseModel")
+                Right(CalculationListResponseModel(valid))
+              }
+            )
+          }
         case status if status >= 400 && status < 500 =>
           logger.warn(s"$status returned from DES with body: ${response.body}")
           handleErrorResponse(response)

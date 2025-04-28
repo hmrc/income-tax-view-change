@@ -25,6 +25,8 @@ object BaseIntegrationTestConstants {
   val testNinoEnrolmentIdentifier = "NINO"
   val testNino = "BB123456A"
   val testTaxYearRange = "23-24"
+  val taxYearRange25to26 = "25-26"
+  val taxYearRange26to27 = "26-27"
   val testTaxYearEnd = "2022"
   val testMtdbsa = "XIAT0000000000A"
   val testMtdRef = "123456789012345"

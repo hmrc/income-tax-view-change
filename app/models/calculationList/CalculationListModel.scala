@@ -22,7 +22,16 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 case class CalculationListModel(calculationId: String,
                                 calculationTimestamp: String,
                                 calculationType: String,
-                                crystallised: Option[Boolean])
+                                crystallised: Option[Boolean]) {
+
+  def updateCalcTypeAndCrystallisedIfReq(): CalculationListModel = {
+    calculationType match {
+      case "IY" => copy(calculationType = "inYear")
+      case "DF" => copy(calculationType = "crystallisation", crystallised = Some(true))
+      case _ => this
+    }
+  }
+}
 
 
 object CalculationListModel {
@@ -36,6 +45,16 @@ object CalculationListModel {
 }
 
 case class CalculationListResponseModel(calculations: Seq[CalculationListModel])
+
+case class CalculationSummaryResponseModel(calculationsSummary: Seq[CalculationListModel]) {
+  def asCalculationListResponseModel(): CalculationListResponseModel = CalculationListResponseModel(
+    calculations = calculationsSummary.map(_.updateCalcTypeAndCrystallisedIfReq())
+  )
+}
+
+object CalculationSummaryResponseModel {
+  implicit val reads: Reads[CalculationSummaryResponseModel] = Json.reads[CalculationSummaryResponseModel]
+}
 
 object CalculationListResponseModel {
   implicit val writes: Writes[CalculationListResponseModel] = Json.writes[CalculationListResponseModel]
