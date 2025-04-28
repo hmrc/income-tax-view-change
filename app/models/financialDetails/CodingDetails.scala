@@ -22,7 +22,7 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import java.time.LocalDate
 
 case class CodingDetails(coded: Option[Seq[CodedEntry]],
-                         codedOutAmount: Option[BigDecimal])
+                         amountCodedOut: Option[BigDecimal])
 
 case class CodedEntry(amount: BigDecimal,
                       initiationDate: LocalDate)

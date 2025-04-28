@@ -164,7 +164,7 @@ object FinancialDetailIntegrationTestConstants {
 
   val codingDetails: CodingDetails = CodingDetails(
     coded = Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))),
-    codedOutAmount = Some(100.00)
+    amountCodedOut = Some(100.00)
   )
 
   val documentDetail: DocumentDetail = DocumentDetail(

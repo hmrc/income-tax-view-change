@@ -79,7 +79,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         "amount" -> 2300.00,
         "initiationDate" -> "2020-04-20"
       )),
-      "codedOutAmount" -> 100.00
+      "amountCodedOut" -> 100.00
     )),
     "documentDetails" -> Json.arr(Json.obj(
       "taxYear" -> 2018,
