@@ -23,17 +23,41 @@ import play.api.libs.json.{JsSuccess, Json}
 import utils.TestSupport
 
 class ITSAStatusResponseSpec extends TestSupport with Matchers {
-  "The ITSAStatusResponseModel" should {
-    "read response to model " in {
-      Json.fromJson(successITSAStatusResponseJson)(ITSAStatusResponseModel.format) shouldBe JsSuccess(successITSAStatusResponseModel)
+  "The ITSAStatusResponseModel" when {
+    "the response is from IF" should {
+      "read response to model " in {
+        Json.fromJson(successITSAStatusResponseJson)(ITSAStatusResponseModel.format) shouldBe JsSuccess(successITSAStatusResponseModel)
+      }
+
+      "read minimal response to model" in {
+        Json.fromJson(successITSAStatusResponseModelMinimalJson)(ITSAStatusResponseModel.format) shouldBe JsSuccess(successITSAStatusResponseModelMinimal)
+      }
+
+      "read StatusDetailMinimal response to model" in {
+        Json.fromJson(statusDetailMinimalJson)(StatusDetail.readsStatusDetail) shouldBe JsSuccess(statusDetailMinimal)
+      }
     }
 
-    "read minimal response to model" in {
-      Json.fromJson(successITSAStatusResponseModelMinimalJson)(ITSAStatusResponseModel.format) shouldBe JsSuccess(successITSAStatusResponseModelMinimal)
-    }
-
-    "read StatusDetailMinimal response to model" in {
-      Json.fromJson(statusDetailMinimalJson)(StatusDetail.format) shouldBe JsSuccess(statusDetailMinimal)
+    "the response is from HIP" that {
+      "has no statusDetails" should {
+        "read to minimal response to model" in {
+          Json.fromJson(successITSAStatusResponseModelMinimalJson)(ITSAStatusResponseModel.format) shouldBe JsSuccess(successITSAStatusResponseModelMinimal)
+        }
+      }
+      StatusDetail.statusMapping.foreach { case (statusKey, status) =>
+        StatusDetail.statusReasonMapping.foreach { case (statusReasonKey, statusReason) =>
+          s"has a status of $statusKey and statusReason of $statusReasonKey" should {
+            s"read and convert status to $status and statusReason to $statusReason" when {
+              "all success response" in {
+                Json.fromJson(successITSAStatusResponseHipJson(statusKey, statusReasonKey))(ITSAStatusResponseModel.format) shouldBe JsSuccess(successITSAStatusResponseModelHip(status, statusReason))
+              }
+              "StatusDetailMinimal response" in {
+                Json.fromJson(statusDetailMinHipJson(statusKey, statusReasonKey))(StatusDetail.readsStatusDetail) shouldBe JsSuccess(statusDetailMinimalHip(status, statusReason))
+              }
+            }
+          }
+        }
+      }
     }
   }
 

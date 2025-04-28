@@ -30,52 +30,57 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
   val taxYear = "19-20"
   val correlationId = "123-456-789"
 
-  val getITSAStatusUrl = s"/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=true&history=true"
+  val getITSAStatusUrl = s"/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=true&history=true"
 
   val request: OptOutUpdateRequest = OptOutUpdateRequest(taxYear = "19-20", updateReason = "ITSA status update reason")
 
   "ITSAStatusConnector" when {
 
-    ".getITSAStatus() is called" when {
+    ".getITSAStatus() is called" should {
+      StatusDetail.statusMapping.foreach { case (statusKey, status) =>
+        StatusDetail.statusReasonMapping.foreach { case (statusReasonKey, statusReason) =>
+          "return an ITSAStatusResponseModel list" that {
+            s"has a status of $status and statusReason of $statusReason" when {
+              s"a 200 OK response with status $statusKey and statusReason $statusReasonKey is recieved" in {
+                val responseBody = successITSAStatusListHIPResponseJson(statusKey, statusReasonKey).toString()
+                WiremockHelper.stubGet(getITSAStatusUrl, OK, responseBody)
+                val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
 
-      "the response is a 200 - OK" should {
+                result shouldBe Right(getSuccessITSAStatusResponseModel(status, statusReason))
+              }
+            }
+          }
 
-        "return an ITSAStatusResponseModel list when successfully retrieved" in {
-          val responseBody = successITSAStatusListResponseJson.toString()
-          WiremockHelper.stubGet(getITSAStatusUrl, OK, responseBody)
-          val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
-
-          result shouldBe Right(listSuccessITSAStatusResponseModel)
-        }
-
-        "return an ITSAStatusResponseError when there has been an error attempting to parse the response" in {
-          WiremockHelper.stubGet(getITSAStatusUrl, OK, failureInvalidRequestResponse)
-          val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
-
-          result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing ITSA Status Response"))
         }
       }
 
-      "the response is a 404 - NotFound" should {
+      "return an ITSAStatusResponseError when there has been an error attempting to parse the response" in {
+        WiremockHelper.stubGet(getITSAStatusUrl, OK, failureInvalidRequestResponse)
+        val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
 
-        "return an ITSAStatusResponseNotFound model when no ITSA status was able to be retrieved" in {
-          val jsonError = Json.obj("code" -> NOT_FOUND, "reason" -> "The remote endpoint has indicated that no match found for the reference provided.")
-          WiremockHelper.stubGet(getITSAStatusUrl, NOT_FOUND, jsonError.toString())
-          val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
-
-          result shouldBe Left(ITSAStatusResponseNotFound(NOT_FOUND, jsonError.toString()))
-        }
+        result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing ITSA Status Response"))
       }
+    }
 
-      "the response is a 500 - InternalServerError" should {
+    "return an ITSAStatusResponseNotFound model when no ITSA status was able to be retrieved" when {
+      "the response is a 404 - NotFound" in {
+        val jsonError = Json.obj("code" -> NOT_FOUND, "reason" -> "The remote endpoint has indicated that no match found for the reference provided.")
+        WiremockHelper.stubGet(getITSAStatusUrl, NOT_FOUND, jsonError.toString())
+        val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
 
-        "return an ITSAStatusResponseError when an unexpected error has occurred while trying to retrieve the ITSA status" in {
-          val jsonError = Json.obj("code" -> INTERNAL_SERVER_ERROR, "reason" -> "Server Error, unexpected error has occurred")
-          WiremockHelper.stubGet(getITSAStatusUrl, INTERNAL_SERVER_ERROR, jsonError.toString())
-          val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
+        result shouldBe Left(ITSAStatusResponseNotFound(NOT_FOUND, jsonError.toString()))
+      }
+    }
 
-          result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, jsonError.toString()))
-        }
+
+    "return an ITSAStatusResponseError when an unexpected error has occurred while trying to retrieve the ITSA status" when {
+      "the response is a 500 - InternalServerError" in {
+
+        val jsonError = Json.obj("code" -> INTERNAL_SERVER_ERROR, "reason" -> "Server Error, unexpected error has occurred")
+        WiremockHelper.stubGet(getITSAStatusUrl, INTERNAL_SERVER_ERROR, jsonError.toString())
+        val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
+
+        result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, jsonError.toString()))
       }
     }
   }

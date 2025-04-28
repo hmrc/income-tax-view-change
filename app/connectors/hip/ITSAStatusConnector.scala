@@ -38,7 +38,7 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
                                    )(implicit ec: ExecutionContext) extends ITSAStatusConnectorTrait with RawResponseReads with Logging {
 
   def getITSAStatusUrl(taxableEntityId: String, taxYear: String, futureYears: String, history: String): String =
-    s"${appConfig.hipUrl}/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=$futureYears&history=$history"
+    s"${appConfig.hipUrl}/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=$futureYears&history=$history"
 
   def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean, history: Boolean)
                    (implicit headerCarrier: HeaderCarrier): Future[Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]] = {
