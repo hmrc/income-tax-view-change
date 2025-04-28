@@ -28,7 +28,9 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
   val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
 
-  val chargeResponseMinWrite = ChargesResponse(balanceDetails, List(), List())
+  val codingDetails: CodingDetails = CodingDetails(Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))), Some(100.00))
+
+  val chargeResponseMinWrite = ChargesResponse(balanceDetails, List(), List(), List())
 
   val chargeResponseMinWriteJson = Json.obj(
     "balanceDetails" -> Json.obj(
@@ -37,11 +39,12 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       "totalBalance" -> 300.00,
       "unallocatedCredit" -> 400.00
     ),
+    "codingDetails" -> Json.arr(),
     "documentDetails" -> Json.arr(),
     "financialDetails" -> Json.arr()
   )
 
-  val chargeResponseMinRead = ChargesResponse(balanceDetails, List(), List())
+  val chargeResponseMinRead = ChargesResponse(balanceDetails, List(), List(), List())
 
   val chargeResponseBadJson = Json.obj(
     "qwer" -> Json.obj(
@@ -60,6 +63,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
   )
 
   val chargeResponseFull = ChargesResponse(balanceDetails = balanceDetails,
+    codingDetails = List(codingDetails),
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail))
 
@@ -70,6 +74,13 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       "totalBalance" -> 300.00,
       "unallocatedCredit" -> 400.00
     ),
+    "codingDetails" -> Json.arr(Json.obj(
+      "coded" -> Json.arr(Json.obj(
+        "amount" -> 2300.00,
+        "initiationDate" -> "2020-04-20"
+      )),
+      "codedOutAmount" -> 100.00
+    )),
     "documentDetails" -> Json.arr(Json.obj(
       "taxYear" -> 2018,
       "transactionId" -> "id",
@@ -230,6 +241,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
         "no documents exist with a paymentLot and paymentLotId" in {
           ChargesResponse(balanceDetails = balanceDetails,
+            codingDetails = List(codingDetails),
             documentDetails = List(document(paymentLot = None, paymentLotItem = None)),
             financialDetails = List(financial())
           ).payments shouldBe List()
@@ -238,6 +250,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         "a payment document exists with no matching financial details" in {
           ChargesResponse(
             balanceDetails = balanceDetails,
+            codingDetails = List(codingDetails),
             documentDetails = List(document()),
             financialDetails = List(financial(documentId = "DOCID02"))
           ).payments shouldBe List()
@@ -246,6 +259,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         "a payment document exists with a matching financial details but no matching items" in {
           ChargesResponse(
             balanceDetails = balanceDetails,
+            codingDetails = List(codingDetails),
             documentDetails = List(document()),
             financialDetails = List(financial(items = Some(List(subItem(paymentLot = Some("lot02"))))))
           ).payments shouldBe List()
@@ -254,6 +268,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         "a payment document exists with matching financial details but missing data" in {
           ChargesResponse(
             balanceDetails = balanceDetails,
+            codingDetails = List(codingDetails),
             documentDetails = List(document()),
             financialDetails = List(financial(items = Some(List(subItem(paymentReference = None)))))
           ).payments shouldBe List()
@@ -265,6 +280,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         "a single payment exists" in {
           ChargesResponse(
             balanceDetails = balanceDetails,
+            codingDetails = List(codingDetails),
             documentDetails = List(document2()),
             financialDetails = List(financial(items = Some(List(subItem()))))
           ).payments shouldBe List(
@@ -278,6 +294,7 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         "multiple payments exist" in {
           ChargesResponse(
             balanceDetails = balanceDetails,
+            codingDetails = List(codingDetails),
             documentDetails = List(
               document2(),
               document2("DOCID02")),

@@ -32,7 +32,7 @@ object CodingDetails {
   implicit val writes: Writes[CodingDetails] = Json.writes[CodingDetails]
   implicit val reads: Reads[CodingDetails] = (
       (JsPath \ "coded").readNullable[Seq[CodedEntry]] and
-        (JsPath \ "codedOutAmount").readNullable[BigDecimal]
+        (JsPath \ "amountCodedOut").readNullable[BigDecimal]
     ) (CodingDetails.apply _)
 }
 

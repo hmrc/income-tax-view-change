@@ -17,7 +17,7 @@
 package constants
 
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, SubItem}
+import models.financialDetails.{BalanceDetails, CodedEntry, CodingDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
 
 import java.time.LocalDate
@@ -38,8 +38,14 @@ object FinancialDataTestConstants {
       |     "totalReturnAmount": 100.00,
       |     "amountNotCoded": 200.00,
       |     "amountNotCodedDueDate": "2018-01-01",
-      |     "amountCodedOut": 300.00,
-      |     "taxYearCoding": "2019"
+      |     "amountCodedOut": 100.00,
+      |     "taxYearCoding": "2019",
+      |     "coded": [
+      |          {
+      |            "amount": 2300.00,
+      |            "initiationDate": "2020-04-20"
+      |          }
+      |        ]
       |   }
       | ],
       | "documentDetails": [
@@ -188,6 +194,8 @@ object FinancialDataTestConstants {
 			|""".stripMargin)
 
   val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
+
+  val testCodingDetails: CodingDetails = CodingDetails(Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))), Some(100.00))
 
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = 2018,
@@ -360,12 +368,14 @@ object FinancialDataTestConstants {
 
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
+    codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail)
   )
 
   val creditChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
+    codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail3),
     financialDetails = List(financialDetail3)
   )
@@ -376,6 +386,7 @@ object FinancialDataTestConstants {
 
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
+    codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
   )

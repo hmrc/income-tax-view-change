@@ -36,8 +36,12 @@ object FinancialDetailIntegrationTestConstants {
         "totalReturnAmount" -> 100.00,
         "amountNotCoded" -> 200.00,
         "amountNotCodedDueDate" -> "2018-01-01",
-        "amountCodedOut" -> 300.00,
-        "taxYearCoding" -> "2019"
+        "amountCodedOut" -> 100.00,
+        "taxYearCoding" -> "2019",
+        "coded" -> Json.arr(Json.obj(
+          "amount" -> 2300.00,
+          "initiationDate" -> "2020-04-20"
+        ))
       )
     ),
     "documentDetails" -> Json.arr(
@@ -156,6 +160,11 @@ object FinancialDetailIntegrationTestConstants {
     None,
     None,
     unallocatedCredit = Some(400.00)
+  )
+
+  val codingDetails: CodingDetails = CodingDetails(
+    coded = Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))),
+    codedOutAmount = Some(100.00)
   )
 
   val documentDetail: DocumentDetail = DocumentDetail(

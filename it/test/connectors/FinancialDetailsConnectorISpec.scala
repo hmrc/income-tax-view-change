@@ -64,6 +64,7 @@ class FinancialDetailsConnectorISpec extends ComponentSpecBase {
 
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = balanceDetails,
+    codingDetails = List(codingDetails),
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
   )
