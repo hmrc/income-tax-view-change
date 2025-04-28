@@ -78,7 +78,6 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
     val url = s"$fullServicePath${buildQueryString(queryParameters)}"
     // TODO: downgrade to debug when PR will be in the review
     logger.info(s"URL - $url")
-    println(s"URL - $url")
     http.get(url"$url")
 //      .setHeader( // set correlationId and basic auth
 //        appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*

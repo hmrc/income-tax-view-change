@@ -49,7 +49,7 @@ object FinancialDetailHipIntegrationTestConstants {
     "documentDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
-        "documentId" -> "id",
+        "documentID" -> "id",
         "documentDate" -> "2018-03-29",
         "documentText" -> "documentText",
         "documentDueDate" -> "2019-03-29",
@@ -76,7 +76,7 @@ object FinancialDetailHipIntegrationTestConstants {
     "financialDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
-        "documentId" -> "transactionId",
+        "documentID" -> "transactionId",
         "mainType" -> "4920",
         "taxPeriodFrom" -> LocalDate.parse("2017-04-05"),
         "taxPeriodTo" -> LocalDate.parse("2018-04-06"),
@@ -115,7 +115,7 @@ object FinancialDetailHipIntegrationTestConstants {
     availableCredit = None)
 
   val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(
-    taxYear = "2018",
+    taxYear = 2018,
     transactionId = "id",
     documentDate = LocalDate.parse("2018-03-29"),
     documentText = Some("documentText"),

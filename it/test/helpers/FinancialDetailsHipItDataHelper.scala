@@ -43,7 +43,6 @@ trait FinancialDetailsHipItDataHelper {
   )
 
   val queryParamsPaymentAllocation: Seq[(String, String)] = Seq(
-    "sapDocumentNumber" -> documentId,
     "calculateAccruedInterest" -> "true",
     "customerPaymentInformation" -> "true",
     "idNumber" -> "AA123456A",
@@ -52,7 +51,8 @@ trait FinancialDetailsHipItDataHelper {
     "includeStatistical" -> "false",
     "onlyOpenItems" -> "false",
     "regimeType" -> "ITSA",
-    "removePaymentonAccount" -> "false"
+    "removePaymentonAccount" -> "false",
+    "sapDocumentNumber" -> documentId
   )
 
   val queryParamsGetOnlyOpenItems: Seq[(String, String)] = Seq(
@@ -69,7 +69,7 @@ trait FinancialDetailsHipItDataHelper {
 
   val chargesResponseJsonInvalid: JsValue = Json.obj("" -> "")
 
-  val chargesResponse: ChargesHipResponse = ChargesHipResponse(
+  val chargesHipResponse: ChargesHipResponse = ChargesHipResponse(
     taxpayerDetails = testTaxPayerHipDetails,
     balanceDetails = testBalanceHipDetails,
     documentDetails = List(documentDetailsHip),

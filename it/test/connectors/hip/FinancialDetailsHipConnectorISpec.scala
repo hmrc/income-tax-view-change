@@ -26,7 +26,7 @@ import play.api.libs.json.Json
 class FinancialDetailsHipConnectorISpec extends ComponentSpecBase with FinancialDetailsHipItDataHelper {
 
   val connector: FinancialDetailsHipConnector = app.injector.instanceOf[FinancialDetailsHipConnector]
-  val baseUrl = "/RESTAdapter/itsa/taxpayer/financial-details"
+  val baseUrl = "/etmp/RESTAdapter/itsa/taxpayer/financial-details"
 
   val urlGetChargeDetails: String = baseUrl + connector.buildQueryString(queryParamsChargeDetails)
   val urlGetPaymentAllocationDetails: String = baseUrl + connector.buildQueryString(queryParamsPaymentAllocation)
@@ -44,7 +44,7 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase with Financial
           WiremockHelper.stubGet(urlGetChargeDetails, OK, responseBody.toString())
           val result = connector.getChargeDetails(nino, dateFrom, dateTo).futureValue
 
-          result shouldBe Right(chargesResponse)
+          result shouldBe Right(chargesHipResponse)
         }
 
         "return an UnexpectedChargeErrorResponse when unable to parse the data into a ChargesResponse" in {
@@ -91,7 +91,7 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase with Financial
           WiremockHelper.stubGet(urlGetPaymentAllocationDetails, OK, responseBody.toString())
           val result = connector.getPaymentAllocationDetails(nino, documentId).futureValue
 
-          result shouldBe Right(chargesResponse)
+          result shouldBe Right(chargesHipResponse)
         }
 
         "return an UnexpectedChargeErrorResponse when unable to parse the date into a ChargesResponse" in {
@@ -137,7 +137,7 @@ class FinancialDetailsHipConnectorISpec extends ComponentSpecBase with Financial
           WiremockHelper.stubGet(urlGetOnlyOpenItems, OK, responseBody.toString())
           val result = connector.getOnlyOpenItems(nino).futureValue
 
-          result shouldBe Right(chargesResponse)
+          result shouldBe Right(chargesHipResponse)
         }
 
         "return an UnexpectedChargeErrorResponse when unable to parse the data into a ChargesResponse" in {
