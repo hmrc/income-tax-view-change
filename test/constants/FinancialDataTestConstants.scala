@@ -248,7 +248,7 @@ object FinancialDataTestConstants {
     interestRate = Some(2.60),
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
-    latePaymentInterestID = Some("latePaymentInterestID"),
+    latePaymentInterestId = Some("latePaymentInterestID"),
     latePaymentInterestAmount = Some(12.34),
     lpiWithDunningLock = Some(12.50),
     interestOutstandingAmount = Some(31.00),

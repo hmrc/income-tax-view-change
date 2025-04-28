@@ -64,7 +64,7 @@ case class DocumentDetailHip(
                               interestFromDate: Option[LocalDate] = None,
                               interestEndDate: Option[LocalDate] = None,
                               /* Late Payment Interets Id */
-                              latePaymentInterestID: Option[String] = None,
+                              latePaymentInterestId: Option[String] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
                               latePaymentInterestAmount: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
@@ -81,6 +81,7 @@ case class DocumentDetailHip(
                               /* Format: YYYY */
                               //taxYearReducedCharge: Option[String] = None
                             )
+
 
 object DocumentDetailHip {
   implicit val writes: Writes[DocumentDetailHip] = Json.writes[DocumentDetailHip]
