@@ -159,7 +159,7 @@ object FinancialDetailHipIntegrationTestConstants {
   val codingOutList : List[CodingDetailsHip] = List(
     CodingDetailsHip(
       taxYearReturn = Option("2018"),
-      totalLiabilityAmount = Option(2015.13),
+      amountCodedOut = Option(2015.13),
       taxYearCoding = Option("2017"),
       coded = None
     )
