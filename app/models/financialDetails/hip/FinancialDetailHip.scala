@@ -32,7 +32,7 @@ case class FinancialDetailHip(
                                /* Period Key */
                                //periodKey: Option[String] = None,
                                /* Period Key Description */
-                               `type`: Option[String] = None, // renamed to fit FE schema
+                               //`type`: Option[String] = None, // renamed to fit FE schema
 
                                taxPeriodFrom: Option[LocalDate] = None,
                                taxPeriodTo: Option[LocalDate] = None,
@@ -75,7 +75,7 @@ object FinancialDetailHip {
       (JsPath \ "documentID").read[String] and
       (JsPath \ "chargeType").readNullable[String] and
       (JsPath \ "mainType").readNullable[String] and
-      (JsPath \ "periodKeyDescription").readNullable[String] and
+      //(JsPath \ "periodKeyDescription").readNullable[String] and
       (JsPath \ "taxPeriodFrom").readNullable[LocalDate] and
       (JsPath \ "taxPeriodTo").readNullable[LocalDate] and
       (JsPath \ "chargeReference").readNullable[String] and
