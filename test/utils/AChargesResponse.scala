@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 case class AChargesResponse(model: ChargesResponse = ChargesResponse(
   BalanceDetails(0.0, 0.0, 0.0, None, None, None, None, None),
-  Nil, Nil
+  Nil, Nil, Nil
 )) {
 
   def withAvailableCredit(availableCredit: BigDecimal): AChargesResponse = {

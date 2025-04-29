@@ -17,10 +17,9 @@
 package constants
 
 import constants.BaseTestConstants.testNino
-import models.financialDetails.hip.model.{BalanceDetailsHip, ChargesHipResponse,
-  CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
+import models.financialDetails.hip.model.{BalanceDetailsHip, ChargesHipResponse, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
 import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, SubItem}
+import models.financialDetails.{BalanceDetails, CodedEntry, CodingDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
 
 import java.time.LocalDate
@@ -41,8 +40,14 @@ object FinancialDataTestConstants {
       |     "totalReturnAmount": 100.00,
       |     "amountNotCoded": 200.00,
       |     "amountNotCodedDueDate": "2018-01-01",
-      |     "amountCodedOut": 300.00,
-      |     "taxYearCoding": "2019"
+      |     "amountCodedOut": 100.00,
+      |     "taxYearCoding": "2019",
+      |     "coded": [
+      |          {
+      |            "amount": 2300.00,
+      |            "initiationDate": "2020-04-20"
+      |          }
+      |        ]
       |   }
       | ],
       | "documentDetails": [
@@ -151,7 +156,6 @@ object FinancialDataTestConstants {
       | ]
       |}""".stripMargin)
 
-
   val validFinancialDetailJsonAfterWrites: JsValue = Json.parse(
     """
 			|{
@@ -190,26 +194,9 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-  val testTaxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
-
   val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
 
-  val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
-    balanceDueWithin30Days = 100.00,
-    nxtPymntDateChrgsDueIn30Days = Some(LocalDate.parse("2018-08-01")),
-    balanceNotDuein30Days = 200.00,
-    nextPaymntDateBalnceNotDue = Some(LocalDate.parse("2018-08-01")),
-    overDueAmount = 45.00,
-    earlistPymntDateOverDue = Some(LocalDate.parse("2018-08-01")),
-    totalBalance = 450.00,
-    amountCodedOut = Some(340.55),
-    totalBCDBalance = None,
-    unallocatedCredit = None,
-    allocatedCredit = None,
-    totalCredit = Some(123.00),
-    firstPendingAmountRequested = Some(120.00),
-    secondPendingAmountRequested = None,
-    availableCredit = None)
+  val testCodingDetails: CodingDetails = CodingDetails(Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))), Some(100.00))
 
   val documentDetail: DocumentDetail = DocumentDetail(
     taxYear = 2018,
@@ -233,30 +220,6 @@ object FinancialDataTestConstants {
     documentDueDate = Some(LocalDate.parse("2019-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
-
-  val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(taxYear = 2018,
-    transactionId = "id",
-    documentDate = LocalDate.parse("2018-03-29"),
-    documentText = Some("documentText"),
-    documentDueDate = Some(LocalDate.parse("2019-03-29")),
-    documentDescription = Some("documentDescription"),
-    originalAmount = 1000.00,
-    outstandingAmount = 200.00,
-    poaRelevantAmount = Some(1000.00),
-    lastClearedAmount = None,
-    paymentLot = Some("paymentLot"),
-    paymentLotItem = Some("paymentLotItem"),
-    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    accruingInterestAmount = None,
-    interestRate = Some(2.60),
-    interestFromDate = Some(LocalDate.parse("2018-08-01")),
-    interestEndDate = Some(LocalDate.parse("2019-01-15")),
-    latePaymentInterestId = Some("latePaymentInterestID"),
-    latePaymentInterestAmount = Some(12.34),
-    lpiWithDunningLock = Some(12.50),
-    interestOutstandingAmount = Some(31.00),
-    amountCodedOut = Some(3.21))
-
 
   val documentDetail2: DocumentDetail = DocumentDetail(
     taxYear = 2019,
@@ -404,32 +367,16 @@ object FinancialDataTestConstants {
       )))
   )
 
-  val financialDetailsHip: FinancialDetailHip = FinancialDetailHip(
-    taxYear = "2018",
-    transactionId = "id",
-    mainType = Some("4920"),
-    taxPeriodFrom = Some(LocalDate.parse("2017-04-05")),
-    taxPeriodTo = Some(LocalDate.parse("2018-04-06")),
-    chargeReference = Some("chargeRef"),
-    mainTransaction =  Some("4920"),
-    originalAmount = Some(BigDecimal(500.00)),
-    outstandingAmount = Some(BigDecimal("500.00")),
-    clearedAmount =  Some(BigDecimal(500.00)),
-    accruedInterest = Some(BigDecimal("1000.00")),
-    items = Some(
-      Seq(
-        SubItemHip()
-      )
-    ))
-
   val chargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
+    codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail)
   )
 
   val creditChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
+    codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail3),
     financialDetails = List(financialDetail3)
   )
@@ -440,17 +387,9 @@ object FinancialDataTestConstants {
 
   val testChargesResponse: ChargesResponse = ChargesResponse(
     balanceDetails = testBalanceDetails,
+    codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail, documentDetail2),
     financialDetails = List(financialDetail, financialDetail2)
-  )
-  val testChargeHipResponse: ChargesHipResponse = ChargesHipResponse(
-    taxpayerDetails = testTaxPayerHipDetails,
-    balanceDetails = testBalanceHipDetails,
-    codingDetails = List(
-      CodingDetailsHip(Some("2024"))
-    ),
-    documentDetails = List(documentDetailsHip),
-    financialDetails = List(financialDetailsHip)
   )
 
   val validSubItemJson: JsValue = Json.parse(
@@ -516,4 +455,75 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
+
+  // Hip Migration
+  val testTaxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
+
+  val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
+    balanceDueWithin30Days = 100.00,
+    nxtPymntDateChrgsDueIn30Days = Some(LocalDate.parse("2018-08-01")),
+    balanceNotDuein30Days = 200.00,
+    nextPaymntDateBalnceNotDue = Some(LocalDate.parse("2018-08-01")),
+    overDueAmount = 45.00,
+    earlistPymntDateOverDue = Some(LocalDate.parse("2018-08-01")),
+    totalBalance = 450.00,
+    amountCodedOut = Some(340.55),
+    totalBCDBalance = None,
+    unallocatedCredit = None,
+    allocatedCredit = None,
+    totalCredit = Some(123.00),
+    firstPendingAmountRequested = Some(120.00),
+    secondPendingAmountRequested = None,
+    availableCredit = None)
+
+  val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(taxYear = 2018,
+    transactionId = "id",
+    documentDate = LocalDate.parse("2018-03-29"),
+    documentText = Some("documentText"),
+    documentDueDate = Some(LocalDate.parse("2019-03-29")),
+    documentDescription = Some("documentDescription"),
+    originalAmount = 1000.00,
+    outstandingAmount = 200.00,
+    poaRelevantAmount = Some(1000.00),
+    lastClearedAmount = None,
+    paymentLot = Some("paymentLot"),
+    paymentLotItem = Some("paymentLotItem"),
+    effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
+    accruingInterestAmount = None,
+    interestRate = Some(2.60),
+    interestFromDate = Some(LocalDate.parse("2018-08-01")),
+    interestEndDate = Some(LocalDate.parse("2019-01-15")),
+    latePaymentInterestId = Some("latePaymentInterestID"),
+    latePaymentInterestAmount = Some(12.34),
+    lpiWithDunningLock = Some(12.50),
+    interestOutstandingAmount = Some(31.00),
+    amountCodedOut = Some(3.21))
+
+  val financialDetailsHip: FinancialDetailHip = FinancialDetailHip(
+    taxYear = "2018",
+    transactionId = "id",
+    mainType = Some("4920"),
+    taxPeriodFrom = Some(LocalDate.parse("2017-04-05")),
+    taxPeriodTo = Some(LocalDate.parse("2018-04-06")),
+    chargeReference = Some("chargeRef"),
+    mainTransaction =  Some("4920"),
+    originalAmount = Some(BigDecimal(500.00)),
+    outstandingAmount = Some(BigDecimal("500.00")),
+    clearedAmount =  Some(BigDecimal(500.00)),
+    accruedInterest = Some(BigDecimal("1000.00")),
+    items = Some(
+      Seq(
+        SubItemHip()
+      )
+    ))
+
+  val testChargeHipResponse: ChargesHipResponse = ChargesHipResponse(
+    taxpayerDetails = testTaxPayerHipDetails,
+    balanceDetails = testBalanceHipDetails,
+    codingDetails = List(
+      CodingDetailsHip(Some("2024"))
+    ),
+    documentDetails = List(documentDetailsHip),
+    financialDetails = List(financialDetailsHip)
+  )
 }

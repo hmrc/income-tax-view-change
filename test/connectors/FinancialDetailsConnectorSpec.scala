@@ -162,13 +162,13 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttpV2 {
       s"$OK is received from ETMP with charges " in {
         val documentDetails: List[DocumentDetail] = List(documentDetail)
         val financialDetails: List[FinancialDetail] = List(financialDetail)
-        val response = Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails))
+        val response = Right(ChargesResponse(testBalanceDetails, List(testCodingDetails), documentDetails, financialDetails))
         mockPaymentAllocation(response)
         println(mock(response))
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, documentId).futureValue
 
-        result shouldBe Right(ChargesResponse(testBalanceDetails, documentDetails, financialDetails))
+        result shouldBe Right(ChargesResponse(testBalanceDetails, List(testCodingDetails), documentDetails, financialDetails))
       }
     }
 
@@ -213,6 +213,7 @@ class FinancialDetailsConnectorSpec extends TestSupport with MockHttpV2 {
       s"$OK is received from ETMP with charges" in {
         val expectedResponse = Right(ChargesResponse(
           balanceDetails = testBalanceDetails,
+          codingDetails = List(testCodingDetails),
           documentDetails = List(documentDetail),
           financialDetails = List(financialDetail)))
 
