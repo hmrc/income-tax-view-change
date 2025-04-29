@@ -42,6 +42,7 @@ abstract class FinancialDetailsControllerISpec extends ComponentSpecBase {
 
         val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
           balanceDetails = balanceDetails,
+          codingDetails = List(codingDetails),
           documentDetails = List(documentDetail, documentDetail2),
           financialDetails = List(financialDetail, financialDetail2)
         ))

@@ -16,12 +16,13 @@
 
 package models.financialDetails.responses
 
-import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail, Payment}
+import models.financialDetails._
+import models.readNullableList
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import models.readNullableList
 
 case class ChargesResponse(balanceDetails: BalanceDetails,
+                           codingDetails: List[CodingDetails],
                            documentDetails: List[DocumentDetail],
                            financialDetails: List[FinancialDetail]) {
 
@@ -73,6 +74,7 @@ object ChargesResponse {
   implicit val writes: Writes[ChargesResponse] = Json.writes[ChargesResponse]
   implicit val reads: Reads[ChargesResponse] = (
     (__ \ "balanceDetails").read[BalanceDetails] and
+      readNullableList[CodingDetails](__ \ "codingDetails") and
       readNullableList[DocumentDetail](__ \ "documentDetails") and
       readNullableList[FinancialDetail](__ \ "financialDetails")
     ) (ChargesResponse.apply _)
