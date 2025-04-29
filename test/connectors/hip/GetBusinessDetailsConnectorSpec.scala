@@ -41,6 +41,9 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
       getHeaders.exists(_._1 == "Authorization") shouldBe true
       getHeaders.exists(_._1 == "correlationId") shouldBe true
       getHeaders.exists(_._1 == "X-Message-Type") shouldBe true
+      getHeaders.exists(_._1 == "X-Message-Type") shouldBe true
+      getHeaders.exists(_._1 == "X-Message-Type") shouldBe true
+      getHeaders.exists(_._1 == "X-Message-Type") shouldBe true
       getBusinessDetails(testNino, Nino).futureValue shouldBe testIncomeSourceDetailsModel
 
     }

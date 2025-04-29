@@ -19,6 +19,7 @@ package config
 import models.hip.{GetBusinessDetailsHipApi, HipApi}
 import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import utils.DateUtils
 
 import java.util.{Base64, UUID}
 import javax.inject.{Inject, Singleton}
@@ -73,7 +74,14 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
   def getHIPHeaders(hipApi: HipApi): Seq[(String, String)] = {
     val additionalHeaders: Seq[(String, String)] = {
       hipApi match {
-        case GetBusinessDetailsHipApi => Seq(("X-Message-Type", "TaxpayerDisplay"))
+        case GetBusinessDetailsHipApi =>
+          Seq(
+            ("X-Message-Type", "TaxpayerDisplay"),
+            ("X-Originating-System", "MTDITSAViewAndChange"),
+            ("X-Receipt-Date", DateUtils.nowAsUtc),
+            ("X-Regime-Type", "ITSA"),
+            ("X-Transmitting-System", "HIP")
+          )
         case _ => Seq.empty
       }
     }
