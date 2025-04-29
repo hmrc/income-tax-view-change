@@ -17,7 +17,6 @@
 package constants
 
 import models.financialDetails._
-import models.financialDetails.hip.model.CodingDetailsHip
 import play.api.libs.json.{JsObject, Json}
 
 import java.time.LocalDate

@@ -142,7 +142,6 @@ object FinancialDetailHipIntegrationTestConstants {
     taxYear = "2018",
     transactionId = "transactionId",
     mainType = Some("4920"),
-    `type` = None,
     taxPeriodFrom = Some(LocalDate.parse("2017-04-05")),
     taxPeriodTo = Some(LocalDate.parse("2018-04-06")),
     chargeReference = Some("chargeRef"),
