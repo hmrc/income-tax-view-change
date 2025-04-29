@@ -59,7 +59,8 @@ class FinancialDetailSpec extends AnyWordSpec with Matchers {
         "dueDate" -> LocalDate.parse("2022-06-23"),
         "paymentMethod" -> "paymentMethod",
         "paymentLot" -> "paymentLot",
-        "paymentLotItem" -> "paymentLotItem"
+        "paymentLotItem" -> "paymentLotItem",
+        "codedOutStatus" -> "I"
       )
     )
   )
