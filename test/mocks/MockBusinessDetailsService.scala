@@ -17,13 +17,17 @@
 package mocks
 
 import constants.BaseTestConstants.testNino
-import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import play.api.mvc.Results.Status
 import services.BusinessDetailsService
 
 import scala.concurrent.Future
@@ -37,11 +41,14 @@ trait MockBusinessDetailsService extends AnyWordSpecLike with Matchers with Opti
     reset(mockBusinessDetailsService)
   }
 
-  def setupMockIncomeSourceDetailsResponse(testNino: String)(response: IncomeSourceDetailsResponseModel):
-  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockBusinessDetailsService.getBusinessDetails(
-    ArgumentMatchers.eq(testNino))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
+  def setupMockIncomeSourceDetailsResponse(testNino: String)(result: Result):
+  OngoingStubbing[Future[Result]] = when(mockBusinessDetailsService.getBusinessDetails(
+    ArgumentMatchers.eq(testNino))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(result))
 
-  def mockIncomeSourceDetailsResponse(desResponse: IncomeSourceDetailsResponseModel):
-  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockIncomeSourceDetailsResponse(testNino)(desResponse)
+  def mockIncomeSourceDetailsResponse(desResponse: IncomeSourceDetailsModel):
+  OngoingStubbing[Future[Result]] = setupMockIncomeSourceDetailsResponse(testNino)(Status(OK)(Json.toJson(desResponse)))
+
+  def mockIncomeSourceDetailsErrorResponse(desResponse: IncomeSourceDetailsError):
+  OngoingStubbing[Future[Result]] = setupMockIncomeSourceDetailsResponse(testNino)(Status(INTERNAL_SERVER_ERROR)(Json.toJson(desResponse)))
 
 }

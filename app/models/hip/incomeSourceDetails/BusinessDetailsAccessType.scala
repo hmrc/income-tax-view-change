@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.hip.incomeSourceDetails
 
-sealed trait HipApi {
-  val name: String
+sealed trait BusinessDetailsAccessType {
+  val key: String
 }
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
+//Used by GetBusinessDetails files
+case object Nino extends BusinessDetailsAccessType {
+  override val key: String = "nino"
 }
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+// Used by GetIncomeSourceDetails files
+case object MtdId extends BusinessDetailsAccessType {
+  override val key: String = "mtdId"
 }

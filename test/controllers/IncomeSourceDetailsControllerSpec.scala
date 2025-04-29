@@ -51,7 +51,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
       }
 
       "an invalid response from the IncomeSourceDetailsService" should {
-        mockNinoResponse(testNinoError)
+        mockNinoErrorResponse(testNinoError)
         mockAuth()
         val futureResult = TestIncomeSourceDetailsController.getNino(mtdRef)(FakeRequest())
         whenReady(futureResult) { result =>
@@ -84,7 +84,7 @@ class IncomeSourceDetailsControllerSpec extends ControllerBaseSpec with MockInco
 
       "an invalid response from the IncomeSourceDetailsService" should {
 
-        mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
+        mockIncomeSourceDetailsErrorResponse(testIncomeSourceDetailsError)
         mockAuth()
         val futureResult = TestIncomeSourceDetailsController.getIncomeSourceDetails(mtdRef)(FakeRequest())
         whenReady(futureResult) { result =>

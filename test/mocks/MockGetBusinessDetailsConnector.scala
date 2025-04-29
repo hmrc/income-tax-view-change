@@ -16,9 +16,9 @@
 
 package mocks
 
-import connectors.BusinessDetailsConnector
+import connectors.hip.GetBusinessDetailsConnector
 import constants.BaseTestConstants.{mtdRef, testNino}
-import models.incomeSourceDetails.{BusinessDetailsAccessType, IncomeSourceDetailsResponseModel, MtdId, Nino}
+import models.hip.incomeSourceDetails.{BusinessDetailsAccessType, IncomeSourceDetailsResponseModel, MtdId, Nino}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
@@ -29,13 +29,13 @@ import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import scala.concurrent.Future
 
 
-trait MockBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
+trait MockGetBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockBusinessDetailsConnector: BusinessDetailsConnector = mock(classOf[BusinessDetailsConnector])
+  val mockGetBusinessDetailsConnector: GetBusinessDetailsConnector = mock(classOf[GetBusinessDetailsConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockBusinessDetailsConnector)
+    reset(mockGetBusinessDetailsConnector)
   }
 
   def setupMockGetBusinessDetailsResult(accessMode: BusinessDetailsAccessType)(response: IncomeSourceDetailsResponseModel)
@@ -44,12 +44,12 @@ trait MockBusinessDetailsConnector extends AnyWordSpecLike with Matchers with Op
       case Nino => testNino
       case MtdId => mtdRef
     }
-    when(mockBusinessDetailsConnector.getBusinessDetails(
-      ArgumentMatchers.eq(mtdRefOrNino), ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockGetBusinessDetailsConnector.getBusinessDetails(
+      ArgumentMatchers.eq(mtdRefOrNino), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(response))
   }
 
-  def mockGetBusinessDetailsResult(incomeSourceDetailsResponse: IncomeSourceDetailsResponseModel,
+  def mockHipGetBusinessDetailsResult(incomeSourceDetailsResponse: IncomeSourceDetailsResponseModel,
                                    accessMode: BusinessDetailsAccessType): OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] =
     setupMockGetBusinessDetailsResult(accessMode)(incomeSourceDetailsResponse)
 }

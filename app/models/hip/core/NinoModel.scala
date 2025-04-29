@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.hip.core
 
-sealed trait HipApi {
-  val name: String
+import play.api.libs.json.{Format, Json}
+
+
+sealed trait NinoResponse
+
+case class NinoModel(nino: String) extends NinoResponse
+
+case class NinoErrorModel(status: Int, reason: String) extends NinoResponse
+
+object NinoModel {
+  implicit val format: Format[NinoModel] = Json.format[NinoModel]
 }
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
-
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+object NinoErrorModel {
+  implicit val format: Format[NinoErrorModel] = Json.format[NinoErrorModel]
 }

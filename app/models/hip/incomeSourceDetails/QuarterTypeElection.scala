@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.hip.incomeSourceDetails
 
-sealed trait HipApi {
-  val name: String
-}
+import play.api.libs.json.{Format, Json}
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
+case class QuarterTypeElection(quarterReportingType: String, taxYearofElection: String)
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+object QuarterTypeElection {
+  implicit val format: Format[QuarterTypeElection] = Json.format[QuarterTypeElection]
 }

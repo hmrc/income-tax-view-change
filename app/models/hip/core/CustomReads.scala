@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.hip.core
 
-sealed trait HipApi {
-  val name: String
-}
+import play.api.libs.json._
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
+import scala.util.{Success, Try}
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+trait CustomReads {
+
+  val readInt: Reads[Int] =
+    implicitly[Reads[Int]]
+      .orElse(implicitly[Reads[String]]
+        .map(x => Try(x.toInt))
+        .collect(
+          JsonValidationError(Seq("Parsing error"))) {
+          case Success(a) => a
+        }
+      )
 }

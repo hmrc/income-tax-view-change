@@ -16,20 +16,51 @@
 
 package services
 
+import config.MicroserviceAppConfig
 import connectors.BusinessDetailsConnector
-import models.incomeSourceDetails.{Nino, IncomeSourceDetailsResponseModel}
+import connectors.hip.GetBusinessDetailsConnector
+import models.hip.GetBusinessDetailsHipApi
 import play.api.Logging
+import play.api.http.Status.OK
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import play.api.mvc.Results.Status
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class BusinessDetailsService @Inject()(val businessDetailsConnector: BusinessDetailsConnector) extends Logging {
+class BusinessDetailsService @Inject()(val businessDetailsConnector: BusinessDetailsConnector,
+                                       val getBusinessDetailsFromHipConnector: GetBusinessDetailsConnector,
+                                       val appConfig: MicroserviceAppConfig
+                                      ) extends Logging {
 
-  def getBusinessDetails(nino: String)(implicit headerCarrier: HeaderCarrier): Future[IncomeSourceDetailsResponseModel] = {
+  def getBusinessDetails(nino: String)
+                        (implicit headerCarrier: HeaderCarrier,
+                         ec:ExecutionContext): Future[Result] = {
     logger.debug("Requesting Income Source Details from Connector")
-    businessDetailsConnector.getBusinessDetails(nino, Nino)
+    if(appConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi))
+      getBusinessDetailsFromHipConnector.getBusinessDetails(nino, models.hip.incomeSourceDetails.Nino).map {
+        case success: models.hip.incomeSourceDetails.IncomeSourceDetailsModel =>
+          Status(OK)(Json.toJson(success))
+        case notFound: models.hip.incomeSourceDetails.IncomeSourceDetailsNotFound =>
+          logger.warn(s"Income tax details not found: $notFound")
+          Status(notFound.status)(Json.toJson(notFound))
+        case error:models.hip.incomeSourceDetails.IncomeSourceDetailsError =>
+          logger.error(s"Error Response: $error")
+          Status(error.status)(Json.toJson(error))
+      }
+    else
+      businessDetailsConnector.getBusinessDetails(nino, models.incomeSourceDetails.Nino).map {
+        case success: models.incomeSourceDetails.IncomeSourceDetailsModel =>
+          Status(OK)(Json.toJson(success))
+        case notFound: models.incomeSourceDetails.IncomeSourceDetailsNotFound =>
+          logger.warn(s"Income tax details not found: $notFound")
+          Status(notFound.status)(Json.toJson(notFound))
+        case error: models.incomeSourceDetails.IncomeSourceDetailsError =>
+          logger.error(s"Error Response: $error")
+          Status(error.status)(Json.toJson(error))
+      }
   }
-
 }
