@@ -48,8 +48,6 @@ case class ChargesHipResponse(
           }
         }
 
-        println(s"SubItem:: ${subItem}")
-
         val mainType: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
           _.mainType
         )

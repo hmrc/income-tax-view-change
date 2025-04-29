@@ -67,7 +67,7 @@ case class SubItemHip(
                        /* Promise to Pay */
                        //promisetoPay: Option[String] = None,
                        /* Coded Out Status */
-                       //codedOutStatus: Option[String] = None
+                       codedOutStatus: Option[String] = None,
                        paymentId: Option[String] = None, // custom field
                      )
 
@@ -93,7 +93,7 @@ object SubItemHip extends Logging {
     paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
     paymentLot <- (JsPath \ "paymentLot").readNullable[String]
     paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-
+    codedOutStatus <- (JsPath \ "codedOutStatus").readNullable[String]
   } yield {
     val paymentId: Option[String] = for {
       pl <- paymentLot
@@ -113,6 +113,7 @@ object SubItemHip extends Logging {
       paymentAmount = paymentAmount,
       paymentMethod = paymentMethod,
       subItemId = subItemId,
+      codedOutStatus = codedOutStatus,
       paymentId = paymentId
     )
   }
