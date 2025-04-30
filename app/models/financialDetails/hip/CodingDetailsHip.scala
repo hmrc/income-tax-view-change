@@ -27,7 +27,7 @@ case class CodingDetailsHip(
                              amountCodedOut: Option[BigDecimal] = None, // renamed to fit FE from totalLiabilityAmount
                              /* Format: YYYY */
                              taxYearCoding: Option[String] = None,
-                             coded: Option[CodingDetailsInnerHip] = None //??? non-Hip version use: Option[Seq[CodedEntry]]
+                             coded: Option[Seq[CodedEntryHip]] = None //??? non-Hip version use: Option[Seq[CodedEntry]]
 )
 
 object CodingDetailsHip {
@@ -37,7 +37,7 @@ object CodingDetailsHip {
     (JsPath \ "taxYearReturn").readNullable[String] and
     (JsPath \ "totalLiabilityAmount").readNullable[BigDecimal] and
       (JsPath \ "taxYearCoding").readNullable[String] and
-      (JsPath \ "coded").readNullable[CodingDetailsInnerHip]
+      (JsPath \ "coded").readNullable[Seq[CodedEntryHip]]
     ) (CodingDetailsHip.apply _)
 }
 

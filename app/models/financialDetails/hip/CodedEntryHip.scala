@@ -20,13 +20,13 @@ import play.api.libs.json.{Json, Reads, Writes}
 import java.time.LocalDate
 
 
-case class CodingDetailsInnerHip(
+case class CodedEntryHip(
   /* Currency amount. 13-digits total with 2 decimal places */
   amount: Option[BigDecimal] = None,
   initiationDate: Option[LocalDate] = None
 )
 
-object CodingDetailsInnerHip {
-  implicit val writes: Writes[CodingDetailsInnerHip] = Json.writes[CodingDetailsInnerHip]
-  implicit val reads: Reads[CodingDetailsInnerHip] = Json.reads[CodingDetailsInnerHip]
+object CodedEntryHip {
+  implicit val writes: Writes[CodedEntryHip] = Json.writes[CodedEntryHip]
+  implicit val reads: Reads[CodedEntryHip] = Json.reads[CodedEntryHip]
 }
