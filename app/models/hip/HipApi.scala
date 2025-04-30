@@ -29,3 +29,8 @@ case object GetBusinessDetailsHipApi extends HipApi {
   val name = "get-business-details"
   def apply(): String = name
 }
+
+case object GetFinancialDetailsHipApi extends HipApi {
+  val name = "get-financial-details"
+  def apply(): String = name
+}
