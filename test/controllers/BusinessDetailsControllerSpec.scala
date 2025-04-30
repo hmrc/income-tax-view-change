@@ -51,7 +51,7 @@ class BusinessDetailsControllerSpec extends ControllerBaseSpec with MockBusiness
       }
 
       "an invalid response from the IncomeSourceDetailsService" should {
-        mockIncomeSourceDetailsResponse(testIncomeSourceDetailsError)
+        mockIncomeSourceDetailsErrorResponse(testIncomeSourceDetailsError)
         mockAuth()
         val futureResult = TestBusinessDetailsController.getBusinessDetails(testNino)(FakeRequest())
         whenReady(futureResult) { result =>

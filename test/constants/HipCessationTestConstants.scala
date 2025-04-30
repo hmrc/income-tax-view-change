@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package models.hip
+package constants
 
-sealed trait HipApi {
-  val name: String
-}
+import models.hip.core.CessationModel
+import play.api.libs.json.Json
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
+import java.time.LocalDate
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+object HipCessationTestConstants {
+
+  val testCessationModel = CessationModel(
+    Some(LocalDate.parse("2017-06-01"))
+  )
+
+  val testCessationJson = Json.obj(
+    "cessationDate" -> "2017-06-01"
+  )
+
+  val testCessationToJson = Json.obj(
+    "date" -> "2017-06-01"
+  )
 }

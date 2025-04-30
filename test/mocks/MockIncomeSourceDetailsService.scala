@@ -17,14 +17,18 @@
 package mocks
 
 import constants.BaseTestConstants.mtdRef
-import models.core.NinoResponse
-import models.incomeSourceDetails.IncomeSourceDetailsResponseModel
+import models.core.{NinoErrorModel, NinoModel}
+import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import play.api.mvc.Results.Status
 import services.IncomeSourceDetailsService
 
 import scala.concurrent.Future
@@ -39,17 +43,23 @@ trait MockIncomeSourceDetailsService extends AnyWordSpecLike with Matchers with 
     reset(mockIncomeSourceDetailsService)
   }
 
-  def setupMockIncomeSourceDetailsResponse(mtdRef: String)(response: IncomeSourceDetailsResponseModel):
-  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = when(mockIncomeSourceDetailsService.getIncomeSourceDetails(
+  def setupMockIncomeSourceDetailsResponse(mtdRef: String)(response: Result):
+  OngoingStubbing[Future[Result]] = when(mockIncomeSourceDetailsService.getIncomeSourceDetails(
     ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
-  def setupMockNinoResponse(mtdRef: String)(response: NinoResponse):
-  OngoingStubbing[Future[NinoResponse]] = when(mockIncomeSourceDetailsService.getNino(
+  def setupMockNinoResponse(mtdRef: String)(response: Result):
+  OngoingStubbing[Future[Result]] = when(mockIncomeSourceDetailsService.getNino(
     ArgumentMatchers.eq(mtdRef))(ArgumentMatchers.any())).thenReturn(Future.successful(response))
 
-  def mockIncomeSourceDetailsResponse(desResponse: IncomeSourceDetailsResponseModel):
-  OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = setupMockIncomeSourceDetailsResponse(mtdRef)(desResponse)
+  def mockIncomeSourceDetailsResponse(desResponse: IncomeSourceDetailsModel):
+  OngoingStubbing[Future[Result]] = setupMockIncomeSourceDetailsResponse(mtdRef)(Status(OK)(Json.toJson(desResponse)))
 
-  def mockNinoResponse(desResponse: NinoResponse):
-  OngoingStubbing[Future[NinoResponse]] = setupMockNinoResponse(mtdRef)(desResponse)
+  def mockIncomeSourceDetailsErrorResponse(desResponse: IncomeSourceDetailsError):
+  OngoingStubbing[Future[Result]] = setupMockIncomeSourceDetailsResponse(mtdRef)(Status(INTERNAL_SERVER_ERROR)(Json.toJson(desResponse)))
+
+  def mockNinoResponse(desResponse: NinoModel):
+  OngoingStubbing[Future[Result]] = setupMockNinoResponse(mtdRef)(Status(OK)(Json.toJson(desResponse)))
+
+  def mockNinoErrorResponse(desResponse: NinoErrorModel):
+  OngoingStubbing[Future[Result]] = setupMockNinoResponse(mtdRef)(Status(INTERNAL_SERVER_ERROR)(Json.toJson(desResponse)))
 }

@@ -18,15 +18,31 @@ package controllers
 
 import constants.BaseIntegrationTestConstants._
 import constants.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
-import constants.HipIncomeSourceIntegrationTestConstants._
+import constants.{HipIncomeSourceIntegrationTestConstants, IncomeSourceIntegrationTestConstants}
 import helpers.ComponentSpecBase
-import helpers.servicemocks.BusinessDetailsHipCallWithNinoStub
-import models.hip.incomeSourceDetails.IncomeSourceDetailsError
+import helpers.servicemocks.{BusinessDetailsCallWithNinoStub, BusinessDetailsHipCallWithNinoStub}
+import models.hip.GetBusinessDetailsHipApi
 import play.api.http.Status._
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.{Application, Environment, Mode}
 
-class BusinessDetailsControllerISpec extends ComponentSpecBase {
+class IfBusinessDetailsControllerISpec extends ComponentSpecBase {
 
-  "Calling the BusinessDetailsController.getBusinessDetails method with HipApi enabled" when {
+  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+    .in(Environment.simple(mode = Mode.Dev))
+    .configure(Map(
+      "microservice.services.auth.host" -> mockHost,
+      "microservice.services.auth.port" -> mockPort,
+      "microservice.services.if.url" -> mockUrl,
+      "microservice.services.des.url" -> mockUrl,
+      "microservice.services.hip.host" -> mockHost,
+      "microservice.services.hip.port" -> mockPort,
+      s"microservice.services.hip.${GetBusinessDetailsHipApi()}.feature-switch" -> "false",
+      "useBusinessDetailsIFPlatform" -> "true"
+    ))
+    .build()
+
+  "Calling the BusinessDetailsController.getBusinessDetails method with HipApi disabled" when {
     "authorised with a valid request" when {
       "A successful response is returned from IF" should {
         "return a valid IncomeSourceDetails model" in {
@@ -34,12 +50,12 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          BusinessDetailsHipCallWithNinoStub.stubGetHipBusinessDetails(testNino, incomeSourceDetailsSuccess)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetails(testNino, IncomeSourceIntegrationTestConstants.incomeSourceDetailsSuccess)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          BusinessDetailsHipCallWithNinoStub.verifyGetHipBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("a successful response is returned with the correct business details")
 
@@ -54,12 +70,12 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a successful getIncomeSourceDetails response")
-          BusinessDetailsHipCallWithNinoStub.stubGetHipBusinessDetailsNotFound(testNino, incomeSourceDetailsSuccess)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetailsNotFound(testNino, IncomeSourceIntegrationTestConstants.incomeSourceDetailsSuccess)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          BusinessDetailsHipCallWithNinoStub.verifyGetHipBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("a successful response is returned with the correct business details")
 
@@ -73,18 +89,18 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub an error response")
-          BusinessDetailsHipCallWithNinoStub.stubGetHipBusinessDetailsError(testNino)
+          BusinessDetailsCallWithNinoStub.stubGetIfBusinessDetailsError(testNino)
 
           When(s"I call GET /get-business-details/nino/$testNino")
           val res = IncomeTaxViewChange.getBusinessDetails(testNino)
 
-          BusinessDetailsHipCallWithNinoStub.verifyGetHipBusinessDetails(testNino)
+          BusinessDetailsCallWithNinoStub.verifyGetIfBusinessDetails(testNino)
 
           Then("an error response is returned")
 
           res should have(
             httpStatus(INTERNAL_SERVER_ERROR),
-            jsonBodyAs[IncomeSourceDetailsError](incomeSourceDetailsError)
+            jsonBodyAs[models.incomeSourceDetails.IncomeSourceDetailsError](IncomeSourceIntegrationTestConstants.incomeSourceDetailsError)
           )
         }
       }

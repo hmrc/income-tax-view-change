@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.hip.core
 
-sealed trait HipApi {
-  val name: String
-}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
+import java.time.LocalDate
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+case class AccountingPeriodModel(start: LocalDate, end: LocalDate)
+
+object AccountingPeriodModel {
+
+  val reads: Reads[AccountingPeriodModel] = (
+    (__ \ "accPeriodSDate").read[LocalDate] and
+      (__ \ "accPeriodEDate").read[LocalDate]
+    ) (AccountingPeriodModel.apply _)
+
+  implicit val format: Format[AccountingPeriodModel] = Json.format[AccountingPeriodModel]
 }
