@@ -17,45 +17,24 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import models.core.{NinoErrorModel, NinoModel}
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound}
 import play.api.Logging
-import play.api.libs.json.Json
 import play.api.mvc._
 import services.IncomeSourceDetailsService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
 
 @Singleton
 class IncomeSourceDetailsController @Inject()(val authentication: AuthenticationPredicate,
                                               val incomeSourceDetailsService: IncomeSourceDetailsService,
                                               cc: ControllerComponents
-                                             )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
+                                             ) extends BackendController(cc) with Logging {
 
   def getNino(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    incomeSourceDetailsService.getNino(mtdRef).map {
-      case error: NinoErrorModel =>
-        logger.error(s"Error Response: $error")
-        Status(error.status)(Json.toJson(error))
-      case success: NinoModel =>
-        logger.debug(s"Successful Response: $success")
-        Ok(Json.toJson(success))
-    }
+    incomeSourceDetailsService.getNino(mtdRef)
   }
 
   def getIncomeSourceDetails(mtdRef: String): Action[AnyContent] = authentication.async { implicit request =>
-    incomeSourceDetailsService.getIncomeSourceDetails(mtdRef).map {
-      case error: IncomeSourceDetailsError =>
-        logger.error(s"Error Response: $error")
-        Status(error.status)(Json.toJson(error))
-      case success: IncomeSourceDetailsModel =>
-        logger.debug(s"Successful Response: $success")
-        Ok(Json.toJson(success))
-      case notFound: IncomeSourceDetailsNotFound =>
-        logger.warn(s"Not Found Response: $notFound")
-        Status(notFound.status)(Json.toJson(notFound))
-    }
+    incomeSourceDetailsService.getIncomeSourceDetails(mtdRef)
   }
 }

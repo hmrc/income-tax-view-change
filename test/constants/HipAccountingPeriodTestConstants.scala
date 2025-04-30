@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-package models.hip
+package constants
 
-sealed trait HipApi {
-  val name: String
-}
+import models.hip.core.AccountingPeriodModel
+import play.api.libs.json.Json
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
+import java.time.LocalDate
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+object HipAccountingPeriodTestConstants {
+
+  val testAccountingPeriodModel =
+    AccountingPeriodModel(
+      start = LocalDate.parse("2017-06-01"),
+      end = LocalDate.parse("2018-05-31")
+    )
+
+  val testAccountingPeriodJson = Json.obj(
+    "accPeriodSDate" -> "2017-06-01",
+    "accPeriodEDate" -> "2018-05-31"
+  )
+
+  val testAccountingPeriodToJson = Json.obj(
+    "start" -> "2017-06-01",
+    "end" -> "2018-05-31"
+  )
+
 }

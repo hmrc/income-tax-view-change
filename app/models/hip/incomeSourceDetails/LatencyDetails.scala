@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.hip.incomeSourceDetails
 
-sealed trait HipApi {
-  val name: String
-}
+import play.api.libs.json.{Format, Json}
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
+import java.time.LocalDate
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+case class LatencyDetails(latencyEndDate: LocalDate, taxYear1: String, latencyIndicator1: String, taxYear2: String, latencyIndicator2: String)
+
+object LatencyDetails {
+  implicit val format: Format[LatencyDetails] = Json.format[LatencyDetails]
 }

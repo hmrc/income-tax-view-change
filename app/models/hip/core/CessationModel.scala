@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package models.hip
+package models.hip.core
 
-sealed trait HipApi {
-  val name: String
-}
+import play.api.libs.json._
+import java.time.LocalDate
 
-case object GetLegacyCalcListHipApi extends HipApi {
-  val name = "get-legacy-calc-list"
-  def apply(): String = name
-}
+case class CessationModel(date: Option[LocalDate])
 
-case object GetBusinessDetailsHipApi extends HipApi {
-  val name = "get-business-details"
-  def apply(): String = name
+object CessationModel {
+
+  val desReads: Reads[CessationModel] =
+    (__ \ "cessationDate").readNullable[LocalDate].map(CessationModel(_))
+
+  def cessation(date: Option[LocalDate]): Option[CessationModel] = date.map(d => CessationModel(Some(d)))
+
+  implicit val format: Format[CessationModel] = Json.format[CessationModel]
 }
