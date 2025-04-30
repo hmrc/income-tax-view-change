@@ -19,7 +19,6 @@ package models.financialDetails.hip.model
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import play.api.libs.functional.syntax._
 
-
 case class CodingDetailsHip(
                              /* Format: YYYY */
                              taxYearReturn: Option[String] = None,

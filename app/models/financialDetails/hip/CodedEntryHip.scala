@@ -16,17 +16,23 @@
 
 package models.financialDetails.hip.model
 
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, Reads, Writes}
+
 import java.time.LocalDate
 
 
 case class CodedEntryHip(
   /* Currency amount. 13-digits total with 2 decimal places */
-  amount: Option[BigDecimal] = None,
-  initiationDate: Option[LocalDate] = None
+  amount: BigDecimal,
+  initiationDate: LocalDate
 )
 
 object CodedEntryHip {
   implicit val writes: Writes[CodedEntryHip] = Json.writes[CodedEntryHip]
-  implicit val reads: Reads[CodedEntryHip] = Json.reads[CodedEntryHip]
+
+    implicit val reads: Reads[CodedEntryHip] = (
+      (JsPath \ "amount").read[BigDecimal] and
+        (JsPath \ "initiationDate").read[LocalDate]
+      ) (CodedEntryHip.apply _)
 }
