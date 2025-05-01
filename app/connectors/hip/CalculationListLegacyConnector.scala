@@ -30,19 +30,12 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CalculationListLegacyConnector @Inject()(val http: HttpClientV2, val appConfig: MicroserviceAppConfig) extends Logging {
 
-  private val isGetCalcApiEnabledInHip = appConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)
-
   private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String =
     s"${appConfig.hipUrl}/itsd/calculations/liability/$nino?taxYear=$taxYearEnd"
 
   def getCalculationList(nino: String, taxYear: String)
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationListUrl(nino, taxYear)
-
-    logger.debug(
-      s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getHIPHeaders(GetLegacyCalcListHipApi)}" +
-        s" \nIs1404GetCalcApiEnabledInHip: ${if (isGetCalcApiEnabledInHip) "YES" else "NO"}"
-    )
 
     http.get(url"$url")
       .setHeader(

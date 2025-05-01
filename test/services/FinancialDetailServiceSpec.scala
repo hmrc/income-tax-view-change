@@ -29,10 +29,6 @@ import utils.{FinancialDetailsHipDataHelper, TestSupport}
 
 import scala.concurrent.Future
 
-// TODO: implement service spec~
-/*
-  Testing only logic related to HipConnector;
- */
 class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDataHelper{
 
   val mockFinancialDetailsHipConnector: FinancialDetailsHipConnector = mock(classOf[FinancialDetailsHipConnector])
@@ -79,17 +75,17 @@ class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDa
     }
   }
 
-// TODO: next data need to be added -> charges.payments !!!
-//  "Call getPayments" should {
-//    "return success response with Json" when {
-//      "correct params provided" in {
-//        setHipConfigOn()
-//        //setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
-//        val expected = ServiceUnderTest.getPayments(testNino, testFromDate, testToDate).futureValue
-//        expected shouldBe successResponse.map(Json.toJson(_))
-//      }
-//    }
-//  }
+  "Call getPayments" should {
+    "return success response with Json" when {
+      "correct params provided" in {
+        setHipConfigOn()
+        setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
+        val expected = ServiceUnderTest.getPayments(testNino, testFromDate, testToDate).futureValue
+        // atm ~.payments field is empty: need to fix dataChargeHipHttpParser
+        expected shouldBe successResponse.map(x => Json.toJson(x.payments))
+      }
+    }
+  }
 
   "Call getPaymentAllocationDetails" should {
     "return success response with Json" when {

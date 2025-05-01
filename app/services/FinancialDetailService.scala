@@ -43,11 +43,11 @@ class FinancialDetailService @Inject()(val ifConnector: FinancialDetailsConnecto
 
   def getChargeDetails(nino: String, fromDate: String, toDate: String)
                       (implicit hc: HeaderCarrier) : Future[ChargeAsJsonResponse] = {
-    logger.info(s"Call::getChargeDetails")
     if (isHipOn) {
       hipConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
           case Right(charges) =>
+
             Right(Json.toJson(charges))
           case Left(err) =>
            Left(err)
@@ -65,12 +65,11 @@ class FinancialDetailService @Inject()(val ifConnector: FinancialDetailsConnecto
 
   def getPayments(nino: String, fromDate: String, toDate: String)
                       (implicit hc: HeaderCarrier) : Future[PaymentsAsJsonResponse] = {
-    logger.info(s"Call::getPayments")
+    logger.debug(s"Call::getPayments")
     if (isHipOn) {
       hipConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
           case Right(charges) =>
-            logger.error(s"Call::getPaymentsD => ${charges}")
             Right(Json.toJson(charges.payments))
           case Left(err) =>
             Left(err)

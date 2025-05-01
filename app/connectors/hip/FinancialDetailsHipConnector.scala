@@ -76,8 +76,6 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
   private[connectors] def getCharge(queryParameters: Seq[(String, String)])
                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
     val url = s"$fullServicePath${buildQueryString(queryParameters)}"
-    // TODO: downgrade to debug when PR will be in the review
-    logger.info(s"URL - $url")
     http.get(url"$url")
       .setHeader( // set correlationId and basic auth
         appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*
