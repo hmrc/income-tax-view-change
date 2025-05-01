@@ -34,8 +34,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
 
   object FinancialDetailCreditsController extends FinancialDetailCreditsController(
     authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents, microserviceAppConfig),
-    cc = controllerComponents,
-    financialDetailsConnector = mockFinancialDetailsConnector
+    cc = controllerComponents, mockFinancialDetailsService
   )
 
   val nino: String = "AA000000A"
@@ -61,7 +60,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
           .get()
 
         mockAuth()
-        mockListCharges(nino, from, to)(Right(chargesResponse))
+        mockCredits(nino, from, to)(Right(chargesResponse))
 
         val result = FinancialDetailCreditsController.getCredits(nino, from, to)(FakeRequest())
 
@@ -76,7 +75,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
       "the connector returns an NOT_FOUND error" in {
         mockAuth()
         val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
-        mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
+        mockCredits(nino, from, to)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
 
         val result = FinancialDetailCreditsController.getCredits(nino, from, to)(FakeRequest())
 
@@ -87,7 +86,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
     s"return $INTERNAL_SERVER_ERROR" when {
       "the connector returns an error" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
+        mockCredits(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
         val result = FinancialDetailCreditsController.getCredits(nino, from, to)(FakeRequest())
 

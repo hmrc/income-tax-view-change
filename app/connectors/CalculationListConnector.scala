@@ -45,6 +45,7 @@ class CalculationListConnector @Inject()(val http: HttpClientV2, val appConfig: 
     if (appConfig.useGetCalcListIFPlatform) appConfig.getIFHeaders(api = api) else appConfig.desAuthHeaders
   }
 
+  @deprecated("Deprecated:: remove after HiP migration", "MISUV-???")
   def getCalculationList(nino: String, taxYear: String)
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
     val url = getCalculationListUrl(nino, taxYear)

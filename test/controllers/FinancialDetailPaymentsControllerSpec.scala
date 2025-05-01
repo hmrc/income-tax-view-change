@@ -64,7 +64,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
   object TestFinancialDetailPaymentsController extends FinancialDetailPaymentsController(
     authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, controllerComponents, microserviceAppConfig),
     cc = controllerComponents,
-    financialDetailsConnector = mockFinancialDetailsConnector
+    financialDetailChargesService = mockFinancialDetailsService
   )
 
   val nino: String = "AA000000A"
@@ -76,7 +76,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
     s"return $OK with the retrieved payment details from the charge details" when {
       "the connector returns the charge details" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Right(creditChargesResponse))
+        mockGetPayments(nino, from, to)(Right(creditChargesResponse))
 
         val result = TestFinancialDetailPaymentsController.getPaymentDetails(nino, from, to)(FakeRequest())
 
@@ -98,7 +98,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
       "the connector returns an NOT_FOUND error" in {
         mockAuth()
         val errorJson = """{"code":"NO_DATA_FOUND","reason":"The remote endpoint has indicated that no data can be found."}"""
-        mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
+        mockGetPayments(nino, from, to)(Left(UnexpectedChargeResponse(NOT_FOUND, errorJson)))
 
         val result = TestFinancialDetailPaymentsController.getPaymentDetails(nino, from, to)(FakeRequest())
 
@@ -110,7 +110,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
     s"return $INTERNAL_SERVER_ERROR" when {
       "the connector returns an error" in {
         mockAuth()
-        mockListCharges(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
+        mockGetPayments(nino, from, to)(Left(UnexpectedChargeResponse(INTERNAL_SERVER_ERROR, "")))
 
         val result = TestFinancialDetailPaymentsController.getPaymentDetails(nino, from, to)(FakeRequest())
 

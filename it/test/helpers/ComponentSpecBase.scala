@@ -25,7 +25,7 @@ import play.api.libs.json.JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
 import helpers.servicemocks.AuthStub
-import models.hip.GetLegacyCalcListHipApi
+import models.hip.{GetFinancialDetailsHipApi, GetLegacyCalcListHipApi}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 import scala.concurrent.ExecutionContext
@@ -50,7 +50,8 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.hip.host" -> mockHost,
     "microservice.services.hip.port" -> mockPort,
     s"microservice.services.hip.${GetLegacyCalcListHipApi()}.feature-switch" -> "false",
-    "useBusinessDetailsIFPlatform" -> "false"
+    "useBusinessDetailsIFPlatform" -> "false",
+    s"microservice.services.hip.${GetFinancialDetailsHipApi()}.feature-switch" -> "false"
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()

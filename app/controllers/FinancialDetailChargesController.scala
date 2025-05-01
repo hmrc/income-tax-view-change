@@ -16,12 +16,12 @@
 
 package controllers
 
-import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
+import services.FinancialDetailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
@@ -30,19 +30,19 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class FinancialDetailChargesController @Inject()(authentication: AuthenticationPredicate,
                                                  cc: ControllerComponents,
-                                                 financialDetailsConnector: FinancialDetailsConnector)
+                                                 financialDetailChargesService : FinancialDetailService)
                                                 (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def getChargeDetails(nino: String, from: String, to: String): Action[AnyContent] = {
+  def getChargeDetails(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {
     authentication.async { implicit request =>
-      financialDetailsConnector.getChargeDetails(
-        nino = nino,
-        from = from,
-        to = to
+      financialDetailChargesService.getChargeDetails(
+        nino,
+        fromDate,
+        toDate
       ) map {
-        case Right(chargeDetails) =>
-          logger.debug("Successful Response: " + chargeDetails)
-          Ok(Json.toJson(chargeDetails))
+        case Right(chargeDetailsAsJson) =>
+          logger.info("Successful Response: " + chargeDetailsAsJson)
+          Ok(chargeDetailsAsJson)
         case Left(error: UnexpectedChargeResponse) if error.code == NOT_FOUND =>
           logger.info("404: " + error)
           Status(error.code)(error.response)
@@ -58,7 +58,7 @@ class FinancialDetailChargesController @Inject()(authentication: AuthenticationP
 
   def getPaymentAllocationDetails(nino: String, documentId: String): Action[AnyContent] = {
     authentication.async { implicit request =>
-      financialDetailsConnector.getPaymentAllocationDetails(
+      financialDetailChargesService.getPaymentAllocationDetails(
         nino = nino,
         documentId = documentId
       ) map {

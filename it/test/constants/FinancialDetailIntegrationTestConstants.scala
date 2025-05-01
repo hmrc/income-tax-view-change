@@ -150,7 +150,6 @@ object FinancialDetailIntegrationTestConstants {
     )
   )
 
-
   val balanceDetails: BalanceDetails = BalanceDetails(
     balanceDueWithin30Days = 100.00,
     overDueAmount = 200.00,
@@ -209,7 +208,6 @@ object FinancialDetailIntegrationTestConstants {
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
-
 
   val financialDetail: FinancialDetail = FinancialDetail(
     taxYear = "2018",
@@ -280,5 +278,6 @@ object FinancialDetailIntegrationTestConstants {
         codedOutStatus = Some("I")
       )))
   )
+
 
 }

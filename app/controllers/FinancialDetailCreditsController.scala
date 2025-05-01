@@ -16,35 +16,31 @@
 
 package controllers
 
-import connectors.FinancialDetailsConnector
 import connectors.httpParsers.ChargeHttpParser.UnexpectedChargeResponse
 import controllers.predicates.AuthenticationPredicate
-import models.credits.CreditsModel
 import play.api.Logging
-import play.api.libs.json.Json
 import play.api.mvc._
+import services.FinancialDetailService
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class FinancialDetailCreditsController @Inject()(authentication: AuthenticationPredicate,
                                                  cc: ControllerComponents,
-                                                 financialDetailsConnector: FinancialDetailsConnector)
+                                                 financialDetailChargesService : FinancialDetailService)
                                                 (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def getCredits(nino: String, from: String, to: String): Action[AnyContent] = {
+  def getCredits(nino: String, fromDate: String, toDate: String): Action[AnyContent] = {
     authentication.async { implicit request =>
-      financialDetailsConnector.getChargeDetails(
-        nino = nino,
-        from = from,
-        to = to
+      financialDetailChargesService.getCredits(
+        nino,
+        fromDate,
+        toDate
       ) map {
-        case Right(chargeDetails) =>
-          logger.debug("Successful Response: " + chargeDetails)
-          val model = CreditsModel.fromChargesResponse(chargeDetails)
-          Ok(Json.toJson(model))
+        case Right(creditsAsJson) =>
+          logger.debug("Successful Response: " + creditsAsJson)
+          Ok(creditsAsJson)
         case Left(error: UnexpectedChargeResponse) if error.code == NOT_FOUND =>
           logger.info("404: " + error)
           Status(error.code)(error.response)
