@@ -16,12 +16,12 @@
 
 package controllers
 
-import constants.BaseIntegrationTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
-import constants.CalculationListIntegrationTestConstants.calculationListFull
+import constants.BaseIntegrationTestConstants.{taxYearRange25to26, taxYearRange26to27, testNino, testTaxYearEnd, testTaxYearRange}
+import constants.CalculationListIntegrationTestConstants.{calculationListFull, calculationListResponseConverted}
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesCalculationListStub
 import models.calculationList.CalculationListModel
-import models.errors.{MultiError, Error}
+import models.errors.{Error, MultiError}
 import play.api.http.Status._
 import play.api.libs.ws.WSResponse
 
@@ -111,22 +111,62 @@ class CalculationListControllerISpec extends ComponentSpecBase {
 
   "CalculationListController.getCalculationListTYS" should {
     "return 200 OK" when {
-      "user is authorised and sends a valid request" in {
-        Given("I am an authorised user")
-        isAuthorised(true)
+      "user is authorised and sends a valid request" that {
+        "is before tax 25-26 tax year range" in {
+          Given("I am an authorised user")
+          isAuthorised(true)
 
-        And("I wiremock stub a 1896 Get Calculation List response")
-        DesCalculationListStub.stubGetDesCalculationListTYS(testNino, testTaxYearRange)
+          And("I wiremock stub a 1896 Get Calculation List response")
+          DesCalculationListStub.stubGetDesCalculationListTYS(testNino, testTaxYearRange)
 
-        When(s"I call /calculation-list/$testNino/$testTaxYearRange")
-        val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, testTaxYearRange)
-        DesCalculationListStub.verifyGetCalculationListTYS(testNino, testTaxYearRange)
+          When(s"I call /calculation-list/$testNino/$testTaxYearRange")
+          val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, testTaxYearRange)
+          DesCalculationListStub.verifyGetCalculationListTYS(testNino, testTaxYearRange)
 
-        Then("A success response is received")
-        result should have(
-          httpStatus(OK),
-          jsonBodyAs[CalculationListModel](calculationListFull.calculations.head)
-        )
+          Then("A success response is received")
+          result should have(
+            httpStatus(OK),
+            jsonBodyAs[CalculationListModel](calculationListFull.calculations.head)
+          )
+        }
+
+
+        "is for 25-26 tax year" in {
+          Given("I am an authorised user")
+          isAuthorised(true)
+
+          And("I wiremock stub a 2083 Get Calculation List response")
+          DesCalculationListStub.stubGetDesCalculationList2083(testNino, taxYearRange25to26, true)
+
+          When(s"I call /calculation-list/$testNino/$taxYearRange25to26")
+          val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, taxYearRange25to26)
+          DesCalculationListStub.verifyGetCalculationList8023(testNino, taxYearRange25to26)
+
+          Then("A success response is received")
+          result should have(
+            httpStatus(OK),
+            jsonBodyAs[CalculationListModel](calculationListResponseConverted(true).calculations.head)
+          )
+        }
+
+
+        "is after 25-26 tax year" in {
+          Given("I am an authorised user")
+          isAuthorised(true)
+
+          And("I wiremock stub a 1896 Get Calculation List response")
+          DesCalculationListStub.stubGetDesCalculationList2083(testNino, taxYearRange26to27, false)
+
+          When(s"I call /calculation-list/$testNino/$taxYearRange26to27")
+          val result: WSResponse = IncomeTaxViewChange.getCalculationListTYS(testNino, taxYearRange26to27)
+          DesCalculationListStub.verifyGetCalculationList8023(testNino, taxYearRange26to27)
+
+          Then("A success response is received")
+          result should have(
+            httpStatus(OK),
+            jsonBodyAs[CalculationListModel](calculationListResponseConverted(false).calculations.head)
+          )
+        }
       }
     }
 

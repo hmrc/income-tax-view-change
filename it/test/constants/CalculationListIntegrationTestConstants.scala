@@ -31,6 +31,28 @@ object CalculationListIntegrationTestConstants {
       )
     )
 
+  val successResponse2083Crys: JsValue =
+    Json.obj(
+      "calculationsSummary" -> Json.arr(
+        Json.obj(
+          "calculationId" -> "c432a56d-e811-474c-a26a-76fc3bcaefe5",
+          "calculationTimestamp" -> "2023-10-31T12:55:51.159Z",
+          "calculationType" -> "DF"
+        )
+      )
+    )
+
+  val successResponse2083NotCrys: JsValue =
+    Json.obj(
+      "calculationsSummary" -> Json.arr(
+        Json.obj(
+          "calculationId" -> "c432a56d-e811-474c-a26a-76fc3bcaefe5",
+          "calculationTimestamp" -> "2023-10-31T12:55:51.159Z",
+          "calculationType" -> "IY"
+        )
+      )
+    )
+
   val successResponseHip: JsValue =
     Json.arr(
       Json.obj(
@@ -51,6 +73,17 @@ object CalculationListIntegrationTestConstants {
         calculationTimestamp = "2023-10-31T12:55:51.159Z",
         calculationType = "finalDeclaration",
         crystallised = Some(true)
+      ))
+    )
+  }
+
+  def calculationListResponseConverted(isCrys: Boolean) = {
+    CalculationListResponseModel(
+      calculations = Seq(CalculationListModel(
+        calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
+        calculationTimestamp = "2023-10-31T12:55:51.159Z",
+        calculationType = if(isCrys) "crystallisation" else "inYear",
+        crystallised = if(isCrys) Some(true) else None
       ))
     )
   }

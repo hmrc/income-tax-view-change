@@ -38,6 +38,9 @@ class CalculationListConnector @Inject()(val http: HttpClientV2, val appConfig: 
   private[connectors] def getCalculationListTYSUrl(nino: String, taxYearRange: String): String =
     s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
 
+  private[connectors] def getCalculationList2083Url(nino: String, taxYearRange: String): String =
+    s"${appConfig.ifUrl}/income-tax/$taxYearRange/view/$nino/calculations-summary"
+
   def getHeaders(api: String): Seq[(String, String)] = {
     if (appConfig.useGetCalcListIFPlatform) appConfig.getIFHeaders(api = api) else appConfig.desAuthHeaders
   }
@@ -60,6 +63,18 @@ class CalculationListConnector @Inject()(val http: HttpClientV2, val appConfig: 
     logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("1896")}")
     http.get(url"$url")
       .setHeader(appConfig.getIFHeaders("1896"): _*)
+      .execute[HttpGetResult[CalculationListResponseModel]](CalculationListReads, ec)
+
+  }
+
+  def getCalculationList2083(nino: String, taxYear: String)
+                           (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
+
+    val url = getCalculationList2083Url(nino, taxYear)
+
+    logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${appConfig.getIFHeaders("2083")}")
+    http.get(url"$url")
+      .setHeader(appConfig.getIFHeaders("2083"): _*)
       .execute[HttpGetResult[CalculationListResponseModel]](CalculationListReads, ec)
 
   }
