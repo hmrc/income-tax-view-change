@@ -68,7 +68,7 @@ case class SubItemHip(
                        //promisetoPay: Option[String] = None,
                        /* Coded Out Status */
                        codedOutStatus: Option[String] = None,
-                       paymentId: Option[String] = None, // custom field
+                       paymentId: Option[String] = None // custom field
                      )
 
 object SubItemHip extends Logging {
