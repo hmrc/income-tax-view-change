@@ -30,6 +30,7 @@ class CalculationListConnectorISpec extends ComponentSpecBase {
   val taxYearRange = "23-24"
   val urlCalculation = s"/income-tax/list-of-calculation-results/$nino?taxYear=$taxYear"
   val urlCalculationTYS = s"/income-tax/view/calculations/liability/$taxYearRange/$nino"
+  val urlCalculation2083 = s"/income-tax/$taxYearRange/view/$nino/calculations-summary"
 
   val calculationListResponse: CalculationListResponseModel = CalculationListResponseModel(Seq(CalculationListModel(
     calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
@@ -37,6 +38,8 @@ class CalculationListConnectorISpec extends ComponentSpecBase {
     calculationType = "finalDeclaration",
     crystallised = Some(false)
   )))
+
+
 
   "CalculationListConnector" when {
 
@@ -163,6 +166,127 @@ class CalculationListConnectorISpec extends ComponentSpecBase {
 
           result shouldBe Left(InvalidJsonResponse)
         }
+      }
+    }
+  }
+
+  ".getCalculationList2083() is called" when {
+
+    "the response is a 200 - OK" should {
+
+      "return the converted calculation list response" that {
+        "has calculationType crystallisation and crystallised true" when {
+          "successful for a given NINO and tax year and original calculation type is DF" in {
+
+            val requestBody: JsValue = Json.obj(
+              "calculationsSummary" -> Json.parse(
+                """
+                  |[
+                  | {
+                  |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
+                  |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
+                  |   "calculationType":"DF"
+                  | }
+                  |]
+                  |""".stripMargin)
+            )
+
+            val expectedResponse: CalculationListResponseModel = CalculationListResponseModel(Seq(CalculationListModel(
+              calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
+              calculationTimestamp = "2023-10-31T12:55:51.159Z",
+              calculationType = "crystallisation",
+              crystallised = Some(true)
+            )))
+
+            WiremockHelper.stubGet(urlCalculation2083, OK, requestBody.toString())
+
+            val result = connector.getCalculationList2083(nino, taxYearRange).futureValue
+
+            result shouldBe Right(expectedResponse)
+          }
+        }
+
+        "has calculationType inYear and crystallised None" when {
+          "successful for a given NINO and tax year and original calculation type is IY" in {
+
+            val requestBody: JsValue = Json.obj(
+              "calculationsSummary" -> Json.parse(
+                """
+                  |[
+                  | {
+                  |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
+                  |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
+                  |   "calculationType":"IY"
+                  | }
+                  |]
+                  |""".stripMargin)
+            )
+
+            val expectedResponse: CalculationListResponseModel = CalculationListResponseModel(Seq(CalculationListModel(
+              calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",
+              calculationTimestamp = "2023-10-31T12:55:51.159Z",
+              calculationType = "inYear",
+              crystallised = None
+            )))
+
+            WiremockHelper.stubGet(urlCalculation2083, OK, requestBody.toString())
+
+            val result = connector.getCalculationList2083(nino, taxYearRange).futureValue
+
+            result shouldBe Right(expectedResponse)
+          }
+        }
+      }
+
+      "return an error when the request returned has errors" in {
+        val requestBody: JsValue = Json.parse(
+          """
+            |[
+            | {
+            |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
+            |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
+            |   "crystallised": false
+            | }
+            |]
+            |""".stripMargin)
+
+        WiremockHelper.stubGet(urlCalculation2083, OK, requestBody.toString())
+
+        val result = connector.getCalculationList2083(nino, taxYearRange).futureValue
+
+        result shouldBe Left(UnexpectedJsonFormat)
+      }
+    }
+
+    "the response is a 500 - InternalServerError" should {
+
+      "return an error when the downstream response was unexpected" in {
+
+        WiremockHelper.stubGet(urlCalculation2083, INTERNAL_SERVER_ERROR, "{}")
+
+        val result = connector.getCalculationList2083(nino, taxYearRange).futureValue
+
+        result shouldBe Left(UnexpectedResponse)
+      }
+
+      "return an error when the json returned was in an incorrect state" in {
+
+        val requestBody: JsValue = Json.parse(
+          """
+            |[
+            | {
+            |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
+            |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
+            |   "crystallised": false
+            | }
+            |]
+            |""".stripMargin)
+
+        WiremockHelper.stubGet(urlCalculation2083, INTERNAL_SERVER_ERROR, requestBody.toString())
+
+        val result = connector.getCalculationList2083("1234", taxYearRange).futureValue
+
+        result shouldBe Left(InvalidJsonResponse)
       }
     }
   }
