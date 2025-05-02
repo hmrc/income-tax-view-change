@@ -16,17 +16,12 @@
 
 package connectors.hip
 
-import java.time.LocalDateTime
-
 trait HipConnectorDataHelper {
 
   // Headers constants
   val xMessageTypeFor5277 = "ETMPGetFinancialDetails" // <= HiP version for 1553
-  val xOriginatingSystem: String = "MDTP"
+  val xOriginatingSystem: String = "MTDITSAViewAndChange"
   val xTransmittingSystem : String = "HIP"
-
-  // Current date/time should be consumed from upstream
-  def getMessageCreated: String = LocalDateTime.now.toString
 
   // Query string param constants for API number: #5277/1553
   val calculateAccruedInterest: String = "true"
