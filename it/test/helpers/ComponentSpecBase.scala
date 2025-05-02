@@ -16,6 +16,8 @@
 
 package helpers
 
+import helpers.servicemocks.AuthStub
+import models.hip.{GetLegacyCalcListHipApi, ITSAStatusHipApi}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, TestSuite}
@@ -50,6 +52,7 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.hip.host" -> mockHost,
     "microservice.services.hip.port" -> mockPort,
     s"microservice.services.hip.${GetLegacyCalcListHipApi()}.feature-switch" -> "false",
+    s"microservice.services.hip.${ITSAStatusHipApi()}.feature-switch" -> "false",
     "useBusinessDetailsIFPlatform" -> "false",
     s"microservice.services.hip.${GetFinancialDetailsHipApi()}.feature-switch" -> "false"
   )

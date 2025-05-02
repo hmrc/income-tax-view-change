@@ -18,17 +18,21 @@ package constants
 
 import models.itsaStatus._
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 
 object ITSAStatusIntegrationTestConstants {
   val taxableEntityId = "AA000000A"
   val taxYear = "2020"
   val statusDetail = StatusDetail("2023-06-15T15:38:33.960Z", "No Status", "Sign up - return available", Some(8000.25))
+  def getStatusDetail(status: String, statusReason: String) = StatusDetail("2023-06-15T15:38:33.960Z", status, statusReason, Some(8000.25))
   val successITSAStatusResponseModel = ITSAStatusResponseModel("2019-20", Some(List(statusDetail)))
+  def getSuccessITSAStatusResponseModel(status: String, statusReason: String) = List(ITSAStatusResponseModel("2019-20", Some(List(getStatusDetail(status, statusReason)))))
   val errorITSAStatusNotFoundError = ITSAStatusResponseNotFound(NOT_FOUND, "The remote endpoint has indicated that no match found for the reference provided.")
   val failedFutureITSAStatusError = ITSAStatusResponseError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, error")
 
   val listSuccessITSAStatusResponseModel = List(successITSAStatusResponseModel)
+  def getListSuccessITSAStatusResponseModel(status: String, statusReason: String) =
+    List(getSuccessITSAStatusResponseModel(status, statusReason))
 
   val failureInvalidRequestResponse =
     """{
@@ -51,6 +55,22 @@ object ITSAStatusIntegrationTestConstants {
       |        "submittedOn": "2023-06-15T15:38:33.960Z",
       |        "status": "No Status",
       |        "statusReason": "Sign up - return available",
+      |        "businessIncomePriorTo2Years": 8000.25
+      |      }
+      |    ]
+      |  }]
+      |""".stripMargin)
+
+  val successITSAStatusListHIPResponseJson: (String, String) => JsValue = (status, statusReason) =>
+    Json.parse(
+    s"""
+      |[{
+      |    "taxYear": "2019-20",
+      |    "itsaStatusDetails": [
+      |      {
+      |        "submittedOn": "2023-06-15T15:38:33.960Z",
+      |        "status": "$status",
+      |        "statusReason": "$statusReason",
       |        "businessIncomePriorTo2Years": 8000.25
       |      }
       |    ]

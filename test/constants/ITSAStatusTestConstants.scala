@@ -18,15 +18,21 @@ package constants
 
 import models.itsaStatus._
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpResponse
 
 
 object ITSAStatusTestConstants {
   val statusDetail = StatusDetail("2023-06-15T15:38:33.960Z", "No Status", "Sign up - return available", Some(8000.25))
+  val statusDetailHip: (String, String) => StatusDetail = (status, statusReason) =>
+    statusDetail.copy(status = status, statusReason = statusReason)
   val statusDetailMinimal = StatusDetail("2023-06-15T15:38:33.960Z", "No Status", "Sign up - return available", None)
+  val statusDetailMinimalHip: (String, String) => StatusDetail = (status, statusReason) =>
+    statusDetailMinimal.copy(status = status, statusReason = statusReason)
   val successITSAStatusResponseModel = ITSAStatusResponseModel("2019-20", Some(List(statusDetail)))
+  val successITSAStatusResponseModelHip: (String, String) => ITSAStatusResponseModel = (status, statusReason) =>
+    ITSAStatusResponseModel("2019-20", Some(List(statusDetailHip(status, statusReason))))
   val successITSAStatusResponseModelMinimal = ITSAStatusResponseModel("2019-20", None)
   val errorITSAStatusError = ITSAStatusResponseError(BAD_REQUEST, "Dummy message")
   val badJsonErrorITSAStatusError = ITSAStatusResponseError(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing ITSA Status Response")
@@ -43,6 +49,16 @@ object ITSAStatusTestConstants {
       |}
       |""".stripMargin)
 
+  val statusDetailMinHipJson: (String, String) => JsValue = (status, statusReason) => Json.parse(
+    s"""
+      |{
+      | "submittedOn": "2023-06-15T15:38:33.960Z",
+      | "status": "$status",
+      | "statusReason": "$statusReason"
+      |}
+      |""".stripMargin)
+
+
   val successITSAStatusResponseModelMinimalJson = Json.parse(
     """
       |{
@@ -50,6 +66,22 @@ object ITSAStatusTestConstants {
       |}
       |""".stripMargin
   )
+  val successITSAStatusResponseHipJson: (String, String) => JsValue = (status, statusReason) => Json.parse(
+    s"""
+      |{
+      |    "taxYear": "2019-20",
+      |    "itsaStatusDetails": [
+      |      {
+      |        "submittedOn": "2023-06-15T15:38:33.960Z",
+      |        "status": "$status",
+      |        "statusReason": "$statusReason",
+      |        "businessIncomePriorTo2Years": 8000.25
+      |      }
+      |    ]
+      |  }
+      |""".stripMargin)
+
+
   val successITSAStatusResponseJson = Json.parse(
     """
       |{
