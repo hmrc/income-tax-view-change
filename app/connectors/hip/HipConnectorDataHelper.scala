@@ -25,9 +25,6 @@ trait HipConnectorDataHelper {
   val xOriginatingSystem: String = "MDTP"
   val xTransmittingSystem : String = "HIP"
 
-  // Current date/time should be consumed from upstream
-  def getMessageCreated: String = LocalDateTime.now.toString
-
   // Query string param constants for API number: #5277/1553
   val calculateAccruedInterest: String = "true"
   val customerPaymentInformation: String = "true"

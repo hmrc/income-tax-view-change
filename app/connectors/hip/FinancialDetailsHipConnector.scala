@@ -23,6 +23,7 @@ import models.hip.GetFinancialDetailsHipApi
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
+import utils.DateUtils
 
 import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
@@ -82,7 +83,7 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
       )
       .setHeader(("X-Message-Type", xMessageTypeFor5277))
       .setHeader(("X-Originating-System", xOriginatingSystem))
-      .setHeader(("X-Receipt-Date", getMessageCreated))
+      .setHeader(("X-Receipt-Date", DateUtils.nowAsUtc))
       .setHeader(("X-Transmitting-System", xTransmittingSystem))
       .execute[ChargeHipResponse](ChargeHipReads, ec)
       .collect{
