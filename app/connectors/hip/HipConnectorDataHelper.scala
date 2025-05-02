@@ -16,8 +16,6 @@
 
 package connectors.hip
 
-import java.time.LocalDateTime
-
 trait HipConnectorDataHelper {
 
   // Headers constants
