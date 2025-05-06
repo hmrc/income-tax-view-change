@@ -77,14 +77,19 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
   private[connectors] def getCharge(queryParameters: Seq[(String, String)])
                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ChargeHipResponse] = {
     val url = s"$fullServicePath${buildQueryString(queryParameters)}"
+
+    val extraHeaders: Seq[(String, String)] = Seq(
+      ("X-Message-Type", xMessageTypeFor5277),
+      ("X-Originating-System", xOriginatingSystem),
+      ("X-Receipt-Date", DateUtils.nowAsUtc),
+      ("X-Transmitting-System", xTransmittingSystem)
+    )
+    val headerCarrier: Seq[(String, String)] = appConfig.getHIPHeaders(GetFinancialDetailsHipApi) ++ extraHeaders
+    logger.info("" +
+      s"FinancialDetailsHipConnector::URL: $url \n\nHeaders: $headerCarrier")
+
     http.get(url"$url")
-      .setHeader( // set correlationId and basic auth
-        appConfig.getHIPHeaders(GetFinancialDetailsHipApi): _*
-      )
-      .setHeader(("X-Message-Type", xMessageTypeFor5277))
-      .setHeader(("X-Originating-System", xOriginatingSystem))
-      .setHeader(("X-Receipt-Date", DateUtils.nowAsUtc))
-      .setHeader(("X-Transmitting-System", xTransmittingSystem))
+      .setHeader(headerCarrier: _*)
       .execute[ChargeHipResponse](ChargeHipReads, ec)
       .collect{
         case Left(ex) =>
