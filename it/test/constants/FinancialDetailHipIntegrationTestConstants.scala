@@ -25,77 +25,78 @@ import java.time.LocalDate
 object FinancialDetailHipIntegrationTestConstants {
 
   // OLD => VERSION
-  val chargeHipJson: JsObject = Json.obj(
-    "taxpayerDetails" -> Json.obj(
-      "idType" -> "NINO",
-      "idNumber" -> "BB123456A",
-      "regimeType" -> "ITSA"
-    ),
-    "balanceDetails" -> Json.obj(
-      "balanceDueWithin30days" -> 100.00,
-      "balanceNotDuein30Days" -> 200.00,
-      "overDueAmount" -> 45.00,
-      "totalBalance" -> 300.17,
-      "unallocatedCredit" -> 400.00
-    ),
-    "codingDetails" -> Json.arr(
+  val chargeHipJson: JsObject =
+    Json.obj("success" ->
       Json.obj(
-        "taxYearReturn" -> "2018",
-        "totalLiabilityAmount" -> 2015.13,
-        "taxYearCoding" -> "2017"
-      )
-    ),
-
-    "documentDetails" -> Json.arr(
-      Json.obj(
-        "taxYear" -> "2018",
-        "documentID" -> "id",
-        "documentDate" -> "2018-03-29",
-        "documentText" -> "documentText",
-        "documentDueDate" -> "2019-03-29",
-        "documentDescription" -> "documentDescription",
-        "totalAmount" -> 1000.11,
-        "documentOutstandingAmount" -> 200.00,
-        "documentOutstandingAmount" -> 200.00,
-        "poaRelevantAmount" -> 1000.00,
-        "paymentLotItem" -> "paymentLotItem",
-        "paymentLot" -> "paymentLot",
-        "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
-        "interestRate" -> 2.60,
-
-        "interestFromDate" -> "2018-08-01",
-        "interestEndDate" -> "2019-01-15",
-        "latePaymentInterestID" -> "latePaymentInterestID",
-        "latePaymentInterestAmount" -> 12.34,
-        "lpiWithDunningBlock" -> 12.50,
-        "interestOutstandingAmount" -> 31.00,
-        "amountCodedOut" -> 3.21,
-      )
-    ),
-
-    "financialDetails" -> Json.arr(
-      Json.obj(
-        "taxYear" -> "2018",
-        "documentID" -> "transactionId",
-        "mainType" -> "4920",
-        "taxPeriodFrom" -> LocalDate.parse("2017-04-05"),
-        "taxPeriodTo" -> LocalDate.parse("2018-04-06"),
-        "chargeReference" -> "chargeRef",
-        "mainTransaction" -> "4920",
-        "originalAmount" -> 500.00,
-        "outstandingAmount" -> 500.00,
-        "clearedAmount" -> 500.00,
-        "accruedInterest" -> 1000,
-        "items" -> Json.arr(
+        "taxpayerDetails" -> Json.obj(
+          "idType" -> "NINO",
+          "idNumber" -> "BB123456A",
+          "regimeType" -> "ITSA"
+        ),
+        "balanceDetails" -> Json.obj(
+          "balanceDueWithin30days" -> 100.00,
+          "balanceNotDuein30Days" -> 200.00,
+          "overDueAmount" -> 45.00,
+          "totalBalance" -> 300.17,
+          "unallocatedCredit" -> 400.00
+        ),
+        "codingDetails" -> Json.arr(
           Json.obj(
+            "taxYearReturn" -> "2018",
+            "totalLiabilityAmount" -> 2015.13,
+            "taxYearCoding" -> "2017"
           )
-        )
+        ),
+        "documentDetails" -> Json.arr(
+          Json.obj(
+            "taxYear" -> "2018",
+            "documentID" -> "id",
+            "documentDate" -> "2018-03-29",
+            "documentText" -> "documentText",
+            "documentDueDate" -> "2019-03-29",
+            "documentDescription" -> "documentDescription",
+            "totalAmount" -> 1000.11,
+            "documentOutstandingAmount" -> 200.00,
+            "documentOutstandingAmount" -> 200.00,
+            "poaRelevantAmount" -> 1000.00,
+            "paymentLotItem" -> "paymentLotItem",
+            "paymentLot" -> "paymentLot",
+            "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
+            "interestRate" -> 2.60,
+
+            "interestFromDate" -> "2018-08-01",
+            "interestEndDate" -> "2019-01-15",
+            "latePaymentInterestID" -> "latePaymentInterestID",
+            "latePaymentInterestAmount" -> 12.34,
+            "lpiWithDunningBlock" -> 12.50,
+            "interestOutstandingAmount" -> 31.00,
+            "amountCodedOut" -> 3.21,
+          )
+        ),
+        "financialDetails" -> Json.arr(
+          Json.obj(
+            "taxYear" -> "2018",
+            "documentID" -> "transactionId",
+            "mainType" -> "4920",
+            "taxPeriodFrom" -> LocalDate.parse("2017-04-05"),
+            "taxPeriodTo" -> LocalDate.parse("2018-04-06"),
+            "chargeReference" -> "chargeRef",
+            "mainTransaction" -> "4920",
+            "originalAmount" -> 500.00,
+            "outstandingAmount" -> 500.00,
+            "clearedAmount" -> 500.00,
+            "accruedInterest" -> 1000,
+            "items" -> Json.arr(
+              Json.obj(
+              )
+            )
+          )
+        ),
       )
-    ),
-  )
+    )
 
   // HiP
-  val testTaxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
+  val testTaxPayerHipDetails: TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
 
   val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
     balanceDueWithin30Days = 100.00,
@@ -145,10 +146,10 @@ object FinancialDetailHipIntegrationTestConstants {
     taxPeriodFrom = Some(LocalDate.parse("2017-04-05")),
     taxPeriodTo = Some(LocalDate.parse("2018-04-06")),
     chargeReference = Some("chargeRef"),
-    mainTransaction =  Some("4920"),
+    mainTransaction = Some("4920"),
     originalAmount = Some(BigDecimal(500.00)),
     outstandingAmount = Some(BigDecimal(500.00)),
-    clearedAmount =  Some(BigDecimal(500.00)),
+    clearedAmount = Some(BigDecimal(500.00)),
     accruedInterest = Some(BigDecimal(1000.00)),
     items = Some(
       Seq(
@@ -156,7 +157,7 @@ object FinancialDetailHipIntegrationTestConstants {
       )
     ))
 
-  val codingOutList : List[CodingDetailsHip] = List(
+  val codingOutList: List[CodingDetailsHip] = List(
     CodingDetailsHip(
       taxYearReturn = Option("2018"),
       amountCodedOut = Option(2015.13),

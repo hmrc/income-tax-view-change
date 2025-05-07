@@ -77,11 +77,11 @@ case class ChargesHipResponse(
 object ChargesHipResponse {
   implicit val writes: Writes[ChargesHipResponse] = Json.writes[ChargesHipResponse]
   implicit val reads: Reads[ChargesHipResponse] = (
-    (__ \ "taxpayerDetails").read[TaxpayerDetailsHip] and
-      (__ \ "balanceDetails").read[BalanceDetailsHip] and
-      readNullableList[CodingDetailsHip](__ \ "codingDetails") and
-      readNullableList[DocumentDetailHip](__ \ "documentDetails") and
-      readNullableList[FinancialDetailHip](__ \ "financialDetails")
+    (__ \ "success" \ "taxpayerDetails").read[TaxpayerDetailsHip] and
+      (__ \ "success" \ "balanceDetails").read[BalanceDetailsHip] and
+      readNullableList[CodingDetailsHip](__ \ "success" \ "codingDetails") and
+      readNullableList[DocumentDetailHip](__ \ "success" \ "documentDetails") and
+      readNullableList[FinancialDetailHip](__ \ "success" \ "financialDetails")
     )(ChargesHipResponse.apply _)
 
 }
