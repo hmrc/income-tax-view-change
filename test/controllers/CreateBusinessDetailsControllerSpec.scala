@@ -31,8 +31,7 @@ import java.time.LocalDate
 class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMicroserviceAuthConnector with MockCreateBusinessDetailsService {
   val mockCC: ControllerComponents = stubControllerComponents()
   val authPredicate = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
-  val testDate = LocalDate.of(2022, 5, 1).toString
-
+  val testDate: String = LocalDate.of(2022, 5, 1).toString
 
   object TestCreateBusinessDetailsController extends CreateBusinessDetailsController(authPredicate, mockCreateBusinessDetailsService, mockCC)
 
@@ -47,7 +46,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
           fakePostRequest.withJsonBody(
             Json.toJson(
               CreateForeignPropertyIncomeSourceRequest(
-                PropertyDetails(testDate, "ACCRUALS", testDate)
+                PropertyDetails(testDate, Some("ACCRUALS"), testDate)
               )
             )
           )
@@ -94,7 +93,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
                     addressDetails = AddressDetails("10 FooBar Street", None, None, None, None, None),
                     typeOfBusiness = None,
                     tradingStartDate = testDate,
-                    cashOrAccrualsFlag = "CASH",
+                    cashOrAccrualsFlag = Some("CASH"),
                     cessationDate = None,
                     cessationReason = None
                   )
@@ -118,7 +117,28 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
           fakePostRequest.withJsonBody(
             Json.toJson(
               CreateForeignPropertyIncomeSourceRequest(
-                PropertyDetails(testDate, "ACCRUALS", testDate)
+                PropertyDetails(testDate, Some("ACCRUALS"), testDate)
+              )
+            )
+          )
+        )
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe
+          Json.toJson(
+            List(IncomeSource(testIncomeSourceId))
+          )
+      }
+
+      "a CreateForeignPropertyIncomeSourceRequest model as json body is sent with no cash or accurals flag" in {
+        mockAuth()
+        mockCreateIncomeSourceSuccessResponse()
+
+        val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
+          fakePostRequest.withJsonBody(
+            Json.toJson(
+              CreateForeignPropertyIncomeSourceRequest(
+                PropertyDetails(testDate, None, testDate)
               )
             )
           )
@@ -138,7 +158,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
           fakePostRequest.withJsonBody(
             Json.toJson(
               CreateUKPropertyIncomeSourceRequest(
-                PropertyDetails(testDate, "CASH", testDate)
+                PropertyDetails(testDate, Some("CASH"), testDate)
               )
             )
           )
