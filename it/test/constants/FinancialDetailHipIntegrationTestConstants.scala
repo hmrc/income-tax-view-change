@@ -73,7 +73,7 @@ object FinancialDetailHipIntegrationTestConstants {
             "amountCodedOut" -> 3.21,
           )
         ),
-        "financialDetails" -> Json.arr(
+        "financialDetailsItem" -> Json.arr(
           Json.obj(
             "taxYear" -> "2018",
             "documentID" -> "transactionId",
