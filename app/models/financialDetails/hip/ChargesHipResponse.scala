@@ -81,7 +81,7 @@ object ChargesHipResponse {
       (__ \ "success" \ "balanceDetails").read[BalanceDetailsHip] and
       readNullableList[CodingDetailsHip](__ \ "success" \ "codingDetails") and
       readNullableList[DocumentDetailHip](__ \ "success" \ "documentDetails") and
-      readNullableList[FinancialDetailHip](__ \ "success" \ "financialDetails")
+      readNullableList[FinancialDetailHip](__ \ "success" \ "financialDetailsItem")
     )(ChargesHipResponse.apply _)
 
 }
