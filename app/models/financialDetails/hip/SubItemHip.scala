@@ -24,7 +24,6 @@ import java.time.LocalDate
 
 case class SubItemHip(
                        /* Custom identifier attribute */
-                       subItemId: Option[String] = None, // renamed
                        amount: Option[BigDecimal] = None,
                        clearingDate: Option[LocalDate] = None,
                        /* Clearing Reason */
@@ -79,7 +78,7 @@ object SubItemHip extends Logging {
   implicit val writes: OWrites[SubItemHip] = Json.writes[SubItemHip]
 
   implicit val reads: Reads[SubItemHip] = for {
-    subItemId <- (JsPath \ "subItem").readNullable[String](Reads.of[String].filter(subItemJsonError)(isIntString))
+    subItem <- (JsPath \ "subItem").readNullable[String](Reads.of[String].filter(subItemJsonError)(isIntString))
     amount <- (JsPath \ "amount").readNullable[BigDecimal]
     clearingDate <- (JsPath \ "clearingDate").readNullable[LocalDate]
     clearingReason <- (JsPath \ "clearingReason").readNullable[String]
@@ -100,7 +99,7 @@ object SubItemHip extends Logging {
       pli <- paymentLotItem
     } yield s"$pl-$pli"
     SubItemHip(
-      subItem = subItemId,
+      subItem = subItem,
       dueDate = dueDate,
       amount = amount,
       clearingDate = clearingDate,
@@ -112,8 +111,9 @@ object SubItemHip extends Logging {
       paymentReference = paymentReference,
       paymentAmount = paymentAmount,
       paymentMethod = paymentMethod,
-      subItemId = subItemId,
       codedOutStatus = codedOutStatus,
+      paymentLot = paymentLot,
+      paymentLotItem = paymentLotItem,
       paymentId = paymentId
     )
   }

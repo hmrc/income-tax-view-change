@@ -88,6 +88,19 @@ object FinancialDetailHipIntegrationTestConstants {
             "accruedInterest" -> 1000,
             "items" -> Json.arr(
               Json.obj(
+                "subItem" -> "001",
+                "dueDate" -> "2025-07-10",
+                "amount" -> -300,
+                "clearingDate" -> "2024-10-29",
+                "clearingReason" -> "Allocated to Charge",
+                "paymentReference" -> "100207948",
+                "paymentAmount" -> 500,
+                "paymentMethod" -> "PAYMENTS MADE BY CHEQUE",
+                "paymentLot" -> "24714",
+                "paymentLotItem" -> "000002",
+                "clearingSAPDocument" -> "003400044065",
+                "codedOutStatus" -> "S"
+
               )
             )
           )
@@ -153,7 +166,21 @@ object FinancialDetailHipIntegrationTestConstants {
     accruedInterest = Some(BigDecimal(1000.00)),
     items = Some(
       Seq(
-        SubItemHip()
+        SubItemHip(
+          subItem = Option("001"),
+          dueDate = Option(LocalDate.parse("2025-07-10")),
+          amount = Option(-300),
+          clearingDate = Option(LocalDate.parse("2024-10-29")),
+          clearingReason = Option("Allocated to Charge"),
+          paymentReference = Option("100207948"),
+          paymentAmount = Option(BigDecimal(500)),
+          paymentMethod = Option("PAYMENTS MADE BY CHEQUE"),
+          paymentLot = Option("24714"),
+          paymentLotItem = Option("000002"),
+          clearingSAPDocument = Option("003400044065"),
+          codedOutStatus = Option("S") ,
+          paymentId = Option("24714-000002")
+        )
       )
     ))
 

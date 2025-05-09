@@ -29,6 +29,7 @@ import utils.{FinancialDetailsHipDataHelper, TestSupport}
 
 import scala.concurrent.Future
 
+// We are testing only HiP connector here
 class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDataHelper{
 
   val mockFinancialDetailsHipConnector: FinancialDetailsHipConnector = mock(classOf[FinancialDetailsHipConnector])
@@ -81,7 +82,7 @@ class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDa
         setHipConfigOn()
         setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
         val expected = ServiceUnderTest.getPayments(testNino, testFromDate, testToDate).futureValue
-        // atm ~.payments field is empty: need to fix dataChargeHipHttpParser
+        // TODO: atm ~.payments field is empty: need to fix dataChargeHipHttpParser
         expected shouldBe successResponse.map(x => Json.toJson(x.payments))
       }
     }
