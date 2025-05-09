@@ -17,85 +17,12 @@
 package constants
 
 import constants.BaseTestConstants.testNino
-import models.financialDetails.hip.model.{BalanceDetailsHip, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
-import play.api.libs.json.{JsObject, Json}
+import models.financialDetails.hip.model.{BalanceDetailsHip, CodedEntryHip, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
 
 import java.time.LocalDate
 
 object FinancialDetailHipIntegrationTestConstants {
 
-  // OLD => VERSION
-  val chargeHipJson: JsObject =
-    Json.obj("success" ->
-      Json.obj(
-        "taxpayerDetails" -> Json.obj(
-          "idType" -> "NINO",
-          "idNumber" -> "BB123456A",
-          "regimeType" -> "ITSA"
-        ),
-        "balanceDetails" -> Json.obj(
-          "balanceDueWithin30days" -> 100.00,
-          "balanceNotDuein30Days" -> 200.00,
-          "overDueAmount" -> 45.00,
-          "totalBalance" -> 300.17,
-          "unallocatedCredit" -> 400.00
-        ),
-        "codingDetails" -> Json.arr(
-          Json.obj(
-            "taxYearReturn" -> "2018",
-            "totalLiabilityAmount" -> 2015.13,
-            "taxYearCoding" -> "2017"
-          )
-        ),
-        "documentDetails" -> Json.arr(
-          Json.obj(
-            "taxYear" -> "2018",
-            "documentID" -> "id",
-            "documentDate" -> "2018-03-29",
-            "documentText" -> "documentText",
-            "documentDueDate" -> "2019-03-29",
-            "documentDescription" -> "documentDescription",
-            "totalAmount" -> 1000.11,
-            "documentOutstandingAmount" -> 200.00,
-            "documentOutstandingAmount" -> 200.00,
-            "poaRelevantAmount" -> 1000.00,
-            "paymentLotItem" -> "paymentLotItem",
-            "paymentLot" -> "paymentLot",
-            "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
-            "interestRate" -> 2.60,
-
-            "interestFromDate" -> "2018-08-01",
-            "interestEndDate" -> "2019-01-15",
-            "latePaymentInterestID" -> "latePaymentInterestID",
-            "latePaymentInterestAmount" -> 12.34,
-            "lpiWithDunningBlock" -> 12.50,
-            "interestOutstandingAmount" -> 31.00,
-            "amountCodedOut" -> 3.21,
-          )
-        ),
-        "financialDetailsItem" -> Json.arr(
-          Json.obj(
-            "taxYear" -> "2018",
-            "documentID" -> "transactionId",
-            "mainType" -> "4920",
-            "taxPeriodFrom" -> LocalDate.parse("2017-04-05"),
-            "taxPeriodTo" -> LocalDate.parse("2018-04-06"),
-            "chargeReference" -> "chargeRef",
-            "mainTransaction" -> "4920",
-            "originalAmount" -> 500.00,
-            "outstandingAmount" -> 500.00,
-            "clearedAmount" -> 500.00,
-            "accruedInterest" -> 1000,
-            "items" -> Json.arr(
-              Json.obj(
-              )
-            )
-          )
-        ),
-      )
-    )
-
-  // HiP
   val testTaxPayerHipDetails: TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
 
   val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
@@ -153,7 +80,21 @@ object FinancialDetailHipIntegrationTestConstants {
     accruedInterest = Some(BigDecimal(1000.00)),
     items = Some(
       Seq(
-        SubItemHip()
+        SubItemHip(
+          subItem = Option("001"),
+          dueDate = Option(LocalDate.parse("2025-07-10")),
+          amount = Option(-300),
+          clearingDate = Option(LocalDate.parse("2024-10-29")),
+          clearingReason = Option("Allocated to Charge"),
+          paymentReference = Option("100207948"),
+          paymentAmount = Option(BigDecimal(500)),
+          paymentMethod = Option("PAYMENTS MADE BY CHEQUE"),
+          paymentLot = Option("24714"),
+          paymentLotItem = Option("000002"),
+          clearingSAPDocument = Option("003400044065"),
+          codedOutStatus = Option("S"),
+          paymentId = Option("24714-000002")
+        )
       )
     ))
 
@@ -162,7 +103,14 @@ object FinancialDetailHipIntegrationTestConstants {
       taxYearReturn = Option("2018"),
       amountCodedOut = Option(2015.13),
       taxYearCoding = Option("2017"),
-      coded = None
+      coded = Some(
+        Seq(
+          CodedEntryHip(
+            amount = BigDecimal(1500),
+            initiationDate = LocalDate.parse("2023-10-30")
+          )
+        )
+      )
     )
   )
 }

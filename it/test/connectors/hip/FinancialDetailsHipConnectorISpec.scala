@@ -17,7 +17,6 @@
 package connectors.hip
 
 import connectors.httpParsers.ChargeHttpParser.{UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
-import constants.FinancialDetailHipIntegrationTestConstants._
 import helpers.{ComponentSpecBase, FinancialDetailsHipItDataHelper, WiremockHelper}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.Json
