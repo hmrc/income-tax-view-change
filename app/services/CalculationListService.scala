@@ -28,10 +28,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CalculationListService @Inject()(val calculationListConnector: CalculationListConnector) extends Logging {
 
-  lazy val TAX_YEAR_2026: Int = 2026
+//  lazy val TAX_YEAR_2026: Int = 2026
 
   def getCalculationList(nino: String, taxYearEnd: String)
-                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
+                        (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
     logger.info(s"Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearEnd")
     calculationListConnector.getCalculationList(nino, taxYearEnd).map {
@@ -47,11 +47,14 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
     logger.info(s"Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearRange")
-    val calculationListResponse = if(getTaxYearEnd(taxYearRange) < TAX_YEAR_2026) {
-      calculationListConnector.getCalculationListTYS(nino, taxYearRange)
-    } else {
-      calculationListConnector.getCalculationList2083(nino, taxYearRange)
-    }
+    //    val calculationListResponse = if(getTaxYearEnd(taxYearRange) < TAX_YEAR_2026) {
+    //      calculationListConnector.getCalculationListTYS(nino, taxYearRange)
+    //    } else {
+    //      calculationListConnector.getCalculationList2083(nino, taxYearRange)
+    //    }
+
+    val calculationListResponse = calculationListConnector.getCalculationList2083(nino, taxYearRange)
+
     calculationListResponse.map {
       case success@Right(calculationListResponse: CalculationListResponseModel) =>
         logger.info(s"Retrieved Calculation List TYS Data:\n\n$calculationListResponse")
@@ -61,11 +64,10 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
     }
   }
 
-  private def getTaxYearEnd(taxYearRange: String): Int = {
-    val taxYearEndString: String = taxYearRange.trim.takeRight(2)
-    taxYearEndString.toInt + 2000
-  }
-
+//  private def getTaxYearEnd(taxYearRange: String): Int = {
+//    val taxYearEndString: String = taxYearRange.trim.takeRight(2)
+//    taxYearEndString.toInt + 2000
+//  }
 
 
 }
