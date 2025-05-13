@@ -31,6 +31,8 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
   val correlationId = "123-456-789"
 
   val getITSAStatusUrl = s"/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=true&history=true"
+  val updateRequestUrl = s"/itsd/itsa-status/update/$taxableEntityId"
+
 
   val request: OptOutUpdateRequest = OptOutUpdateRequest(taxYear = "19-20", updateReason = "ITSA status update reason")
 
@@ -60,28 +62,55 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
 
         result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, "Json Validation Error. Parsing ITSA Status Response"))
       }
-    }
 
-    "return an ITSAStatusResponseNotFound model when no ITSA status was able to be retrieved" when {
-      "the response is a 404 - NotFound" in {
-        val jsonError = Json.obj("code" -> NOT_FOUND, "reason" -> "The remote endpoint has indicated that no match found for the reference provided.")
-        WiremockHelper.stubGet(getITSAStatusUrl, NOT_FOUND, jsonError.toString())
-        val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
+      "return an ITSAStatusResponseNotFound model when no ITSA status was able to be retrieved" when {
+        "the response is a 404 - NotFound" in {
+          val jsonError = Json.obj("code" -> NOT_FOUND, "reason" -> "The remote endpoint has indicated that no match found for the reference provided.")
+          WiremockHelper.stubGet(getITSAStatusUrl, NOT_FOUND, jsonError.toString())
+          val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
 
-        result shouldBe Left(ITSAStatusResponseNotFound(NOT_FOUND, jsonError.toString()))
+          result shouldBe Left(ITSAStatusResponseNotFound(NOT_FOUND, jsonError.toString()))
+        }
+      }
+
+
+      "return an ITSAStatusResponseError when an unexpected error has occurred while trying to retrieve the ITSA status" when {
+        "the response is a 500 - InternalServerError" in {
+
+          val jsonError = Json.obj("code" -> INTERNAL_SERVER_ERROR, "reason" -> "Server Error, unexpected error has occurred")
+          WiremockHelper.stubGet(getITSAStatusUrl, INTERNAL_SERVER_ERROR, jsonError.toString())
+          val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
+
+          result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, jsonError.toString()))
+        }
       }
     }
 
+    ".requestOptOutForTaxYear() is called" when {
 
-    "return an ITSAStatusResponseError when an unexpected error has occurred while trying to retrieve the ITSA status" when {
-      "the response is a 500 - InternalServerError" in {
+      "the response is a 204 - NoContent" should {
 
-        val jsonError = Json.obj("code" -> INTERNAL_SERVER_ERROR, "reason" -> "Server Error, unexpected error has occurred")
-        WiremockHelper.stubGet(getITSAStatusUrl, INTERNAL_SERVER_ERROR, jsonError.toString())
-        val result = connector.getITSAStatus(taxableEntityId, taxYear, futureYears = true, history = true).futureValue
+        "return a OptOutUpdateResponseSuccess response with a correlationId when successful" in {
+          val response = OptOutUpdateResponseSuccess(correlationId)
+          WiremockHelper.stubPutWithHeaders(updateRequestUrl, NO_CONTENT, Json.toJson(response).toString, Map("correlationId" -> correlationId))
+          val result = connector.requestOptOutForTaxYear(taxableEntityId, request).futureValue
 
-        result shouldBe Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, jsonError.toString()))
+          result shouldBe response
+        }
+      }
+
+      "the response is a 500 - InternalServerError" should {
+
+        "return an OptOutUpdateResponseFailure when there has been an error with the request" in {
+          val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
+          val headers = Map("correlationId" -> correlationId)
+          WiremockHelper.stubPutWithHeaders(updateRequestUrl, INTERNAL_SERVER_ERROR, expectedResponse, headers)
+          val result = connector.requestOptOutForTaxYear(taxableEntityId, request).futureValue
+
+          result shouldBe OptOutUpdateResponseFailure.defaultFailure(correlationId)
+        }
       }
     }
+
   }
 }
