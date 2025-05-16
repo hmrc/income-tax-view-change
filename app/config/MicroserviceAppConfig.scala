@@ -16,7 +16,7 @@
 
 package config
 
-import models.hip.{GetBusinessDetailsHipApi, HipApi}
+import models.hip.{CreateIncomeSourceHipApi, GetBusinessDetailsHipApi, HipApi}
 import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import utils.DateUtils
@@ -71,21 +71,27 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     s"Basic $encoded"
   }
 
-  def getHIPHeaders(hipApi: HipApi): Seq[(String, String)] = {
+  def getHIPHeaders(hipApi: HipApi, messageTypeHeaderValue: Option[String] = None): Seq[(String, String)] = {
     val additionalHeaders: Seq[(String, String)] = {
       hipApi match {
         case GetBusinessDetailsHipApi =>
           Seq(
-            ("X-Message-Type", "TaxpayerDisplay"),
             ("X-Originating-System", "MTDITSAViewAndChange"),
             ("X-Receipt-Date", DateUtils.nowAsUtc),
             ("X-Regime-Type", "ITSA"),
             ("X-Transmitting-System", "HIP")
           )
+        case CreateIncomeSourceHipApi =>
+          Seq(
+            ("X-Originating-System", "MTDITSAViewAndChange"),
+            ("X-Receipt-Date", DateUtils.nowAsUtc),
+            ("X-Regime", "ITSA"),
+            ("X-Transmitting-System", "HIP")
+          )
         case _ => Seq.empty
       }
     }
-    Seq(
+    messageTypeHeaderValue.map(mtv => Seq(("X-Message-Type", mtv))).getOrElse(Seq()) ++ Seq(
       (HeaderNames.authorisation, getHipCredentials(hipApi)),
       ("correlationId", UUID.randomUUID().toString)
     ) ++ additionalHeaders
