@@ -37,6 +37,9 @@ object ITSAStatusConnector {
 trait ITSAStatusConnectorTrait {
   def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean, history: Boolean)
                    (implicit headerCarrier: HeaderCarrier): Future[Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]]
+
+  def requestOptOutForTaxYear(taxableEntityId: String, optOutUpdateRequest: OptOutUpdateRequest)
+                             (implicit headerCarrier: HeaderCarrier): Future[OptOutUpdateResponse]
 }
 
 class ITSAStatusConnector @Inject()(val http: HttpClientV2,

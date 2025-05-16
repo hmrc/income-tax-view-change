@@ -18,11 +18,14 @@ package connectors.hip
 
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
+import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.ITSAStatusConnectorTrait
+import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponse, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
 import models.hip.ITSAStatusHipApi
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
 import play.api.Logging
 import play.api.http.Status._
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
@@ -37,15 +40,19 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
                                     val appConfig: MicroserviceAppConfig
                                    )(implicit ec: ExecutionContext) extends ITSAStatusConnectorTrait with RawResponseReads with Logging {
 
+  val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(ITSAStatusHipApi)
+
   def getITSAStatusUrl(taxableEntityId: String, taxYear: String, futureYears: String, history: String): String =
     s"${appConfig.hipUrl}/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=$futureYears&history=$history"
+
+  def updateItsaStatusUrl(taxableEntityId: String): String =
+    s"${appConfig.hipUrl}/itsd/itsa-status/update/$taxableEntityId"
 
   def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean, history: Boolean)
                    (implicit headerCarrier: HeaderCarrier): Future[Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]] = {
 
     val url = getITSAStatusUrl(taxableEntityId, taxYear, futureYears.toString, history.toString)
 
-    val hipHeaders = appConfig.getHIPHeaders(ITSAStatusHipApi)
 
     logger.info("" +
       s"Calling GET $url \n\nHeaders: $headerCarrier \nAuth Headers: $hipHeaders")
@@ -81,5 +88,34 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
         logger.error(s"Unexpected failed future, ${ex.getMessage}")
         Left(ITSAStatusResponseError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}"))
     }
+  }
+
+  def requestOptOutForTaxYear(taxableEntityId: String, optOutUpdateRequest: OptOutUpdateRequest)
+                             (implicit headerCarrier: HeaderCarrier): Future[OptOutUpdateResponse] = {
+
+    http.put(url"${updateItsaStatusUrl(taxableEntityId)}")
+      .withBody(Json.toJson[OptOutUpdateRequest](optOutUpdateRequest))
+      .setHeader(hipHeaders: _*)
+      .execute[HttpResponse]
+      .map{ response =>
+        val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
+        response.status match {
+          case NO_CONTENT =>
+            logger.info("ITSA status successfully updated")
+            OptOutUpdateResponseSuccess(correlationId)
+          case _ =>
+            response.json.validate[OptOutUpdateResponseFailure].fold(
+              invalid => {
+                val msg = s"Json validation error parsing itsa-status update response, error $invalid"
+                logger.error(msg)
+                OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
+              },
+              valid => {
+                logger.debug(s"Unsuccessful response: $valid")
+                valid.copy(correlationId = correlationId, statusCode = response.status)
+              }
+            )
+        }
+      }
   }
 }
