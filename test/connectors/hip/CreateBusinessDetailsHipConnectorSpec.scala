@@ -34,6 +34,13 @@ class CreateBusinessDetailsHipConnectorSpec extends TestSupport with MockHttpV2 
 
     "return an IncomeSource model if status (OK) is returned by API with valid json body" in {
       mock(validCreateSelfEmploymentRequest, successHttpResponse)
+      getHeaders.exists(_._1 == "Authorization") shouldBe true
+      getHeaders.exists(_._1 == "correlationId") shouldBe true
+      getHeaders.exists(_._1 == "X-Message-Type") shouldBe true
+      getHeaders.exists(_._1 == "X-Originating-System") shouldBe true
+      getHeaders.exists(_._1 == "X-Receipt-Date") shouldBe true
+      getHeaders.exists(_._1 == "X-Regime") shouldBe true
+      getHeaders.exists(_._1 == "X-Transmitting-System") shouldBe true
       create(validCreateSelfEmploymentRequest).futureValue shouldBe Right(successResponse)
     }
 
