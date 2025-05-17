@@ -20,6 +20,8 @@ trait HipConnectorDataHelper {
 
   // Headers constants
   val xMessageTypeFor5277 = "ETMPGetFinancialDetails" // <= HiP version for 1553
+  val xMessageTypeFor5266 = "TaxpayerDisplay" // <= HiP version for 1171
+  val xMessageTypeFor5265 = "CreateIncomeSource" // <= HiP version for 1566
   val xOriginatingSystem: String = "MDTP"
   val xTransmittingSystem : String = "HIP"
 

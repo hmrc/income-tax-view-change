@@ -16,7 +16,7 @@
 
 package mocks
 
-import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, IncomeSource}
+import models.hip.incomeSourceDetails.{CreateBusinessDetailsHipErrorResponse, IncomeSource}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
@@ -40,18 +40,18 @@ trait MockCreateBusinessDetailsService extends AnyWordSpecLike with Matchers wit
 
   val testIncomeSourceId: String = "AAIS12345678901"
 
-  def mockCreateBusinessDetailsErrorResponse(): OngoingStubbing[Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]]] =
-    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any()))
+  def mockCreateBusinessDetailsErrorResponse(): OngoingStubbing[Future[Either[CreateBusinessDetailsHipErrorResponse, List[IncomeSource]]]] =
+    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any(), any()))
       .thenReturn(
         Future.successful(
           Left(
-            CreateBusinessDetailsErrorResponse(INTERNAL_SERVER_ERROR, "failed to create income source")
+            CreateBusinessDetailsHipErrorResponse(INTERNAL_SERVER_ERROR, "failed to create income source")
           )
         )
       )
 
-  def mockCreateIncomeSourceSuccessResponse(): OngoingStubbing[Future[Either[CreateBusinessDetailsErrorResponse, List[IncomeSource]]]] =
-    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any()))
+  def mockCreateIncomeSourceSuccessResponse(): OngoingStubbing[Future[Either[CreateBusinessDetailsHipErrorResponse, List[IncomeSource]]]] =
+    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any(), any()))
       .thenReturn(
         Future.successful(
           Right(

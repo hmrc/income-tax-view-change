@@ -16,14 +16,20 @@
 
 package controllers
 
-import constants.CreateBusinessDetailsHipIntegrationTestConstants._
+import constants.BaseIntegrationTestConstants._
+import constants.CreateBusinessDetailsIntegrationTestConstants._
 import helpers.ComponentSpecBase
-import helpers.servicemocks.HipCreateBusinessDetailsStub
-import models.hip.incomeSourceDetails.CreateBusinessDetailsHipErrorResponse
+import helpers.servicemocks.DesCreateBusinessDetailsStub
+import models.hip.CreateIncomeSourceHipApi
+import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.CreateBusinessDetailsErrorResponse
 import play.api.http.Status._
 import play.api.libs.json.Json
 
-class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
+class IfCreateBusinessDetailsControllerISpec extends ComponentSpecBase {
+
+  override def config: Map[String, String] =
+    super.config + (s"microservice.services.hip.${CreateIncomeSourceHipApi()}.feature-switch" -> "false")
+
 
   "Calling CreateBusinessDetailsController.createBusinessDetails method" when {
     "authorised with a CreateBusinessIncomeSourceRequest model" when {
@@ -32,14 +38,15 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(CREATED, testCreateSelfEmploymentHipIncomeSourceRequest(),
-              testCreateBusinessDetailsSuccessResponse)
+          val request = testCreateSelfEmploymentIncomeSourceRequest()
+
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, OK, request, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest())
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, request)
 
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest())
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, request)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -48,13 +55,15 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
         s"return $OK response with an incomeSourceId with a missing cashOrAccrualFlag" in {
           isAuthorised(true)
 
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(OK, testCreateSelfEmploymentHipIncomeSourceRequest(None), testCreateBusinessDetailsSuccessResponse)
+          val requestMissing = testCreateSelfEmploymentIncomeSourceRequest(None)
+
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, OK, requestMissing, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest(None))
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, requestMissing)
 
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest(None))
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, requestMissing)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -67,13 +76,13 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(OK, testCreateUKPropertyHipRequest, testCreateBusinessDetailsSuccessResponse)
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateUKPropertyRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateUKPropertyRequest)
 
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateUKPropertyHipRequest)
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateUKPropertyRequest)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -86,13 +95,13 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(OK, testCreateForeignPropertyHipRequest, testCreateBusinessDetailsSuccessResponse)
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, OK, testCreateForeignPropertyRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
 
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateForeignPropertyHipRequest)
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -101,13 +110,15 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
         s"return $OK with an incomeSourceId with no flag" in {
           isAuthorised(true)
 
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(OK, testCreateHipForeignPropertyRequestNoFlag, testCreateBusinessDetailsSuccessResponse)
+          val request = testCreateForeignPropertyRequestNoFlag
+
+          DesCreateBusinessDetailsStub
+            .stubPostDesBusinessDetails(testMtdbsa, OK, request, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequestNoFlag)
+          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, request)
 
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateHipForeignPropertyRequestNoFlag)
+          DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, request)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
@@ -135,10 +146,11 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
           isAuthorised(true)
 
-          HipCreateBusinessDetailsStub.stubPostHipBusinessDetails(
+          DesCreateBusinessDetailsStub.stubPostDesBusinessDetails(
+            testMtdbsa,
             INTERNAL_SERVER_ERROR,
-            testCreateSelfEmploymentHipIncomeSourceRequest(),
-            Json.toJson(CreateBusinessDetailsHipErrorResponse(INTERNAL_SERVER_ERROR, "failed to create details"))
+            testCreateSelfEmploymentIncomeSourceRequest(),
+            Json.toJson(CreateBusinessDetailsErrorResponse(INTERNAL_SERVER_ERROR, "failed to create details"))
           )
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")

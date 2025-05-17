@@ -22,7 +22,9 @@ trait CreateBusinessDetailsResponseModel
 
 object CreateBusinessDetailsResponseModel {
 
-final case class IncomeSource(incomeSourceId: String)
+final case class IncomeSource(incomeSourceId: String) {
+  def toHipModel: models.hip.incomeSourceDetails.IncomeSource = models.hip.incomeSourceDetails.IncomeSource(incomeSourceId)
+}
 final case class CreateBusinessDetailsModel(response: List[IncomeSource])
 
   object IncomeSource {
@@ -33,7 +35,11 @@ final case class CreateBusinessDetailsModel(response: List[IncomeSource])
     implicit val formats: OFormat[CreateBusinessDetailsModel] = Json.format[CreateBusinessDetailsModel]
   }
 
-  final case class CreateBusinessDetailsErrorResponse(status: Int, reason: String) extends CreateBusinessDetailsResponseModel
+  final case class CreateBusinessDetailsErrorResponse(status: Int, reason: String) extends CreateBusinessDetailsResponseModel {
+    def toHipModel: models.hip.incomeSourceDetails.CreateBusinessDetailsHipErrorResponse = {
+      models.hip.incomeSourceDetails.CreateBusinessDetailsHipErrorResponse(status, reason)
+    }
+  }
 
   object CreateBusinessDetailsErrorResponse {
     implicit val formats: OFormat[CreateBusinessDetailsErrorResponse] = Json.format[CreateBusinessDetailsErrorResponse]
