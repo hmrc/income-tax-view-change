@@ -88,7 +88,7 @@ class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
       json <- request.body.asJson
       optOutUpdateRequest <- json.validate[OptOutUpdateRequest].asOpt
     } yield {
-      ifConnector.requestOptOutForTaxYear(taxableEntityId, optOutUpdateRequest)
+      connector.requestOptOutForTaxYear(taxableEntityId, optOutUpdateRequest)
     }
 
     connectorResponse.map(toResult).getOrElse(toResult(Future.successful(OptOutUpdateResponseFailure.defaultFailure())))

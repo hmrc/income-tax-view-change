@@ -25,10 +25,17 @@ object HipITSAStatusStub {
   def getITSAStatusUrl(taxableEntityId: String, taxYear: String): String =
     s"/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=true&history=true"
 
+  def updateItsStatusUrl(taxableEntityId: String) = s"/itsd/itsa-status/update/$taxableEntityId"
+
   val url: String = getITSAStatusUrl(taxableEntityId, taxYear)
+  val updateUrl: String = updateItsStatusUrl(taxableEntityId)
 
   def stubGetHipITSAStatusDetails(response: String): Unit = {
     WiremockHelper.stubGet(url, Status.OK, response)
+  }
+
+  def stubPutHipITSAStatusUpdate(statusInt: Int, response: String, headers: Map[String, String] = Map.empty): Unit = {
+    WiremockHelper.stubPutWithHeaders(updateUrl, statusInt, response, headers)
   }
 
   def stubGetHipITSAStatusDetailsError(): Unit = {
