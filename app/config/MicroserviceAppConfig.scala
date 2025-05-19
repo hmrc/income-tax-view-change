@@ -76,14 +76,14 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
       hipApi match {
         case GetBusinessDetailsHipApi =>
           Seq(
-            ("X-Originating-System", "MTDITSAViewAndChange"),
+            ("X-Originating-System", "MDTPITVC"),
             ("X-Receipt-Date", DateUtils.nowAsUtc),
             ("X-Regime-Type", "ITSA"),
             ("X-Transmitting-System", "HIP")
           )
         case CreateIncomeSourceHipApi =>
           Seq(
-            ("X-Originating-System", "MTDITSAViewAndChange"),
+            ("X-Originating-System", "MDTPITVC"),
             ("X-Receipt-Date", DateUtils.nowAsUtc),
             ("X-Regime", "ITSA"),
             ("X-Transmitting-System", "HIP")
