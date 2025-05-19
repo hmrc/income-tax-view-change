@@ -53,7 +53,21 @@ case class BusinessDetails(accountingPeriodStartDate: String,
                            cashOrAccrualsFlag: Option[String],
                            cessationDate: Option[String],
                            cessationReason: Option[String]
-                          )
+                          ) {
+  def toHipModel: models.hip.createIncomeSource.BusinessDetails = {
+    models.hip.createIncomeSource.BusinessDetails(
+      accountingPeriodStartDate,
+      accountingPeriodEndDate,
+      tradingName,
+      addressDetails.toHipModel,
+      typeOfBusiness.get,
+      tradingStartDate,
+      cashOrAccrualsFlag.map(_.head.toString),
+      cessationDate,
+      cessationReason
+    )
+  }
+}
 
 case class AddressDetails(addressLine1: String,
                           addressLine2: Option[String],
@@ -61,7 +75,13 @@ case class AddressDetails(addressLine1: String,
                           addressLine4: Option[String],
                           countryCode: Option[String],
                           postalCode: Option[String]
-                         )
+                         ) {
+  def toHipModel: models.hip.createIncomeSource.AddressDetails = {
+    models.hip.createIncomeSource.AddressDetails(
+      addressLine1, addressLine2, addressLine3, addressLine4, countryCode.getOrElse("GB"), postalCode
+    )
+  }
+}
 
 object CreateBusinessIncomeSourceRequest {
   implicit val format: Format[CreateBusinessIncomeSourceRequest] = Json.format[CreateBusinessIncomeSourceRequest]
@@ -88,6 +108,14 @@ final case class PropertyDetails(tradingStartDate: String,
   require(cashOrAccrualsFlag.forall(_.matches("^[A-Z]+$")), "Accounting method must be capitalised")
   require(tradingStartDate.nonEmpty, "Trading start date must be provided")
   require(tradingStartDate == startDate, "Trading start date and start date must be the same")
+
+  def toHipModel: models.hip.createIncomeSource.PropertyDetails = {
+    models.hip.createIncomeSource.PropertyDetails(
+      Some(tradingStartDate),
+      cashOrAccrualsFlag.map(_.head.toString),
+      startDate
+    )
+  }
 }
 
 final case class CreateForeignPropertyIncomeSourceRequest(foreignPropertyDetails: PropertyDetails) extends CreateIncomeSourceRequest
