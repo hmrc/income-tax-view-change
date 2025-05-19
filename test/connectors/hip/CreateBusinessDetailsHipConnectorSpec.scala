@@ -36,11 +36,11 @@ class CreateBusinessDetailsHipConnectorSpec extends TestSupport with MockHttpV2 
       mock(validCreateSelfEmploymentRequest, successHttpResponse)
       getHeaders.exists(_._1 == "Authorization") shouldBe true
       getHeaders.exists(_._1 == "correlationId") shouldBe true
-      getHeaders.exists(_._1 == "X-Message-Type") shouldBe true
-      getHeaders.exists(_._1 == "X-Originating-System") shouldBe true
+      getHeaders.exists(h => h._1 == "X-Message-Type" && h._2 == "CreateIncomeSource") shouldBe true
+      getHeaders.exists(h => h._1 == "X-Originating-System" && h._2 == "MTDITSAViewAndChange") shouldBe true
       getHeaders.exists(_._1 == "X-Receipt-Date") shouldBe true
-      getHeaders.exists(_._1 == "X-Regime") shouldBe true
-      getHeaders.exists(_._1 == "X-Transmitting-System") shouldBe true
+      getHeaders.exists(h => h._1 == "X-Regime" && h._2 == "ITSA" ) shouldBe true
+      getHeaders.exists(h => h._1 == "X-Transmitting-System" && h._2 == "HIP") shouldBe true
       create(validCreateSelfEmploymentRequest).futureValue shouldBe Right(successResponse)
     }
 

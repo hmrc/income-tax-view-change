@@ -37,7 +37,7 @@ class CreateBusinessDetailsHipConnector @Inject()(val http: HttpClientV2,
 
   val getUrl: String = s"${appConfig.hipUrl}/etmp/RESTAdapter/itsa/taxpayer/income-source"
 
-  def getHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(CreateIncomeSourceHipApi, Some(xMessageTypeFor5266))
+  def getHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(CreateIncomeSourceHipApi, Some(xMessageTypeFor5265))
 
   def create(body: CreateIncomeSourceHipRequest)
             (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsHipErrorResponse, List[IncomeSource]]] = {
