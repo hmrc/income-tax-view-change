@@ -82,7 +82,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
           address = models.hip.createIncomeSource.AddressDetails("10 FooBar Street", None, None, None, "GB", None),
           typeOfBusiness = "test business type",
           tradingStartDate = testDate,
-          cashOrAccrualsFlag = cashOrAccFlag,
+          cashAccrualsFlag = cashOrAccFlag,
           cessationDate = None,
           cessationReason = None
         )
@@ -112,7 +112,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashOrAccrualsFlag = Some("C"),
+          cashAccrualsFlag = Some("C"),
           startDate = testDate
         )
       )
@@ -135,7 +135,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashOrAccrualsFlag = Some("A"),
+          cashAccrualsFlag = Some("A"),
           startDate = testDate
         )
       )
@@ -158,7 +158,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashOrAccrualsFlag = None,
+          cashAccrualsFlag = None,
           startDate = testDate
         )
       )
