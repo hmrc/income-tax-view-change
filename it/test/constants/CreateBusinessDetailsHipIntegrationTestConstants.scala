@@ -70,8 +70,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
       )
     )
 
-  def createBusinessHipIncomeSourceRequest
-  (cashOrAccFlag: Option[String]): CreateBusinessIncomeSourceHipRequest =
+  def createBusinessHipIncomeSourceRequest(cashOrAccFlag: String): CreateBusinessIncomeSourceHipRequest =
     CreateBusinessIncomeSourceHipRequest(
       testMtdbsa,
       List(
@@ -92,7 +91,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
   def testCreateSelfEmploymentIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("CASH")): JsValue =
     Json.toJson(createBusinessIncomeSourceRequest(cashOrAccFlag))
 
-  def testCreateSelfEmploymentHipIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("C")): JsValue =
+  def testCreateSelfEmploymentHipIncomeSourceRequest(cashOrAccFlag: String = "C"): JsValue =
     Json.toJson(createBusinessHipIncomeSourceRequest(cashOrAccFlag))
 
   val testCreateUKPropertyRequest: JsValue =
@@ -112,7 +111,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = Some("C"),
+          cashAccrualsFlag = "C",
           startDate = testDate
         )
       )
@@ -135,30 +134,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = Some("A"),
-          startDate = testDate
-        )
-      )
-    )
-
-  val testCreateForeignPropertyRequestNoFlag: JsValue =
-    Json.toJson(
-      CreateForeignPropertyIncomeSourceRequest(
-        PropertyDetails(
-          tradingStartDate = testDate,
-          cashOrAccrualsFlag = None,
-          startDate = testDate
-        )
-      )
-    )
-
-  val testCreateHipForeignPropertyRequestNoFlag: JsValue =
-    Json.toJson(
-      CreateForeignPropertyIncomeSourceHipRequest(
-        testMtdbsa,
-        models.hip.createIncomeSource.PropertyDetails(
-          tradingStartDate = Some(testDate),
-          cashAccrualsFlag = None,
+          cashAccrualsFlag = "A",
           startDate = testDate
         )
       )

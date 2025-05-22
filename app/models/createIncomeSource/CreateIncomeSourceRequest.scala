@@ -60,9 +60,9 @@ case class BusinessDetails(accountingPeriodStartDate: String,
       accountingPeriodEndDate,
       tradingName,
       addressDetails.toHipModel,
-      typeOfBusiness.get,
+      typeOfBusiness.getOrElse(throw new Exception("TypeOfBusiness does not exists")),
       tradingStartDate,
-      cashOrAccrualsFlag.map(_.head.toString),
+      cashOrAccrualsFlag.map(_.head.toString).getOrElse(throw new Exception("CashOrAccrual flag does not exists")),
       cessationDate,
       cessationReason
     )
@@ -112,7 +112,7 @@ final case class PropertyDetails(tradingStartDate: String,
   def toHipModel: models.hip.createIncomeSource.PropertyDetails = {
     models.hip.createIncomeSource.PropertyDetails(
       Some(tradingStartDate),
-      cashOrAccrualsFlag.map(_.head.toString),
+      cashOrAccrualsFlag.map(_.head.toString).getOrElse(throw new Exception("CashOrAccrual flag does not exists")),
       startDate
     )
   }

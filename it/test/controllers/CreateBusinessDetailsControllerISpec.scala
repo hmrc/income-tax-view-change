@@ -44,21 +44,6 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
         }
-
-        s"return $OK response with an incomeSourceId with a missing cashOrAccrualFlag" in {
-          isAuthorised(true)
-
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(OK, testCreateSelfEmploymentHipIncomeSourceRequest(None), testCreateBusinessDetailsSuccessResponse)
-
-          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest(None))
-
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest(None))
-
-          res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
-        }
       }
     }
     "authorised with a CreateUKPropertyIncomeSourceRequest model" when {
@@ -93,21 +78,6 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
 
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateForeignPropertyHipRequest)
-
-          res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
-        }
-
-        s"return $OK with an incomeSourceId with no flag" in {
-          isAuthorised(true)
-
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(OK, testCreateHipForeignPropertyRequestNoFlag, testCreateBusinessDetailsSuccessResponse)
-
-          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequestNoFlag)
-
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateHipForeignPropertyRequestNoFlag)
 
           res should have(httpStatus(OK))
           res.body should include(testIncomeSourceId)
