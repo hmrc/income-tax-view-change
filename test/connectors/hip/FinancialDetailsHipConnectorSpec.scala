@@ -19,7 +19,7 @@ package connectors.hip
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import constants.FinancialDataTestConstants._
 import mocks.MockHttpV2
-import models.financialDetails.hip.model.{ChargesHipResponse, CodingDetailsHip}
+import models.financialDetails.hip.model.ChargesHipResponse
 import models.hip.{GetFinancialDetailsHipApi, GetLegacyCalcListHipApi, HipApi}
 import org.mockito.stubbing.OngoingStubbing
 import play.api.http.Status.{NOT_FOUND, OK}
@@ -131,13 +131,13 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
         val documentDetails = List(documentDetailsHip)
         val financialDetails = List(financialDetailsHip)
         val response =
-          Right(ChargesHipResponse(testTaxPayerHipDetails, testBalanceHipDetails, List(CodingDetailsHip()), documentDetails, financialDetails))
+          Right(ChargesHipResponse(testTaxPayerHipDetails, testBalanceHipDetails, List(testCodingDetailsHip), documentDetails, financialDetails))
 
         mockPaymentAllocationHip(GetFinancialDetailsHipApi)(response)
 
         val result = TestFinancialDetailsConnector.getPaymentAllocationDetails(testNino, testDocumentId).futureValue
 
-        result shouldBe Right(ChargesHipResponse(testTaxPayerHipDetails, testBalanceHipDetails, List(CodingDetailsHip()), documentDetails, financialDetails))
+        result shouldBe Right(ChargesHipResponse(testTaxPayerHipDetails, testBalanceHipDetails, List(testCodingDetailsHip), documentDetails, financialDetails))
 
       }
     }
@@ -180,7 +180,7 @@ class FinancialDetailsHipConnectorSpec extends TestSupport with MockHttpV2 with 
           balanceDetails = testBalanceHipDetails,
           documentDetails = List(documentDetailsHip),
           financialDetails = List(financialDetailsHip),
-          codingDetails = List(CodingDetailsHip())
+          codingDetails = List(testCodingDetailsHip)
           )
         )
 

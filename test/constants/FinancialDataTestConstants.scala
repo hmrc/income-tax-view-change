@@ -476,6 +476,11 @@ object FinancialDataTestConstants {
     secondPendingAmountRequested = None,
     availableCredit = None)
 
+  val testCodingDetailsHip: CodingDetailsHip = CodingDetailsHip(
+    totalLiabilityAmount = Some(100),
+    taxYearReturn = Some("2018")
+  )
+
   val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(taxYear = 2018,
     transactionId = "id",
     documentDate = LocalDate.parse("2018-03-29"),
@@ -521,7 +526,7 @@ object FinancialDataTestConstants {
     taxpayerDetails = testTaxPayerHipDetails,
     balanceDetails = testBalanceHipDetails,
     codingDetails = List(
-      CodingDetailsHip(Some("2024"))
+      CodingDetailsHip(Some(1500.00), Some("2024"))
     ),
     documentDetails = List(documentDetailsHip),
     financialDetails = List(financialDetailsHip)

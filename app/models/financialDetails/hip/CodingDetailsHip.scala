@@ -16,34 +16,18 @@
 
 package models.financialDetails.hip.model
 
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
-case class CodingDetailsHip(
-                             /* Format: YYYY */
-                             taxYearReturn: Option[String] = None,
-                             /* Currency amount. 13-digits total with 2 decimal places */
-                             amountCodedOut: Option[BigDecimal] = None, // renamed to fit FE from totalLiabilityAmount
-                             /* Format: YYYY */
-                             taxYearCoding: Option[String] = None,
-                             coded: Option[Seq[CodedEntryHip]] = None // non-Hip version use: Option[Seq[CodedEntry]]
-                           )
+case class CodingDetailsHip(totalLiabilityAmount: Option[BigDecimal],
+                         taxYearReturn: Option[String])
+
 
 object CodingDetailsHip {
   implicit val writes: Writes[CodingDetailsHip] = Json.writes[CodingDetailsHip]
-
-  implicit val reads: Reads[CodingDetailsHip] = {
-    for {
-      taxReturn <- (JsPath \ "taxYearReturn").readNullable[String]
-      amountCodedOut <- (JsPath \ "totalLiabilityAmount").readNullable[BigDecimal]
-      taxYearCoding <- (JsPath \ "taxYearCoding").readNullable[String]
-      coded <- (JsPath \ "coded").readNullable[CodedEntryHip]
-    } yield {
-      CodingDetailsHip(taxYearReturn = taxReturn,
-        amountCodedOut = amountCodedOut,
-        taxYearCoding = taxYearCoding, coded = coded.map(Seq(_))
-      )
-    }
-  }
-
+  implicit val reads: Reads[CodingDetailsHip] = (
+    (JsPath \ "totalLiabilityAmount").readNullable[BigDecimal] and
+      (JsPath \ "taxYearReturn").readNullable[String]
+    ) (CodingDetailsHip.apply _)
 }
 
