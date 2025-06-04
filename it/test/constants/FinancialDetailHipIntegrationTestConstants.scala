@@ -17,7 +17,7 @@
 package constants
 
 import constants.BaseTestConstants.testNino
-import models.financialDetails.hip.model.{BalanceDetailsHip, CodedEntryHip, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
+import models.financialDetails.hip.model.{BalanceDetailsHip, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
 
 import java.time.LocalDate
 
