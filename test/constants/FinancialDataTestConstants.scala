@@ -49,7 +49,8 @@ object FinancialDataTestConstants {
       |    },
       |    "codingDetails": [
       |      {
-      |        "taxYearReturn": "2024"
+      |        "taxYearReturn": "2024",
+      |        "totalLiabilityAmount": 1500.0
       |      }
       |    ],
       |    "documentDetails": [
