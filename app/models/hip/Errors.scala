@@ -79,3 +79,15 @@ object BadGatewayResponse extends ErrorResponse(
   BAD_GATEWAY,
   Json.toJson(CustomResponse("BAD_GATEWAY response"))
 )
+
+case class HipResponseError(code: String, text: String)
+
+object HipResponseError {
+  implicit val formats: Format[HipResponseError] = Json.format[HipResponseError]
+}
+
+case class HipResponseErrorsObject(errors: HipResponseError)
+
+object HipResponseErrorsObject {
+  implicit val formats: Format[HipResponseErrorsObject] = Json.format[HipResponseErrorsObject]
+}
