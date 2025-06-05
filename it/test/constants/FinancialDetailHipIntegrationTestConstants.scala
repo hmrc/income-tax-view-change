@@ -17,7 +17,7 @@
 package constants
 
 import constants.BaseTestConstants.testNino
-import models.financialDetails.hip.model.{BalanceDetailsHip, CodedEntryHip, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
+import models.financialDetails.hip.model.{BalanceDetailsHip, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
 
 import java.time.LocalDate
 
@@ -100,17 +100,8 @@ object FinancialDetailHipIntegrationTestConstants {
 
   val codingOutList: List[CodingDetailsHip] = List(
     CodingDetailsHip(
-      taxYearReturn = Option("2018"),
-      amountCodedOut = Option(2015.13),
-      taxYearCoding = Option("2017"),
-      coded = Some(
-        Seq(
-          CodedEntryHip(
-            amount = BigDecimal(1500),
-            initiationDate = LocalDate.parse("2023-10-30")
-          )
-        )
-      )
+      totalLiabilityAmount = Some(2015.13),
+      taxYearReturn = Option("2018")
     )
   )
 }
