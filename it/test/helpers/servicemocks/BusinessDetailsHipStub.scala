@@ -17,6 +17,7 @@
 package helpers.servicemocks
 
 import constants.HipBusinessDetailsIntegrationTestConstants._
+import constants.HipIncomeSourceIntegrationTestConstants
 import helpers.WiremockHelper
 import models.hip.incomeSourceDetails.IncomeSourceDetailsModel
 import play.api.http.Status
@@ -28,6 +29,14 @@ object BusinessDetailsHipStub {
   def stubGetHipBusinessDetails(mtdRef: String, response: IncomeSourceDetailsModel): Unit = {
     val hipBusinessDetailsResponse = successResponseHip(response.nino).toString
     WiremockHelper.stubGet(hipUrl(mtdRef), Status.OK, hipBusinessDetailsResponse)
+  }
+
+  def stubGetHipBusinessDetails422NotFound(nino: String): Unit = {
+    WiremockHelper.stubGet(hipUrl(nino), Status.UNPROCESSABLE_ENTITY, HipIncomeSourceIntegrationTestConstants.errorJson422NotFoundError.toString)
+  }
+
+  def stubGetHipBusinessDetails422GenericError(nino: String): Unit = {
+    WiremockHelper.stubGet(hipUrl(nino), Status.UNPROCESSABLE_ENTITY, HipIncomeSourceIntegrationTestConstants.errorJson422GeneralError.toString)
   }
 
   def stubGetBusinessDetailsError(mtdRef: String): Unit = {

@@ -18,11 +18,11 @@ package controllers
 
 import constants.BaseIntegrationTestConstants._
 import constants.HipBusinessDetailsIntegrationTestConstants.jsonSuccessOutput
-import constants.HipIncomeSourceIntegrationTestConstants.{incomeSourceDetailsError, incomeSourceDetailsSuccess, ninoLookupError}
+import constants.HipIncomeSourceIntegrationTestConstants.{incomeSourceDetailsError, incomeSourceDetailsNotFoundError, incomeSourceDetailsSuccess, ninoLookupError}
 import helpers.ComponentSpecBase
 import helpers.servicemocks.{BusinessDetailsHipCallWithNinoStub, BusinessDetailsHipStub}
 import models.hip.core.{NinoErrorModel, NinoModel}
-import models.hip.incomeSourceDetails.IncomeSourceDetailsError
+import models.hip.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsNotFound}
 import play.api.http.Status._
 
 
@@ -107,6 +107,27 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
           res should have(
             httpStatus(OK),
             jsonBodyMatching(jsonSuccessOutput())
+          )
+        }
+      }
+
+      "An 422 response is returned from IF" should {
+        "return an 404 Response model" in {
+          isAuthorised(true)
+
+          And("I wiremock stub an error response")
+          BusinessDetailsHipStub.stubGetHipBusinessDetails422NotFound(testMtdRef)
+
+          When(s"I call GET income-tax-view-change/income-sources/$testMtdRef")
+          val res = IncomeTaxViewChange.getIncomeSources(testMtdRef)
+
+          BusinessDetailsHipStub.verifyGetHipBusinessDetails(testMtdRef)
+
+          Then("an NOT_FOUND response is returned")
+
+          res should have(
+            httpStatus(NOT_FOUND),
+            jsonBodyAs[IncomeSourceDetailsNotFound](incomeSourceDetailsNotFoundError)
           )
         }
       }
