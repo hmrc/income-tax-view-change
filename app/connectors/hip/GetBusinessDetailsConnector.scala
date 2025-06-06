@@ -90,6 +90,7 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
   }
 
   private def handleUnprocessableStatusResponse(unprocessableResponse: HttpResponse): IncomeSourceDetailsResponseModel = {
+    val notFoundCodes = Set("006", "008")
     unprocessableResponse.json.validate[HipResponseErrorsObject] match {
       case JsError(errors) =>
         logger.error("Unable to parse response as Business Validation Error - " + errors)
@@ -97,8 +98,8 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
         IncomeSourceDetailsError(unprocessableResponse.status, unprocessableResponse.body)
       case JsSuccess(success, _) =>
         success match {
-          case error: HipResponseErrorsObject if error.errors.code == "006" || error.errors.code == "008" =>
-            logger.info(s"Resource not found code identified, converting to 404 response")
+          case error: HipResponseErrorsObject if notFoundCodes.contains(error.errors.code) =>
+            logger.info(s"Resource not found code identified, code:${error.errors.code}, converting to 404 response")
             IncomeSourceDetailsNotFound(NOT_FOUND, unprocessableResponse.body)
           case _ =>
             logger.error(s"${unprocessableResponse.status} returned from HiP with body: ${unprocessableResponse.body}")

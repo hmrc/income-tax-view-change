@@ -68,7 +68,7 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
           )
         }
 
-        "return a UNPROCESSABLE_ENTITY 422 NOT FOUND error" in {
+        "return a UNPROCESSABLE_ENTITY 422 NOT FOUND error with 006 or 008 codes" in {
 
           isAuthorised(true)
 
@@ -80,14 +80,14 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
 
           BusinessDetailsHipCallWithNinoStub.verifyGetHipBusinessDetails(testNino)
 
-          Then("a successful response is returned with the correct business details")
+          Then("a UNPROCESSABLE_ENTITY response is transformed to NOT_FOUND")
 
           res should have(
             httpStatus(NOT_FOUND)
           )
         }
 
-        "return a UNPROCESSABLE_ENTITY 422 General error" in {
+        "return a UNPROCESSABLE_ENTITY 422 with 001 code" in {
 
           isAuthorised(true)
 
@@ -99,7 +99,7 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
 
           BusinessDetailsHipCallWithNinoStub.verifyGetHipBusinessDetails(testNino)
 
-          Then("a successful response is returned with the correct business details")
+          Then("same error response UNPROCESSABLE_ENTITY is cascaded to frontend")
 
           res should have(
             httpStatus(UNPROCESSABLE_ENTITY)

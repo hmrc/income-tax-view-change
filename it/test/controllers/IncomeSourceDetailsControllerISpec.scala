@@ -123,7 +123,7 @@ class IncomeSourceDetailsControllerISpec extends ComponentSpecBase {
 
           BusinessDetailsHipStub.verifyGetHipBusinessDetails(testMtdRef)
 
-          Then("an error response is returned")
+          Then("an NOT_FOUND response is returned")
 
           res should have(
             httpStatus(NOT_FOUND),
