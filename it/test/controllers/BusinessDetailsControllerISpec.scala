@@ -67,6 +67,44 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
             httpStatus(NOT_FOUND)
           )
         }
+
+        "return a UNPROCESSABLE_ENTITY 422 NOT FOUND error" in {
+
+          isAuthorised(true)
+
+          And("I wiremock stub a successful getIncomeSourceDetails response")
+          BusinessDetailsHipCallWithNinoStub.stubGetHipBusinessDetails422NotFound(testNino)
+
+          When(s"I call GET /get-business-details/nino/$testNino")
+          val res = IncomeTaxViewChange.getBusinessDetails(testNino)
+
+          BusinessDetailsHipCallWithNinoStub.verifyGetHipBusinessDetails(testNino)
+
+          Then("a successful response is returned with the correct business details")
+
+          res should have(
+            httpStatus(NOT_FOUND)
+          )
+        }
+
+        "return a UNPROCESSABLE_ENTITY 422 General error" in {
+
+          isAuthorised(true)
+
+          And("I wiremock stub a successful getIncomeSourceDetails response")
+          BusinessDetailsHipCallWithNinoStub.stubGetHipBusinessDetails422GenericError(testNino)
+
+          When(s"I call GET /get-business-details/nino/$testNino")
+          val res = IncomeTaxViewChange.getBusinessDetails(testNino)
+
+          BusinessDetailsHipCallWithNinoStub.verifyGetHipBusinessDetails(testNino)
+
+          Then("a successful response is returned with the correct business details")
+
+          res should have(
+            httpStatus(UNPROCESSABLE_ENTITY)
+          )
+        }
       }
       "An error response is returned from DES" should {
         "return an Error Response model" in {

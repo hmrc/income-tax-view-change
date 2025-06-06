@@ -19,7 +19,7 @@ package constants
 import constants.BaseIntegrationTestConstants.{testMtdbsa, testNino}
 import constants.HipBusinessDetailsIntegrationTestConstants.{testBusinessModel, testPropertyDetailsModel}
 import models.hip.core.NinoErrorModel
-import models.hip.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
+import models.hip.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel, IncomeSourceDetailsNotFound}
 import play.api.libs.json.{JsValue, Json}
 import play.mvc.Http.Status
 
@@ -41,7 +41,24 @@ object HipIncomeSourceIntegrationTestConstants {
         "message" -> "ISE"
       ))
   }
+
+  val errorJson422GeneralError: JsValue = {
+    Json.obj("errors" ->
+      Json.obj(
+        "code" -> "001",
+        "text" -> "REGIME missing or invalid"
+      ))
+  }
+
+  val errorJson422NotFoundError: JsValue = {
+    Json.obj("errors" ->
+      Json.obj(
+        "code" -> "008",
+        "text" -> "Subscription data not found"
+      ))
+  }
   val incomeSourceDetailsError: IncomeSourceDetailsError = IncomeSourceDetailsError(500, errorJson.toString())
+  val incomeSourceDetailsNotFoundError: IncomeSourceDetailsNotFound = IncomeSourceDetailsNotFound(404, errorJson422NotFoundError.toString())
 
   val ninoLookupError: NinoErrorModel = NinoErrorModel(Status.INTERNAL_SERVER_ERROR, errorJson.toString())
 
