@@ -26,6 +26,81 @@ import java.time.LocalDate
 
 object FinancialDataTestConstants {
 
+  val validHipChargesJson: JsValue = Json.parse(
+    """
+      |{
+      |  "success": {
+      |    "taxpayerDetails": {
+      |      "idType": "NINO",
+      |      "idNumber": "BB123456A",
+      |      "regimeType": "ITSA"
+      |    },
+      |    "balanceDetails": {
+      |      "balanceDueWithin30days": 100.0,
+      |      "balanceNotDuein30Days": 200.0,
+      |      "nextPaymntDateBalnceNotDue": "2018-08-01",
+      |      "nxtPymntDateChrgsDueIn30Days" : "2018-08-01",
+      |      "overDueAmount": 45.0,
+      |      "earlistPymntDateOverDue" : "2018-08-01",
+      |      "totalBalance": 450.0,
+      |      "amountCodedOut": 340.55,
+      |      "totalCredit": 123.0,
+      |      "firstPendingAmountRequested" : 120.0
+      |    },
+      |    "codingDetails": [
+      |      {
+      |        "taxYearReturn": "2024",
+      |        "totalLiabilityAmount": 1500.0
+      |      }
+      |    ],
+      |    "documentDetails": [
+      |      {
+      |        "taxYear": "2018",
+      |        "documentID": "id",
+      |        "documentDate": "2018-03-29",
+      |        "documentText": "documentText",
+      |        "documentDueDate": "2019-03-29",
+      |        "documentDescription": "documentDescription",
+      |        "totalAmount": 1000.0,
+      |        "documentOutstandingAmount": 200.0,
+      |        "poaRelevantAmount": 1000.0,
+      |        "paymentLot": "paymentLot",
+      |        "paymentLotItem": "paymentLotItem",
+      |        "effectiveDateOfPayment": "2018-03-29",
+      |        "interestRate": 2.6,
+      |        "interestFromDate": "2018-08-01",
+      |        "interestEndDate": "2019-01-15",
+      |        "latePaymentInterestID": "latePaymentInterestID",
+      |        "latePaymentInterestAmount": 12.34,
+      |        "lpiWithDunningLock": 12.50,
+      |        "interestOutstandingAmount": 31.0,
+      |        "amountCodedOut": 3.21
+      |      }
+      |    ],
+      |    "financialDetailsItem": [
+      |      {
+      |        "taxYear": "2018",
+      |        "documentID": "id",
+      |        "taxPeriodFrom": "2017-04-05",
+      |        "taxPeriodTo": "2018-04-06",
+      |        "chargeReference": "chargeRef",
+      |        "mainType": "4920",
+      |        "mainTransaction": "4920",
+      |        "originalAmount": 500.0,
+      |        "outstandingAmount": 500.0,
+      |        "clearedAmount": 500.0,
+      |        "accruedInterest": 1000.0,
+      |        "items": [
+      |         {
+      |         }
+      |        ]
+      |      }
+      |    ]
+      |  }
+      |}
+      |""".stripMargin
+  )
+
   val validChargesJson: JsValue = Json.parse(
     """{
       |"balanceDetails": {
