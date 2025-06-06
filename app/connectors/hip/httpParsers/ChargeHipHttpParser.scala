@@ -30,9 +30,6 @@ object ChargeHipHttpParser extends ErrorResponseHttpParsers {
 
   type ChargeHipResponse = Either[ChargeResponseError, ChargesHipResponse]
 
-
-
-
   implicit object ChargeHipReads extends HttpReads[ChargeHipResponse] {
     override def read(method: String, url: String, response: HttpResponse): ChargeHipResponse = {
       response.status match {
