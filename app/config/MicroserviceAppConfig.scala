@@ -62,9 +62,9 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
 
   lazy val hipUrl: String = servicesConfig.baseUrl("hip")
 
-  private def getHipCredentials(hipApi: HipApi): String = {
-    val clientId = loadConfig(s"microservice.services.hip.${hipApi.name}.clientId")
-    val secret = loadConfig(s"microservice.services.hip.${hipApi.name}.secret")
+  private def getHipCredentials: String = {
+    val clientId = loadConfig(s"microservice.services.hip.clientId")
+    val secret = loadConfig(s"microservice.services.hip.secret")
 
     val encoded = Base64.getEncoder.encodeToString(s"$clientId:$secret".getBytes("UTF-8"))
 
@@ -92,7 +92,7 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
       }
     }
     messageTypeHeaderValue.map(mtv => Seq(("X-Message-Type", mtv))).getOrElse(Seq()) ++ Seq(
-      (HeaderNames.authorisation, getHipCredentials(hipApi)),
+      (HeaderNames.authorisation, getHipCredentials),
       ("correlationId", UUID.randomUUID().toString)
     ) ++ additionalHeaders
   }
