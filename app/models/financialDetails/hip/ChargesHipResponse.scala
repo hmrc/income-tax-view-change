@@ -59,7 +59,7 @@ case class ChargesHipResponse(
         Payment(
           reference = subItem.flatMap(_.paymentReference),
           amount = document.originalAmount,
-          outstandingAmount = document.originalAmount,
+          outstandingAmount = document.outstandingAmount,
           documentDescription = document.documentDescription,
           method = subItem.flatMap(_.paymentMethod),
           lot = document.paymentLot.fold(subItem.flatMap(_.paymentLot))(Some(_)),
