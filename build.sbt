@@ -8,14 +8,16 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "income-tax-view-change"
 
-val bootstrapPlayVersion = "9.11.0"
-val mockitoVersion = "5.8.0"
-val wiremockVersion = "2.7.1"
-val scalaMockVersion = "5.2.0"
+val bootstrapPlayVersion = "9.13.0"
+val mockitoVersion = "5.18.0"
+val wiremockVersion = "3.0.1"
+val scalaMockVersion = "7.3.3"
 val pegdownVersion = "1.6.0"
-val jsoupVersion = "1.15.4"
-val scalaTestPlusVersion = "7.0.0"
-val currentScalaVersion = "2.13.12"
+val jsoupVersion = "1.21.1"
+val scalaTestPlusVersion = "7.0.1"
+val currentScalaVersion = "3.3.5"
+
+
 
 val compile: Seq[ModuleID] = Seq(
   PlayImport.ws,
@@ -30,7 +32,7 @@ def test(scope: String = "test"): Seq[ModuleID] = Seq(
   "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapPlayVersion % scope,
   "org.mockito" % "mockito-core" % mockitoVersion % scope,
   "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.16.1",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.19.1",
   caffeine
 )
 
@@ -77,9 +79,10 @@ lazy val microservice = Project(appName, file("."))
     retrieveManaged := true
   )
   .settings(
+    ThisBuild / scalacOptions += "-Wconf:msg=Flag.*repeatedly:s",
+    ThisBuild / scalacOptions += "-Wconf:msg=unused import&src=html/.*:s",
     Test / Keys.fork := true,
     scalaVersion := currentScalaVersion,
-    scalacOptions += "-Wconf:src=routes/.*:s",
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")
   .settings(
     Keys.fork := false)
