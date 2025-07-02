@@ -85,8 +85,7 @@ lazy val microservice = Project(appName, file("."))
     Keys.fork := false)
   .settings(resolvers ++= Seq(
     MavenRepository("HMRC-open-artefacts-maven2", "https://open.artefacts.tax.service.gov.uk/maven2"),
-      Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns),
-    Resolver.jcenterRepo
+      Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns)
   ))
 
 lazy val it = project
