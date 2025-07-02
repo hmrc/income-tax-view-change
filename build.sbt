@@ -8,7 +8,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "income-tax-view-change"
 
-val bootstrapPlayVersion = "9.11.0"
+val bootstrapPlayVersion = "9.13.0"
 val mockitoVersion = "5.8.0"
 val wiremockVersion = "2.7.1"
 val scalaMockVersion = "5.2.0"
