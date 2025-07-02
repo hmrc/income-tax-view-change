@@ -15,7 +15,7 @@ val scalaMockVersion = "5.2.0"
 val pegdownVersion = "1.6.0"
 val jsoupVersion = "1.15.4"
 val scalaTestPlusVersion = "7.0.0"
-val currentScalaVersion = "2.13.12"
+val currentScalaVersion = "2.13.16"
 
 val compile: Seq[ModuleID] = Seq(
   PlayImport.ws,
