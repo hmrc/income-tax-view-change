@@ -12,7 +12,6 @@ val bootstrapPlayVersion = "9.13.0"
 val mockitoVersion = "5.8.0"
 val wiremockVersion = "2.7.1"
 val scalaMockVersion = "5.2.0"
-val pegdownVersion = "1.6.0"
 val jsoupVersion = "1.15.4"
 val scalaTestPlusVersion = "7.0.0"
 val currentScalaVersion = "2.13.16"
@@ -25,7 +24,6 @@ val compile: Seq[ModuleID] = Seq(
 def test(scope: String = "test"): Seq[ModuleID] = Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
   "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
-  "org.pegdown" % "pegdown" % pegdownVersion % scope,
   "org.jsoup" % "jsoup" % jsoupVersion % scope,
   "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapPlayVersion % scope,
   "org.mockito" % "mockito-core" % mockitoVersion % scope,
@@ -37,7 +35,6 @@ def test(scope: String = "test"): Seq[ModuleID] = Seq(
 def it(scope: String = "test"): Seq[ModuleID] = Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
   "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
-  "org.pegdown" % "pegdown" % pegdownVersion % scope,
   "org.jsoup" % "jsoup" % jsoupVersion % scope,
   "org.mockito" % "mockito-core" % mockitoVersion % scope,
   "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
