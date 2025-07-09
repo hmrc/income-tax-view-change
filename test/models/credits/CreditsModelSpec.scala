@@ -40,7 +40,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
         .get()
 
-      val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+      val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
         val json = Json.toJson(creditsModel)
 
@@ -76,7 +76,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
         .get()
 
-      val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+      val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
       creditsModel.transactions.size shouldBe 5
       creditsModel.transactions.head shouldBe Transaction(CutOverCreditType, 100.0, Some(2024), Some(LocalDate.of(2024, 6, 20)))
@@ -92,7 +92,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withSecondRefundRequest(100.0)
         .get()
 
-      val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+      val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
       creditsModel.transactions.size shouldBe 2
       creditsModel.transactions.foreach(t => t.transactionType shouldBe Repayment)
@@ -111,7 +111,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
         .get()
 
-      val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+      val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
       creditsModel.transactions.size shouldBe 5
       creditsModel.transactions.forall(t => t.amount > 0) shouldBe true
@@ -128,7 +128,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), 500)
         .get()
 
-      val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+      val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
       creditsModel.transactions.size shouldBe 5
       creditsModel.transactions.forall(t => t.amount == 0) shouldBe true
@@ -144,7 +144,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
           mainTransaction = Some("!!!!"))
         .get()
 
-      val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+      val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
       creditsModel.transactions.isEmpty shouldBe true
     }
@@ -159,7 +159,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
           mainTransaction = None)
         .get()
 
-      val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+      val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
       creditsModel.transactions.isEmpty shouldBe true
     }
