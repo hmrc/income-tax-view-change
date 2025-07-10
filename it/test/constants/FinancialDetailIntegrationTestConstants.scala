@@ -16,7 +16,7 @@
 
 package constants
 
-import models.financialDetails._
+import models.financialDetails.hip.model.{BalanceDetailsHip, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
 import play.api.libs.json.{JsObject, Json}
 
 import java.time.LocalDate
@@ -24,30 +24,29 @@ import java.time.LocalDate
 object FinancialDetailIntegrationTestConstants {
 
   val chargeJson: JsObject = Json.obj(
+    "success" -> Json.obj(
+    "taxpayerDetails" -> Json.obj(
+      "idType" -> "NINO",
+      "idNumber" -> "BB123456A",
+      "regimeType" -> "ITSA"
+    ),
     "balanceDetails" -> Json.obj(
-      "balanceDueWithin30Days" -> 100.00,
+      "balanceDueWithin30days" -> 100.00,
+      "balanceNotDuein30Days" -> 0,
       "overDueAmount" -> 200.00,
       "totalBalance" -> 300.00,
       "unallocatedCredit" -> 400.00
     ),
     "codingDetails" -> Json.arr(
-      Json.obj(
-        "taxYearReturn" -> "2018",
-        "totalReturnAmount" -> 100.00,
-        "amountNotCoded" -> 200.00,
-        "amountNotCodedDueDate" -> "2018-01-01",
-        "amountCodedOut" -> 100.00,
-        "taxYearCoding" -> "2019",
-        "coded" -> Json.arr(Json.obj(
-          "amount" -> 2300.00,
-          "initiationDate" -> "2020-04-20"
-        ))
-      )
+        Json.obj(
+          "totalLiabilityAmount" -> 2300.00,
+          "taxYearReturn" -> "2020"
+        )
     ),
     "documentDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
-        "documentId" -> "id",
+        "documentID" -> "id",
         "documentDescription" -> "documentDescription",
         "documentText" -> "documentText",
         "totalAmount" -> 300.00,
@@ -68,7 +67,7 @@ object FinancialDetailIntegrationTestConstants {
       ),
       Json.obj(
         "taxYear" -> "2019",
-        "documentId" -> "id2",
+        "documentID" -> "id2",
         "documentDescription" -> "documentDescription2",
         "totalAmount" -> 100.00,
         "documentOutstandingAmount" -> 50.00,
@@ -77,17 +76,17 @@ object FinancialDetailIntegrationTestConstants {
         "poaRelevantAmount" -> 1000.00
       )
     ),
-    "financialDetails" -> Json.arr(
+    "financialDetailsItem" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
-        "documentId" -> "transactionId",
+        "documentID" -> "id",
         "documentDate" -> "2022-06-23",
         "chargeReference" -> "chargeRef",
         "documentDescription" -> "type",
         "originalAmount" -> 1000.00,
         "totalAmount" -> 1000.00,
         "originalAmount" -> 500.00,
-        "documentOutstandingAmount" -> 500.00,
+        "outstandingAmount" -> 500.00,
         "clearedAmount" -> 500.00,
         "chargeType" -> "POA1",
         "mainType" -> "4920",
@@ -115,13 +114,13 @@ object FinancialDetailIntegrationTestConstants {
       ),
       Json.obj(
         "taxYear" -> "2019",
-        "documentId" -> "transactionId2",
+        "documentID" -> "id2",
         "documentDate" -> "2022-06-23",
         "chargeReference" -> "chargeRef",
         "documentDescription" -> "type2",
         "totalAmount" -> 2000.00,
         "originalAmount" -> 500.00,
-        "documentOutstandingAmount" -> 200.00,
+        "outstandingAmount" -> 200.00,
         "clearedAmount" -> 500.00,
         "chargeType" -> "POA1",
         "mainType" -> "4920",
@@ -149,24 +148,28 @@ object FinancialDetailIntegrationTestConstants {
       )
     )
   )
+  )
 
-  val balanceDetails: BalanceDetails = BalanceDetails(
+  val taxpayerDetails: TaxpayerDetailsHip = TaxpayerDetailsHip(
+    idType = "NINO",
+    idNumber = "BB123456A",
+    regimeType = "ITSA"
+  )
+
+  val balanceDetails: BalanceDetailsHip = BalanceDetailsHip(
     balanceDueWithin30Days = 100.00,
     overDueAmount = 200.00,
     totalBalance = 300.00,
-    None,
-    None,
-    None,
-    None,
+    balanceNotDuein30Days = 0.00,
     unallocatedCredit = Some(400.00)
   )
 
-  val codingDetails: CodingDetails = CodingDetails(
-    coded = Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))),
-    amountCodedOut = Some(100.00)
+  val codingDetails: CodingDetailsHip = CodingDetailsHip(
+    totalLiabilityAmount = Some(2300.00),
+    taxYearReturn = Some("2020")
   )
 
-  val documentDetail: DocumentDetail = DocumentDetail(
+  val documentDetail: DocumentDetailHip = DocumentDetailHip(
     taxYear = 2018,
     transactionId = "id",
     documentDescription = Some("documentDescription"),
@@ -182,13 +185,13 @@ object FinancialDetailIntegrationTestConstants {
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
-    lpiWithDunningBlock = Some(12.50),
+    lpiWithDunningLock = Some(12.50),
     amountCodedOut = Some(3.21),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
 
-  val documentDetail2: DocumentDetail = DocumentDetail(
+  val documentDetail2: DocumentDetailHip = DocumentDetailHip(
     taxYear = 2019,
     transactionId = "id2",
     documentDescription = Some("documentDescription2"),
@@ -204,18 +207,15 @@ object FinancialDetailIntegrationTestConstants {
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
-    lpiWithDunningBlock = None,
+    lpiWithDunningLock = None,
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
 
-  val financialDetail: FinancialDetail = FinancialDetail(
+  val financialDetail: FinancialDetailHip = FinancialDetailHip(
     taxYear = "2018",
-    transactionId = "transactionId",
-    transactionDate = Some(LocalDate.parse("2022-06-23")),
+    transactionId = "id",
     chargeReference = Some("chargeRef"),
-    `type` = Some("type"),
-    totalAmount = Some(BigDecimal("1000.00")),
     originalAmount = Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("500.00")),
     clearedAmount = Some(BigDecimal("500.00")),
@@ -224,8 +224,8 @@ object FinancialDetailIntegrationTestConstants {
     mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("1000")),
     items = Some(Seq(
-      SubItem(
-        subItemId = Some("1"),
+      SubItemHip(
+        subItem = Some("1"),
         amount = Some(BigDecimal("100.00")),
         clearingDate = Some(LocalDate.parse("2022-06-23")),
         clearingReason = Some("clearingReason"),
@@ -244,13 +244,10 @@ object FinancialDetailIntegrationTestConstants {
       )))
   )
 
-  val financialDetail2: FinancialDetail = FinancialDetail(
+  val financialDetail2: FinancialDetailHip = FinancialDetailHip(
     taxYear = "2019",
-    transactionId = "transactionId2",
-    transactionDate = Some(LocalDate.parse("2022-06-23")),
+    transactionId = "id2",
     chargeReference = Some("chargeRef"),
-    `type` = Some("type2"),
-    totalAmount = Some(BigDecimal("2000.00")),
     originalAmount = Some(BigDecimal("500.00")),
     outstandingAmount = Some(BigDecimal("200.00")),
     clearedAmount = Some(BigDecimal("500.00")),
@@ -259,8 +256,8 @@ object FinancialDetailIntegrationTestConstants {
     mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("2000")),
     items = Some(Seq(
-      SubItem(
-        subItemId = Some("2"),
+      SubItemHip(
+        subItem = Some("2"),
         amount = Some(BigDecimal("200.00")),
         clearingDate = Some(LocalDate.parse("2022-06-23")),
         clearingReason = Some("clearingReason2"),

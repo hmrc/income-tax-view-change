@@ -22,11 +22,12 @@ import helpers.WiremockHelper
 object DesChargesStub {
 
   private def detailsUrl(nino: String, from: String, to: String): String = {
-    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?dateFrom=$from&dateTo=$to&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
+    s"/etmp/RESTAdapter/itsa/taxpayer/financial-details?calculateAccruedInterest=true&customerPaymentInformation=true&dateFrom=$from&dateTo=$to&idNumber=$nino&idType=NINO&includeLocks=true&includeStatistical=false&onlyOpenItems=false&regimeType=ITSA&removePaymentonAccount=false"
+
   }
 
   private def singleDocumentDetailsUrl(nino: String, documentId: String): String = {
-    s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA?docNumber=$documentId&onlyOpenItems=false&includeLocks=true&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=true&includeStatistical=false"
+    s"/etmp/RESTAdapter/itsa/taxpayer/financial-details?calculateAccruedInterest=true&customerPaymentInformation=true&idNumber=$nino&idType=NINO&includeLocks=true&includeStatistical=false&onlyOpenItems=false&regimeType=ITSA&removePaymentonAccount=false&sapDocumentNumber=$documentId"
   }
 
   private def onlyOpenItemsUrl(nino: String): String = {

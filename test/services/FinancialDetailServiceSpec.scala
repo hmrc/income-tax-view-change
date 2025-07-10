@@ -17,10 +17,8 @@
 package services
 
 import config.MicroserviceAppConfig
-import connectors.FinancialDetailsConnector
 import connectors.hip.FinancialDetailsHipConnector
 import connectors.hip.httpParsers.ChargeHipHttpParser.ChargeHipResponse
-import models.hip.GetFinancialDetailsHipApi
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, when}
 import org.mockito.stubbing.OngoingStubbing
@@ -29,15 +27,13 @@ import utils.{FinancialDetailsHipDataHelper, TestSupport}
 
 import scala.concurrent.Future
 
-// We are testing only HiP connector here
 class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDataHelper{
 
   val mockFinancialDetailsHipConnector: FinancialDetailsHipConnector = mock(classOf[FinancialDetailsHipConnector])
-  val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
   val mockAppConfig: MicroserviceAppConfig = mock(classOf[MicroserviceAppConfig])
 
   object ServiceUnderTest
-    extends FinancialDetailService(mockFinancialDetailsConnector, mockFinancialDetailsHipConnector, mockAppConfig)
+    extends FinancialDetailService(mockFinancialDetailsHipConnector, mockAppConfig)
 
   def setupMockGetPayment(nino: String, fromDate: String, toDate: String)
                          (response: ChargeHipResponse): OngoingStubbing[Future[ChargeHipResponse]] = {
@@ -60,15 +56,9 @@ class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDa
     ).thenReturn(Future.successful(response))
   }
 
-  def setHipConfigOn(): OngoingStubbing[Boolean] = {
-    when(mockAppConfig.hipFeatureSwitchEnabled(GetFinancialDetailsHipApi))
-      .thenReturn(true)
-  }
-
   "Call getChargeDetails" should {
     "return success response with Json" when {
       "correct params provided" in {
-        setHipConfigOn()
         setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
         val expected = ServiceUnderTest.getChargeDetails(testNino, testFromDate, testToDate).futureValue
         expected shouldBe successResponse.map(Json.toJson(_))
@@ -79,7 +69,6 @@ class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDa
   "Call getPayments" should {
     "return success response with Json" when {
       "correct params provided" in {
-        setHipConfigOn()
         setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
         val expected = ServiceUnderTest.getPayments(testNino, testFromDate, testToDate).futureValue
         // TODO: atm ~.payments field is empty: need to fix dataChargeHipHttpParser
@@ -91,7 +80,6 @@ class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDa
   "Call getPaymentAllocationDetails" should {
     "return success response with Json" when {
       "correct params provided" in {
-        setHipConfigOn()
         setUpMockPaymentAllocationDetails(testNino, testDocumentId)(successResponse)
         val expected = ServiceUnderTest.getPaymentAllocationDetails(testNino, testDocumentId).futureValue
         expected shouldBe successResponse.map(Json.toJson(_))

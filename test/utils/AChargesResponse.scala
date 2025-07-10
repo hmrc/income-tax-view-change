@@ -16,14 +16,14 @@
 
 package utils
 
-import models.financialDetails.{BalanceDetails, DocumentDetail, FinancialDetail}
-import models.financialDetails.responses.ChargesResponse
+import models.financialDetails.hip.model.{BalanceDetailsHip, ChargesHipResponse, DocumentDetailHip, FinancialDetailHip, TaxpayerDetailsHip}
 
 import java.time.LocalDate
 
 
-case class AChargesResponse(model: ChargesResponse = ChargesResponse(
-  BalanceDetails(0.0, 0.0, 0.0, None, None, None, None, None),
+case class AChargesResponse(model: ChargesHipResponse = ChargesHipResponse(
+  TaxpayerDetailsHip("NINO","BB123456A","ITSA"),
+  BalanceDetailsHip(0.0, None, 0.0, None, 0.0, None, 0.0, None, None, None, None),
   Nil, Nil, Nil
 )) {
 
@@ -51,7 +51,7 @@ case class AChargesResponse(model: ChargesResponse = ChargesResponse(
     AChargesResponse(model.copy(balanceDetails = balanceDetails))
   }
 
-  private def addToModel(documentAndFinancialDetails: (DocumentDetail, FinancialDetail)): AChargesResponse = {
+  private def addToModel(documentAndFinancialDetails: (DocumentDetailHip, FinancialDetailHip)): AChargesResponse = {
     AChargesResponse(model.copy(
       documentDetails = model.documentDetails :+ documentAndFinancialDetails._1,
       financialDetails = model.financialDetails :+ documentAndFinancialDetails._2))
@@ -89,7 +89,7 @@ case class AChargesResponse(model: ChargesResponse = ChargesResponse(
     addToModel(documentAndFinancialDetails)
   }
 
-  def get(): ChargesResponse = model
+  def get(): ChargesHipResponse = model
 
   private def details( transactionId: String,
                        taxYear: Int,
@@ -97,9 +97,9 @@ case class AChargesResponse(model: ChargesResponse = ChargesResponse(
                        mainTransaction: Option[String],
                        originalAmount: BigDecimal,
                        outstandingAmount:BigDecimal,
-                       dueDate: LocalDate):(DocumentDetail, FinancialDetail) = {
+                       dueDate: LocalDate):(DocumentDetailHip, FinancialDetailHip) = {
 
-    val dd = DocumentDetail(
+    val dd = DocumentDetailHip(
       taxYear = taxYear,
       transactionId =transactionId,
       documentDescription = None,
@@ -115,20 +115,17 @@ case class AChargesResponse(model: ChargesResponse = ChargesResponse(
       interestOutstandingAmount = None,
       paymentLotItem = None,
       paymentLot = None,
-      lpiWithDunningBlock = None,
+      lpiWithDunningLock = None,
       amountCodedOut = None,
       effectiveDateOfPayment = None,
       documentDueDate = Some(dueDate),
       poaRelevantAmount = None
     )
 
-    val fd = FinancialDetail(
+    val fd = FinancialDetailHip(
       taxYear = s"$taxYear",
       transactionId = transactionId,
-      transactionDate = Some(dueDate),
-      `type` = None,
       chargeReference = None,
-      totalAmount = None,
       originalAmount = Some(originalAmount),
       outstandingAmount = Some(outstandingAmount),
       clearedAmount = None,

@@ -64,7 +64,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
 
         val result = FinancialDetailCreditsController.getCredits(nino, from, to)(FakeRequest())
 
-        val creditsModel = CreditsModel.fromChargesResponse(chargesResponse)
+        val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.toJson(creditsModel)

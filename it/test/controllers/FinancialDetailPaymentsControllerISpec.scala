@@ -35,7 +35,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
   val payments1: Payment = Payment(
     reference = Some("paymentReference"),
     amount = BigDecimal("-1000.00"),
-    outstandingAmount = BigDecimal("0"),
+    outstandingAmount = BigDecimal("100"),
     documentDescription = Some("documentDescription"),
     method = Some("paymentMethod"),
     lot = None,
@@ -50,7 +50,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
   val payments2: Payment = Payment(
     reference = Some("paymentReference2"),
     amount = BigDecimal("-1000.00"),
-    outstandingAmount = BigDecimal("0"),
+    outstandingAmount = BigDecimal("100"),
     method = Some("paymentMethod2"),
     documentDescription =  Some("documentDescription2"),
     lot = None,
@@ -63,53 +63,56 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
   )
 
   val chargeJson: JsObject = Json.obj(
+    "success" -> Json.obj(
+      "taxpayerDetails" -> Json.obj(
+        "idType" -> "NINO",
+        "idNumber" -> "BB123456A",
+        "regimeType" -> "ITSA"
+      ),
     "balanceDetails" -> Json.obj(
-      "balanceDueWithin30Days" -> 100.00,
+      "balanceDueWithin30days" -> 100.00,
+      "balanceNotDuein30Days" -> 0,
       "overDueAmount" -> 200.00,
       "totalBalance" -> 300.00
     ),
-    "codingDetails" -> Json.arr(
-      Json.obj(
-        "taxYearReturn" -> "2018",
-        "totalReturnAmount" -> 100.00,
-        "amountNotCoded" -> 200.00,
-        "amountNotCodedDueDate" -> "2018-01-01",
-        "amountCodedOut" -> 300.00,
-        "taxYearCoding" -> "2019"
-      )
-    ),
+      "codingDetails" -> Json.arr(
+        Json.obj(
+          "totalLiabilityAmount" -> 2300.00,
+          "taxYearReturn" -> "2020"
+        )
+      ),
     "documentDetails" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
-        "documentId" -> "id",
+        "documentID" -> "id",
         "documentDescription" -> "documentDescription",
         "documentText" -> "documentText",
         "totalAmount" -> -1000.00,
-        "documentOutstandingAmount" -> 0.00,
+        "documentOutstandingAmount" -> 100.00,
         "documentDate" -> "2018-03-29",
         "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
       ),
       Json.obj(
         "taxYear" -> "2019",
-        "documentId" -> "id2",
+        "documentID" -> "id2",
         "documentDescription" -> "documentDescription2",
         "documentText" -> "documentText2",
         "totalAmount" -> -1000.00,
-        "documentOutstandingAmount" -> 0.00,
+        "documentOutstandingAmount" -> 100.00,
         "documentDate" -> "2018-03-29",
         "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
       )
     ),
-    "financialDetails" -> Json.arr(
+    "financialDetailsItem" -> Json.arr(
       Json.obj(
         "taxYear" -> "2018",
-        "documentId" -> "id",
+        "documentID" -> "id",
         "documentDate" -> "2022-06-23",
         "documentDescription" -> "type",
         "originalAmount" -> -1000.00,
         "totalAmount" -> -1000.00,
         "originalAmount" -> -1000.00,
-        "documentOutstandingAmount" -> 0.00,
+        "outstandingAmount" -> 0.00,
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "1",
@@ -126,12 +129,12 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
       ),
       Json.obj(
         "taxYear" -> "2019",
-        "documentId" -> "id2",
+        "documentID" -> "id2",
         "documentDate" -> "2022-06-23",
         "documentDescription" -> "type2",
         "totalAmount" -> -1000.00,
         "originalAmount" -> -1000.00,
-        "documentOutstandingAmount" -> 0.00,
+        "outstandingAmount" -> 0.00,
         "items" -> Json.arr(
           Json.obj(
             "subItem" -> "2",
@@ -148,7 +151,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
       )
     )
   )
-
+  )
 
   s"GET ${controllers.routes.FinancialDetailPaymentsController.getPaymentDetails(testNino, from, to)}" should {
     s"return $OK" when {

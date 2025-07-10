@@ -17,6 +17,7 @@
 package models.financialDetails
 
 import constants.FinancialDataTestConstants._
+import models.financialDetails.hip.model.FinancialDetailHip
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, JsSuccess, JsValue, Json}
@@ -25,25 +26,26 @@ import java.time.LocalDate
 
 class FinancialDetailSpec extends AnyWordSpec with Matchers {
 
-  val financialDetailEmpty: FinancialDetail = FinancialDetail("2019", "id", None, None, None, None, None, None, None, None, None, None, None, None)
+  val financialDetailEmpty: FinancialDetailHip = FinancialDetailHip("2019", "id", None, None, None, None, None, None, None, None, None, None, None)
 
-  val financialDetailEmptyJsonRead: JsObject = Json.obj("taxYear" -> "2019", "documentId" -> "id")
+  val financialDetailEmptyJsonRead: JsObject = Json.obj("taxYear" -> "2019", "documentID" -> "id")
   val financialDetailEmptyJsonWrite: JsObject = Json.obj("taxYear" -> "2019", "transactionId" -> "id")
 
   val financialDetailFullJson: JsValue = Json.obj(
     "taxYear" -> "2018",
-    "documentId" -> "id",
+    "documentID" -> "id",
+    "chargeType" -> "POA1",
+    "mainType" -> "4920",
+    "mainTransaction" -> "4920",
+    "originalAmount" -> 500.00,
+    "outstandingAmount" -> 500.00,
+    "clearedAmount" -> 500.00,
+    "accruedInterest" -> 1000.00,
     "documentDate" -> LocalDate.parse("2022-06-23"),
     "documentDescription" -> "type",
     "chargeReference" -> "chargeRef",
     "totalAmount" -> 1000.00,
     "originalAmount" -> 500.00,
-    "clearedAmount" -> 500.00,
-    "documentOutstandingAmount" -> 500.00,
-    "chargeType" -> "POA1",
-    "mainType" -> "4920",
-    "mainTransaction" -> "4920",
-    "accruedInterest" -> 1000,
     "items" -> Json.arr(
       Json.obj(
         "subItem" -> "1",
@@ -68,10 +70,10 @@ class FinancialDetailSpec extends AnyWordSpec with Matchers {
   "FinancialDetail" should {
     "read from json" when {
       "the json is complete" in {
-        Json.fromJson[FinancialDetail](financialDetailFullJson) shouldBe JsSuccess(financialDetail)
+        Json.fromJson[FinancialDetailHip](financialDetailFullJson) shouldBe JsSuccess(financialDetail)
       }
       "the json is minimal" in {
-        Json.fromJson[FinancialDetail](financialDetailEmptyJsonRead) shouldBe JsSuccess(financialDetailEmpty)
+        Json.fromJson[FinancialDetailHip](financialDetailEmptyJsonRead) shouldBe JsSuccess(financialDetailEmpty)
       }
     }
     "write to json" when {

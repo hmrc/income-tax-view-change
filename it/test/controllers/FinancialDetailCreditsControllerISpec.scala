@@ -29,9 +29,16 @@ import java.time.LocalDate
 
 class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
 
-  val apiResponseJson = """{
+  val apiResponseJson = s"""{
+               |  "success" : {
+               |  "taxpayerDetails" : {
+               |    "idType" : "NINO",
+               |    "idNumber" : "BB123456A",
+               |    "regimeType" : "ITSA"
+               |    },
                |  "balanceDetails" : {
-               |    "balanceDueWithin30Days" : 0,
+               |    "balanceDueWithin30days" : 0,
+               |    "balanceNotDuein30Days" : 0,
                |    "overDueAmount" : 0,
                |    "totalBalance" : 0,
                |    "availableCredit" : 200,
@@ -39,45 +46,49 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "firstPendingAmountRequested" : 200,
                |    "secondPendingAmountRequested" : 100
                |  },
+               |  "codingDetails" : [ {
+               |  "totalLiabilityAmount" : 0.0,
+               |  "taxYearReturn": "2024"
+               |  }],
                |  "documentDetails" : [ {
                |    "taxYear" : "2024",
-               |    "documentId" : "CUTOVER01",
+               |    "documentID" : "CUTOVER01",
                |    "totalAmount" : -1000,
                |    "documentOutstandingAmount" : -100,
                |    "documentDate" : "2024-06-20",
                |    "documentDueDate" : "2024-06-20"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "BALANCING01",
+               |    "documentID" : "BALANCING01",
                |    "totalAmount" : -1000,
                |    "documentOutstandingAmount" : -200,
                |    "documentDate" : "2024-06-19",
                |    "documentDueDate" : "2024-06-19"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "MFA01",
+               |    "documentID" : "MFA01",
                |    "totalAmount" : -1000,
                |    "documentOutstandingAmount" : -300,
                |    "documentDate" : "2024-06-18",
                |    "documentDueDate" : "2024-06-18"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "PAYMENT01",
+               |    "documentID" : "PAYMENT01",
                |    "totalAmount" : -1000,
                |    "documentOutstandingAmount" : -400,
                |    "documentDate" : "2024-06-17",
                |    "documentDueDate" : "2024-06-17"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "INTEREST01",
+               |    "documentID" : "INTEREST01",
                |    "totalAmount" : -1000,
                |    "documentOutstandingAmount" : -500,
                |    "documentDate" : "2024-06-16",
                |    "documentDueDate" : "2024-06-16"
                |  } ],
-               |  "financialDetails" : [ {
+               |  "financialDetailsItem" : [ {
                |    "taxYear" : "2024",
-               |    "documentId" : "CUTOVER01",
+               |    "documentID" : "CUTOVER01",
                |    "documentDate" : "2024-06-20",
                |    "originalAmount" : -1000,
                |    "documentOutstandingAmount" : -100,
@@ -85,7 +96,7 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "mainTransaction" : "6110"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "BALANCING01",
+               |    "documentID" : "BALANCING01",
                |    "documentDate" : "2024-06-19",
                |    "originalAmount" : -1000,
                |    "documentOutstandingAmount" : -200,
@@ -93,7 +104,7 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "mainTransaction" : "4905"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "MFA01",
+               |    "documentID" : "MFA01",
                |    "documentDate" : "2024-06-18",
                |    "originalAmount" : -1000,
                |    "documentOutstandingAmount" : -300,
@@ -101,7 +112,7 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "mainTransaction" : "4004"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "PAYMENT01",
+               |    "documentID" : "PAYMENT01",
                |    "documentDate" : "2024-06-17",
                |    "originalAmount" : -1000,
                |    "documentOutstandingAmount" : -400,
@@ -109,13 +120,14 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "mainTransaction" : "0060"
                |  }, {
                |    "taxYear" : "2024",
-               |    "documentId" : "INTEREST01",
+               |    "documentID" : "INTEREST01",
                |    "documentDate" : "2024-06-16",
                |    "originalAmount" : -1000,
                |    "documentOutstandingAmount" : -500,
                |    "mainType" : "SA Repayment Supplement Credit",
                |    "mainTransaction" : "6020"
                |  } ]
+               |  }
                |}""".stripMargin
 
   val from: String = "from"
@@ -134,7 +146,7 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
 
         val res: WSResponse = IncomeTaxViewChange.getCreditDetails(testNino, from, to)
 
-        val expectedResponse = CreditsModel.fromChargesResponse(AChargesResponse()
+        val expectedResponse = CreditsModel.fromHipChargesResponse(AChargesResponse()
           .withAvailableCredit(200.0)
           .withAllocatedCredit(100.0)
           .withFirstRefundRequest(200.0)

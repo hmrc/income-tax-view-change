@@ -18,12 +18,12 @@ package controllers
 
 import constants.BaseIntegrationTestConstants._
 import constants.FinancialDetailIntegrationTestConstants._
-import models.financialDetails.responses.ChargesResponse
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 import helpers.ComponentSpecBase
 import helpers.servicemocks.DesChargesStub._
+import models.financialDetails.hip.model.ChargesHipResponse
 
 class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 
@@ -43,7 +43,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 
         val res: WSResponse = IncomeTaxViewChange.getChargeDetails(testNino, from, to)
 
-        val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+        val expectedResponseBody: JsValue = Json.toJson(ChargesHipResponse(
+          taxpayerDetails = taxpayerDetails,
           balanceDetails = balanceDetails,
           codingDetails = List(codingDetails),
           documentDetails = List(documentDetail, documentDetail2),
@@ -119,7 +120,8 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
 
         val res: WSResponse = IncomeTaxViewChange.getPaymentAllocationDetails(testNino, documentId)
 
-        val expectedResponseBody: JsValue = Json.toJson(ChargesResponse(
+        val expectedResponseBody: JsValue = Json.toJson(ChargesHipResponse(
+          taxpayerDetails = taxpayerDetails,
           balanceDetails = balanceDetails,
           codingDetails = List(codingDetails),
           documentDetails = List(documentDetail, documentDetail2),
@@ -181,5 +183,5 @@ class FinancialDetailChargesControllerISpec extends ComponentSpecBase {
         )
       }
     }
-  }
+ }
 }

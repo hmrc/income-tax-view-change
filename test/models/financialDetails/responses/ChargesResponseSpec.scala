@@ -18,6 +18,7 @@ package models.financialDetails.responses
 
 import constants.FinancialDataTestConstants.{documentDetail, financialDetail}
 import models.financialDetails._
+import models.financialDetails.hip.model.{BalanceDetailsHip, ChargesHipResponse, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json._
@@ -26,100 +27,110 @@ import java.time.LocalDate
 
 class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
-  val balanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
+  val taxpayerDetails: TaxpayerDetailsHip = TaxpayerDetailsHip("NINO1","AB123456A","ITSA")
+  val balanceDetails: BalanceDetailsHip = BalanceDetailsHip(100.00, None, 200.00, None, 300.00, None, 400.00)
 
-  val codingDetails: CodingDetails = CodingDetails(Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))), Some(100.00))
+  val codingDetails: CodingDetailsHip = CodingDetailsHip(Some(2300.00), Some("2020-04-20"))
 
-  val chargeResponseMinWrite = ChargesResponse(balanceDetails, List(), List(), List())
+  val chargeResponseMinWrite: ChargesHipResponse = ChargesHipResponse(taxpayerDetails,  balanceDetails, List(), List(), List())
 
-  val chargeResponseMinWriteJson = Json.obj(
+  val chargeResponseMinWriteJson: JsObject = Json.obj(
+    "taxpayerDetails" -> Json.obj(
+      "idType" -> "NINO1",
+      "idNumber" -> "AB123456A",
+      "regimeType" -> "ITSA"
+    ),
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
-      "overDueAmount" -> 200.00,
-      "totalBalance" -> 300.00,
-      "unallocatedCredit" -> 400.00
+      "balanceNotDuein30Days" -> 200.00,
+      "overDueAmount" -> 300.00,
+      "totalBalance" -> 400.00
     ),
     "codingDetails" -> Json.arr(),
     "documentDetails" -> Json.arr(),
     "financialDetails" -> Json.arr()
   )
 
-  val chargeResponseMinRead = ChargesResponse(balanceDetails, List(), List(), List())
+  val chargeResponseMinRead: ChargesHipResponse = ChargesHipResponse(taxpayerDetails, balanceDetails, List(), List(), List())
 
-  val chargeResponseBadJson = Json.obj(
+  val chargeResponseBadJson: JsObject = Json.obj(
     "qwer" -> Json.obj(
       "asdf" -> 100.00,
       "qwer2" -> 200.00
     )
   )
 
-  val chargeResponseMinReadJson = Json.obj(
-    "balanceDetails" -> Json.obj(
-      "balanceDueWithin30Days" -> 100.00,
-      "overDueAmount" -> 200.00,
-      "totalBalance" -> 300.00,
-      "unallocatedCredit" -> 400.00
+  val chargeResponseMinReadJson: JsObject = Json.obj(
+    "success" -> Json.obj(
+      "taxpayerDetails" -> Json.obj(
+        "idType" -> "NINO1",
+        "idNumber" -> "AB123456A",
+        "regimeType" -> "ITSA"),
+      "balanceDetails" -> Json.obj(
+        "balanceDueWithin30days" -> 100.00,
+        "balanceNotDuein30Days" -> 200.00,
+        "overDueAmount" -> 300.00,
+        "totalBalance" -> 400.00
+    )
     )
   )
 
-  val chargeResponseFull = ChargesResponse(balanceDetails = balanceDetails,
+  val chargeResponseFull: ChargesHipResponse = ChargesHipResponse(taxpayerDetails = taxpayerDetails,
+    balanceDetails = balanceDetails,
     codingDetails = List(codingDetails),
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail))
 
-  val chargeResponseFullJson = Json.obj(
+  val chargeResponseFullJson: JsObject = Json.obj(
+      "taxpayerDetails" -> Json.obj(
+        "idType" -> "NINO1",
+        "idNumber" -> "AB123456A",
+        "regimeType" -> "ITSA"),
     "balanceDetails" -> Json.obj(
       "balanceDueWithin30Days" -> 100.00,
-      "overDueAmount" -> 200.00,
-      "totalBalance" -> 300.00,
-      "unallocatedCredit" -> 400.00
+      "balanceNotDuein30Days" -> 200,
+      "overDueAmount" -> 300.00,
+      "totalBalance" -> 400.00
     ),
     "codingDetails" -> Json.arr(Json.obj(
-      "coded" -> Json.arr(Json.obj(
-        "amount" -> 2300.00,
-        "initiationDate" -> "2020-04-20"
-      )),
-      "amountCodedOut" -> 100.00
-    )),
+        "totalLiabilityAmount" -> 2300.00,
+        "taxYearReturn" -> "2020-04-20")
+    ),
     "documentDetails" -> Json.arr(Json.obj(
       "taxYear" -> 2018,
       "transactionId" -> "id",
-      "documentDescription" -> "documentDescription",
+      "documentDate" -> LocalDate.parse("2018-03-29"),
       "documentText" -> "documentText",
+      "documentDueDate" -> LocalDate.parse("2019-03-29"),
+      "documentDescription" -> "documentDescription",
       "originalAmount" -> 300.00,
       "outstandingAmount" -> 200.00,
-      "documentDate" -> LocalDate.parse("2018-03-29"),
+      "poaRelevantAmount" -> Some(1000.00),
+      "paymentLot" -> "paymentLot",
+      "paymentLotItem" -> "paymentLotItem",
+      "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
       "interestRate" -> 2.60,
       "interestFromDate" -> LocalDate.parse("2018-08-01"),
       "interestEndDate" -> LocalDate.parse("2019-01-15"),
       "latePaymentInterestId" -> "latePaymentInterestID",
       "latePaymentInterestAmount" -> 12.34,
+      "lpiWithDunningLock" -> 12.50,
       "interestOutstandingAmount" -> 31.00,
-      "paymentLotItem" -> "paymentLotItem",
-      "paymentLot" -> "paymentLot",
-      "lpiWithDunningBlock" -> 12.50,
-      "amountCodedOut" -> 3.21,
-      "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
-      "documentDueDate" -> LocalDate.parse("2019-03-29"),
-      "poaRelevantAmount" -> Some(1000.00)
+      "amountCodedOut" -> 3.21
     )),
     "financialDetails" -> Json.arr(Json.parse(
       """{
         |     "taxYear": "2018",
         |     "transactionId": "id",
-        |     "transactionDate": "2022-06-23",
+        |     "chargeType": "POA1",
+        |     "mainType": "4920",
         |     "chargeReference": "chargeRef",
-        |     "type": "type",
-        |     "totalAmount": 1000.00,
+        |     "mainTransaction": "4920",
         |     "originalAmount": 500.00,
         |     "outstandingAmount": 500.00,
         |     "clearedAmount": 500.00,
-        |     "chargeType": "POA1",
-        |     "mainType": "4920",
-        |     "mainTransaction": "4920",
         |     "accruedInterest": 1000,
         |     "items": [{
-        |       "subItemId": "1",
         |       "amount": 100.00,
         |       "clearingDate": "2022-06-23",
         |       "clearingReason": "clearingReason",
@@ -133,8 +144,9 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         |       "paymentMethod": "paymentMethod",
         |       "paymentLot": "paymentLot",
         |       "paymentLotItem": "paymentLotItem",
-        |       "paymentId": "paymentLot-paymentLotItem",
-        |       "codedOutStatus": "I"
+        |       "subItem": "1",
+        |       "codedOutStatus": "I",
+        |       "paymentId": "paymentLot-paymentLotItem"
         |       }
         |     ]
         |}""".stripMargin))
@@ -142,8 +154,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
   def document(documentId: String = "DOCID01",
                paymentLot: Option[String] = Some("lot01"),
-               paymentLotItem: Option[String] = Some("item01")): DocumentDetail = {
-    DocumentDetail(
+               paymentLotItem: Option[String] = Some("item01")): DocumentDetailHip = {
+    DocumentDetailHip(
       taxYear = 2018,
       documentDescription = None,
       documentText = None,
@@ -159,15 +171,15 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       transactionId = documentId,
       paymentLot = paymentLot,
       paymentLotItem = paymentLotItem,
-      lpiWithDunningBlock = None,
+      lpiWithDunningLock = None,
       amountCodedOut = Some(3.21),
       effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
       poaRelevantAmount = Some(1000.00)
     )
   }
 
-  def document2(documentId: String = "DOCID01"): DocumentDetail = {
-    DocumentDetail(
+  def document2(documentId: String = "DOCID01"): DocumentDetailHip = {
+    DocumentDetailHip(
       taxYear = 2018,
       documentDescription = None,
       documentText = None,
@@ -183,21 +195,18 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       transactionId = documentId,
       paymentLot = None,
       paymentLotItem = None,
-      lpiWithDunningBlock = None,
+      lpiWithDunningLock = None,
       amountCodedOut = Some(3.21),
       effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
       poaRelevantAmount = Some(1000.00)
     )
   }
 
-  def financial(documentId: String = "DOCID01", items: Option[List[SubItem]] = None): FinancialDetail = {
-    FinancialDetail(
+  def financial(documentId: String = "DOCID01", items: Option[List[SubItemHip]] = None): FinancialDetailHip = {
+    FinancialDetailHip(
       taxYear = "2018",
       transactionId = documentId,
-      transactionDate = None,
       chargeReference = Some("chargeRef"),
-      `type` = None,
-      totalAmount = None,
       originalAmount = None,
       outstandingAmount = None,
       clearedAmount = None,
@@ -212,9 +221,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
   def subItem(paymentReference: Option[String] = Some("ref"),
               paymentLot: Option[String] = Some("lot01"),
-              paymentLotItem: Option[String] = Some("item01")): SubItem = {
-    SubItem(
-      subItemId = None,
+              paymentLotItem: Option[String] = Some("item01")): SubItemHip = {
+    SubItemHip(
       amount = Some(1000.0),
       clearingDate = None,
       clearingReason = None,
@@ -240,7 +248,9 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       "return no payments" when {
 
         "no documents exist with a paymentLot and paymentLotId" in {
-          ChargesResponse(balanceDetails = balanceDetails,
+          ChargesHipResponse(
+            taxpayerDetails = taxpayerDetails,
+            balanceDetails = balanceDetails,
             codingDetails = List(codingDetails),
             documentDetails = List(document(paymentLot = None, paymentLotItem = None)),
             financialDetails = List(financial())
@@ -248,7 +258,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         }
 
         "a payment document exists with no matching financial details" in {
-          ChargesResponse(
+          ChargesHipResponse(
+            taxpayerDetails = taxpayerDetails,
             balanceDetails = balanceDetails,
             codingDetails = List(codingDetails),
             documentDetails = List(document()),
@@ -257,7 +268,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         }
 
         "a payment document exists with a matching financial details but no matching items" in {
-          ChargesResponse(
+          ChargesHipResponse(
+            taxpayerDetails = taxpayerDetails,
             balanceDetails = balanceDetails,
             codingDetails = List(codingDetails),
             documentDetails = List(document()),
@@ -266,7 +278,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         }
 
         "a payment document exists with matching financial details but missing data" in {
-          ChargesResponse(
+          ChargesHipResponse(
+            taxpayerDetails = taxpayerDetails,
             balanceDetails = balanceDetails,
             codingDetails = List(codingDetails),
             documentDetails = List(document()),
@@ -278,7 +291,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       "return payments" when {
 
         "a single payment exists" in {
-          ChargesResponse(
+          ChargesHipResponse(
+            taxpayerDetails = taxpayerDetails,
             balanceDetails = balanceDetails,
             codingDetails = List(codingDetails),
             documentDetails = List(document2()),
@@ -292,7 +306,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
         }
 
         "multiple payments exist" in {
-          ChargesResponse(
+          ChargesHipResponse(
+            taxpayerDetails = taxpayerDetails,
             balanceDetails = balanceDetails,
             codingDetails = List(codingDetails),
             documentDetails = List(
@@ -317,14 +332,15 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
 
     "read from Json" when {
       "the model has the minimal details" in {
-        Json.fromJson[ChargesResponse](chargeResponseMinReadJson) shouldBe JsSuccess(chargeResponseMinRead)
+        Json.fromJson[ChargesHipResponse](chargeResponseMinReadJson) shouldBe JsSuccess(chargeResponseMinRead)
       }
     }
     "read from bad Json" when {
       "a parse error is generated" in {
-        Json.fromJson[ChargesResponse](chargeResponseBadJson) shouldBe JsError(
-          List((JsPath \ "balanceDetails", List(JsonValidationError(List("error.path.missing")))
-          )))
+        Json.fromJson[ChargesHipResponse](chargeResponseBadJson).toString shouldBe JsError(
+          List(
+            (JsPath \ "success/taxpayerDetails", List(JsonValidationError("error.path.missing"))),
+            (JsPath \ "success/balanceDetails", List(JsonValidationError("error.path.missing"))))).toString
       }
     }
 

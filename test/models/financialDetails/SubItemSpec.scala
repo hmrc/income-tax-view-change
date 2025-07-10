@@ -17,13 +17,14 @@
 package models.financialDetails
 
 import constants.FinancialDataTestConstants._
+import models.financialDetails.hip.model.SubItemHip
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, JsPath, JsSuccess, Json}
 
 class SubItemSpec extends AnyWordSpec with Matchers {
 
-  val subItemEmpty: SubItem = SubItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+  val subItemEmpty: SubItemHip = SubItemHip(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 
   val subItemEmptyJson: JsObject = Json.obj(
   )
@@ -31,10 +32,10 @@ class SubItemSpec extends AnyWordSpec with Matchers {
   "SubItem" should {
     "read from json" when {
       "the json is complete" in {
-        Json.fromJson[SubItem](validSubItemJson) shouldBe JsSuccess(subItems1, JsPath \ "codedOutStatus")
+        Json.fromJson[SubItemHip](validSubItemJson) shouldBe JsSuccess(subItems1, JsPath \ "codedOutStatus")
       }
       "the json is empty" in {
-        Json.fromJson[SubItem](Json.obj()) shouldBe JsSuccess(subItemEmpty)
+        Json.fromJson[SubItemHip](Json.obj()) shouldBe JsSuccess(subItemEmpty)
       }
     }
     "write to json" when {
