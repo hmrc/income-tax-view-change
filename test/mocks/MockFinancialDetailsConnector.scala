@@ -16,12 +16,11 @@
 
 package mocks
 
-import connectors.FinancialDetailsConnector
-import connectors.httpParsers.ChargeHttpParser.ChargeResponse
+import connectors.hip.httpParsers.ChargeHipHttpParser.ChargeHipResponse
 import models.credits.CreditsModel
-import models.financialDetails.responses.ChargesResponse
+import models.financialDetails.hip.model.ChargesHipResponse
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.when
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 
 import scala.concurrent.Future
@@ -35,17 +34,10 @@ import play.api.libs.json.Json
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
-  val mockFinancialDetailsConnector: FinancialDetailsConnector = mock(classOf[FinancialDetailsConnector])
-  val mockFinancialDetailsService: FinancialDetailService = mock(classOf[FinancialDetailService])
-
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    reset(mockFinancialDetailsConnector)
-  }
+    val mockFinancialDetailsService: FinancialDetailService = mock(classOf[FinancialDetailService])
 
   def mockListCharges(nino: String, from: String, to: String)
-                     (response: ChargeResponse): Unit = {
+                     (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getChargeDetails(
       ArgumentMatchers.eq(nino),
       ArgumentMatchers.eq(from),
@@ -59,7 +51,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
   }
 
   def mockGetPayments(nino: String, from: String, to: String)
-                     (response: ChargeResponse): Unit = {
+                     (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getPayments(
       ArgumentMatchers.eq(nino),
       ArgumentMatchers.eq(from),
@@ -74,15 +66,15 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
   }
 
   def mockCredits(nino: String, from: String, to: String)
-                     (response: ChargeResponse): Unit = {
+                     (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getCredits(
       ArgumentMatchers.eq(nino),
       ArgumentMatchers.eq(from),
       ArgumentMatchers.eq(to)
     )(ArgumentMatchers.any())) thenReturn Future (
       response match {
-        case Right(charges: ChargesResponse) =>
-          val creditsModel: CreditsModel = CreditsModel.fromChargesResponse(charges)
+        case Right(charges: ChargesHipResponse) =>
+          val creditsModel: CreditsModel = CreditsModel.fromHipChargesResponse(charges)
           Right(Json.toJson(creditsModel))
         case Left(err) =>
           Left(err)
@@ -91,7 +83,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
   }
 
   def mockSingleDocumentDetails(nino: String, documentId: String)
-                               (response: ChargeResponse): Unit = {
+                               (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getPaymentAllocationDetails(
       ArgumentMatchers.eq(nino),
       ArgumentMatchers.eq(documentId)
@@ -104,7 +96,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
   }
 
   def mockOnlyOpenItems(nino: String)
-                       (response: ChargeResponse): Unit = {
+                       (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getOnlyOpenItems(
       ArgumentMatchers.eq(nino)
     )(ArgumentMatchers.any())) thenReturn Future (

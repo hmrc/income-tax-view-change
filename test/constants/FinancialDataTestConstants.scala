@@ -18,8 +18,6 @@ package constants
 
 import constants.BaseTestConstants.testNino
 import models.financialDetails.hip.model.{BalanceDetailsHip, ChargesHipResponse, CodingDetailsHip, DocumentDetailHip, FinancialDetailHip, SubItemHip, TaxpayerDetailsHip}
-import models.financialDetails.responses.ChargesResponse
-import models.financialDetails.{BalanceDetails, CodedEntry, CodingDetails, DocumentDetail, FinancialDetail, SubItem}
 import play.api.libs.json.{JsValue, Json}
 
 import java.time.LocalDate
@@ -101,154 +99,21 @@ object FinancialDataTestConstants {
       |""".stripMargin
   )
 
-  val validChargesJson: JsValue = Json.parse(
-    """{
-      |"balanceDetails": {
-      | "balanceDueWithin30Days": 100.00,
-      | "overDueAmount": 200.00,
-      | "totalBalance": 300.00,
-      | "unallocatedCredit": 400.00
-      | },
-      |"codingDetails": [
-      |   {
-      |     "taxYearReturn": "2018",
-      |     "totalReturnAmount": 100.00,
-      |     "amountNotCoded": 200.00,
-      |     "amountNotCodedDueDate": "2018-01-01",
-      |     "amountCodedOut": 100.00,
-      |     "taxYearCoding": "2019",
-      |     "coded": [
-      |          {
-      |            "amount": 2300.00,
-      |            "initiationDate": "2020-04-20"
-      |          }
-      |        ]
-      |   }
-      | ],
-      | "documentDetails": [
-      |   {
-      |     "taxYear": "2018",
-      |     "documentId": "id",
-      |     "documentDescription": "documentDescription",
-      |     "documentText": "documentText",
-      |     "totalAmount": 300.0,
-      |     "documentOutstandingAmount": 200.0,
-      |     "lastClearedAmount": 100.0,
-      |     "documentDate": "2018-03-29",
-      |     "interestRate": 2.6,
-      |     "interestFromDate": "2018-08-01",
-      |     "interestEndDate": "2019-01-15",
-      |     "latePaymentInterestID": "latePaymentInterestID",
-      |     "latePaymentInterestAmount": 12.34,
-      |     "interestOutstandingAmount": 31.0,
-      |     "paymentLot": "paymentLot",
-      |     "paymentLotItem": "paymentLotItem",
-      |     "lpiWithDunningBlock": 12.5,
-      |     "amountCodedOut" : 3.21,
-      |     "effectiveDateOfPayment" : "2018-03-29",
-      |     "documentDueDate" : "2019-03-29",
-      |     "poaRelevantAmount": 1000.0
-      |   },
-      |   {
-      |     "taxYear": "2019",
-      |     "documentId": "id2",
-      |     "documentDescription": "documentDescription2",
-      |     "totalAmount": 100.00,
-      |     "documentOutstandingAmount": 50.00,
-      |     "lastClearedAmount": 50.00,
-      |     "documentDate": "2018-03-29",
-      |     "effectiveDateOfPayment" : "2018-03-29",
-      |     "poaRelevantAmount": 1000.0
-      |   }
-      | ],
-      | "financialDetails": [
-      |   {
-      |     "taxYear": "2018",
-      |     "documentId": "id",
-      |     "documentDate": "2022-06-23",
-      |     "chargeReference": "chargeRef",
-      |     "documentDescription": "type",
-      |     "totalAmount": 1000.00,
-      |     "originalAmount": 500.00,
-      |     "clearedAmount": 500.00,
-      |     "documentOutstandingAmount": 500.00,
-      |     "chargeType": "POA1",
-      |     "mainType": "4920",
-      |     "mainTransaction": "4920",
-      |     "accruedInterest": 1000,
-      |     "items": [{
-      |       "subItem": "1",
-      |       "amount": 100.00,
-      |       "clearingDate": "2022-06-23",
-      |       "clearingReason": "clearingReason",
-      |       "clearingSAPDocument": "012345678912",
-      |       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
-      |       "paymentReference": "paymentReference",
-      |       "paymentAmount": 2000.00,
-      |       "dueDate": "2022-06-23",
-      |       "paymentMethod": "paymentMethod",
-      |       "paymentLot": "paymentLot",
-      |       "paymentLotItem": "paymentLotItem",
-      |       "codedOutStatus": "I"
-      |       }
-      |     ]
-      |   },
-      |   {
-      |     "taxYear": "2019",
-      |     "documentId": "transactionId2",
-      |     "documentDate": "2022-06-23",
-      |     "chargeReference": "chargeRef",
-      |     "documentDescription": "type2",
-      |     "totalAmount": 2000.00,
-      |     "originalAmount": 500.00,
-      |     "clearedAmount": 500.00,
-      |     "documentOutstandingAmount": 200.00,
-      |     "chargeType": "POA1",
-      |     "mainType": "4920",
-      |     "mainTransaction": "4920",
-      |     "accruedInterest": 2000,
-      |     "items": [{
-      |       "subItem": "2",
-      |       "amount": 200.00,
-      |       "clearingDate": "2022-06-23",
-      |       "clearingReason": "clearingReason2",
-      |       "clearingSAPDocument": "012345678912",
-      |       "outgoingPaymentMethod": "outgoingPaymentMethod2",
-      |       "interestLock": "interestLock2",
-      |       "dunningLock": "dunningLock2",
-      |       "paymentReference": "paymentReference2",
-      |       "paymentAmount": 3000.00,
-      |       "dueDate": "2022-06-23",
-      |       "paymentMethod": "paymentMethod2",
-      |       "paymentLot": "paymentLot2",
-      |       "paymentLotItem": "paymentLotItem2",
-      |       "codedOutStatus": "I"
-      |       }
-      |     ]
-      |   }
-      | ]
-      |}""".stripMargin)
 
   val validFinancialDetailJsonAfterWrites: JsValue = Json.parse(
     """
 			|{
 			|     "taxYear": "2018",
 			|     "transactionId": "id",
-			|     "transactionDate": "2022-06-23",
-      |     "chargeReference": "chargeRef",
-			|     "type": "type",
-			|     "totalAmount": 1000.00,
+      |     "chargeType": "POA1",
+      |     "mainType": "4920",
+      |     "chargeReference" : "chargeRef",
+      |     "mainTransaction": "4920",
 			|     "originalAmount": 500.00,
 			|     "outstandingAmount": 500.00,
 			|     "clearedAmount": 500.00,
-			|     "chargeType": "POA1",
-			|     "mainType": "4920",
-      |     "mainTransaction": "4920",
       |     "accruedInterest": 1000,
 			|     "items": [{
-			|       "subItemId": "1",
 			|       "amount": 100.00,
 			|       "clearingDate": "2022-06-23",
 			|       "clearingReason": "clearingReason",
@@ -261,6 +126,7 @@ object FinancialDataTestConstants {
 			|       "dueDate": "2022-06-23",
 			|       "paymentMethod": "paymentMethod",
 			|       "paymentLot": "paymentLot",
+      |       "subItem" : "1",
 			|       "paymentLotItem": "paymentLotItem",
 			|       "paymentId": "paymentLot-paymentLotItem",
       |       "codedOutStatus": "I"
@@ -269,11 +135,13 @@ object FinancialDataTestConstants {
 			|}
 			|""".stripMargin)
 
-  val testBalanceDetails: BalanceDetails = BalanceDetails(100.00, 200.00, 300.00, None, None, None, None, Some(400.00))
+  val testTaxPayerHipDetails: TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
 
-  val testCodingDetails: CodingDetails = CodingDetails(Some(List(CodedEntry(2300.00, LocalDate.parse("2020-04-20")))), Some(100.00))
+  val testBalanceDetails: BalanceDetailsHip = BalanceDetailsHip(100.00, None, 200.00, None, 300.00, None, 400.00)
 
-  val documentDetail: DocumentDetail = DocumentDetail(
+  val testCodingDetails: CodingDetailsHip = CodingDetailsHip(Some(2300.00), Some("2020-04-20"))
+
+  val documentDetail: DocumentDetailHip = DocumentDetailHip(
     taxYear = 2018,
     transactionId = "id",
     documentDescription = Some("documentDescription"),
@@ -289,14 +157,14 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
-    lpiWithDunningBlock = Some(12.50),
+    lpiWithDunningLock = Some(12.50),
     amountCodedOut = Some(3.21),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
     documentDueDate = Some(LocalDate.parse("2019-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
 
-  val documentDetail2: DocumentDetail = DocumentDetail(
+  val documentDetail2: DocumentDetailHip = DocumentDetailHip(
     taxYear = 2019,
     transactionId = "id2",
     documentDescription = Some("documentDescription2"),
@@ -312,12 +180,12 @@ object FinancialDataTestConstants {
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
-    lpiWithDunningBlock = None,
+    lpiWithDunningLock = None,
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
 
-  val documentDetail3: DocumentDetail = DocumentDetail(
+  val documentDetail3: DocumentDetailHip = DocumentDetailHip(
     taxYear = 2018,
     documentDescription = Some("documentDescription"),
     documentText = None,
@@ -333,18 +201,15 @@ object FinancialDataTestConstants {
     transactionId = "id",
     paymentLot = None,
     paymentLotItem = None,
-    lpiWithDunningBlock = None,
+    lpiWithDunningLock = None,
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
     poaRelevantAmount = Some(1000.00)
   )
 
-  val financialDetail3: FinancialDetail = FinancialDetail(
+  val financialDetail3: FinancialDetailHip = FinancialDetailHip(
     taxYear = "2018",
     transactionId = "id",
-    transactionDate = Some(LocalDate.parse("2022-06-23")),
     chargeReference = Some("chargeRef"),
-    `type` = Some("type"),
-    totalAmount = Some(BigDecimal("-1000.00")),
     originalAmount = Some(BigDecimal(-1000.00)),
     outstandingAmount = Some(BigDecimal("0")),
     clearedAmount = Some(BigDecimal(-1000.00)),
@@ -353,8 +218,7 @@ object FinancialDataTestConstants {
     mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("0")),
     items = Some(Seq(
-      SubItem(
-        subItemId = Some("1"),
+      SubItemHip(
         amount = Some(BigDecimal("-1000.00")),
         clearingDate = Some(LocalDate.parse("2022-06-23")),
         clearingReason = Some("clearingReason"),
@@ -373,24 +237,20 @@ object FinancialDataTestConstants {
       )))
   )
 
-  val financialDetail: FinancialDetail = FinancialDetail(
+  val financialDetail: FinancialDetailHip = FinancialDetailHip(
     taxYear = "2018",
     transactionId = "id",
-    transactionDate = Some(LocalDate.parse("2022-06-23")),
     chargeReference = Some("chargeRef"),
-    `type` = Some("type"),
-    totalAmount = Some(BigDecimal("1000.00")),
-    originalAmount = Some(BigDecimal(500.00)),
-    outstandingAmount = Some(BigDecimal("500.00")),
+    originalAmount = Some(500.0),
+    outstandingAmount = Some(500.00),
     clearedAmount = Some(BigDecimal(500.00)),
     chargeType = Some("POA1"),
     mainType = Some("4920"),
     mainTransaction = Some("4920"),
-    accruedInterest = Some(BigDecimal("1000.00")),
+    accruedInterest = Some(BigDecimal(1000.0)),
     items = Some(Seq(
-      SubItem(
-        subItemId = Some("1"),
-        amount = Some(BigDecimal("100.00")),
+      SubItemHip(
+        amount = Some(BigDecimal(100.00)),
         clearingDate = Some(LocalDate.parse("2022-06-23")),
         clearingReason = Some("clearingReason"),
         clearingSAPDocument = Some("012345678912"),
@@ -398,22 +258,20 @@ object FinancialDataTestConstants {
         interestLock = Some("interestLock"),
         dunningLock = Some("dunningLock"),
         paymentReference = Some("paymentReference"),
-        paymentAmount = Some(BigDecimal("2000.00")),
+        paymentAmount = Some(BigDecimal("2000.0")),
         dueDate = Some(LocalDate.parse("2022-06-23")),
         paymentMethod = Some("paymentMethod"),
         paymentLot = Some("paymentLot"),
         paymentLotItem = Some("paymentLotItem"),
         paymentId = Some("paymentLot-paymentLotItem"),
+        subItem = Some("1"),
         codedOutStatus = Some("I")
       )))
   )
-  val financialDetail2: FinancialDetail = FinancialDetail(
+  val financialDetail2: FinancialDetailHip = FinancialDetailHip(
     taxYear = "2019",
     transactionId = "transactionId2",
-    transactionDate = Some(LocalDate.parse("2022-06-23")),
     chargeReference = Some("chargeRef"),
-    `type` = Some("type2"),
-    totalAmount = Some(BigDecimal("2000.00")),
     originalAmount = Some(BigDecimal(500.00)),
     outstandingAmount = Some(BigDecimal("200.00")),
     clearedAmount = Some(BigDecimal(500.00)),
@@ -422,8 +280,7 @@ object FinancialDataTestConstants {
     mainTransaction = Some("4920"),
     accruedInterest = Some(BigDecimal("2000.00")),
     items = Some(Seq(
-      SubItem(
-        subItemId = Some("2"),
+      SubItemHip(
         amount = Some(BigDecimal("200.00")),
         clearingDate = Some(LocalDate.parse("2022-06-23")),
         clearingReason = Some("clearingReason2"),
@@ -438,29 +295,33 @@ object FinancialDataTestConstants {
         paymentLot = Some("paymentLot2"),
         paymentLotItem = Some("paymentLotItem2"),
         paymentId = Some("paymentLot2-paymentLotItem2"),
+        subItem = Some("2"),
         codedOutStatus = Some("I")
       )))
   )
 
-  val chargesResponse: ChargesResponse = ChargesResponse(
+  val chargesResponse: ChargesHipResponse = ChargesHipResponse(
+    taxpayerDetails = testTaxPayerHipDetails,
     balanceDetails = testBalanceDetails,
     codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail),
     financialDetails = List(financialDetail)
   )
 
-  val creditChargesResponse: ChargesResponse = ChargesResponse(
+  val creditChargesResponse: ChargesHipResponse = ChargesHipResponse(
     balanceDetails = testBalanceDetails,
+    taxpayerDetails = testTaxPayerHipDetails,
     codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail3),
     financialDetails = List(financialDetail3)
   )
 
-  val chargesResponseNoCodingDetails2: ChargesResponse = creditChargesResponse
+  val chargesResponseNoCodingDetails2: ChargesHipResponse = creditChargesResponse
 
-  val chargesResponseNoCodingDetails: ChargesResponse = chargesResponse
+  val chargesResponseNoCodingDetails: ChargesHipResponse = chargesResponse
 
-  val testChargesResponse: ChargesResponse = ChargesResponse(
+  val testChargesResponse: ChargesHipResponse = ChargesHipResponse(
+    taxpayerDetails = testTaxPayerHipDetails,
     balanceDetails = testBalanceDetails,
     codingDetails = List(testCodingDetails),
     documentDetails = List(documentDetail, documentDetail2),
@@ -470,69 +331,61 @@ object FinancialDataTestConstants {
   val validSubItemJson: JsValue = Json.parse(
     """
 			|{
-			|       "subItem": "1",
-			|       "amount": 100.00,
-			|       "clearingDate": "2022-06-23",
-			|       "clearingReason": "clearingReason",
-      |       "clearingSAPDocument":  "012345678912",
-			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
-			|       "paymentReference": "paymentReference",
-			|       "paymentAmount": 2000.00,
-			|       "dueDate": "2022-06-23",
-			|       "paymentMethod": "paymentMethod",
-			|       "paymentLot": "paymentLot",
-			|       "paymentLotItem": "paymentLotItem",
-      |       "codedOutStatus": "I"
+      |       "subItem": "001",
+			|       "amount": -300.00,
+			|       "clearingDate": "2024-10-29",
+			|       "clearingReason": "Allocated to Charge",
+      |       "clearingSAPDocument":  "003400044065",
+			|       "paymentReference": "100207948",
+			|       "paymentAmount": 500.00,
+			|       "dueDate": "2025-07-10",
+			|       "paymentMethod": "PAYMENTS MADE BY CHEQUE",
+			|       "paymentLot": "24714",
+			|       "paymentLotItem": "000002",
+      |       "codedOutStatus": "S"
 			|}
 			|""".stripMargin)
 
-
-  val subItems1: SubItem = SubItem(
-    subItemId = Some("1"),
-    amount = Some(BigDecimal("100.00")),
-    clearingDate = Some(LocalDate.parse("2022-06-23")),
-    clearingReason = Some("clearingReason"),
-    clearingSAPDocument = Some("012345678912"),
-    outgoingPaymentMethod = Some("outgoingPaymentMethod"),
-    interestLock = Some("interestLock"),
-    dunningLock = Some("dunningLock"),
-    paymentReference = Some("paymentReference"),
-    paymentAmount = Some(BigDecimal("2000.00")),
-    dueDate = Some(LocalDate.parse("2022-06-23")),
-    paymentMethod = Some("paymentMethod"),
-    paymentLot = Some("paymentLot"),
-    paymentLotItem = Some("paymentLotItem"),
-    paymentId = Some("paymentLot-paymentLotItem"),
-    codedOutStatus = Some("I")
+  val subItems1: SubItemHip = SubItemHip(
+    subItem = Some("001"),
+    dueDate = Some(LocalDate.parse("2025-07-10")),
+    amount = Some(-300.00),
+    clearingDate = Some(LocalDate.parse("2024-10-29")),
+    clearingReason = Some("Allocated to Charge"),
+    paymentReference = Some("100207948"),
+    paymentAmount = Some(BigDecimal(500)),
+    paymentMethod = Some("PAYMENTS MADE BY CHEQUE"),
+    paymentLot = Some("24714"),
+    paymentLotItem = Some("000002"),
+    clearingSAPDocument = Some("003400044065"),
+    codedOutStatus = Some("S"),
+    paymentId = Option("24714-000002")
   )
+
+
+
 
   val validSubItemJsonAfterWrites: JsValue = Json.parse(
     """
 			|{
-			|       "subItemId": "1",
-			|       "amount": 100.00,
-			|       "clearingDate": "2022-06-23",
-			|       "clearingReason": "clearingReason",
-      |       "clearingSAPDocument":  "012345678912",
-			|       "outgoingPaymentMethod": "outgoingPaymentMethod",
-      |       "interestLock": "interestLock",
-      |       "dunningLock": "dunningLock",
-			|       "paymentReference": "paymentReference",
-			|       "paymentAmount": 2000.00,
-			|       "dueDate": "2022-06-23",
-			|       "paymentMethod": "paymentMethod",
-			|       "paymentLot": "paymentLot",
-			|       "paymentLotItem": "paymentLotItem",
-			|       "paymentId": "paymentLot-paymentLotItem",
-      |       "codedOutStatus": "I"
+      |       "subItem": "001",
+			|       "amount": -300.00,
+			|       "clearingDate": "2024-10-29",
+			|       "clearingReason": "Allocated to Charge",
+      |       "clearingSAPDocument":  "003400044065",
+			|       "paymentReference": "100207948",
+			|       "paymentAmount": 500.00,
+			|       "dueDate": "2025-07-10",
+			|       "paymentMethod": "PAYMENTS MADE BY CHEQUE",
+			|       "paymentLot": "24714",
+			|       "paymentLotItem": "000002",
+			|       "paymentId": "24714-000002",
+      |       "codedOutStatus": "S"
 			|}
 			|""".stripMargin)
 
 
   // Hip Migration
-  val testTaxPayerHipDetails : TaxpayerDetailsHip = TaxpayerDetailsHip("NINO", testNino, "ITSA")
 
   val testBalanceHipDetails: BalanceDetailsHip = BalanceDetailsHip(
     balanceDueWithin30Days = 100.00,

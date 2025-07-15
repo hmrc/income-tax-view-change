@@ -47,7 +47,6 @@ case class ChargesHipResponse(
               ))).flatten
           }
         }
-
         val mainType: Option[String] = financialDetails.find(_.transactionId.equals(document.transactionId)).flatMap(
           _.mainType
         )

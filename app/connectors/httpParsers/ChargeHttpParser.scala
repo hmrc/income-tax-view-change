@@ -16,11 +16,6 @@
 
 package connectors.httpParsers
 
-import models.financialDetails.responses.ChargesResponse
-import play.api.http.Status.OK
-import play.api.libs.json.{JsError, JsSuccess}
-import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-
 object ChargeHttpParser extends ResponseHttpParsers {
 
   sealed trait ChargeResponseError
@@ -29,29 +24,4 @@ object ChargeHttpParser extends ResponseHttpParsers {
 
   case class UnexpectedChargeResponse(code: Int, response: String) extends ChargeResponseError
 
-  type ChargeResponse = Either[ChargeResponseError, ChargesResponse]
-
-  implicit object ChargeReads extends HttpReads[ChargeResponse] {
-    override def read(method: String, url: String, response: HttpResponse): ChargeResponse = {
-      response.status match {
-        case OK =>
-          logger.debug("successful: " + response.json)
-          response.json.validate[ChargesResponse] match {
-            case JsError(errors) =>
-              logger.error("Unable to parse response into ChargesResponse - " + errors)
-              Left(UnexpectedChargeErrorResponse)
-
-            case JsSuccess(value, _) =>
-              logger.info("successfully parsed response into ChargesResponse")
-              Right(value)
-          }
-        case status if status >= 400 && status < 500 =>
-          logger.error(s"$status returned from DES with body: ${response.body}")
-          Left(UnexpectedChargeResponse(status, response.body))
-        case status =>
-          logger.error(s"Unexpected Response with status: $status")
-          Left(UnexpectedChargeErrorResponse)
-      }
-    }
-  }
 }
