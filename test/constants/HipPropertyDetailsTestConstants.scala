@@ -50,7 +50,7 @@ object HipPropertyDetailsTestConstants {
       latencyIndicator1 = "A",
       taxYear2 = "2023",
       latencyIndicator2 = "Q")),
-    cashOrAccruals = true,
+    cashOrAccruals = Some(true),
     quarterTypeElection = Some(QuarterTypeElection("STANDARD", "2021"))
   )
 
@@ -66,7 +66,7 @@ object HipPropertyDetailsTestConstants {
     contextualTaxYear = None,
     tradingStartDate = None,
     latencyDetails = None,
-    cashOrAccruals = true,
+    cashOrAccruals = Some(true),
     quarterTypeElection = None
   )
 
