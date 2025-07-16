@@ -47,7 +47,7 @@ object HipBusinessDetailsIntegrationTestConstants {
         emailAddress = Some("stephen@manncorpone.co.uk"))),
       contextualTaxYear = Some("2015"),
       tradingStartDate = Some(LocalDate.parse("2017-01-01")),
-      cashOrAccruals = false,
+      cashOrAccruals = Some(false),
       seasonal = Some(true),
       cessation = None,
       paperless = Some(true),
@@ -77,7 +77,7 @@ object HipBusinessDetailsIntegrationTestConstants {
       contextualTaxYear = None,
       tradingStartDate = None,
       latencyDetails = None,
-      cashOrAccruals = true,
+      cashOrAccruals = Some(true),
       quarterTypeElection = None
     )
 
