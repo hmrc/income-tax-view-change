@@ -31,7 +31,7 @@ object StatusDetail {
     "01" -> "MTD Mandated",
     "02" -> "MTD Voluntary",
     "03" -> "Annual",
-    "04" -> "Non Digital",
+    "04" -> "Digitally Exempt",
     "05" -> "Dormant",
     "99" -> "MTD Exempt"
   )
