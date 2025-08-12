@@ -30,19 +30,6 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
 
   lazy val TAX_YEAR_2026: Int = 2026
 
-  def getCalculationList(nino: String, taxYearEnd: String)
-                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
-
-    logger.info(s"Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearEnd")
-    calculationListConnector.getCalculationList(nino, taxYearEnd).map {
-      case success@Right(calculationListResponse: CalculationListResponseModel) =>
-        logger.info(s"Retrieved Calculation List Data:\n\n$calculationListResponse")
-        success
-      case error@Left(_) =>
-        error
-    }
-  }
-
   def getCalculationListTYS(nino: String, taxYearRange: String)
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 

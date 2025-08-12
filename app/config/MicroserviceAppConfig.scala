@@ -106,5 +106,4 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
   val confidenceLevel: Int = servicesConfig.getInt("auth.confidenceLevel")
 
   val useRepaymentHistoryDetailsIFPlatform: Boolean = servicesConfig.getBoolean("useRepaymentHistoryDetailsIFPlatform")
-  val useGetCalcListIFPlatform: Boolean = servicesConfig.getBoolean("useGetCalcListIFPlatform")
 }

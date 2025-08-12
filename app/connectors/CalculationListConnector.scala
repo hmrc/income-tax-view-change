@@ -30,31 +30,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CalculationListConnector @Inject()(val http: HttpClientV2, val appConfig: MicroserviceAppConfig) extends Logging {
 
-  private[connectors] def getCalculationListUrl(nino: String, taxYearEnd: String): String = {
-    val platformUrl = if (appConfig.useGetCalcListIFPlatform) appConfig.ifUrl else appConfig.desUrl
-    s"$platformUrl/income-tax/list-of-calculation-results/$nino?taxYear=$taxYearEnd"
-  }
-
   private[connectors] def getCalculationListTYSUrl(nino: String, taxYearRange: String): String =
     s"${appConfig.ifUrl}/income-tax/view/calculations/liability/$taxYearRange/$nino"
 
   private[connectors] def getCalculationList2083Url(nino: String, taxYearRange: String): String =
     s"${appConfig.ifUrl}/income-tax/$taxYearRange/view/$nino/calculations-summary"
-
-  def getHeaders(api: String): Seq[(String, String)] = {
-    if (appConfig.useGetCalcListIFPlatform) appConfig.getIFHeaders(api = api) else appConfig.desAuthHeaders
-  }
-
-  @deprecated("Deprecated:: remove after HiP migration", "MISUV-???")
-  def getCalculationList(nino: String, taxYear: String)
-                        (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
-    val url = getCalculationListUrl(nino, taxYear)
-
-    logger.debug(s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: ${getHeaders("1404")} \nIsMigratedToIF: ${if (appConfig.useGetCalcListIFPlatform) "YES" else "NO"}")
-    http.get(url"$url")
-      .setHeader(getHeaders("1404"): _*)
-      .execute[HttpGetResult[CalculationListResponseModel]](CalculationListReads, ec)
-  }
 
   def getCalculationListTYS(nino: String, taxYear: String)
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
