@@ -16,7 +16,7 @@
 
 package connectors
 
-import constants.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
+import constants.BaseTestConstants.{testNino, testTaxYearRange}
 import constants.CalculationListDesTestConstants._
 import mocks.MockHttpV2
 import models.errors.{ErrorResponse, UnexpectedJsonFormat}
