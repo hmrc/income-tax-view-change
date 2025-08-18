@@ -37,17 +37,6 @@ trait MockCalculationListService extends AnyWordSpecLike with Matchers with Opti
     reset(mockCalculationListService)
   }
 
-  def setupMockGetCalculationList(nino: String, taxYear: String)
-                                     (response: HttpGetResult[CalculationListResponseModel]):
-  OngoingStubbing[Future[HttpGetResult[CalculationListResponseModel]]] = {
-    when(
-      mockCalculationListService.getCalculationList(
-        ArgumentMatchers.eq(nino),
-        ArgumentMatchers.eq(taxYear)
-      )(ArgumentMatchers.any(), ArgumentMatchers.any())
-    ).thenReturn(Future.successful(response))
-  }
-
   def setupMockGetCalculationListTYS(nino: String, taxYear: String)
                                  (response: HttpGetResult[CalculationListResponseModel]):
   OngoingStubbing[Future[HttpGetResult[CalculationListResponseModel]]] = {

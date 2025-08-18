@@ -43,54 +43,6 @@ class CalculationListConnectorISpec extends ComponentSpecBase {
 
   "CalculationListConnector" when {
 
-    ".getCalculationList() is called" when {
-
-      "the response is a 200 - Ok" should {
-
-        "return the correct calculation list for a given NINO and tax year" in {
-
-          val requestBody: JsValue = Json.parse(
-            """
-              |[
-              | {
-              |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
-              |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
-              |   "calculationType":"finalDeclaration",
-              |   "crystallised": false
-              | }
-              |]
-              |""".stripMargin)
-
-          WiremockHelper.stubGet(urlCalculation, OK, requestBody.toString())
-
-          val result = connector.getCalculationList(nino, taxYear).futureValue
-
-          result shouldBe Right(calculationListResponse)
-        }
-
-        "return an UnexpectedJsonFormat error when the json returned is in an unexpected format" in {
-
-          WiremockHelper.stubGet(urlCalculation, OK, "{}")
-
-          val result = connector.getCalculationList(nino, taxYear).futureValue
-
-          result shouldBe Left(UnexpectedJsonFormat)
-        }
-      }
-
-      "the response is a 500 - InternalServerError" should {
-
-        "return an error response when an unexpected error was received" in {
-
-          WiremockHelper.stubGet(urlCalculation, INTERNAL_SERVER_ERROR, "{}")
-
-          val result = connector.getCalculationList(nino, taxYear).futureValue
-
-          result shouldBe Left(UnexpectedResponse)
-        }
-      }
-    }
-
     ".getCalculationListTYS() is called" when {
 
       "the response is a 200 - OK" should {
