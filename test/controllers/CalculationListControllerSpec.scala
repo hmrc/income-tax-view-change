@@ -51,69 +51,6 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
   object TestCalculationListController extends CalculationListController(
     authPredicate, mockCalculationListService, mockHipCalcListConnector, mockAppConfig, mockCC)
 
-  "CalculationListController.getCalculationList from DES" should {
-    "return 200 OK" when {
-      "user is authenticated and CalculationListService returns a success response" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(false)
-        mockAuth()
-        setupMockGetCalculationList(testNino, testTaxYearEnd)(successResponseDes)
-
-        val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
-        status(result) shouldBe Status.OK
-        contentAsJson(result) shouldBe Json.toJson(constants.CalculationListDesTestConstants.calculationListFull.calculations.head)
-      }
-    }
-    "return 400 BAD_REQUEST" when {
-      "CalculationListService returns a single 400 BAD_REQUEST error" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(false)
-        mockAuth()
-        setupMockGetCalculationList(testNino, testTaxYearEnd)(constants.CalculationListDesTestConstants.badRequestSingleError)
-
-        val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
-        status(result) shouldBe Status.BAD_REQUEST
-        contentAsJson(result) shouldBe Json.toJson(constants.CalculationListDesTestConstants.singleError)
-      }
-      "CalculationListService returns multiple errors" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(false)
-        mockAuth()
-        setupMockGetCalculationList(testNino, testTaxYearEnd)(constants.CalculationListDesTestConstants.badRequestMultiError)
-
-        val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
-        status(result) shouldBe Status.BAD_REQUEST
-        contentAsJson(result) shouldBe Json.toJson(constants.CalculationListDesTestConstants.multiError)
-      }
-      "NINO is invalid" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(false)
-        val invalidNino = "GB123456E"
-        mockAuth()
-        setupMockGetCalculationList(invalidNino, testTaxYearEnd)(constants.CalculationListDesTestConstants.badRequestSingleError)
-
-        val result = TestCalculationListController.getCalculationList(invalidNino, testTaxYearEnd)(fakeRequest)
-        status(result) shouldBe Status.BAD_REQUEST
-        contentAsJson(result) shouldBe Json.toJson[errors.Error](InvalidNino)
-      }
-      "tax year is invalid" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(false)
-        val invalidTaxYear = "3000"
-        mockAuth()
-        setupMockGetCalculationList(testNino, invalidTaxYear)(constants.CalculationListDesTestConstants.badRequestSingleError)
-
-        val result = TestCalculationListController.getCalculationListTYS(testNino, invalidTaxYear)(fakeRequest)
-        status(result) shouldBe Status.BAD_REQUEST
-        contentAsJson(result) shouldBe Json.toJson[errors.Error](InvalidTaxYear)
-      }
-    }
-    "return 401 UNAUTHORIZED" when {
-      "called with an unauthenticated user" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(false)
-        mockAuth(Future.failed(new MissingBearerToken))
-
-        val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
-        status(result) shouldBe Status.UNAUTHORIZED
-      }
-    }
-  }
-
   "CalculationListController.getCalculationList from HIP" should {
     "return 200 OK" when {
       "user is authenticated and CalculationListService returns a success response" in {
