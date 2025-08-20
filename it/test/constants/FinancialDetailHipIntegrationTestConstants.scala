@@ -56,12 +56,11 @@ object FinancialDetailHipIntegrationTestConstants {
     paymentLot = Some("paymentLot"),
     paymentLotItem = Some("paymentLotItem"),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    accruingInterestAmount = None,
+    accruingInterestAmount = Some(12.34),
     interestRate = Some(2.60),
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
-    latePaymentInterestAmount = Some(12.34),
     lpiWithDunningLock = Some(12.50),
     interestOutstandingAmount = Some(31.00),
     amountCodedOut = Some(3.21))
