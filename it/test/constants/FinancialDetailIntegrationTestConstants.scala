@@ -56,7 +56,7 @@ object FinancialDetailIntegrationTestConstants {
         "interestFromDate" -> "2018-08-01",
         "interestEndDate" -> "2019-01-15",
         "latePaymentInterestID" -> "latePaymentInterestID",
-        "latePaymentInterestAmount" -> 12.34,
+        "accruingInterestAmount" -> 12.34,
         "interestOutstandingAmount" -> 31.00,
         "paymentLotItem" -> "paymentLotItem",
         "paymentLot" -> "paymentLot",
@@ -181,14 +181,14 @@ object FinancialDetailIntegrationTestConstants {
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
-    latePaymentInterestAmount = Some(12.34),
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
     lpiWithDunningLock = Some(12.50),
     amountCodedOut = Some(3.21),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    poaRelevantAmount = Some(1000.00)
+    poaRelevantAmount = Some(1000.00),
+    accruingInterestAmount = Some(12.34)
   )
 
   val documentDetail2: DocumentDetailHip = DocumentDetailHip(
@@ -203,13 +203,13 @@ object FinancialDetailIntegrationTestConstants {
     interestFromDate = None,
     interestEndDate = None,
     latePaymentInterestId = None,
-    latePaymentInterestAmount = None,
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
     lpiWithDunningLock = None,
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    poaRelevantAmount = Some(1000.00)
+    poaRelevantAmount = Some(1000.00),
+    accruingInterestAmount = None
   )
 
   val financialDetail: FinancialDetailHip = FinancialDetailHip(

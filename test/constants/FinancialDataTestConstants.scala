@@ -69,10 +69,10 @@ object FinancialDataTestConstants {
       |        "interestFromDate": "2018-08-01",
       |        "interestEndDate": "2019-01-15",
       |        "latePaymentInterestID": "latePaymentInterestID",
-      |        "latePaymentInterestAmount": 12.34,
       |        "lpiWithDunningLock": 12.50,
       |        "interestOutstandingAmount": 31.0,
-      |        "amountCodedOut": 3.21
+      |        "amountCodedOut": 3.21,
+      |        "accruingInterestAmount": 12.34
       |      }
       |    ],
       |    "financialDetailsItem": [
@@ -153,7 +153,6 @@ object FinancialDataTestConstants {
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
-    latePaymentInterestAmount = Some(12.34),
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
@@ -161,7 +160,8 @@ object FinancialDataTestConstants {
     amountCodedOut = Some(3.21),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
     documentDueDate = Some(LocalDate.parse("2019-03-29")),
-    poaRelevantAmount = Some(1000.00)
+    poaRelevantAmount = Some(1000.00),
+    accruingInterestAmount = Some(12.34)
   )
 
   val documentDetail2: DocumentDetailHip = DocumentDetailHip(
@@ -176,13 +176,13 @@ object FinancialDataTestConstants {
     interestFromDate = None,
     interestEndDate = None,
     latePaymentInterestId = None,
-    latePaymentInterestAmount = None,
     interestOutstandingAmount = None,
     paymentLotItem = None,
     paymentLot = None,
     lpiWithDunningLock = None,
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    poaRelevantAmount = Some(1000.00)
+    poaRelevantAmount = Some(1000.00),
+    accruingInterestAmount = None
   )
 
   val documentDetail3: DocumentDetailHip = DocumentDetailHip(
@@ -196,14 +196,14 @@ object FinancialDataTestConstants {
     interestFromDate = None,
     interestEndDate = None,
     latePaymentInterestId = None,
-    latePaymentInterestAmount = None,
     interestOutstandingAmount = None,
     transactionId = "id",
     paymentLot = None,
     paymentLotItem = None,
     lpiWithDunningLock = None,
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    poaRelevantAmount = Some(1000.00)
+    poaRelevantAmount = Some(1000.00),
+    accruingInterestAmount = None
   )
 
   val financialDetail3: FinancialDetailHip = FinancialDetailHip(
@@ -422,12 +422,11 @@ object FinancialDataTestConstants {
     paymentLot = Some("paymentLot"),
     paymentLotItem = Some("paymentLotItem"),
     effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-    accruingInterestAmount = None,
+    accruingInterestAmount = Some(12.34),
     interestRate = Some(2.60),
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
-    latePaymentInterestAmount = Some(12.34),
     lpiWithDunningLock = Some(12.50),
     interestOutstandingAmount = Some(31.00),
     amountCodedOut = Some(3.21))
