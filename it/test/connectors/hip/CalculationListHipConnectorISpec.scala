@@ -27,7 +27,7 @@ class CalculationListHipConnectorISpec extends ComponentSpecBase {
   val connector: CalculationListHipConnector = app.injector.instanceOf[CalculationListHipConnector]
   val nino = "AA123456A"
   val taxYearRange = "23-24"
-  val urlCalculationHipTYS = s"/income-tax/v1/$taxYearRange/view/calculations/liability/$nino"
+  val urlCalculationHipTYS = s"/itsa/income-tax/v1/$taxYearRange/view/calculations/liability/$nino"
 
   val calculationListResponse: CalculationListResponseModel = CalculationListResponseModel(Seq(CalculationListModel(
     calculationId = "c432a56d-e811-474c-a26a-76fc3bcaefe5",

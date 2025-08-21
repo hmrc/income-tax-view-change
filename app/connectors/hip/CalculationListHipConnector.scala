@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CalculationListHipConnector @Inject()(val http: HttpClientV2, val appConfig: MicroserviceAppConfig) extends Logging {
 
   private[connectors] def getCalculationListTYSHipUrl(nino: String, taxYearRange: String): String =
-    s"${appConfig.hipUrl}/income-tax/v1/$taxYearRange/view/calculations/liability/$nino"
+    s"${appConfig.hipUrl}/itsa/income-tax/v1/$taxYearRange/view/calculations/liability/$nino"
 
   def getCalculationListTYS(nino: String, taxYear: String)
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {

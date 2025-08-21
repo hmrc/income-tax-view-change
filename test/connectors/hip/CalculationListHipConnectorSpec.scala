@@ -27,7 +27,7 @@ class CalculationListHipConnectorSpec extends TestSupport with MockHttpV2 {
 
   object TestCalculationListHipConnector extends CalculationListHipConnector(mockHttpClientV2, microserviceAppConfig)
   val platform: String = microserviceAppConfig.hipUrl
-  val url5624 = s"$platform/income-tax/v1/$testTaxYearRange/view/calculations/liability/$testNino"
+  val url5624 = s"$platform/itsa/income-tax/v1/$testTaxYearRange/view/calculations/liability/$testNino"
   val header5624: Seq[(String, String)] = microserviceAppConfig.getHIPHeaders(GetCalcListTYSHipApi)
 
   lazy val mockUrl5624: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(url5624, header5624)(_)
