@@ -16,9 +16,12 @@
 
 package services
 
+import config.MicroserviceAppConfig
 import connectors.CalculationListConnector
+import connectors.hip.CalculationListHipConnector
 import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
+import models.hip.GetCalcListTYSHipApi
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -26,16 +29,22 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CalculationListService @Inject()(val calculationListConnector: CalculationListConnector) extends Logging {
+class CalculationListService @Inject()(val calculationListConnector: CalculationListConnector,
+                                       val hipCalculationListConnector: CalculationListHipConnector,
+                                       val appConfig: MicroserviceAppConfig) extends Logging {
 
-  lazy val TAX_YEAR_2026: Int = 2026
+  private lazy val TAX_YEAR_2026: Int = 2026
 
   def getCalculationListTYS(nino: String, taxYearRange: String)
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
     logger.info(s"Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearRange")
     val calculationListResponse = if(getTaxYearEnd(taxYearRange) < TAX_YEAR_2026) {
-      calculationListConnector.getCalculationListTYS(nino, taxYearRange)
+      if (appConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)) {
+        hipCalculationListConnector.getCalculationListTYS(nino, taxYearRange)
+      } else {
+        calculationListConnector.getCalculationListTYS(nino, taxYearRange)
+      }
     } else {
       calculationListConnector.getCalculationList2083(nino, taxYearRange)
     }
@@ -52,7 +61,4 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
     val taxYearEndString: String = taxYearRange.trim.takeRight(2)
     taxYearEndString.toInt + 2000
   }
-
-
-
 }

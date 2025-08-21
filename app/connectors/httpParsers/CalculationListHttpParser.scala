@@ -42,7 +42,7 @@ object CalculationListHttpParser extends ResponseHttpParsers {
             )
           }
         case status if status >= 400 && status < 500 =>
-          logger.warn(s"$status returned from DES with body: ${response.body}")
+          logger.warn(s"$status returned from downstream with body: ${response.body}")
           handleErrorResponse(response)
 
         case status =>
