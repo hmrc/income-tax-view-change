@@ -111,7 +111,6 @@ case class AChargesResponse(model: ChargesHipResponse = ChargesHipResponse(
       interestFromDate = None,
       interestEndDate = None,
       latePaymentInterestId = None,
-      latePaymentInterestAmount = None,
       interestOutstandingAmount = None,
       paymentLotItem = None,
       paymentLot = None,
@@ -119,7 +118,8 @@ case class AChargesResponse(model: ChargesHipResponse = ChargesHipResponse(
       amountCodedOut = None,
       effectiveDateOfPayment = None,
       documentDueDate = Some(dueDate),
-      poaRelevantAmount = None
+      poaRelevantAmount = None,
+      accruingInterestAmount = None
     )
 
     val fd = FinancialDetailHip(

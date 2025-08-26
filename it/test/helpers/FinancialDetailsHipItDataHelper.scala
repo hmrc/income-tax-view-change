@@ -119,14 +119,13 @@ trait FinancialDetailsHipItDataHelper {
             "paymentLot" -> "paymentLot",
             "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
             "interestRate" -> 2.60,
-
             "interestFromDate" -> "2018-08-01",
             "interestEndDate" -> "2019-01-15",
             "latePaymentInterestID" -> "latePaymentInterestID",
-            "latePaymentInterestAmount" -> 12.34,
             "lpiWithDunningBlock" -> 12.50,
             "interestOutstandingAmount" -> 31.00,
             "amountCodedOut" -> 3.21,
+            "accruingInterestAmount" -> 12.34
           )
         ),
         "financialDetailsItem" -> Json.arr(
