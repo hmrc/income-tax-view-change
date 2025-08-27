@@ -39,7 +39,6 @@ class CalculationListHipControllerISpec extends ComponentSpecBase {
       "microservice.services.des.url" -> mockUrl,
       "microservice.services.hip.host" -> mockHost,
       "microservice.services.hip.port" -> mockPort,
-      s"microservice.services.hip.${GetLegacyCalcListHipApi()}.feature-switch" -> "true",
       "useBusinessDetailsIFPlatform" -> "true"
     ))
     .build()

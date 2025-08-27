@@ -53,7 +53,6 @@ class DocumentDetailSpec extends AnyWordSpec with Matchers {
     "interestFromDate" -> LocalDate.parse("2018-08-01"),
     "interestEndDate" -> LocalDate.parse("2019-01-15"),
     "latePaymentInterestID" -> "latePaymentInterestID",
-    "latePaymentInterestAmount" -> 12.34,
     "interestOutstandingAmount" -> 31.00,
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
@@ -61,7 +60,8 @@ class DocumentDetailSpec extends AnyWordSpec with Matchers {
     "amountCodedOut" -> 3.21,
     "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
     "documentDueDate" -> LocalDate.parse("2019-03-29"),
-    "poaRelevantAmount" -> Some(1000.00)
+    "poaRelevantAmount" -> Some(1000.00),
+    "accruingInterestAmount" -> 12.34
   )
 
   val documentDetailFullJsonWrite: JsValue = Json.obj(
@@ -76,7 +76,6 @@ class DocumentDetailSpec extends AnyWordSpec with Matchers {
     "interestFromDate" -> LocalDate.parse("2018-08-01"),
     "interestEndDate" -> LocalDate.parse("2019-01-15"),
     "latePaymentInterestId" -> "latePaymentInterestID",
-    "latePaymentInterestAmount" -> 12.34,
     "interestOutstandingAmount" -> 31.00,
     "paymentLotItem" -> "paymentLotItem",
     "paymentLot" -> "paymentLot",
@@ -84,7 +83,8 @@ class DocumentDetailSpec extends AnyWordSpec with Matchers {
     "amountCodedOut" -> 3.21,
     "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29"),
     "documentDueDate" -> LocalDate.parse("2019-03-29"),
-    "poaRelevantAmount" -> Some(1000.00)
+    "poaRelevantAmount" -> Some(1000.00),
+    "accruingInterestAmount" -> 12.34
   )
 
   val documentDetailLpiWithDunningLockJsonRead: JsValue = Json.obj("taxYear" -> "2018", "documentID" -> "id", "totalAmount" -> 1000.00,

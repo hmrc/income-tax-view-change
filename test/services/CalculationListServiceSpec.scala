@@ -16,7 +16,7 @@
 
 package services
 
-import constants.BaseTestConstants.{testNino, testTaxYearEnd, testTaxYearRange}
+import constants.BaseTestConstants.{testNino, testTaxYearRange}
 import constants.CalculationListDesTestConstants.{badRequestMultiError, badRequestSingleError, calculationListFull}
 import mocks.MockCalculationListConnector
 import models.calculationList.CalculationListResponseModel
@@ -27,45 +27,6 @@ class CalculationListServiceSpec extends TestSupport with MockCalculationListCon
 
   object TestCalculationListService extends CalculationListService(mockCalculationListConnector)
 
-  "CalculationListService.getCalculationList" should {
-    "return a CalculationListResponseModel" when {
-      "a success response is received from the Connector" in {
-        val successResponse: Either[Nothing, CalculationListResponseModel] = Right(calculationListFull)
-
-        setupMockGetCalculationList(testNino, testTaxYearEnd)(successResponse)
-
-        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationList(
-          testNino,
-          testTaxYearEnd
-        ).futureValue
-
-        expected shouldBe successResponse
-      }
-    }
-    "return a single error" when {
-      "a single error response is received from the Connector" in {
-        setupMockGetCalculationList(testNino, testTaxYearEnd)(badRequestSingleError)
-
-        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationList(
-          testNino,
-          testTaxYearEnd
-        ).futureValue
-
-        expected shouldBe badRequestSingleError
-      }
-    }
-    "return a multi error" when {
-      "multiple error responses are received from the Connector" in {
-        setupMockGetCalculationList(testNino, testTaxYearEnd)(badRequestMultiError)
-        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationList(
-          testNino,
-          testTaxYearEnd
-        ).futureValue
-
-        expected shouldBe badRequestMultiError
-      }
-    }
-  }
   "CalculationListService.getCalculationListTYS" should {
     "return a CalculationListResponseModel" when {
       "a success response is received from the Connector" in {

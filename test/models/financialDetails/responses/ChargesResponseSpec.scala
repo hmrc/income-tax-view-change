@@ -113,10 +113,10 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       "interestFromDate" -> LocalDate.parse("2018-08-01"),
       "interestEndDate" -> LocalDate.parse("2019-01-15"),
       "latePaymentInterestId" -> "latePaymentInterestID",
-      "latePaymentInterestAmount" -> 12.34,
       "lpiWithDunningLock" -> 12.50,
       "interestOutstandingAmount" -> 31.00,
-      "amountCodedOut" -> 3.21
+      "amountCodedOut" -> 3.21,
+      "accruingInterestAmount" -> 12.34
     )),
     "financialDetails" -> Json.arr(Json.parse(
       """{
@@ -166,7 +166,6 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       interestFromDate = None,
       interestEndDate = None,
       latePaymentInterestId = None,
-      latePaymentInterestAmount = None,
       interestOutstandingAmount = None,
       transactionId = documentId,
       paymentLot = paymentLot,
@@ -174,7 +173,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       lpiWithDunningLock = None,
       amountCodedOut = Some(3.21),
       effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-      poaRelevantAmount = Some(1000.00)
+      poaRelevantAmount = Some(1000.00),
+      accruingInterestAmount = None
     )
   }
 
@@ -190,7 +190,6 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       interestFromDate = None,
       interestEndDate = None,
       latePaymentInterestId = None,
-      latePaymentInterestAmount = None,
       interestOutstandingAmount = None,
       transactionId = documentId,
       paymentLot = None,
@@ -198,7 +197,8 @@ class ChargesResponseSpec extends AnyWordSpec with Matchers {
       lpiWithDunningLock = None,
       amountCodedOut = Some(3.21),
       effectiveDateOfPayment = Some(LocalDate.parse("2018-03-29")),
-      poaRelevantAmount = Some(1000.00)
+      poaRelevantAmount = Some(1000.00),
+      accruingInterestAmount = None
     )
   }
 

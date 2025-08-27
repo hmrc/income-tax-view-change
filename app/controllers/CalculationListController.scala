@@ -20,7 +20,6 @@ import config.MicroserviceAppConfig
 import connectors.hip.CalculationListLegacyConnector
 import controllers.predicates.AuthenticationPredicate
 import models.errors.{Error, InvalidNino, InvalidTaxYear, MultiError}
-import models.hip.GetLegacyCalcListHipApi
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
@@ -37,7 +36,7 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
                                           val hipCalculationListConnector: CalculationListLegacyConnector,
                                           val appConfig: MicroserviceAppConfig,
                                           cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
-  // Get Legacy Calculation details DES API#1404(now moved to HIP API#5191)
+  // Get Legacy Calculation details HIP API#5191)
   def getCalculationList(nino: String, taxYearEnd: String): Action[AnyContent] = authentication.async {
     implicit request =>
       if (isInvalidNino(nino)) {
@@ -47,12 +46,8 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
         logger.error(s"Invalid tax year '$taxYearEnd' received in request.")
         Future.successful(BadRequest(Json.toJson[Error](InvalidTaxYear)))
       } else {
-        if(appConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)) {
           getCalculationListFromHip(nino, taxYearEnd)
-        } else {
-          getCalculationListFromDes(nino, taxYearEnd)
         }
-      }
   }
 
   // TYS - 1896 and beyond
@@ -67,24 +62,6 @@ class CalculationListController @Inject()(val authentication: AuthenticationPred
       } else {
         getCalculationListTYS(nino, taxYearRange)
       }
-  }
-
-  private def getCalculationListFromDes(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
-    logger.debug("Calling CalculationListService.getCalculationList")
-    calculationListService.getCalculationList(nino, taxYear).map {
-      case Right(calculationList) =>
-        val calculation = calculationList.calculations.head
-        Ok(Json.toJson(calculation))
-      case Left(error) => error.error match {
-        case singleError: Error =>
-          logger.error(s"returned a single error ${singleError.reason}")
-          Status(error.status)(Json.toJson(singleError))
-        case multiError: MultiError =>
-          multiError.failures.foreach(singleError =>
-            logger.error(s"returned multiple errors ${singleError.reason}"))
-          Status(error.status)(Json.toJson(multiError))
-      }
-    }
   }
 
   private def getCalculationListFromHip(nino: String, taxYear: String)(implicit hc: HeaderCarrier): Future[Result] = {
