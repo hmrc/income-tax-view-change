@@ -20,6 +20,11 @@ sealed trait HipApi {
   val name: String
 }
 
+case object GetCalcListTYSHipApi extends HipApi {
+  val name = "get-calc-list-TYS"
+  def apply(): String = name
+}
+
 case object GetLegacyCalcListHipApi extends HipApi {
   val name = "get-legacy-calc-list"
   def apply(): String = name

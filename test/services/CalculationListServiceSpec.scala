@@ -16,23 +16,44 @@
 
 package services
 
+import config.MicroserviceAppConfig
 import constants.BaseTestConstants.{testNino, testTaxYearRange}
 import constants.CalculationListDesTestConstants.{badRequestMultiError, badRequestSingleError, calculationListFull}
 import mocks.MockCalculationListConnector
+import mocks.hip.MockCalculationListHipConnector
 import models.calculationList.CalculationListResponseModel
 import models.errors.ErrorResponse
+import models.hip.GetCalcListTYSHipApi
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
 import utils.TestSupport
 
-class CalculationListServiceSpec extends TestSupport with MockCalculationListConnector {
+class CalculationListServiceSpec extends TestSupport with MockCalculationListConnector with MockCalculationListHipConnector {
 
-  object TestCalculationListService extends CalculationListService(mockCalculationListConnector)
+  val mockAppConfig: MicroserviceAppConfig = mock[MicroserviceAppConfig]
+  object TestCalculationListService extends CalculationListService(mockCalculationListConnector, mockCalculationListHipConnector, mockAppConfig)
 
   "CalculationListService.getCalculationListTYS" should {
     "return a CalculationListResponseModel" when {
-      "a success response is received from the Connector" in {
+      "a success response is received from the IF Connector" in {
         val successResponse: Either[Nothing, CalculationListResponseModel] = Right(calculationListFull)
 
+        when(mockAppConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)).thenReturn(false)
         setupMockGetCalculationListTYS(testNino, testTaxYearRange)(successResponse)
+
+        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
+          testNino,
+          testTaxYearRange
+        ).futureValue
+
+        expected shouldBe successResponse
+      }
+
+      "a success response is received from the HIP Connector" in {
+        val successResponse: Either[Nothing, CalculationListResponseModel] = Right(calculationListFull)
+
+        when(mockAppConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)).thenReturn(true)
+        setupMockGetCalculationListHipTYS(testNino, testTaxYearRange)(successResponse)
 
         val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
           testNino,
@@ -43,8 +64,21 @@ class CalculationListServiceSpec extends TestSupport with MockCalculationListCon
       }
     }
     "return a single error" when {
-      "a single error response is received from the Connector" in {
+      "a single error response is received from the IF Connector" in {
+        when(mockAppConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)).thenReturn(false)
         setupMockGetCalculationListTYS(testNino, testTaxYearRange)(badRequestSingleError)
+
+        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
+          testNino,
+          testTaxYearRange
+        ).futureValue
+
+        expected shouldBe badRequestSingleError
+      }
+
+      "a single error response is received from the HIP Connector" in {
+        when(mockAppConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)).thenReturn(true)
+        setupMockGetCalculationListHipTYS(testNino, testTaxYearRange)(badRequestSingleError)
 
         val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
           testNino,
@@ -55,8 +89,21 @@ class CalculationListServiceSpec extends TestSupport with MockCalculationListCon
       }
     }
     "return a multi error" when {
-      "multiple error responses are received from the Connector" in {
+      "multiple error responses are received from the IF Connector" in {
+        when(mockAppConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)).thenReturn(false)
         setupMockGetCalculationListTYS(testNino, testTaxYearRange)(badRequestMultiError)
+
+        val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
+          testNino,
+          testTaxYearRange
+        ).futureValue
+
+        expected shouldBe badRequestMultiError
+      }
+
+      "multiple error responses are received from the HIP Connector" in {
+        when(mockAppConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)).thenReturn(true)
+        setupMockGetCalculationListHipTYS(testNino, testTaxYearRange)(badRequestMultiError)
 
         val expected: Either[ErrorResponse, CalculationListResponseModel] = TestCalculationListService.getCalculationListTYS(
           testNino,
