@@ -18,7 +18,7 @@ package connectors.hip
 
 import helpers.{ComponentSpecBase, WiremockHelper}
 import models.calculationList.{CalculationListModel, CalculationListResponseModel}
-import models.errors.{InvalidJsonResponse, UnexpectedJsonFormat, UnexpectedResponse}
+import models.errors.{Error, ErrorResponse, InvalidJsonResponse, UnexpectedJsonFormat, UnexpectedResponse}
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 
@@ -95,25 +95,32 @@ class CalculationListHipConnectorISpec extends ComponentSpecBase {
 
           result shouldBe Left(UnexpectedResponse)
         }
+      }
 
-        "return an error when the json returned was in an incorrect state" in {
+      "the response is a 404 - NOT_FOUND" should {
 
-          val requestBody: JsValue = Json.parse(
+        "return an error when the downstream response was NOT FOUND" in {
+
+          val json = Json.parse(
             """
-              |[
-              | {
-              |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
-              |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
-              |   "crystallised": false
+              |{
+              | "origin":"HoD",
+              | "response": {
+              |   "failures":[
+              |     {
+              |       "type": "NOT_FOUND",
+              |       "reason":"The remote endpoint has indicated that the requested resource could not be found."
+              |     }
+              |   ]
               | }
-              |]
+              |}
               |""".stripMargin)
 
-          WiremockHelper.stubGet(urlCalculationHipTYS, INTERNAL_SERVER_ERROR, requestBody.toString())
+          WiremockHelper.stubGet(urlCalculationHipTYS, NOT_FOUND, json.toString())
 
-          val result = connector.getCalculationListTYS("1234", taxYearRange).futureValue
+          val result = connector.getCalculationListTYS(nino, taxYearRange).futureValue
 
-          result shouldBe Left(InvalidJsonResponse)
+          result shouldBe Left(ErrorResponse(NOT_FOUND, Error("NOT_FOUND", "Resource not found")))
         }
       }
     }

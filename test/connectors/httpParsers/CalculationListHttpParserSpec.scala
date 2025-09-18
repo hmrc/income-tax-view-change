@@ -16,11 +16,12 @@
 
 package connectors.httpParsers
 
-import constants.CalculationListDesTestConstants.{badRequestSingleError, calculationListFull, calculationListMin, jsonResponseFull, jsonResponseMin, jsonSingleError}
+import constants.CalculationListDesTestConstants.{badRequestSingleError, calculationListFull, calculationListMin, hipNotFoundErrorResponse, jsonResponseFull, jsonResponseMin, jsonSingleError}
 import connectors.httpParsers.CalculationListHttpParser.CalculationListReads
 import models.calculationList.CalculationListResponseModel
-import models.errors.{InvalidJsonResponse, UnexpectedResponse}
+import models.errors.{Error, ErrorResponse, InvalidJsonResponse, UnexpectedResponse}
 import play.api.http.Status
+import play.api.http.Status.NOT_FOUND
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -54,6 +55,13 @@ class CalculationListHttpParserSpec extends TestSupport {
       "HTTP response is 500 INTERNAL_SERVER_ERROR" in {
         val httpResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, jsonSingleError, Map.empty)
         val expected: Either[UnexpectedResponse.type, Nothing] = Left(UnexpectedResponse)
+        val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
+
+        result shouldEqual expected
+      }
+      "HTTP response is 404 NOT_FOUND" in {
+        val httpResponse: HttpResponse = HttpResponse(Status.NOT_FOUND, hipNotFoundErrorResponse, Map.empty)
+        val expected: Either[ErrorResponse, Nothing] = Left(ErrorResponse(NOT_FOUND, Error("NOT_FOUND", "Resource not found")))
         val result: CalculationListHttpParser.HttpGetResult[CalculationListResponseModel] = CalculationListReads.read("", "", httpResponse)
 
         result shouldEqual expected

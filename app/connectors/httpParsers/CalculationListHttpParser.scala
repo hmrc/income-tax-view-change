@@ -17,8 +17,8 @@
 package connectors.httpParsers
 
 import models.calculationList.{CalculationListModel, CalculationListResponseModel, CalculationSummaryResponseModel}
-import models.errors.{UnexpectedJsonFormat, UnexpectedResponse}
-import play.api.http.Status.OK
+import models.errors.{Error, ErrorResponse, UnexpectedJsonFormat, UnexpectedResponse}
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
@@ -41,6 +41,9 @@ object CalculationListHttpParser extends ResponseHttpParsers {
               }
             )
           }
+        case NOT_FOUND =>
+          logger.debug(s"404 returned from downstream with body: ${response.body}")
+          Left(ErrorResponse(NOT_FOUND, Error("NOT_FOUND", "Resource not found")))
         case status if status >= 400 && status < 500 =>
           logger.warn(s"$status returned from downstream with body: ${response.body}")
           handleErrorResponse(response)

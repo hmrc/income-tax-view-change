@@ -102,9 +102,9 @@ class CalculationListControllerISpec extends ComponentSpecBase {
         Then("A no content response is received")
         result should have(
           httpStatus(NOT_FOUND),
-          jsonBodyAs[MultiError](
-            MultiError(
-              Seq(Error("NOT_FOUND", "The remote endpoint has indicated that the requested resource could not be found."))
+          jsonBodyAs[Error](
+            Error(
+              "NOT_FOUND", "Resource not found"
             )
           )
         )
