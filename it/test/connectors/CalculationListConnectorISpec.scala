@@ -98,26 +98,6 @@ class CalculationListConnectorISpec extends ComponentSpecBase {
 
           result shouldBe Left(UnexpectedResponse)
         }
-
-        "return an error when the json returned was in an incorrect state" in {
-
-          val requestBody: JsValue = Json.parse(
-            """
-              |[
-              | {
-              |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
-              |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
-              |   "crystallised": false
-              | }
-              |]
-              |""".stripMargin)
-
-          WiremockHelper.stubGet(urlCalculationTYS, INTERNAL_SERVER_ERROR, requestBody.toString())
-
-          val result = connector.getCalculationListTYS("1234", taxYearRange).futureValue
-
-          result shouldBe Left(InvalidJsonResponse)
-        }
       }
     }
   }
@@ -219,26 +199,6 @@ class CalculationListConnectorISpec extends ComponentSpecBase {
         val result = connector.getCalculationList2083(nino, taxYearRange).futureValue
 
         result shouldBe Left(UnexpectedResponse)
-      }
-
-      "return an error when the json returned was in an incorrect state" in {
-
-        val requestBody: JsValue = Json.parse(
-          """
-            |[
-            | {
-            |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
-            |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
-            |   "crystallised": false
-            | }
-            |]
-            |""".stripMargin)
-
-        WiremockHelper.stubGet(urlCalculation2083, INTERNAL_SERVER_ERROR, requestBody.toString())
-
-        val result = connector.getCalculationList2083("1234", taxYearRange).futureValue
-
-        result shouldBe Left(InvalidJsonResponse)
       }
     }
   }

@@ -76,6 +76,8 @@ object CalculationListDesTestConstants {
 
   val unexpectedJsonError: Error = Error(code = "UNEXPECTED_JSON_FORMAT", reason = "The downstream service responded with json which did not match the expected format.")
 
+  val hipNotFoundErrorResponse: JsValue = Json.obj("origin" -> "HIP", "response" -> Json.obj("failures" -> Json.arr(Json.obj("type" -> "NOT_FOUND", "reason" -> "The remote endpoint has indicated that the requested resource could not be found."))))
+
   val badRequestSingleError: Either[ErrorResponse, Nothing] =
     Left(ErrorResponse(Status.BAD_REQUEST, singleError))
 
