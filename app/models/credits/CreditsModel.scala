@@ -18,9 +18,11 @@ package models.credits
 import models.financialDetails.hip.model.{ChargesHipResponse, DocumentDetailHip}
 import play.api.libs.json.{Json, OFormat}
 
-case class CreditsModel(availableCredit: BigDecimal,
-                        allocatedCreditForChargesThatAreOverdue: BigDecimal,
-                        allocatedCreditForChargesBecomingDueIn30Days: BigDecimal,
+case class CreditsModel(availableCreditForRepayment: BigDecimal,
+                        allocatedCreditForOverdueCharges: BigDecimal,
+                        allocatedCreditForFutureCharges: BigDecimal,
+                        unallocatedCredit: BigDecimal,
+                        totalCredit: BigDecimal,
                         transactions: List[Transaction] )
 
 object CreditsModel {
@@ -69,6 +71,8 @@ object CreditsModel {
       chargesResponse.balanceDetails.totalCreditAvailableForRepayment.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.allocatedCreditForChargesThatAreOverdue.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.allocatedCreditForChargesBecomingDueIn30Days.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.unallocatedCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.totalCredit.map(_.abs).getOrElse(0.0),
       getCreditTransactionsForHip(chargesResponse) :++ createPendingRefundTransactionsForHip(chargesResponse)
     )
   }
