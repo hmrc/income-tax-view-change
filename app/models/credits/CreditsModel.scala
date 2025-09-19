@@ -19,7 +19,8 @@ import models.financialDetails.hip.model.{ChargesHipResponse, DocumentDetailHip}
 import play.api.libs.json.{Json, OFormat}
 
 case class CreditsModel(availableCredit: BigDecimal,
-                        allocatedCredit: BigDecimal,
+                        allocatedCreditForChargesThatAreOverdue: BigDecimal,
+                        allocatedCreditForChargesBecomingDueIn30Days: BigDecimal,
                         transactions: List[Transaction] )
 
 object CreditsModel {
@@ -65,8 +66,9 @@ object CreditsModel {
 
   def fromHipChargesResponse(chargesResponse: ChargesHipResponse): CreditsModel = {
     CreditsModel(
-      chargesResponse.balanceDetails.availableCredit.map(_.abs).getOrElse(0.0),
-      chargesResponse.balanceDetails.allocatedCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.totalCreditAvailableForRepayment.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCreditForChargesThatAreOverdue.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCreditForChargesBecomingDueIn30Days.map(_.abs).getOrElse(0.0),
       getCreditTransactionsForHip(chargesResponse) :++ createPendingRefundTransactionsForHip(chargesResponse)
     )
   }

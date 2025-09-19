@@ -44,7 +44,7 @@ case class BalanceDetailsHip(
                               /* Currency amount. 13-digits total with 2 decimal places */
                               unallocatedCredit: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
-                              allocatedCredit: Option[BigDecimal] = None,
+                              allocatedCreditForChargesThatAreOverdue: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
                               totalCredit: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
@@ -52,7 +52,9 @@ case class BalanceDetailsHip(
                               /* Currency amount. 13-digits total with 2 decimal places */
                               secondPendingAmountRequested: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
-                              availableCredit: Option[BigDecimal] = None
+                              totalCreditAvailableForRepayment: Option[BigDecimal] = None,
+                              /* Currency amount. 13-digits total with 2 decimal places */
+                              allocatedCreditForChargesBecomingDueIn30Days: Option[BigDecimal] = None
                             )
 
 object BalanceDetailsHip {
@@ -68,11 +70,12 @@ object BalanceDetailsHip {
       (__ \ "amountCodedOut").readNullable[BigDecimal] and
       (__ \ "totalBCDBalance").readNullable[BigDecimal] and
       (__ \ "unallocatedCredit").readNullable[BigDecimal] and
-      (__ \ "allocatedCredit").readNullable[BigDecimal] and
+      (__ \ "allocatedCreditForChargesThatAreOverdue").readNullable[BigDecimal] and
       (__ \ "totalCredit").readNullable[BigDecimal] and
       (__ \ "firstPendingAmountRequested").readNullable[BigDecimal] and
       (__ \ "secondPendingAmountRequested").readNullable[BigDecimal] and
-      (__ \ "availableCredit").readNullable[BigDecimal]
+      (__ \ "totalCreditAvailableForRepayment").readNullable[BigDecimal] and
+      (__ \ "allocatedCreditForChargesBecomingDueIn30Days").readNullable[BigDecimal]
     )(BalanceDetailsHip.apply _)
 
 }

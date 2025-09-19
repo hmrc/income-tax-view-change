@@ -36,11 +36,11 @@ object FinancialDetailHipIntegrationTestConstants {
     amountCodedOut = None,
     totalBCDBalance = None,
     unallocatedCredit = Some(400.00),
-    allocatedCredit = None,
+    allocatedCreditForChargesThatAreOverdue = None,
     totalCredit = None,
     firstPendingAmountRequested = None,
     secondPendingAmountRequested = None,
-    availableCredit = None)
+    totalCreditAvailableForRepayment = None)
 
   val documentDetailsHip: DocumentDetailHip = DocumentDetailHip(
     taxYear = 2018,
