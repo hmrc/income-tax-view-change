@@ -44,7 +44,7 @@ case class BalanceDetailsHip(
                               /* Currency amount. 13-digits total with 2 decimal places */
                               unallocatedCredit: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
-                              allocatedCreditForChargesThatAreOverdue: Option[BigDecimal] = None,
+                              allocatedCreditForOverdueCharges: Option[BigDecimal] = None, // renamed from allocatedCreditForChargesThatAreOverdue
                               /* Currency amount. 13-digits total with 2 decimal places */
                               totalCredit: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
@@ -54,7 +54,7 @@ case class BalanceDetailsHip(
                               /* Currency amount. 13-digits total with 2 decimal places */
                               totalCreditAvailableForRepayment: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
-                              allocatedCreditForChargesBecomingDueIn30Days: Option[BigDecimal] = None
+                              allocatedCreditForFutureCharges: Option[BigDecimal] = None //renamed from allocatedCreditForChargesBecomingDueIn30Days
                             )
 
 object BalanceDetailsHip {
