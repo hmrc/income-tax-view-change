@@ -41,8 +41,11 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "balanceNotDuein30Days" : 0,
                |    "overDueAmount" : 0,
                |    "totalBalance" : 0,
-               |    "availableCredit" : 200,
-               |    "allocatedCredit" : 100,
+               |    "totalCreditAvailableForRepayment" : 200,
+               |    "allocatedCreditForChargesThatAreOverdue" : 100,
+               |    "allocatedCreditForChargesBecomingDueIn30Days" : 150,
+               |    "totalCredit" : 175,
+               |    "unallocatedCredit" : 125,
                |    "firstPendingAmountRequested" : 200,
                |    "secondPendingAmountRequested" : 100
                |  },
@@ -148,7 +151,10 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
 
         val expectedResponse = CreditsModel.fromHipChargesResponse(AChargesResponse()
           .withAvailableCredit(200.0)
-          .withAllocatedCredit(100.0)
+          .withAllocatedOverdueCredit(100.0)
+          .withAllocatedFutureCredit(150.0)
+          .withTotalCredit(175.0)
+          .withUnallocatedCredit(125.0)
           .withFirstRefundRequest(200.0)
           .withSecondRefundRequest(100.0)
           .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)

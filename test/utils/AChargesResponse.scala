@@ -33,9 +33,27 @@ case class AChargesResponse(model: ChargesHipResponse = ChargesHipResponse(
     AChargesResponse(model.copy(balanceDetails = balanceDetails))
   }
 
-  def withAllocatedCredit(allocatedCredit: BigDecimal): AChargesResponse = {
+  def withAllocatedOverdueCredit(allocatedCredit: BigDecimal): AChargesResponse = {
     val balanceDetails = model.balanceDetails
-      .copy(allocatedCreditForChargesThatAreOverdue = Some(allocatedCredit))
+      .copy(allocatedCreditForOverdueCharges = Some(allocatedCredit))
+    AChargesResponse(model.copy(balanceDetails = balanceDetails))
+  }
+
+  def withAllocatedFutureCredit(allocatedCredit: BigDecimal): AChargesResponse = {
+    val balanceDetails = model.balanceDetails
+      .copy(allocatedCreditForFutureCharges = Some(allocatedCredit))
+    AChargesResponse(model.copy(balanceDetails = balanceDetails))
+  }
+
+  def withTotalCredit(totalCredit: BigDecimal): AChargesResponse = {
+    val balanceDetails = model.balanceDetails
+      .copy(totalCredit = Some(totalCredit))
+    AChargesResponse(model.copy(balanceDetails = balanceDetails))
+  }
+
+  def withUnallocatedCredit(unallocatedCredit: BigDecimal): AChargesResponse = {
+    val balanceDetails = model.balanceDetails
+      .copy(unallocatedCredit = Some(unallocatedCredit))
     AChargesResponse(model.copy(balanceDetails = balanceDetails))
   }
 

@@ -69,8 +69,8 @@ object CreditsModel {
   def fromHipChargesResponse(chargesResponse: ChargesHipResponse): CreditsModel = {
     CreditsModel(
       chargesResponse.balanceDetails.totalCreditAvailableForRepayment.map(_.abs).getOrElse(0.0),
-      chargesResponse.balanceDetails.allocatedCreditForChargesThatAreOverdue.map(_.abs).getOrElse(0.0),
-      chargesResponse.balanceDetails.allocatedCreditForChargesBecomingDueIn30Days.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCreditForOverdueCharges.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCreditForFutureCharges.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.unallocatedCredit.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.totalCredit.map(_.abs).getOrElse(0.0),
       getCreditTransactionsForHip(chargesResponse) :++ createPendingRefundTransactionsForHip(chargesResponse)
