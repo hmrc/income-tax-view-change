@@ -19,7 +19,7 @@ import models.financialDetails.hip.model.{ChargesHipResponse, DocumentDetailHip}
 import play.api.libs.json.{Json, OFormat}
 
 case class CreditsModel(availableCreditForRepayment: BigDecimal,
-                        allocatedCreditForOverdueCharges: BigDecimal,
+                        allocatedCredit: BigDecimal,
                         allocatedCreditForFutureCharges: BigDecimal,
                         unallocatedCredit: BigDecimal,
                         totalCredit: BigDecimal,
@@ -69,7 +69,7 @@ object CreditsModel {
   def fromHipChargesResponse(chargesResponse: ChargesHipResponse): CreditsModel = {
     CreditsModel(
       chargesResponse.balanceDetails.totalCreditAvailableForRepayment.map(_.abs).getOrElse(0.0),
-      chargesResponse.balanceDetails.allocatedCreditForOverdueCharges.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCredit.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.allocatedCreditForFutureCharges.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.unallocatedCredit.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.totalCredit.map(_.abs).getOrElse(0.0),
