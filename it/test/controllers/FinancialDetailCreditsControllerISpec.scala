@@ -42,7 +42,7 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "overDueAmount" : 0,
                |    "totalBalance" : 0,
                |    "totalCreditAvailableForRepayment" : 200,
-               |    "allocatedCreditForChargesThatAreOverdue" : 100,
+               |    "allocatedCredit" : 100,
                |    "allocatedCreditForChargesBecomingDueIn30Days" : 150,
                |    "totalCredit" : 175,
                |    "unallocatedCredit" : 125,
