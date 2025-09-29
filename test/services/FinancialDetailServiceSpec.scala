@@ -58,10 +58,15 @@ class FinancialDetailServiceSpec  extends TestSupport with FinancialDetailsHipDa
 
   "Call getChargeDetails" should {
     "return success response with Json" when {
-      "correct params provided" in {
-        setupMockGetPayment(testNino, testFromDate, testToDate)(successResponse)
+      "correct params provided with balanceDetails.totalCreditAvailableForRepayment" in {
+        setupMockGetPayment(testNino, testFromDate, testToDate)(successResponseTotalAvailableCredit)
         val expected = ServiceUnderTest.getChargeDetails(testNino, testFromDate, testToDate).futureValue
-        expected shouldBe successResponse.map(Json.toJson(_))
+        expected shouldBe successResponseTotalAvailableCredit.map(Json.toJson(_))
+      }
+      "correct params provided with balanceDetails.availableCredit" in {
+        setupMockGetPayment(testNino, testFromDate, testToDate)(successResponseAvailableCredit)
+        val expected = ServiceUnderTest.getChargeDetails(testNino, testFromDate, testToDate).futureValue
+        expected shouldBe successResponseBothAvailableCredits.map(Json.toJson(_))
       }
     }
   }
