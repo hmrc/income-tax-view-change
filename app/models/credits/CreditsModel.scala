@@ -18,8 +18,11 @@ package models.credits
 import models.financialDetails.hip.model.{ChargesHipResponse, DocumentDetailHip}
 import play.api.libs.json.{Json, OFormat}
 
-case class CreditsModel(availableCredit: BigDecimal,
+case class CreditsModel(availableCreditForRepayment: BigDecimal,
                         allocatedCredit: BigDecimal,
+                        allocatedCreditForFutureCharges: BigDecimal,
+                        unallocatedCredit: BigDecimal,
+                        totalCredit: BigDecimal,
                         transactions: List[Transaction] )
 
 object CreditsModel {
@@ -64,9 +67,17 @@ object CreditsModel {
   }
 
   def fromHipChargesResponse(chargesResponse: ChargesHipResponse): CreditsModel = {
+    val availableCredit: Option[BigDecimal] = chargesResponse.balanceDetails.availableCredit match {
+      //Logic deprecated after R18, should just read from totalCreditAvailableForRepayment
+      case Some(value) => Some(value)
+      case None => chargesResponse.balanceDetails.totalCreditAvailableForRepayment
+    }
     CreditsModel(
-      chargesResponse.balanceDetails.availableCredit.map(_.abs).getOrElse(0.0),
+      availableCredit.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.allocatedCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.allocatedCreditForFutureCharges.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.unallocatedCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.totalCredit.map(_.abs).getOrElse(0.0),
       getCreditTransactionsForHip(chargesResponse) :++ createPendingRefundTransactionsForHip(chargesResponse)
     )
   }

@@ -402,7 +402,7 @@ object FinancialDataTestConstants {
     totalCredit = Some(123.00),
     firstPendingAmountRequested = Some(120.00),
     secondPendingAmountRequested = None,
-    availableCredit = None)
+    totalCreditAvailableForRepayment = None)
 
   val testCodingDetailsHip: CodingDetailsHip = CodingDetailsHip(
     totalLiabilityAmount = Some(100),
