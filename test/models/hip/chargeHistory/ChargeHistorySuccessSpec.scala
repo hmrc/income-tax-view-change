@@ -16,22 +16,22 @@
 
 package models.hip.chargeHistory
 
-import constants.hip.ChargeHistoryTestConstants.{chargeHistorySuccess, chargeHistorySuccessJson}
+import constants.hip.ChargeHistoryTestConstants.{chargeHistorySuccess, chargeHistorySuccessJsonReads, chargeHistorySuccessJsonWrites}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.Json
+import play.api.libs.json.{JsSuccess, Json}
 
 class ChargeHistorySuccessSpec extends AnyWordSpec with Matchers {
 
   "ChargeHistorySuccess" should {
     "write to JSON" in {
       val result = Json.toJson(chargeHistorySuccess)
-      result shouldBe chargeHistorySuccessJson
+      result shouldBe chargeHistorySuccessJsonWrites
     }
 
     "read from JSON" in {
-      val result = Json.fromJson[ChargeHistorySuccess](chargeHistorySuccessJson)
-      result shouldBe chargeHistorySuccess
+      val result = Json.fromJson[ChargeHistorySuccess](chargeHistorySuccessJsonReads)
+      result shouldBe JsSuccess(chargeHistorySuccess)
     }
   }
 }

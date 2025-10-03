@@ -96,7 +96,7 @@ object ChargeHistoryTestConstants {
       |""".stripMargin
   )
 
-  val chargeHistorySuccessJson: JsValue = Json.parse(
+  val chargeHistorySuccessJsonWrites: JsValue = Json.parse(
     """{
       |  "processingDate" : "2001-12-17T09:30:17",
       |  "chargeHistoryDetails" : {
@@ -104,6 +104,28 @@ object ChargeHistoryTestConstants {
       |    "idValue" : "XQIT00000000001",
       |    "regimeType" : "ITSA",
       |    "chargeHistoryDetails" : [ {
+      |      "taxYear" : "2023",
+      |      "documentId" : "2740002892",
+      |      "documentDate" : "2023-03-13",
+      |      "documentDescription" : "Balancing Charge",
+      |      "totalAmount" : 25678.99,
+      |      "reversalDate" : "2022-03-14T09:30:45",
+      |      "reversalReason" : "Manual amendment",
+      |      "poaAdjustmentReason" : "005"
+      |    } ]
+      |  }
+      |}
+      |""".stripMargin
+  )
+
+  val chargeHistorySuccessJsonReads: JsValue = Json.parse(
+    """{
+      |  "processingDate" : "2001-12-17T09:30:17",
+      |  "chargeHistoryDetails" : {
+      |    "idType" : "MTDBSA",
+      |    "idNumber" : "XQIT00000000001",
+      |    "regimeType" : "ITSA",
+      |    "chargeHistory" : [ {
       |      "taxYear" : "2023",
       |      "documentId" : "2740002892",
       |      "documentDate" : "2023-03-13",
