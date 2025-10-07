@@ -20,8 +20,14 @@ import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDateTime
 
+sealed trait ChargeHistoryResponseModel
+
 case class ChargeHistorySuccess(processingDate: LocalDateTime,
-                                chargeHistoryDetails: ChargeHistoryDetails)
+                                chargeHistoryDetails: ChargeHistoryDetails) extends ChargeHistoryResponseModel
+
+case class ChargeHistoryError(status: Int, reason: String) extends ChargeHistoryResponseModel
+
+case class ChargeHistoryNotFound(status: Int, reason: String) extends ChargeHistoryResponseModel
 
 object ChargeHistorySuccess {
   implicit val format: OFormat[ChargeHistorySuccess] = Json.format[ChargeHistorySuccess]
@@ -34,4 +40,12 @@ object ChargeHistorySuccess {
       chargeHistoryDetails = chargeHistory.chargeHistoryDetails.chargeHistoryDetails
     )
   }
+}
+
+object ChargeHistoryError {
+  implicit val format: OFormat[ChargeHistoryError] = Json.format[ChargeHistoryError]
+}
+
+object ChargeHistoryNotFound {
+  implicit val format: OFormat[ChargeHistoryNotFound] = Json.format[ChargeHistoryNotFound]
 }

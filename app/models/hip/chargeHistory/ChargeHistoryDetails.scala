@@ -17,7 +17,7 @@
 package models.hip.chargeHistory
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{Reads, Writes, __}
+import play.api.libs.json.{Json, Reads, Writes, __}
 
 case class ChargeHistoryDetails(idType: String,
                                 idValue: String,
@@ -25,12 +25,7 @@ case class ChargeHistoryDetails(idType: String,
                                 chargeHistoryDetails: Option[List[ChargeHistory]])
 
 object ChargeHistoryDetails {
-  implicit val writes: Writes[ChargeHistoryDetails] = (
-    (__ \ "idType").write[String] and
-      (__ \ "idValue").write[String] and
-      (__ \ "regimeType").write[String] and
-      (__ \ "chargeHistoryDetails").writeNullable[List[ChargeHistory]]
-  )(c => (c.idType, c.idValue, c.regimeType, c.chargeHistoryDetails))
+  implicit val writes: Writes[ChargeHistoryDetails] = Json.writes[ChargeHistoryDetails]
 
   implicit val reads: Reads[ChargeHistoryDetails] = (
     (__ \ "idType").read[String] and
