@@ -17,7 +17,9 @@
 package constants.hip
 
 import models.hip.chargeHistory.{ChargeHistory, ChargeHistoryDetails, ChargeHistorySuccess}
+import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.http.HttpResponse
 
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
@@ -139,4 +141,9 @@ object ChargeHistoryTestConstants {
       |}
       |""".stripMargin
   )
+
+  val successResponse: HttpResponse = HttpResponse(Status.OK, chargeHistorySuccessJsonReads, Map.empty)
+  val badJsonResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "{}")
+  val notFoundResponse: HttpResponse = HttpResponse(Status.NOT_FOUND, "Error message", Map.empty)
+  val badResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Error message")
 }

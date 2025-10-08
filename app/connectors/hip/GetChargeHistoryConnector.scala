@@ -35,7 +35,7 @@ class GetChargeHistoryConnector @Inject()(val http: HttpClientV2,
     s"${appConfig.hipUrl}/etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory?idType=$idType&idValue=$idValue&chargeReference=$chargeReference"
   }
 
-  def headers: Seq[(String, String)] = appConfig.getHIPHeaders(GetChargeHistoryHipApi, Some(xMessageTypeFor5705))
+  def getHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(GetChargeHistoryHipApi, Some(xMessageTypeFor5705))
 
   def getChargeHistory(idValue: String, chargeReference: String)
                       (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[ChargeHistoryResponseModel] = {
@@ -43,7 +43,7 @@ class GetChargeHistoryConnector @Inject()(val http: HttpClientV2,
     val url = getChargeHistoryDetailsUrl("NINO", idValue, chargeReference)
 
     http.get(url"$url")
-      .setHeader(headers: _*)
+      .setHeader(getHeaders: _*)
       .execute[HttpResponse]
       .map {
         response =>
