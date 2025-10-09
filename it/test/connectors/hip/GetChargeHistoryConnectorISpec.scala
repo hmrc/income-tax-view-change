@@ -53,23 +53,31 @@ class GetChargeHistoryConnectorISpec extends ComponentSpecBase {
     chargeHistoryDetails = chargeHistoryDetails
   )
 
+  val chargeHistorySuccessWrapper: ChargeHistorySuccessWrapper =
+    ChargeHistorySuccessWrapper(chargeHistorySuccessModel)
+
+  val toJsonModel = Json.prettyPrint(Json.toJson(chargeHistorySuccessWrapper))
+  println(toJsonModel)
+
   val chargeHistorySuccessJsonReads: JsValue = Json.parse(
     """{
-      |  "processingDate" : "2001-12-17T09:30:17",
-      |  "chargeHistoryDetails" : {
-      |    "idType" : "MTDBSA",
-      |    "idNumber" : "XQIT00000000001",
-      |    "regimeType" : "ITSA",
-      |    "chargeHistory" : [ {
-      |      "taxYear" : "2023",
-      |      "documentId" : "2740002892",
-      |      "documentDate" : "2023-03-13",
-      |      "documentDescription" : "Balancing Charge",
-      |      "totalAmount" : 25678.99,
-      |      "reversalDate" : "2022-03-14T09:30:45",
-      |      "reversalReason" : "Manual amendment",
-      |      "poaAdjustmentReason" : "005"
-      |    } ]
+      |  "success" : {
+      |    "processingDate" : "2001-12-17T09:30:17Z",
+      |    "chargeHistoryDetails" : {
+      |      "idType" : "MTDBSA",
+      |      "idValue" : "XQIT00000000001",
+      |      "regimeType" : "ITSA",
+      |      "chargeHistoryDetails" : [ {
+      |        "taxYear" : "2023",
+      |        "documentId" : "2740002892",
+      |        "documentDate" : "2023-03-13",
+      |        "documentDescription" : "Balancing Charge",
+      |        "totalAmount" : 25678.99,
+      |        "reversalDate" : "2022-03-14T09:30:45Z",
+      |        "reversalReason" : "Manual amendment",
+      |        "poaAdjustmentReason" : "005"
+      |      } ]
+      |    }
       |  }
       |}
       |""".stripMargin
@@ -84,14 +92,14 @@ class GetChargeHistoryConnectorISpec extends ComponentSpecBase {
           WiremockHelper.stubGet(chargeHistoryUrl, OK, chargeHistorySuccessJsonReads.toString())
           val result = connector.getChargeHistory(nino, chargeReference).futureValue
 
-          result shouldBe chargeHistorySuccessModel
+          result shouldBe Right(chargeHistorySuccessWrapper)
         }
 
         "return a ChargeHistoryError response when the API has returned data, but it hasn't been parsed successfully" in {
           WiremockHelper.stubGet(chargeHistoryUrl, OK, "{}")
           val result = connector.getChargeHistory(nino, chargeReference).futureValue
 
-          result shouldBe ChargeHistoryError(INTERNAL_SERVER_ERROR, "Json validation error parsing ChargeHistorySuccess model")
+          result shouldBe Left(ChargeHistoryError(INTERNAL_SERVER_ERROR, "Json validation error parsing ChargeHistorySuccess model"))
         }
       }
 
@@ -101,7 +109,7 @@ class GetChargeHistoryConnectorISpec extends ComponentSpecBase {
           WiremockHelper.stubGet(chargeHistoryUrl, NOT_FOUND, jsonError.toString())
           val result = connector.getChargeHistory(nino, chargeReference).futureValue
 
-          result shouldBe ChargeHistoryNotFound(NOT_FOUND, jsonError.toString())
+          result shouldBe Left(ChargeHistoryNotFound(NOT_FOUND, jsonError.toString()))
         }
       }
 
@@ -111,7 +119,7 @@ class GetChargeHistoryConnectorISpec extends ComponentSpecBase {
           WiremockHelper.stubGet(chargeHistoryUrl, INTERNAL_SERVER_ERROR, jsonError.toString())
           val result = connector.getChargeHistory(nino, chargeReference).futureValue
 
-          result shouldBe ChargeHistoryError(INTERNAL_SERVER_ERROR, jsonError.toString())
+          result shouldBe Left(ChargeHistoryError(INTERNAL_SERVER_ERROR, jsonError.toString()))
         }
       }
 
@@ -127,7 +135,7 @@ class GetChargeHistoryConnectorISpec extends ComponentSpecBase {
 
           WiremockHelper.stubGet(chargeHistoryUrl, UNPROCESSABLE_ENTITY, jsonError)
           val result = connector.getChargeHistory(nino, chargeReference).futureValue
-          result shouldBe ChargeHistoryNotFound(NOT_FOUND, jsonError)
+          result shouldBe Left(ChargeHistoryNotFound(NOT_FOUND, jsonError))
         }
       }
     }

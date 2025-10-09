@@ -17,27 +17,33 @@
 package models.hip.chargeHistory
 
 import play.api.libs.json.{Json, OFormat}
+import utils.JsonUtils
 
 import java.time.LocalDateTime
 
-sealed trait ChargeHistoryResponseModel
+sealed trait ChargeHistoryResponseError
 
-case class ChargeHistorySuccess(processingDate: LocalDateTime,
-                                chargeHistoryDetails: ChargeHistoryDetails) extends ChargeHistoryResponseModel
+case class ChargeHistorySuccessWrapper(success: ChargeHistorySuccess)
 
-case class ChargeHistoryError(status: Int, reason: String) extends ChargeHistoryResponseModel
+case class ChargeHistorySuccess(processingDate: LocalDateTime, chargeHistoryDetails: ChargeHistoryDetails)
 
-case class ChargeHistoryNotFound(status: Int, reason: String) extends ChargeHistoryResponseModel
+case class ChargeHistoryError(status: Int, reason: String) extends ChargeHistoryResponseError
 
-object ChargeHistorySuccess {
+case class ChargeHistoryNotFound(status: Int, reason: String) extends ChargeHistoryResponseError
+
+object ChargeHistorySuccess extends JsonUtils{
   implicit val format: OFormat[ChargeHistorySuccess] = Json.format[ChargeHistorySuccess]
+}
 
-  def toChargeHistoryModel(chargeHistory: ChargeHistorySuccess): ChargeHistoryDetails = {
+object ChargeHistorySuccessWrapper {
+  implicit val format: OFormat[ChargeHistorySuccessWrapper] = Json.format[ChargeHistorySuccessWrapper]
+
+  def toChargeHistoryModel(chargeHistory: ChargeHistorySuccessWrapper): ChargeHistoryDetails = {
     ChargeHistoryDetails(
-      idType = chargeHistory.chargeHistoryDetails.idType,
-      idValue = chargeHistory.chargeHistoryDetails.idValue,
-      regimeType = chargeHistory.chargeHistoryDetails.regimeType,
-      chargeHistoryDetails = chargeHistory.chargeHistoryDetails.chargeHistoryDetails
+      idType = chargeHistory.success.chargeHistoryDetails.idType,
+      idValue = chargeHistory.success.chargeHistoryDetails.idValue,
+      regimeType = chargeHistory.success.chargeHistoryDetails.regimeType,
+      chargeHistoryDetails = chargeHistory.success.chargeHistoryDetails.chargeHistoryDetails
     )
   }
 }

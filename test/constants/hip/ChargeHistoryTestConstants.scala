@@ -16,7 +16,7 @@
 
 package constants.hip
 
-import models.hip.chargeHistory.{ChargeHistory, ChargeHistoryDetails, ChargeHistorySuccess}
+import models.hip.chargeHistory.{ChargeHistory, ChargeHistoryDetails, ChargeHistorySuccess, ChargeHistorySuccessWrapper}
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpResponse
@@ -48,6 +48,9 @@ object ChargeHistoryTestConstants {
     chargeHistoryDetails = chargeHistoryDetails
   )
 
+  val chargeHistorySuccessWrapperModel: ChargeHistorySuccessWrapper =
+    ChargeHistorySuccessWrapper(success = chargeHistorySuccess)
+
   val chargeHistoryJson: JsValue = Json.parse(
     """{
       |  "taxYear" : "2023",
@@ -55,7 +58,7 @@ object ChargeHistoryTestConstants {
       |  "documentDate" : "2023-03-13",
       |  "documentDescription" : "Balancing Charge",
       |  "totalAmount" : 25678.99,
-      |  "reversalDate" : "2022-03-14T09:30:45",
+      |  "reversalDate" : "2022-03-14T09:30:45Z",
       |  "reversalReason" : "Manual amendment",
       |  "poaAdjustmentReason" : "005"
       |}
@@ -72,7 +75,7 @@ object ChargeHistoryTestConstants {
       |    "documentDate" : "2023-03-13",
       |    "documentDescription" : "Balancing Charge",
       |    "totalAmount" : 25678.99,
-      |    "reversalDate" : "2022-03-14T09:30:45",
+      |    "reversalDate" : "2022-03-14T09:30:45Z",
       |    "reversalReason" : "Manual amendment",
       |    "poaAdjustmentReason" : "005"
       |  } ]
@@ -90,7 +93,7 @@ object ChargeHistoryTestConstants {
       |    "documentDate" : "2023-03-13",
       |    "documentDescription" : "Balancing Charge",
       |    "totalAmount" : 25678.99,
-      |    "reversalDate" : "2022-03-14T09:30:45",
+      |    "reversalDate" : "2022-03-14T09:30:45Z",
       |    "reversalReason" : "Manual amendment",
       |    "poaAdjustmentReason" : "005"
       |  } ]
@@ -100,7 +103,7 @@ object ChargeHistoryTestConstants {
 
   val chargeHistorySuccessJsonWrites: JsValue = Json.parse(
     """{
-      |  "processingDate" : "2001-12-17T09:30:17",
+      |  "processingDate" : "2001-12-17T09:30:17Z",
       |  "chargeHistoryDetails" : {
       |    "idType" : "MTDBSA",
       |    "idValue" : "XQIT00000000001",
@@ -111,7 +114,7 @@ object ChargeHistoryTestConstants {
       |      "documentDate" : "2023-03-13",
       |      "documentDescription" : "Balancing Charge",
       |      "totalAmount" : 25678.99,
-      |      "reversalDate" : "2022-03-14T09:30:45",
+      |      "reversalDate" : "2022-03-14T09:30:45Z",
       |      "reversalReason" : "Manual amendment",
       |      "poaAdjustmentReason" : "005"
       |    } ]
@@ -122,7 +125,7 @@ object ChargeHistoryTestConstants {
 
   val chargeHistorySuccessJsonReads: JsValue = Json.parse(
     """{
-      |  "processingDate" : "2001-12-17T09:30:17",
+      |  "processingDate" : "2001-12-17T09:30:17Z",
       |  "chargeHistoryDetails" : {
       |    "idType" : "MTDBSA",
       |    "idNumber" : "XQIT00000000001",
@@ -133,7 +136,7 @@ object ChargeHistoryTestConstants {
       |      "documentDate" : "2023-03-13",
       |      "documentDescription" : "Balancing Charge",
       |      "totalAmount" : 25678.99,
-      |      "reversalDate" : "2022-03-14T09:30:45",
+      |      "reversalDate" : "2022-03-14T09:30:45Z",
       |      "reversalReason" : "Manual amendment",
       |      "poaAdjustmentReason" : "005"
       |    } ]
@@ -142,7 +145,31 @@ object ChargeHistoryTestConstants {
       |""".stripMargin
   )
 
-  val successResponse: HttpResponse = HttpResponse(Status.OK, chargeHistorySuccessJsonReads, Map.empty)
+  val chargeHistorySuccessWrapperJsonReads: JsValue = Json.parse(
+    """{
+      |  "success" : {
+      |    "processingDate" : "2001-12-17T09:30:17Z",
+      |    "chargeHistoryDetails" : {
+      |      "idType" : "MTDBSA",
+      |      "idNumber" : "XQIT00000000001",
+      |      "regimeType" : "ITSA",
+      |      "chargeHistory" : [ {
+      |        "taxYear" : "2023",
+      |        "documentId" : "2740002892",
+      |        "documentDate" : "2023-03-13",
+      |        "documentDescription" : "Balancing Charge",
+      |        "totalAmount" : 25678.99,
+      |        "reversalDate" : "2022-03-14T09:30:45Z",
+      |        "reversalReason" : "Manual amendment",
+      |        "poaAdjustmentReason" : "005"
+      |      } ]
+      |    }
+      |  }
+      |}
+      |""".stripMargin
+  )
+
+  val successResponse: HttpResponse = HttpResponse(Status.OK, chargeHistorySuccessWrapperJsonReads, Map.empty)
   val badJsonResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "{}")
   val notFoundResponse: HttpResponse = HttpResponse(Status.NOT_FOUND, "Error message", Map.empty)
   val badResponse: HttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "Error message")

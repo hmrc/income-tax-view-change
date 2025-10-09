@@ -17,7 +17,7 @@
 package connectors.hip
 
 import constants.BaseTestConstants.testNino
-import constants.hip.ChargeHistoryTestConstants.{badJsonResponse, badResponse, chargeHistorySuccess, notFoundResponse, successResponse}
+import constants.hip.ChargeHistoryTestConstants._
 import mocks.MockHttpV2
 import models.hip.GetChargeHistoryHipApi
 import models.hip.chargeHistory.{ChargeHistoryError, ChargeHistoryNotFound}
@@ -49,7 +49,7 @@ class GetChargeHistoryConnectorSpec extends TestSupport with MockHttpV2 {
       }
     }
 
-    "return Status (OK) and a JSON body when successful as a GetBusinessDetails" in {
+    "return the correct success model when the correct headers are passed" in {
       mock5705(successResponse)
       getHeaders.exists(_._1 == "Authorization") shouldBe true
       getHeaders.exists(_._1 == "correlationId") shouldBe true
@@ -58,32 +58,31 @@ class GetChargeHistoryConnectorSpec extends TestSupport with MockHttpV2 {
       getHeaders.exists(_._1 == "X-Receipt-Date") shouldBe true
       getHeaders.exists(_._1 == "X-Regime-Type") shouldBe true
       getHeaders.exists(_._1 == "X-Transmitting-System") shouldBe true
-      getChargeHistory(testNino, chargeReference).futureValue shouldBe chargeHistorySuccess
+      getChargeHistory(testNino, chargeReference).futureValue shouldBe Right(chargeHistorySuccessWrapperModel)
 
     }
 
     "return a ChargeHistorySuccess response model when able to successfully retrieve parse the data" in {
       mock5705(successResponse)
-      getChargeHistory(testNino, chargeReference).futureValue shouldBe chargeHistorySuccess
+      getChargeHistory(testNino, chargeReference).futureValue shouldBe Right(chargeHistorySuccessWrapperModel)
     }
 
     "return a ChargeHistoryError response model when data is successfully returned but an error occurred parsing the data" in {
       mock5705(badJsonResponse)
       getChargeHistory(testNino, chargeReference).futureValue shouldBe
-        ChargeHistoryError(Status.INTERNAL_SERVER_ERROR, "{}")
+        Left(ChargeHistoryError(Status.INTERNAL_SERVER_ERROR, "{}"))
     }
 
     "return a ChargeHistoryError response model when an error has been returned by the API" in {
       mock5705(badResponse)
       getChargeHistory(testNino, chargeReference).futureValue shouldBe
-        ChargeHistoryError(Status.INTERNAL_SERVER_ERROR, "Error message")
+        Left(ChargeHistoryError(Status.INTERNAL_SERVER_ERROR, "Error message"))
     }
 
     "return a ChargeHistoryNotFound response when no data was found and returned by the API" in {
       mock5705(notFoundResponse)
       getChargeHistory(testNino, chargeReference).futureValue shouldBe
-        ChargeHistoryNotFound(Status.NOT_FOUND, "Error message")
+        Left(ChargeHistoryNotFound(Status.NOT_FOUND, "Error message"))
     }
   }
-
 }

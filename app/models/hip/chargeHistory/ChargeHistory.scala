@@ -16,7 +16,8 @@
 
 package models.hip.chargeHistory
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
+import utils.JsonUtils
 
 import java.time.{LocalDate, LocalDateTime}
 
@@ -29,6 +30,6 @@ case class ChargeHistory(taxYear: String,
                          reversalReason: String,
                          poaAdjustmentReason: Option[String])
 
-object ChargeHistory {
+object ChargeHistory extends JsonUtils {
   implicit val format: OFormat[ChargeHistory] = Json.format[ChargeHistory]
 }

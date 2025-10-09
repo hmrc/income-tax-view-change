@@ -18,12 +18,12 @@ package connectors.hip
 
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
+import models.hip.chargeHistory.{ChargeHistoryError, ChargeHistoryNotFound, ChargeHistoryResponseError, ChargeHistorySuccessWrapper}
 import models.hip.{GetChargeHistoryHipApi, HipResponseErrorsObject}
-import models.hip.chargeHistory.{ChargeHistoryError, ChargeHistoryNotFound, ChargeHistoryResponseModel, ChargeHistorySuccess}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{JsError, JsSuccess}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,44 +38,46 @@ class GetChargeHistoryConnector @Inject()(val http: HttpClientV2,
   def getHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(GetChargeHistoryHipApi, Some(xMessageTypeFor5705))
 
   def getChargeHistory(idValue: String, chargeReference: String)
-                      (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[ChargeHistoryResponseModel] = {
+                      (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Either[ChargeHistoryResponseError, ChargeHistorySuccessWrapper]] = {
 
     val url = getChargeHistoryDetailsUrl("NINO", idValue, chargeReference)
 
-    http.get(url"$url")
+    http
+      .get(url"$url")
       .setHeader(getHeaders: _*)
       .execute[HttpResponse]
       .map {
         response =>
+          println(s"$response responseBody: ${response.body}")
           response.status match {
             case OK =>
               logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
-              response.json.validate[ChargeHistorySuccess].fold(
+              response.json.validate[ChargeHistorySuccessWrapper].fold(
                 invalid => {
                   logger.error(s"Validation Errors: $invalid")
-                  ChargeHistoryError(INTERNAL_SERVER_ERROR, "Json validation error parsing ChargeHistorySuccess model")
+                  Left(ChargeHistoryError(INTERNAL_SERVER_ERROR, "Json validation error parsing ChargeHistorySuccess model"))
                 }, {
                   valid =>
                   logger.info("Successfully parsed response to ChargeHistorySuccess model")
-                  valid
+                  Right(valid)
                 }
               )
             case NOT_FOUND =>
               logger.warn(s" RESPONSE status: ${response.status}, body: ${response.body}")
-              ChargeHistoryNotFound(response.status, response.body)
-            case UNPROCESSABLE_ENTITY => handleUnprocessableStatusResponse(response)
+              Left(ChargeHistoryNotFound(response.status, response.body))
+            case UNPROCESSABLE_ENTITY => Left(handleUnprocessableStatusResponse(response))
             case _ =>
               logger.error(s"RESPONSE status: ${response.status}, body: ${response.body}")
-              ChargeHistoryError(response.status, response.body)
+              Left(ChargeHistoryError(response.status, response.body))
           }
       } recover {
       case ex =>
         logger.error(s"Unexpected failed future, ${ex.getMessage}")
-        ChargeHistoryError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}")
+        Left(ChargeHistoryError(INTERNAL_SERVER_ERROR, s"Unexpected failed future, ${ex.getMessage}"))
     }
   }
 
-  private def handleUnprocessableStatusResponse(unprocessableResponse: HttpResponse): ChargeHistoryResponseModel = {
+  private def handleUnprocessableStatusResponse(unprocessableResponse: HttpResponse): ChargeHistoryResponseError = {
     val notFoundCodes = Set("005", "014")
     unprocessableResponse.json.validate[HipResponseErrorsObject] match {
       case JsError(errors) =>

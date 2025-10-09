@@ -16,9 +16,9 @@
 
 package controllers
 
-import connectors.ChargeHistoryDetailsConnector
-import connectors.httpParsers.ChargeHistoryHttpParser.UnexpectedChargeHistoryResponse
+import connectors.hip.GetChargeHistoryConnector
 import controllers.predicates.AuthenticationPredicate
+import models.hip.chargeHistory.{ChargeHistoryError, ChargeHistoryNotFound, ChargeHistorySuccessWrapper}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -29,19 +29,24 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ChargeHistoryController @Inject()(authentication: AuthenticationPredicate,
                                         cc: ControllerComponents,
-                                        chargeHistoryDetailsConnector: ChargeHistoryDetailsConnector)
+                                        chargeHistoryDetailsConnector: GetChargeHistoryConnector)
                                        (implicit ec: ExecutionContext) extends BackendController(cc) {
 
 
   def getChargeHistoryDetails(nino: String, chargeReference: String): Action[AnyContent] =
     authentication.async { implicit request =>
-      chargeHistoryDetailsConnector.getChargeHistoryDetails(
-        nino = nino,
+      chargeHistoryDetailsConnector.getChargeHistory(
+        idValue = nino,
         chargeReference = chargeReference
       ) map {
-        case Right(chargeHistory) => Ok(Json.toJson(chargeHistory))
-        case Left(error: UnexpectedChargeHistoryResponse) if error.code >= 400 && error.code < 500 => Status(error.code)(error.response)
-        case Left(_) =>
+        case Right(chargeHistory) =>
+          val convertToChargeHistoryModel = ChargeHistorySuccessWrapper.toChargeHistoryModel(chargeHistory)
+          Ok(Json.toJson(convertToChargeHistoryModel))
+        case Left(notFoundError: ChargeHistoryNotFound) =>
+          Status(notFoundError.status)(Json.toJson(notFoundError))
+        case Left(error: ChargeHistoryError) =>
+          Status(error.status)(Json.toJson(error))
+        case _ =>
           InternalServerError("Failed to retrieve charges outstanding details")
       }
     }
