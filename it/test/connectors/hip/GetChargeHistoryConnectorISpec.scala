@@ -65,9 +65,9 @@ class GetChargeHistoryConnectorISpec extends ComponentSpecBase {
       |    "processingDate" : "2001-12-17T09:30:17Z",
       |    "chargeHistoryDetails" : {
       |      "idType" : "MTDBSA",
-      |      "idValue" : "XQIT00000000001",
+      |      "idNumber" : "XQIT00000000001",
       |      "regimeType" : "ITSA",
-      |      "chargeHistoryDetails" : [ {
+      |      "chargeHistory" : [ {
       |        "taxYear" : "2023",
       |        "documentId" : "2740002892",
       |        "documentDate" : "2023-03-13",
