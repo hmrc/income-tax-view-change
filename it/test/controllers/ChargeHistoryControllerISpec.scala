@@ -16,64 +16,70 @@
 
 package controllers
 
-import models.chargeHistoryDetail.{ChargeHistoryDetailModel, ChargeHistorySuccessResponse}
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
+import helpers.ComponentSpecBase
+import helpers.servicemocks.HipGetChargeHistoryStub.stubGetChargeHistory
+import models.hip.chargeHistory._
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
-import helpers.ComponentSpecBase
-import helpers.servicemocks.DesChargesStub.stubChargeHistory
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 class ChargeHistoryControllerISpec extends ComponentSpecBase {
 
-  val mtdBsa = "XAIT000000000000"
-  val chargeReference = "chargeRef"
+  val chargeReference = "XAIT000000000000"
+  val nino: String = "AA123456A"
 
   val chargeHistoryJson: JsValue = {
     Json.parse(
-      s"""|{
-   			 	|	"idType" : "NINO",
-   			 	|	"idValue" : "${mtdBsa}",
-   			 	|	"regimeType" : "ITSA",
-   			 	|	"chargeHistoryDetails" : [{
-					|		"taxYear" : "2017",
-					|		"documentId" : "DOCID01",
-					|		"documentDate" : "2017-08-07",
-					|		"documentDescription" : "desc",
-					|		"totalAmount" : 10000.00,
-					|		"reversalDate" : "2018-10-09",
-					|		"reversalReason" : "reason"
-					|	}]
-					|}""".stripMargin)
+      s"""{
+        |  "success" : {
+        |    "processingDate" : "2001-12-17T09:30:17Z",
+        |    "chargeHistoryDetails" : {
+        |      "idType" : "NINO",
+        |      "idNumber" : "$nino",
+        |      "regimeType" : "ITSA",
+        |      "chargeHistory" : [ {
+        |        "taxYear" : "2023",
+        |        "documentId" : "2740002892",
+        |        "documentDate" : "2023-03-13",
+        |        "documentDescription" : "Balancing Charge",
+        |        "totalAmount" : 25678.99,
+        |        "reversalDate" : "2022-03-14T09:30:45Z",
+        |        "reversalReason" : "Manual amendment",
+        |        "poaAdjustmentReason" : "005"
+        |      } ]
+        |    }
+        |  }
+        |}
+        |""".stripMargin
+    )
   }
 
-  s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(mtdBsa, chargeReference)}" should {
+  s"GET ${controllers.routes.ChargeHistoryController.getChargeHistoryDetails(nino, chargeReference)}" should {
     s"return $OK" when {
       "charge details are successfully retrieved" in {
 
         isAuthorised(true)
 
-        stubChargeHistory(mtdBsa, chargeReference)(
-          status = OK,
-          response = chargeHistoryJson)
+        stubGetChargeHistory(nino, chargeReference, OK, chargeHistoryJson)
 
-        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, chargeReference)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(nino, chargeReference)
 
-        val expectedResponseBody: JsValue = Json.toJson(ChargeHistorySuccessResponse(
+        val expectedResponseBody: JsValue = Json.toJson(ChargeHistoryDetails(
           idType = "NINO",
-          idValue = mtdBsa,
+          idValue = nino,
           regimeType = "ITSA",
           chargeHistoryDetails = Some(List(
-            ChargeHistoryDetailModel(
-              taxYear = "2017",
-              documentId = "DOCID01",
-              documentDate = LocalDate.parse("2017-08-07"),
-              documentDescription = "desc",
-              totalAmount = 10000.00,
-              reversalDate = "2018-10-09",
-              reversalReason = "reason",
-              poaAdjustmentReason = None
+            ChargeHistory(
+              taxYear = "2023",
+              documentId = "2740002892",
+              documentDate = LocalDate.of(2023, 3, 13),
+              documentDescription = "Balancing Charge",
+              totalAmount = 25678.99,
+              reversalDate = LocalDateTime.of(LocalDate.of(2022, 3, 14), LocalTime.of(9, 30, 45)),
+              reversalReason = "Manual amendment",
+              poaAdjustmentReason = Some("005")
             )
           ))))
 
@@ -86,33 +92,49 @@ class ChargeHistoryControllerISpec extends ComponentSpecBase {
 
     s"return $NOT_FOUND" when {
       "an unexpected status with NOT_FOUND was returned when retrieving charge details" in {
+        val chargeHistoryNotFound = ChargeHistoryNotFound(404, "No charge history data was found")
 
         isAuthorised(true)
 
-        val errorJson = Json.obj("code" -> "NO_DATA_FOUND", "reason" -> "The remote endpoint has indicated that no data can be found.")
-        stubChargeHistory(mtdBsa, chargeReference)(
-          status = NOT_FOUND, response = errorJson
-        )
+        stubGetChargeHistory(nino, chargeReference, NOT_FOUND, Json.toJson(chargeHistoryNotFound))
 
-        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, chargeReference)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(nino, chargeReference)
 
         res should have(
-          httpStatus(NOT_FOUND),
-          bodyMatching(errorJson.toString())
+          httpStatus(NOT_FOUND)
+        )
+      }
+
+      "a UnprocessableEntity - 422 response has been returned by the connector" in {
+        val errorJson422NotFoundError: JsValue = {
+          Json.obj("errors" ->
+            Json.obj(
+              "code" -> "005",
+              "text" -> "Subscription data not found"
+            ))
+        }
+
+        isAuthorised(true)
+
+        stubGetChargeHistory(nino, chargeReference, UNPROCESSABLE_ENTITY, Json.toJson(errorJson422NotFoundError))
+
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(nino, chargeReference)
+
+        res should have(
+          httpStatus(NOT_FOUND)
         )
       }
     }
 
     s"return $INTERNAL_SERVER_ERROR" when {
       "an unexpected status was returned when retrieving charge details" in {
+        val chargeHistoryError = ChargeHistoryError(500, "An error occurred while trying to retrieve charge history data")
 
         isAuthorised(true)
 
-        stubChargeHistory(mtdBsa, chargeReference)(
-          status = SERVICE_UNAVAILABLE
-        )
+        stubGetChargeHistory(nino, chargeReference, INTERNAL_SERVER_ERROR, Json.toJson(chargeHistoryError))
 
-        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(mtdBsa, chargeReference)
+        val res: WSResponse = IncomeTaxViewChange.getChargeHistory(nino, chargeReference)
 
         res should have(
           httpStatus(INTERNAL_SERVER_ERROR)
