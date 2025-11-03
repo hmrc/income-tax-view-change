@@ -16,37 +16,41 @@
 
 package mocks
 
-import connectors.BusinessDetailsConnector
 import constants.BaseTestConstants.{mtdRef, testNino}
-import models.incomeSourceDetails.{BusinessDetailsAccessType, IncomeSourceDetailsResponseModel, MtdId, Nino}
+import connectors.hip.GetBusinessDetailsConnector
+import models.hip.incomeSourceDetails.{BusinessDetailsAccessType, IncomeSourceDetailsResponseModel, MtdId, Nino}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.Future
-
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockBusinessDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockBusinessDetailsConnector: BusinessDetailsConnector = mock(classOf[BusinessDetailsConnector])
+  val mockGetBusinessDetailsConnector: GetBusinessDetailsConnector = mock(classOf[GetBusinessDetailsConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockBusinessDetailsConnector)
+    reset(mockGetBusinessDetailsConnector)
   }
 
   def setupMockGetBusinessDetailsResult(accessMode: BusinessDetailsAccessType)(response: IncomeSourceDetailsResponseModel)
   : OngoingStubbing[Future[IncomeSourceDetailsResponseModel]] = {
     val mtdRefOrNino = accessMode match {
-      case Nino => testNino
+      case Nino  => testNino
       case MtdId => mtdRef
     }
-    when(mockBusinessDetailsConnector.getBusinessDetails(
-      ArgumentMatchers.eq(mtdRefOrNino), ArgumentMatchers.any())(ArgumentMatchers.any()))
-      .thenReturn(Future.successful(response))
+    when(mockGetBusinessDetailsConnector.getBusinessDetails(
+      ArgumentMatchers.eq(mtdRefOrNino),
+      ArgumentMatchers.any[BusinessDetailsAccessType]()
+    )(
+      ArgumentMatchers.any[HeaderCarrier](),
+      ArgumentMatchers.any[ExecutionContext]()
+    )).thenReturn(Future.successful(response))
   }
 
   def mockGetBusinessDetailsResult(incomeSourceDetailsResponse: IncomeSourceDetailsResponseModel,

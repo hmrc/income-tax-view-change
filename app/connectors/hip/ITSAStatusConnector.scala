@@ -18,8 +18,6 @@ package connectors.hip
 
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
-import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
-import connectors.itsastatus.ITSAStatusConnectorTrait
 import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponse, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
 import models.hip.ITSAStatusHipApi
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
@@ -38,7 +36,7 @@ object ITSAStatusConnector {
 
 class ITSAStatusConnector @Inject()(val http: HttpClientV2,
                                     val appConfig: MicroserviceAppConfig
-                                   )(implicit ec: ExecutionContext) extends ITSAStatusConnectorTrait with RawResponseReads with Logging {
+                                   )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {
 
   val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(ITSAStatusHipApi)
 
@@ -98,7 +96,7 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
       .setHeader(hipHeaders: _*)
       .execute[HttpResponse]
       .map{ response =>
-        val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
+        val correlationId = response.headers.get(ITSAStatusConnector.CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_${ITSAStatusConnector.CorrelationIdHeader}")
         response.status match {
           case NO_CONTENT =>
             logger.info("ITSA status successfully updated")

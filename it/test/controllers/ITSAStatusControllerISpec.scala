@@ -17,12 +17,12 @@
 package controllers
 
 import constants.ITSAStatusIntegrationTestConstants._
-import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
+import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import helpers.ComponentSpecBase
-import helpers.servicemocks.IfITSAStatusStub
+import helpers.servicemocks.HipITSAStatusStub
 import play.api.libs.json.Json
 import play.mvc.Http.Status
 
@@ -30,18 +30,18 @@ import play.mvc.Http.Status
 class ITSAStatusControllerISpec extends ComponentSpecBase {
   "Calling the ITSAStatusController.getITSAStatus method" when {
     "authorised with a valid request" when {
-      "a success response is returned from IF" should {
+      "a success response is returned from HIP" should {
         "return a List of status details" in {
 
           isAuthorised(true)
 
           And("I wiremock stub a successful ITSAStatusDetails response")
-          IfITSAStatusStub.stubGetIfITSAStatusDetails(successITSAStatusListResponseJson.toString())
+          HipITSAStatusStub.stubGetHipITSAStatusDetails(successITSAStatusListResponseJson.toString())
 
           When(s"I call GET /itsa-status/status/$taxableEntityId/$taxYear")
           val res = IncomeTaxViewChange.getITSAStatus(taxableEntityId, taxYear)
 
-          IfITSAStatusStub.verifyGetIfITSAStatusDetails()
+          HipITSAStatusStub.verifyGetHipITSAStatusDetails()
 
           Then("a successful response is returned with status details")
 
@@ -57,7 +57,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           isAuthorised(true)
 
           And("I wiremock stub a badRequest ITSAStatusDetails response")
-          IfITSAStatusStub.stubGetIfITSAStatusDetailsBadRequest()
+          HipITSAStatusStub.stubGetHipITSAStatusDetailsBadRequest()
 
 
           When(s"I call GET /itsa-status/status/$taxableEntityId/$taxYear")
@@ -70,17 +70,17 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
         }
       }
 
-      "An error response is returned from IF" should {
+      "An error response is returned from HIP" should {
         "return an Error Response model" in {
           isAuthorised(true)
 
           And("I wiremock stub an error response")
-          IfITSAStatusStub.stubGetIfITSAStatusDetailsError()
+          HipITSAStatusStub.stubGetHipITSAStatusDetailsError()
 
           When(s"I call GET /itsa-status/status/$taxableEntityId/$taxYear")
           val res = IncomeTaxViewChange.getITSAStatus(taxableEntityId, taxYear)
 
-          IfITSAStatusStub.verifyGetIfITSAStatusDetails()
+          HipITSAStatusStub.verifyGetHipITSAStatusDetails()
 
           Then("an error response is returned")
 
@@ -112,7 +112,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
   "Calling the ITSAStatusController.updateItsaStatus method" when {
     "authorised with a valid request" when {
 
-      "a success response is returned from IF" should {
+      "a success response is returned from HIP" should {
         "return success response" in {
 
           isAuthorised(true)
@@ -122,7 +122,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           val correlationId = "123"
           val expectedBody = Json.toJson(OptOutUpdateResponseSuccess(correlationId)).toString()
           val headers = Map(CorrelationIdHeader -> correlationId)
-          IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.NO_CONTENT, expectedBody, headers)
+          HipITSAStatusStub.stubPutHipITSAStatusUpdate(Status.NO_CONTENT, expectedBody, headers)
 
           val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
@@ -134,7 +134,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
         }
       }
 
-      "a fail response is returned from IF" should {
+      "a fail response is returned from HIP" should {
         "return fail response" in {
 
           isAuthorised(true)
@@ -144,7 +144,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
 
           val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
           val headers = Map(CorrelationIdHeader -> "123")
-          IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, expectedResponse, headers)
+          HipITSAStatusStub.stubPutHipITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, expectedResponse, headers)
 
           val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
@@ -156,7 +156,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
         }
       }
 
-      "a bad format fail response is returned from IF" should {
+      "a bad format fail response is returned from HIP" should {
         "return fail response" in {
 
           isAuthorised(true)
@@ -164,7 +164,7 @@ class ITSAStatusControllerISpec extends ComponentSpecBase {
           val optOutTaxYear = "2023-24"
 
           val headers = Map(CorrelationIdHeader -> "123")
-          IfITSAStatusStub.stubPutIfITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, Json.toJson("bad-format-fail-response").toString(), headers)
+          HipITSAStatusStub.stubPutHipITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, Json.toJson("bad-format-fail-response").toString(), headers)
 
           val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))

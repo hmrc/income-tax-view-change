@@ -42,11 +42,10 @@ class MicroserviceAppConfigSpec extends TestSupport {
         microserviceAppConfig.ifUrl shouldBe "http://localhost:9084"
       }
 
-      "has a correct HTTP headers for IF" in {
-        microserviceAppConfig.ifAuthHeaders shouldBe Seq(
-          "Gov-Test-Scenario" -> "businessDetailsIf",
+      "has a correct HTTP headers for IF 1771" in {
+        microserviceAppConfig.getIFHeaders("1771") shouldBe Seq(
           "Environment" -> "localIFEnvironment",
-          "Authorization" -> "Bearer localIFToken"
+          "Authorization" -> "Bearer localIFToken1771"
         )
       }
     }
@@ -54,7 +53,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
     "read from application.conf values for calling HiP APIs" which {
 
       "has a correct HiP base url" in {
-        microserviceAppConfig.ifUrl shouldBe "http://localhost:9084"
+        microserviceAppConfig.hipUrl shouldBe "http://localhost:9084"
       }
 
       "has a correct Http Hip auth headers" in {

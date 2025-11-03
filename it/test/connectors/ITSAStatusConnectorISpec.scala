@@ -16,7 +16,8 @@
 
 package connectors
 
-import connectors.itsastatus.ITSAStatusConnector
+import connectors.hip.ITSAStatusConnector
+import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
 import constants.ITSAStatusIntegrationTestConstants._
 import helpers._
@@ -31,8 +32,8 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
   val taxYear = "19-20"
   val correlationId = "123-456-789"
 
-  val getITSAStatusUrl = s"/income-tax/$taxableEntityId/person-itd/itsa-status/$taxYear?futureYears=true&history=true"
-  val updateRequestUrl = s"/income-tax/itsa-status/update/$taxableEntityId"
+  val getITSAStatusUrl = s"/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=true&history=true"
+  val updateRequestUrl = s"/itsd/itsa-status/update/$taxableEntityId"
 
   val request: OptOutUpdateRequest = OptOutUpdateRequest(taxYear = "19-20", updateReason = "ITSA status update reason")
 
@@ -87,7 +88,7 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
 
         "return a OptOutUpdateResponseSuccess response with a correlationId when successful" in {
           val response = OptOutUpdateResponseSuccess(correlationId)
-          WiremockHelper.stubPutWithHeaders(updateRequestUrl, NO_CONTENT, Json.toJson(response).toString, Map("correlationId" -> correlationId))
+          WiremockHelper.stubPutWithHeaders(updateRequestUrl, NO_CONTENT, Json.toJson(response).toString, Map(CorrelationIdHeader -> correlationId))
           val result = connector.requestOptOutForTaxYear(taxableEntityId, request).futureValue
 
           result shouldBe response
@@ -98,7 +99,7 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
 
         "return an OptOutUpdateResponseFailure when there has been an error with the request" in {
           val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
-          val headers = Map("correlationId" -> correlationId)
+          val headers = Map(CorrelationIdHeader -> correlationId)
           WiremockHelper.stubPutWithHeaders(updateRequestUrl, INTERNAL_SERVER_ERROR, expectedResponse, headers)
           val result = connector.requestOptOutForTaxYear(taxableEntityId, request).futureValue
 
