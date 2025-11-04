@@ -44,7 +44,8 @@ object CreditsModel {
         Repayment,
         amount,
         None,
-        None
+        None,
+        ""
       )).toList
   }
 
@@ -60,7 +61,8 @@ object CreditsModel {
           amount = getCreditOrPaymentAmountForHip(documentDetail),
           // TODO: convert TaxYear to Int in the actual model?
           taxYear = Some(documentDetail.taxYear),
-          dueDate = documentDetail.documentDueDate
+          dueDate = documentDetail.documentDueDate,
+          transactionId = documentDetail.transactionId
         )
       }
     })
