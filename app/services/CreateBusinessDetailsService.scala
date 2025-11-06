@@ -28,7 +28,7 @@ import scala.concurrent.{Future}
 
 @Singleton
 class CreateBusinessDetailsService @Inject()(
-                                              createBusinessDetailsHipConnector: CreateBusinessDetailsHipConnector,
+                                              createBusinessDetailsHipConnector: CreateBusinessDetailsHipConnector
                                             ) extends Logging {
 
   def createBusinessDetails(mtdbsaRef: String, body: CreateIncomeSourceRequest)
