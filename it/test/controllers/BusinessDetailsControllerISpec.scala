@@ -17,7 +17,7 @@
 package controllers
 
 import constants.BaseIntegrationTestConstants._
-import constants.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
+import constants.HipBusinessDetailsIntegrationTestConstants.jsonSuccessOutput
 import constants.HipIncomeSourceIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.BusinessDetailsHipCallWithNinoStub

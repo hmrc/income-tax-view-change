@@ -16,7 +16,7 @@
 
 package mocks
 
-import connectors.itsastatus.ITSAStatusConnector
+import connectors.hip.ITSAStatusConnector
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -29,15 +29,15 @@ import scala.concurrent.Future
 
 trait MockITSAStatusConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
 
-  val mockITSAStatusConnector: ITSAStatusConnector = mock(classOf[ITSAStatusConnector])
+  val mockHIPITSAStatusConnector: ITSAStatusConnector = mock(classOf[ITSAStatusConnector])
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockITSAStatusConnector)
+    reset(mockHIPITSAStatusConnector)
   }
 
-  def mockGetITSAStatus(response: Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]): Unit = {
-    when(mockITSAStatusConnector.getITSAStatus(any, any, any, any)(ArgumentMatchers.any())) thenReturn Future.successful(response)
+  def mockHIPGetITSAStatus(response: Either[ITSAStatusResponse, List[ITSAStatusResponseModel]]): Unit = {
+    when(mockHIPITSAStatusConnector.getITSAStatus(any, any, any, any)(ArgumentMatchers.any())) thenReturn Future.successful(response)
   }
 
 }

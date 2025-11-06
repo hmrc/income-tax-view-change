@@ -16,12 +16,11 @@
 
 package controllers
 
-import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
+import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
 import constants.ITSAStatusIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.HipITSAStatusStub
-import models.hip.ITSAStatusHipApi
 import models.itsaStatus.{ITSAStatusResponseError, ITSAStatusResponseModel}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import play.api.libs.json.Json
@@ -29,9 +28,6 @@ import play.mvc.Http.Status
 
 
 class HipITSAStatusControllerISpec extends ComponentSpecBase {
-  override def config: Map[String, String] =
-    super.config + (s"microservice.services.hip.${ITSAStatusHipApi()}.feature-switch" -> "true")
-
 
   "Calling the ITSAStatusController.getITSAStatus method" when {
     "authorised with a valid request" when {

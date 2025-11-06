@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 object DesCalculationListStub {
   def url(nino: String, taxYear: String): String = s"""/income-tax/list-of-calculation-results/$nino?taxYear=$taxYear"""
 
-  def urlTYS(nino: String, taxYear: String): String = s"""/income-tax/view/calculations/liability/$taxYear/$nino"""
+  def urlTYS(nino: String, taxYear: String): String = s"""/itsa/income-tax/v1/$taxYear/view/calculations/liability/$nino"""
   def url2083(nino: String, taxYear: String): String = s"""/income-tax/$taxYear/view/$nino/calculations-summary"""
 
 

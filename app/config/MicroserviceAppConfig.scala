@@ -41,15 +41,6 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
   }
 
   val ifUrl: String = loadConfig("microservice.services.if.url")
-  val ifAuthHeaders: Seq[(String, String)] = {
-    val ifEnvironment: String = loadConfig("microservice.services.if.environment")
-    val ifToken: String = loadConfig("microservice.services.if.authorization-token")
-    Seq(
-      "Gov-Test-Scenario" -> "businessDetailsIf",
-      "Environment" -> ifEnvironment,
-      "Authorization" -> s"Bearer $ifToken"
-    )
-  }
 
   def getIFHeaders(api: String): Seq[(String, String)] = {
     val ifEnvironment: String = loadConfig("microservice.services.if.environment")
@@ -104,9 +95,7 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     ) ++ additionalHeaders
   }
 
-  def hipFeatureSwitchEnabled(hipApi: HipApi): Boolean = {
-    servicesConfig.getBoolean(s"microservice.services.hip.${hipApi.name}.feature-switch")
-  }
+
 
   val claimToAdjustTimeout: Int = servicesConfig.getInt("claim-to-adjust.timeout")
 
