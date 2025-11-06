@@ -95,9 +95,7 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
     ) ++ additionalHeaders
   }
 
-  def hipFeatureSwitchEnabled(hipApi: HipApi): Boolean = {
-    servicesConfig.getBoolean(s"microservice.services.hip.${hipApi.name}.feature-switch")
-  }
+
 
   val claimToAdjustTimeout: Int = servicesConfig.getInt("claim-to-adjust.timeout")
 

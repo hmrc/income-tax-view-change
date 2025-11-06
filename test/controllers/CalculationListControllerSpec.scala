@@ -26,7 +26,7 @@ import mocks.{MockCalculationListService, MockMicroserviceAuthConnector}
 import models.calculationList.CalculationListResponseModel
 import models.errors
 import models.errors.{InvalidNino, InvalidTaxYear}
-import models.hip.{ErrorResponse, FailureResponse, GetLegacyCalcListHipApi, OriginWithErrorCodeAndResponse}
+import models.hip.{ErrorResponse, FailureResponse, OriginWithErrorCodeAndResponse}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -54,7 +54,6 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
   "CalculationListController.getCalculationList from HIP" should {
     "return 200 OK" when {
       "user is authenticated and CalculationListService returns a success response" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(true)
         mockAuth()
         when(mockHipCalcListConnector.getCalculationList(
           ArgumentMatchers.eq(testNino), ArgumentMatchers.eq(testTaxYearEnd))(any(), any())).thenReturn(Future.successful(successResponseHip))
@@ -66,7 +65,6 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
     }
     "return 400 BAD_REQUEST" when {
       "CalculationListService returns a single 400 BAD_REQUEST error" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(true)
         mockAuth()
         when(mockHipCalcListConnector.getCalculationList(
           ArgumentMatchers.eq(testNino), ArgumentMatchers.eq(testTaxYearEnd))(any(), any())).thenReturn(
@@ -77,7 +75,6 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
       }
 
       "NINO is invalid from backend" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(true)
         mockAuth()
         when(mockHipCalcListConnector.getCalculationList(
           ArgumentMatchers.eq(testNino), ArgumentMatchers.eq(testTaxYearEnd))(any(), any())).thenReturn(
@@ -89,7 +86,6 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
           OriginWithErrorCodeAndResponse("HIP", Seq(FailureResponse("1215", "Invalid taxable entity id"))))
       }
       "tax year is invalid from backend" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(true)
         mockAuth()
         when(mockHipCalcListConnector.getCalculationList(
           ArgumentMatchers.eq(testNino), ArgumentMatchers.eq(testTaxYearEnd))(any(), any())).thenReturn(
@@ -103,7 +99,6 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
     }
     "return 401 UNAUTHORIZED" when {
       "called with an unauthenticated user" in {
-        when(mockAppConfig.hipFeatureSwitchEnabled(GetLegacyCalcListHipApi)).thenReturn(true)
         mockAuth(Future.failed(new MissingBearerToken))
 
         val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)

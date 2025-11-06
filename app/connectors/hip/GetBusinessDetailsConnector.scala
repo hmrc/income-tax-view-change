@@ -33,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
                                             val appConfig: MicroserviceAppConfig) extends RawResponseReads with HipConnectorDataHelper {
 
-  private val isGetBusinessDetailsEnabledInHip = appConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)
 
   def getBusinessDetailsUrl(accessType: BusinessDetailsAccessType, ninoOrMtdRef: String): String = {
     accessType match {
@@ -48,10 +47,10 @@ class GetBusinessDetailsConnector @Inject()(val http: HttpClientV2,
                         (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[IncomeSourceDetailsResponseModel] = {
     val url = getBusinessDetailsUrl(accessType, ninoOrMtdRef)
 
-    logger.debug(
-      s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: $getHeaders" +
-        s" \nIs1171GetBusinessDetailsEnabledInHip: ${if (isGetBusinessDetailsEnabledInHip) "YES" else "NO"}"
-    )
+//    logger.debug(
+//      s"Calling GET $url \nHeaders: $headerCarrier \nAuth Headers: $getHeaders" +
+//        s" \nIs1171GetBusinessDetailsEnabledInHip: ${if (isGetBusinessDetailsEnabledInHip) "YES" else "NO"}"
+//    )
 
     http
       .get(url"$url")

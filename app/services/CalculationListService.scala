@@ -21,7 +21,6 @@ import connectors.CalculationListConnector
 import connectors.hip.CalculationListHipConnector
 import connectors.httpParsers.CalculationListHttpParser.HttpGetResult
 import models.calculationList.CalculationListResponseModel
-import models.hip.GetCalcListTYSHipApi
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -39,15 +38,12 @@ class CalculationListService @Inject()(val calculationListConnector: Calculation
                            (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[HttpGetResult[CalculationListResponseModel]] = {
 
     logger.info(s"Calling calculationListConnector with Nino: $nino\nTax Year: $taxYearRange")
-    val calculationListResponse = if(getTaxYearEnd(taxYearRange) < TAX_YEAR_2026) {
-      if (appConfig.hipFeatureSwitchEnabled(GetCalcListTYSHipApi)) {
+    val calculationListResponse = if (getTaxYearEnd(taxYearRange) < TAX_YEAR_2026) {
         hipCalculationListConnector.getCalculationListTYS(nino, taxYearRange)
       } else {
-        calculationListConnector.getCalculationListTYS(nino, taxYearRange)
+        calculationListConnector.getCalculationList2083(nino, taxYearRange)
       }
-    } else {
-      calculationListConnector.getCalculationList2083(nino, taxYearRange)
-    }
+
     calculationListResponse.map {
       case success@Right(calculationListResponse: CalculationListResponseModel) =>
         logger.info(s"Retrieved Calculation List TYS Data:\n\n$calculationListResponse")
