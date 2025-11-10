@@ -17,7 +17,6 @@
 package services
 
 import config.MicroserviceAppConfig
-import connectors.BusinessDetailsConnector
 import connectors.hip.GetBusinessDetailsConnector
 import models.core.{NinoErrorModel, NinoModel}
 import models.hip.GetBusinessDetailsHipApi
@@ -32,8 +31,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IncomeSourceDetailsService @Inject()(val businessDetailsConnector: BusinessDetailsConnector,
-                                           val getBusinessDetailsFromHipConnector: GetBusinessDetailsConnector,
+class IncomeSourceDetailsService @Inject()(val getBusinessDetailsFromHipConnector: GetBusinessDetailsConnector,
                                            val appConfig: MicroserviceAppConfig
                                           )
                                           (implicit ec: ExecutionContext) extends Logging {
@@ -73,10 +71,7 @@ class IncomeSourceDetailsService @Inject()(val businessDetailsConnector: Busines
 
   private def getIncomeSourceDetailsModels(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[ResponseModel] = {
     logger.debug("Requesting Income Source Details from Connector")
-    if(appConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi))
       getBusinessDetailsFromHipConnector.getBusinessDetails(mtdRef, models.hip.incomeSourceDetails.MtdId).map(Right(_))
-    else
-      businessDetailsConnector.getBusinessDetails(mtdRef, models.incomeSourceDetails.MtdId).map(Left(_))
   }
 
   def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {

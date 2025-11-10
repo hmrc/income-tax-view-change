@@ -20,7 +20,7 @@ import config.MicroserviceAppConfig
 import constants.BaseTestConstants.mtdRef
 import constants.HipIncomeSourceDetailsTestConstants
 import constants.IncomeSourceDetailsTestConstants._
-import mocks.{MockBusinessDetailsConnector, MockGetBusinessDetailsConnector}
+import mocks.MockGetBusinessDetailsConnector
 import models.hip.GetBusinessDetailsHipApi
 import models.incomeSourceDetails.{IncomeSourceDetailsResponseModel, MtdId}
 import org.mockito.Mockito.when
@@ -33,38 +33,12 @@ import utils.TestSupport
 
 import scala.concurrent.Future
 
-class IncomeSourceDetailsServiceSpec extends TestSupport with MockBusinessDetailsConnector with MockGetBusinessDetailsConnector {
+class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDetailsConnector {
 
   val mockAppConfig = mock[MicroserviceAppConfig]
-  object TestIncomeSourceDetailsService extends IncomeSourceDetailsService(mockBusinessDetailsConnector, mockGetBusinessDetailsConnector, mockAppConfig)
+  object TestIncomeSourceDetailsService extends IncomeSourceDetailsService(mockGetBusinessDetailsConnector, mockAppConfig)
 
   "The IncomeSourceDetailsService" when {
-
-    "getIncomeSourceDetails method is called with IFConnector when Hip FS is disabled" when {
-
-      def result: Future[Result] = TestIncomeSourceDetailsService.getIncomeSourceDetails(mtdRef)
-
-      "a successful response is returned from the IncomeSourceDetailsConnector" should {
-
-        "return a correctly formatted IncomeSourceDetailsModel" in {
-          val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(false)
-          mockGetBusinessDetailsResult(resp, MtdId)
-          status(result) shouldBe Status.OK
-          contentAsJson(result) shouldBe Json.toJson(testIncomeSourceDetailsModel)
-        }
-      }
-
-      "an Error Response is returned from the IncomeSourceDetailsConnector" should {
-
-        "return a correctly formatted DesBusinessDetailsError model" in {
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(false)
-          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, MtdId)
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-          contentAsJson(result) shouldBe Json.toJson(testIncomeSourceDetailsError)
-        }
-      }
-    }
 
     "getIncomeSourceDetails method is called with HipConnector when Hip FS is enabled" when {
 
@@ -88,32 +62,6 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockBusinessDetail
           mockHipGetBusinessDetailsResult(HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsError, models.hip.incomeSourceDetails.MtdId)
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
           contentAsJson(result) shouldBe Json.toJson(HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsError)
-        }
-      }
-    }
-
-    "getNino method is called when Hip Api is disabled" when {
-
-      def result: Future[Result] = TestIncomeSourceDetailsService.getNino(mtdRef)
-
-      "a successful response is returned from the IncomeSourceDetailsConnector" should {
-
-        "return a correctly formatted NinoModel" in {
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(false)
-          val resp: IncomeSourceDetailsResponseModel = testIncomeSourceDetailsModel
-          mockGetBusinessDetailsResult(resp, MtdId)
-          status(result) shouldBe Status.OK
-          contentAsJson(result) shouldBe Json.toJson(testNinoModel)
-        }
-      }
-
-      "an Error Response is returned from the IncomeSourceDetailsConnector" should {
-
-        "return a correctly formatted IncomeSourceDetailsError model" in {
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(false)
-          mockGetBusinessDetailsResult(testIncomeSourceDetailsError, MtdId)
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-          contentAsJson(result) shouldBe Json.toJson(testNinoError)
         }
       }
     }
