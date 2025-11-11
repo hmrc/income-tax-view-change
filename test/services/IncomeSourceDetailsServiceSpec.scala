@@ -19,11 +19,7 @@ package services
 import config.MicroserviceAppConfig
 import constants.BaseTestConstants.mtdRef
 import constants.HipIncomeSourceDetailsTestConstants
-import constants.IncomeSourceDetailsTestConstants._
 import mocks.MockGetBusinessDetailsConnector
-import models.hip.GetBusinessDetailsHipApi
-import models.incomeSourceDetails.{IncomeSourceDetailsResponseModel, MtdId}
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.Status
 import play.api.libs.json.Json
@@ -48,7 +44,6 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
 
         "return a correctly formatted IncomeSourceDetailsModel" in {
           val resp: models.hip.incomeSourceDetails.IncomeSourceDetailsResponseModel = HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsModel
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(true)
           mockHipGetBusinessDetailsResult(resp, models.hip.incomeSourceDetails.MtdId)
           status(result) shouldBe Status.OK
           contentAsJson(result) shouldBe Json.toJson(HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsModel)
@@ -58,7 +53,6 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
       "an Error Response is returned from the IncomeSourceDetailsConnector" should {
 
         "return a correctly formatted DesBusinessDetailsError model" in {
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(true)
           mockHipGetBusinessDetailsResult(HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsError, models.hip.incomeSourceDetails.MtdId)
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
           contentAsJson(result) shouldBe Json.toJson(HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsError)
@@ -73,7 +67,6 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
       "a successful response is returned from the IncomeSourceDetailsConnector" should {
 
         "return a correctly formatted NinoModel" in {
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(true)
           val resp: models.hip.incomeSourceDetails.IncomeSourceDetailsResponseModel = HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsModel
           mockHipGetBusinessDetailsResult(resp, models.hip.incomeSourceDetails.MtdId)
           status(result) shouldBe Status.OK
@@ -84,7 +77,6 @@ class IncomeSourceDetailsServiceSpec extends TestSupport with MockGetBusinessDet
       "an Error Response is returned from the IncomeSourceDetailsConnector" should {
 
         "return a correctly formatted IncomeSourceDetailsError model" in {
-          when(mockAppConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi)).thenReturn(true)
           mockHipGetBusinessDetailsResult(HipIncomeSourceDetailsTestConstants.testIncomeSourceDetailsError, models.hip.incomeSourceDetails.MtdId)
           status(result) shouldBe Status.INTERNAL_SERVER_ERROR
           contentAsJson(result) shouldBe Json.toJson(HipIncomeSourceDetailsTestConstants.testNinoError)

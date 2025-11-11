@@ -19,10 +19,8 @@ package services
 import config.MicroserviceAppConfig
 import constants.BaseTestConstants.testNino
 import constants.HipIncomeSourceDetailsTestConstants
-import constants.IncomeSourceDetailsTestConstants._
 import mocks.MockGetBusinessDetailsConnector
 import models.hip.GetBusinessDetailsHipApi
-import models.incomeSourceDetails.{IncomeSourceDetailsResponseModel, Nino}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.Status

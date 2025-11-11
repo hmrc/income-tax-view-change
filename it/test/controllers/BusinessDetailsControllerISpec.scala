@@ -28,7 +28,7 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
 
   "Calling the BusinessDetailsController.getBusinessDetails method with HipApi enabled" when {
     "authorised with a valid request" when {
-      "A successful response is returned from IF" should {
+      "A successful response is returned from HIP" should {
         "return a valid IncomeSourceDetails model" in {
 
           isAuthorised(true)
