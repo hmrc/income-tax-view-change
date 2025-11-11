@@ -41,7 +41,7 @@ trait MockCreateBusinessDetailsService extends AnyWordSpecLike with Matchers wit
   val testIncomeSourceId: String = "AAIS12345678901"
 
   def mockCreateBusinessDetailsErrorResponse(): OngoingStubbing[Future[Either[CreateBusinessDetailsHipErrorResponse, List[IncomeSource]]]] =
-    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any(), any()))
+    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any()))
       .thenReturn(
         Future.successful(
           Left(
@@ -51,7 +51,7 @@ trait MockCreateBusinessDetailsService extends AnyWordSpecLike with Matchers wit
       )
 
   def mockCreateIncomeSourceSuccessResponse(): OngoingStubbing[Future[Either[CreateBusinessDetailsHipErrorResponse, List[IncomeSource]]]] =
-    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any(), any()))
+    when(mockCreateBusinessDetailsService.createBusinessDetails(any(), any())(any()))
       .thenReturn(
         Future.successful(
           Right(
