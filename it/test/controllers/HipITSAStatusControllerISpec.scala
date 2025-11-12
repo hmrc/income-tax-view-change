@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
+import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
 import constants.ITSAStatusIntegrationTestConstants._
 import helpers.ComponentSpecBase

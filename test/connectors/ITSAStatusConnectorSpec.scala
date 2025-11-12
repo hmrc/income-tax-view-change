@@ -16,8 +16,8 @@
 
 package connectors
 
+import connectors.hip.ITSAStatusConnector
 import constants.ITSAStatusTestConstants._
-import connectors.itsastatus.ITSAStatusConnector
 import mocks.MockHttpV2
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseModel}
 import uk.gov.hmrc.http.HttpResponse
