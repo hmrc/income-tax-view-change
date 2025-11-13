@@ -17,7 +17,8 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import models.createIncomeSource.{CreateBusinessDetailsRequestError, CreateIncomeSourceRequest}
+import models.createIncomeSource.CreateIncomeSourceRequest
+import models.hip.createIncomeSource.CreateBusinessDetailsRequestError
 import play.api.Logging
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
