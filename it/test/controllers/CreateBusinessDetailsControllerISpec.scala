@@ -22,6 +22,8 @@ import helpers.servicemocks.HipCreateBusinessDetailsStub
 import models.hip.incomeSourceDetails.CreateBusinessDetailsHipErrorResponse
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.libs.ws.JsonBodyReadables.readableAsJson
+
 
 class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
@@ -42,7 +44,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest())
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
 
         s"return $OK response with an incomeSourceId with a missing cashOrAccrualFlag" in {
@@ -57,7 +59,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest(None))
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
       }
     }
@@ -76,7 +78,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateUKPropertyHipRequest)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
       }
     }
@@ -95,7 +97,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateForeignPropertyHipRequest)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
 
         s"return $OK with an incomeSourceId with no flag" in {
@@ -110,7 +112,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateHipForeignPropertyRequestNoFlag)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
       }
     }

@@ -24,6 +24,7 @@ import models.hip.CreateIncomeSourceHipApi
 import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.CreateBusinessDetailsErrorResponse
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.libs.ws.JsonBodyReadables.readableAsJson
 
 class IfCreateBusinessDetailsControllerISpec extends ComponentSpecBase {
 
@@ -49,7 +50,7 @@ class IfCreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, request)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
 
         s"return $OK response with an incomeSourceId with a missing cashOrAccrualFlag" in {
@@ -66,7 +67,7 @@ class IfCreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, requestMissing)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
       }
     }
@@ -85,7 +86,7 @@ class IfCreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateUKPropertyRequest)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
       }
     }
@@ -104,7 +105,7 @@ class IfCreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
 
         s"return $OK with an incomeSourceId with no flag" in {
@@ -121,7 +122,7 @@ class IfCreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           DesCreateBusinessDetailsStub.verifyCreateDesBusinessDetails(testMtdbsa, request)
 
           res should have(httpStatus(OK))
-          res.body should include(testIncomeSourceId)
+          res.body.toString should include(testIncomeSourceId)
         }
       }
     }

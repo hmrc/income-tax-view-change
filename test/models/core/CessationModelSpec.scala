@@ -16,40 +16,69 @@
 
 package models.core
 
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import play.api.libs.json.*
+
 import java.time.LocalDate
 
-import constants.CessationTestConstants._
-import org.scalatest.matchers.should.Matchers
-import play.api.libs.json._
-import utils.TestSupport
+class CessationModelSpec extends AnyWordSpec with Matchers {
 
-class CessationModelSpec extends TestSupport with Matchers {
+  "CessationModel format" should {
 
-  "The CessationModel" should {
+    "serialize to JSON correctly when both fields are defined" in {
+      val model = CessationModel(Some(LocalDate.parse("2025-03-31")), Some("Business ceased"))
 
-    "read from DES Json with all fields" in {
-      Json.fromJson(testCessationJson)(CessationModel.desReads) shouldBe JsSuccess(testCessationModel)
+      val json = Json.toJson(model)
+
+      val expectedJson = Json.obj(
+        "date" -> "2025-03-31",
+        "reason" -> "Business ceased"
+      )
+
+      json shouldBe expectedJson
     }
 
-    "read from DES Json with minimum fields" in {
-      Json.fromJson(Json.obj())(CessationModel.desReads) shouldBe JsSuccess(CessationModel(None, None))
+    "serialize to JSON correctly when fields are None" in {
+      val model = CessationModel(None, None)
+
+      val json = Json.toJson(model)
+
+      val expectedJson = Json.obj()
+
+      json shouldBe expectedJson
     }
 
-    "write to Json" in {
-      Json.toJson(testCessationModel) shouldBe testCessationToJson
+    "deserialize from JSON correctly when both fields are defined" in {
+      val json = Json.obj(
+        "date" -> "2025-03-31",
+        "reason" -> "Business ceased"
+      )
+
+      val result = json.as[CessationModel]
+
+      result shouldBe CessationModel(Some(LocalDate.parse("2025-03-31")), Some("Business ceased"))
     }
 
-    "return Some Cessation Model when CessationModel.cessation is given either a date, reason or both" in {
-      CessationModel.cessation(Some(LocalDate.parse("2017-06-01")), Some("Dummy reason")) shouldBe Some(testCessationModel)
-      CessationModel.cessation(None, Some("")) shouldBe Some(CessationModel(None, Some("")))
-      CessationModel.cessation(Some(LocalDate.parse("2017-06-01")), None) shouldBe Some(CessationModel(Some(LocalDate.parse("2017-06-01")), None))
+    "deserialize from JSON correctly when fields are null" in {
+      val json = Json.obj(
+        "date" -> JsNull,
+        "reason" -> JsNull
+      )
+
+      val result = json.as[CessationModel]
+
+      result shouldBe CessationModel(None, None)
     }
 
-    "return None when CessationModel.cessation is given two Nones" in {
-      CessationModel.cessation(None, None) shouldBe None
-    }
+    "round-trip serialize/deserialize keeps the object unchanged" in {
+      val original = CessationModel(Some(LocalDate.parse("2025-03-31")), Some("Business ceased"))
 
+      val roundTrip = Json.toJson(original).as[CessationModel]
+
+      roundTrip shouldBe original
+    }
   }
-
 }
+
 

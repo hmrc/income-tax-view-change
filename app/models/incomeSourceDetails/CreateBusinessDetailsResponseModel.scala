@@ -27,9 +27,9 @@ final case class IncomeSource(incomeSourceId: String) {
 }
 final case class CreateBusinessDetailsModel(response: List[IncomeSource])
 
-  object IncomeSource {
-    implicit val formats: OFormat[IncomeSource] = Json.format[IncomeSource]
-  }
+object IncomeSource {
+  implicit val formats: OFormat[IncomeSource] = Json.format[IncomeSource]
+}
 
   object CreateBusinessDetailsModel {
     implicit val formats: OFormat[CreateBusinessDetailsModel] = Json.format[CreateBusinessDetailsModel]

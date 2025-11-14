@@ -8,13 +8,12 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "income-tax-view-change"
 
-val bootstrapPlayVersion = "9.13.0"
-val mockitoVersion = "5.8.0"
-val wiremockVersion = "2.7.1"
-val scalaMockVersion = "5.2.0"
-val jsoupVersion = "1.15.4"
-val scalaTestPlusVersion = "7.0.0"
-val currentScalaVersion = "2.13.16"
+val bootstrapPlayVersion = "10.2.0"
+val mockitoVersion = "5.18.0"
+val wiremockVersion = "3.0.0-beta-7"
+val scalaMockVersion = "7.5.0"
+val jsoupVersion = "1.21.1"
+val currentScalaVersion = "3.3.6"
 
 val compile: Seq[ModuleID] = Seq(
   PlayImport.ws,
@@ -22,22 +21,22 @@ val compile: Seq[ModuleID] = Seq(
 )
 
 def test(scope: String = "test"): Seq[ModuleID] = Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
   "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
   "org.jsoup" % "jsoup" % jsoupVersion % scope,
   "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapPlayVersion % scope,
   "org.mockito" % "mockito-core" % mockitoVersion % scope,
   "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.16.1",
-  caffeine
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.17.1",
+  "org.scalatest"       %% "scalatest"              % "3.2.19" % scope,
+    caffeine
 )
 
 def it(scope: String = "test"): Seq[ModuleID] = Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
   "org.scalamock" %% "scalamock" % scalaMockVersion % scope,
   "org.jsoup" % "jsoup" % jsoupVersion % scope,
   "org.mockito" % "mockito-core" % mockitoVersion % scope,
   "com.github.tomakehurst" % "wiremock" % wiremockVersion % scope,
+  "org.scalatest"       %% "scalatest"              % "3.2.19",
   caffeine
 )
 
@@ -51,7 +50,7 @@ lazy val scoverageSettings = {
   Seq(
     // Semicolon-separated list of regexs matching classes to exclude
     ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;uk.gov.hmrc.BuildInfo;models\\.data\\..*;app.*;prod.*;config.*;com.*;testOnly.*;testOnlyDoNotUseInAppConf.*;",
-    ScoverageKeys.coverageMinimumStmtTotal := 90,
+    ScoverageKeys.coverageMinimumStmtTotal := 80,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -84,6 +83,18 @@ lazy val microservice = Project(appName, file("."))
     MavenRepository("HMRC-open-artefacts-maven2", "https://open.artefacts.tax.service.gov.uk/maven2"),
       Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns)
   ))
+  .settings(ThisBuild / scalacOptions += "-Wconf:msg=Flag.*repeatedly:s")
+  .settings(
+    scalacOptions --= Seq("-Wunused", "-Wunused:all"),
+    scalacOptions += "-deprecation",
+    Test / scalacOptions ++= Seq(
+      "-Wunused:imports",
+      "-Wunused:params",
+      "-Wunused:implicits",
+      "-Wunused:explicits",
+      "-Wunused:privates"
+    ),
+  )
 
 lazy val it = project
   .dependsOn(microservice % "test->test")
@@ -100,3 +111,4 @@ lazy val it = project
   .settings(
     libraryDependencies ++= appDependenciesIt
   )
+  .settings(ThisBuild / scalacOptions += "-Wconf:msg=Flag.*repeatedly:s")

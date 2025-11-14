@@ -16,23 +16,56 @@
 
 package models.core
 
-import constants.AccountingPeriodTestConstants._
+import models.hip.core.AccountingPeriodModel
 import org.scalatest.matchers.should.Matchers
-import play.api.libs.json._
-import utils.TestSupport
+import org.scalatest.wordspec.AnyWordSpec
+import play.api.libs.json.*
 
-class AccountingPeriodModelSpec extends TestSupport with Matchers {
+import java.time.LocalDate
 
-  "The AccountingPeriodModel" should {
+class AccountingPeriodModelSpec extends AnyWordSpec with Matchers {
 
-    "read from the DES Json" in {
-      Json.fromJson(testAccountingPeriodJson)(AccountingPeriodModel.reads) shouldBe JsSuccess(testAccountingPeriodModel)
+  "AccountingPeriodModel format" should {
+
+    "serialize to JSON correctly" in {
+      val model = AccountingPeriodModel(
+        start = LocalDate.parse("2024-04-01"),
+        end = LocalDate.parse("2025-03-31")
+      )
+
+      val json = Json.toJson(model)
+
+      val expectedJson = Json.obj(
+        "start" -> "2024-04-01",
+        "end" -> "2025-03-31"
+      )
+
+      json shouldBe expectedJson
     }
 
-    "write to Json" in {
-      Json.toJson(testAccountingPeriodModel) shouldBe testAccountingPeriodToJson
+    "deserialize from JSON correctly" in {
+      val json = Json.obj(
+        "start" -> "2024-04-01",
+        "end" -> "2025-03-31"
+      )
+
+      val result = json.as[AccountingPeriodModel]
+
+      result shouldBe AccountingPeriodModel(
+        start = LocalDate.parse("2024-04-01"),
+        end = LocalDate.parse("2025-03-31")
+      )
     }
 
+    "round-trip serialize/deserialize keeps the object unchanged" in {
+      val original = AccountingPeriodModel(
+        start = LocalDate.parse("2023-01-01"),
+        end = LocalDate.parse("2023-12-31")
+      )
+
+      val roundTrip = Json.toJson(original).as[AccountingPeriodModel]
+
+      roundTrip shouldBe original
+    }
   }
-
 }
