@@ -16,26 +16,26 @@
 
 package constants
 
-import models.core.AddressModel
+import models.hip.core.AddressModel
 import play.api.libs.json.Json
 
 object AddressDetailsTestConstants {
 
   val testAddressModel = AddressModel(
-    addressLine1 = "Test Lane",
+    addressLine1 = Some("Test Lane"),
     addressLine2 = Some("Test Unit"),
     addressLine3 = Some("Test Town"),
     addressLine4 = Some("Test City"),
     postCode = Some("TE5 7TE"),
-    countryCode = "GB")
+    countryCode = Some("GB"))
 
   val testMinimumAddressModel = AddressModel(
-    addressLine1 = "Test Lane",
+    addressLine1 = Some("Test Lane"),
     addressLine2 = None,
     addressLine3 = None,
     addressLine4 = None,
     postCode = None,
-    countryCode = "GB")
+    countryCode = Some("GB"))
 
   val testAddressJson = Json.obj(
     "addressLine1" -> "Test Lane",

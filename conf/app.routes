@@ -38,6 +38,6 @@ PUT         /update-income-source                                    controllers
 GET         /itsa-status/status/:nino/:year                          controllers.ITSAStatusController.getITSAStatus(nino,year,futureYears:Boolean,history:Boolean)
 PUT         /itsa-status/update/:nino                                controllers.ITSAStatusController.updateItsaStatus(nino)
 
-POST        /create-income-source/business/:mtdbsaRef                controllers.CreateBusinessDetailsController.createBusinessDetails(mtdbsaRef: String)
+POST        /create-income-source/business                           controllers.CreateBusinessDetailsController.createBusinessDetails()
 
 POST        /submit-claim-to-adjust-poa                              controllers.ClaimToAdjustPoaController.submitClaimToAdjustPoa()

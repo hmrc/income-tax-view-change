@@ -16,8 +16,8 @@
 
 package models.incomeSourceDetails
 
-import constants.PropertyDetailsTestConstants._
-import models.incomeSourceDetails.PropertyDetailsModel._
+import constants.HipPropertyDetailsTestConstants._
+import models.hip.incomeSourceDetails.PropertyDetailsModel._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
@@ -39,7 +39,7 @@ class PropertyDetailsModelSpec extends TestSupport with Matchers {
     }
 
     "write to Json" in {
-      Json.toJson(testPropertyDetailsModel) shouldBe testPropertyDetailsToJson
+      Json.toJson(testPropertyDetailsModel) shouldBe testPropertyDetailsModelToJson
     }
   }
 }

@@ -16,8 +16,8 @@
 
 package models.incomeSourceDetails
 
-import constants.IncomeSourceDetailsTestConstants._
-import models.incomeSourceDetails.IncomeSourceDetailsModel._
+import constants.HipIncomeSourceDetailsTestConstants._
+import models.hip.incomeSourceDetails.IncomeSourceDetailsModel._
 import org.scalatest.matchers.should.Matchers
 import play.api.http.Status
 import play.api.libs.json._
@@ -26,11 +26,11 @@ import utils.TestSupport
 class IncomeSourceDetailsModelSpec extends TestSupport with Matchers {
 
   "The IncomeSourceDetailsResponseModel" should {
-    "read from IF Json when all fields are returned" in {
-      Json.fromJson(testIfIncomeSourceDetailsJson) shouldBe JsSuccess(testIncomeSourceDetailsModel)
+    "read from HIP Json when all fields are returned" in {
+      Json.fromJson(testHipIncomeSourceDetailsJson) shouldBe JsSuccess(testIncomeSourceDetailsModel)
     }
-    "read from IF Json when minimum fields are returned" in {
-      Json.fromJson(testIfMinimumIncomeSourceDetailsJson) shouldBe JsSuccess(testMinimumIncomeSourceDetailsModel)
+    "read from HIP Json when minimum fields are returned" in {
+      Json.fromJson(testHipMinimumIncomeSourceDetailsJson) shouldBe JsSuccess(testMinimumIncomeSourceDetailsModel)
     }
     "write to Json" in {
       Json.toJson(testIncomeSourceDetailsModel) shouldBe testIncomeSourceDetailsToJson

@@ -17,6 +17,7 @@
 package models.core
 
 import constants.AddressDetailsTestConstants._
+import models.hip.core.AddressModel
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport

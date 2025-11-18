@@ -16,11 +16,10 @@
 
 package controllers
 
-import constants.BaseTestConstants.mtdRef
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockCreateBusinessDetailsService, MockMicroserviceAuthConnector}
-import models.createIncomeSource._
-import models.incomeSourceDetails.CreateBusinessDetailsResponseModel.{CreateBusinessDetailsErrorResponse, IncomeSource}
+import models.hip.createIncomeSource._
+import models.hip.incomeSourceDetails.{CreateBusinessDetailsHipErrorResponse, IncomeSource}
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
@@ -32,6 +31,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
   val mockCC: ControllerComponents = stubControllerComponents()
   val authPredicate = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig)
   val testDate: String = LocalDate.of(2022, 5, 1).toString
+  val mtdbsa: String = "XAIT12345678910"
 
   object TestCreateBusinessDetailsController extends CreateBusinessDetailsController(authPredicate, mockCreateBusinessDetailsService, mockCC)
 
@@ -42,11 +42,11 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
         mockAuth()
         mockCreateBusinessDetailsErrorResponse()
 
-        val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
+        val result = TestCreateBusinessDetailsController.createBusinessDetails()(
           fakePostRequest.withJsonBody(
             Json.toJson(
-              CreateForeignPropertyIncomeSourceRequest(
-                PropertyDetails(testDate, Some("ACCRUALS"), testDate)
+              CreateForeignPropertyIncomeSourceHipRequest(mtdbsa,
+                PropertyDetails(Some(testDate), Some("A"), testDate)
               )
             )
           )
@@ -55,7 +55,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
         status(result) shouldBe INTERNAL_SERVER_ERROR
         contentAsJson(result) shouldBe
           Json.toJson(
-            CreateBusinessDetailsErrorResponse(INTERNAL_SERVER_ERROR, "failed to create income source")
+            CreateBusinessDetailsHipErrorResponse(INTERNAL_SERVER_ERROR, "failed to create income source")
           )
       }
     }
@@ -63,7 +63,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
       "an invalid json body is sent" in {
         mockAuth()
 
-        val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
+        val result = TestCreateBusinessDetailsController.createBusinessDetails()(
           fakePostRequest.withJsonBody(
             Json.obj()
           )
@@ -81,19 +81,19 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
         mockAuth()
         mockCreateIncomeSourceSuccessResponse()
 
-        val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
+        val result = TestCreateBusinessDetailsController.createBusinessDetails()(
           fakePostRequest.withJsonBody(
             Json.toJson(
-              CreateBusinessIncomeSourceRequest(
+              CreateBusinessIncomeSourceHipRequest(mtdbsa,
                 List(
                   BusinessDetails(
                     accountingPeriodStartDate = testDate,
                     accountingPeriodEndDate = testDate,
                     tradingName = "Big Business",
-                    addressDetails = AddressDetails("10 FooBar Street", None, None, None, None, None),
-                    typeOfBusiness = None,
+                    address = AddressDetails("10 FooBar Street", None, None, None, "GB", None),
+                    typeOfBusiness = "",
                     tradingStartDate = testDate,
-                    cashOrAccrualsFlag = Some("CASH"),
+                    cashAccrualsFlag = Some("C"),
                     cessationDate = None,
                     cessationReason = None
                   )
@@ -113,11 +113,11 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
         mockAuth()
         mockCreateIncomeSourceSuccessResponse()
 
-        val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
+        val result = TestCreateBusinessDetailsController.createBusinessDetails()(
           fakePostRequest.withJsonBody(
             Json.toJson(
-              CreateForeignPropertyIncomeSourceRequest(
-                PropertyDetails(testDate, Some("ACCRUALS"), testDate)
+              CreateForeignPropertyIncomeSourceHipRequest(mtdbsa,
+                PropertyDetails(Some(testDate), Some("A"), testDate)
               )
             )
           )
@@ -134,11 +134,11 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
         mockAuth()
         mockCreateIncomeSourceSuccessResponse()
 
-        val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
+        val result = TestCreateBusinessDetailsController.createBusinessDetails()(
           fakePostRequest.withJsonBody(
             Json.toJson(
-              CreateForeignPropertyIncomeSourceRequest(
-                PropertyDetails(testDate, None, testDate)
+              CreateForeignPropertyIncomeSourceHipRequest(mtdbsa,
+                PropertyDetails(Some(testDate), None, testDate)
               )
             )
           )
@@ -154,11 +154,11 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
         mockAuth()
         mockCreateIncomeSourceSuccessResponse()
 
-        val result = TestCreateBusinessDetailsController.createBusinessDetails(mtdRef)(
+        val result = TestCreateBusinessDetailsController.createBusinessDetails()(
           fakePostRequest.withJsonBody(
             Json.toJson(
-              CreateUKPropertyIncomeSourceRequest(
-                PropertyDetails(testDate, Some("CASH"), testDate)
+              CreateUKPropertyIncomeSourceHipRequest(mtdbsa,
+                PropertyDetails(Some(testDate), Some("C"), testDate)
               )
             )
           )

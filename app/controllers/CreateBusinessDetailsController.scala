@@ -17,8 +17,7 @@
 package controllers
 
 import controllers.predicates.AuthenticationPredicate
-import models.createIncomeSource.CreateIncomeSourceRequest
-import models.hip.createIncomeSource.CreateBusinessDetailsRequestError
+import models.hip.createIncomeSource.{CreateBusinessDetailsRequestError, CreateIncomeSourceHipRequest}
 import play.api.Logging
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
@@ -34,9 +33,9 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
                                                 cc: ControllerComponents
                                                )(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-  def createBusinessDetails(mtdbsaRef: String): Action[AnyContent] = authentication.async { implicit request =>
+  def createBusinessDetails(): Action[AnyContent] = authentication.async { implicit request =>
     request.body.asJson.getOrElse(Json.obj())
-      .validate[CreateIncomeSourceRequest] match {
+      .validate[CreateIncomeSourceHipRequest] match {
         case err: JsError =>
           logWithError(s"Validation Errors: ${err.errors}")
           Future {
@@ -48,7 +47,7 @@ class CreateBusinessDetailsController @Inject()(val authentication: Authenticati
           }
         case JsSuccess(validRequest, _) =>
           logWithInfo(s"creating business from body: $validRequest")
-          createBusinessDetailsService.createBusinessDetails(mtdbsaRef, validRequest) map {
+          createBusinessDetailsService.createBusinessDetails(validRequest) map {
             case Right(successResponse) =>
               Ok {
                 Json.toJson(successResponse)

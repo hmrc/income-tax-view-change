@@ -18,7 +18,7 @@ package services
 
 import config.MicroserviceAppConfig
 import connectors.hip.GetBusinessDetailsConnector
-import models.core.{NinoErrorModel, NinoModel}
+import models.hip.core.{NinoErrorModel, NinoModel}
 import play.api.Logging
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json

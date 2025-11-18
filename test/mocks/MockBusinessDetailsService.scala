@@ -17,7 +17,7 @@
 package mocks
 
 import constants.BaseTestConstants.testNino
-import models.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
+import models.hip.incomeSourceDetails.{IncomeSourceDetailsError, IncomeSourceDetailsModel}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, reset, when}
 import org.mockito.stubbing.OngoingStubbing

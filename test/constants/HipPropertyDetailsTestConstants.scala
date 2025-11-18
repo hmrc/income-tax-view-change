@@ -157,7 +157,7 @@ object HipPropertyDetailsTestConstants {
     "cessation" -> testCessationToJson,
     "paperless" -> true,
     "firstAccountingPeriodEndDate" -> "2016-01-01",
-    "incomeSourceType" -> "property-unspecified",
+    "incomeSourceType" -> "uk-property",
     "contextualTaxYear" -> "2015",
     "tradingStartDate" -> "2015-01-01",
     "latencyDetails" -> Json.obj(
@@ -175,9 +175,33 @@ object HipPropertyDetailsTestConstants {
 
   val testMinimumPropertyDetailsJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
-    "accountingPeriodStartDate" -> "2017-06-01",
-    "accountingPeriodEndDate" -> "2018-05-31",
-    "cashOrAccruals" -> true
+    "accPeriodSDate" -> "2017-06-01",
+    "accPeriodEDate" -> "2018-05-31",
+    "cashOrAccrualsFlag" -> true
+  )
+
+  val testPropertyDetailsModelToJson = Json.obj(
+    "incomeSourceId" -> "111111111111111",
+    "accountingPeriod" -> testAccountingPeriodToJson,
+    "contactDetails" -> testContactDetailsToJson,
+    "propertiesRented" -> testPropertiesRentedToJson,
+    "cessation" -> testCessationToJson,
+    "paperless" -> true,
+    "firstAccountingPeriodEndDate" -> "2016-01-01",
+    "incomeSourceType" -> "uk-property",
+    "contextualTaxYear" -> "2015",
+    "tradingStartDate" -> "2015-01-01",
+    "latencyDetails" -> Json.obj(
+      "latencyEndDate" -> "2022-01-01",
+      "taxYear1" -> "2022",
+      "latencyIndicator1" -> "A",
+      "taxYear2" -> "2023",
+      "latencyIndicator2" -> "Q"),
+    "cashOrAccruals" -> true,
+    "quarterTypeElection" -> Json.obj(
+      "quarterReportingType" -> "STANDARD",
+      "taxYearofElection" -> "2021"
+    )
   )
 
 

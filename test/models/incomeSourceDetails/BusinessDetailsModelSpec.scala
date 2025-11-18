@@ -17,8 +17,9 @@
 package models.incomeSourceDetails
 
 import constants.AccountingPeriodTestConstants.testAccountingPeriodModel
-import constants.BusinessDetailsTestConstants._
-import models.incomeSourceDetails.BusinessDetailsModel._
+import constants.HipBusinessDetailsTestConstants._
+import models.hip.incomeSourceDetails.BusinessDetailsModel
+import models.hip.incomeSourceDetails.BusinessDetailsModel._
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
@@ -36,7 +37,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
     }
 
     "write to Json" in {
-      Json.toJson(testBusinessDetailsModel) shouldBe testBusinessDetailsToJson
+      Json.toJson(testBusinessDetailsModel) shouldBe testBusinessDetailsModelJson
     }
 
     "write cashOrAccruals `cash` (pre-R10 value) to Some(false) (post-R10 value)" in {
@@ -45,9 +46,9 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         Json.obj(
           "incomeSourceId" -> "111111111111111",
           "incomeSource" -> "Fruit Ltd",
-          "accountingPeriodStartDate" -> "2017-06-01",
-          "accountingPeriodEndDate" -> "2018-05-31",
-          "cashOrAccruals" -> false
+          "accPeriodSDate" -> "2017-06-01",
+          "accPeriodEDate" -> "2018-05-31",
+          "cashOrAccrualsFlag" -> false
         )
 
       val businessDetailsModelBeforeR10 = BusinessDetailsModel(
@@ -59,7 +60,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         contactDetails = None,
         contextualTaxYear = None,
         tradingStartDate = None,
-        cashOrAccruals = false,
+        cashOrAccruals = Some(false),
         seasonal = None,
         cessation = None,
         paperless = None,
@@ -76,9 +77,9 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
       val businessDetailsJsonBeforeR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
         "incomeSource" -> "Fruit Ltd",
-        "accountingPeriodStartDate" -> "2017-06-01",
-        "accountingPeriodEndDate" -> "2018-05-31",
-        "cashOrAccruals" -> true)
+        "accPeriodSDate" -> "2017-06-01",
+        "accPeriodEDate" -> "2018-05-31",
+        "cashOrAccrualsFlag" -> true)
 
       val businessDetailsModelBeforeR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
@@ -89,7 +90,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         contactDetails = None,
         contextualTaxYear = None,
         tradingStartDate = None,
-        cashOrAccruals = true,
+        cashOrAccruals = Some(true),
         seasonal = None,
         cessation = None,
         paperless = None,
@@ -105,9 +106,9 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
       val businessDetailsJsonAfterR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
         "incomeSource" -> "Fruit Ltd",
-        "accountingPeriodStartDate" -> "2017-06-01",
-        "accountingPeriodEndDate" -> "2018-05-31",
-        "cashOrAccruals" -> true)
+        "accPeriodSDate" -> "2017-06-01",
+        "accPeriodEDate" -> "2018-05-31",
+        "cashOrAccrualsFlag" -> true)
 
       val businessDetailsModelAfterR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
@@ -118,7 +119,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         contactDetails = None,
         contextualTaxYear = None,
         tradingStartDate = None,
-        cashOrAccruals = true,
+        cashOrAccruals = Some(true),
         seasonal = None,
         cessation = None,
         paperless = None,
@@ -134,9 +135,9 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
       val businessDetailsJsonAfterR10: JsObject = Json.obj(
         "incomeSourceId" -> "111111111111111",
         "incomeSource" -> "Fruit Ltd",
-        "accountingPeriodStartDate" -> "2017-06-01",
-        "accountingPeriodEndDate" -> "2018-05-31",
-        "cashOrAccruals" -> false)
+        "accPeriodSDate" -> "2017-06-01",
+        "accPeriodEDate" -> "2018-05-31",
+        "cashOrAccrualsFlag" -> false)
 
       val businessDetailsModelAfterR10 = BusinessDetailsModel(
         incomeSourceId = "111111111111111",
@@ -147,7 +148,7 @@ class BusinessDetailsModelSpec extends TestSupport with Matchers {
         contactDetails = None,
         contextualTaxYear = None,
         tradingStartDate = None,
-        cashOrAccruals = false,
+        cashOrAccruals = Some(false),
         seasonal = None,
         cessation = None,
         paperless = None,

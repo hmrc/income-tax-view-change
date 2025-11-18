@@ -16,7 +16,7 @@
 
 package constants
 
-import models.core.ContactDetailsModel
+import models.hip.core.ContactDetailsModel
 import play.api.libs.json.Json
 
 object ContactDetailsTestConstants {
@@ -38,6 +38,13 @@ object ContactDetailsTestConstants {
 
   val testSomeContactDetailsJson = Json.obj(
     "emailAddress" -> "stephen@manncorpone.co.uk"
+  )
+
+  val testContactDetailsReadsJson = Json.obj(
+    "telephone" -> "01332752856",
+    "mobileNo" -> "07782565326",
+    "faxNo" -> "01332754256",
+    "email" -> "stephen@manncorpone.co.uk"
   )
 
 }

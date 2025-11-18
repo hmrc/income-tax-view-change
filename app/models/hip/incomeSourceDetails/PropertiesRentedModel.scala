@@ -16,7 +16,7 @@
 
 package models.hip.incomeSourceDetails
 
-import models.core.CustomReads
+import models.hip.core.CustomReads
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 

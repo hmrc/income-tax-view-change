@@ -17,8 +17,6 @@
 package services
 
 import connectors.hip.CreateBusinessDetailsHipConnector
-import models.createIncomeSource._
-import models.hip.createIncomeSource.CreateBusinessDetailsRequestError
 import models.hip.createIncomeSource._
 import models.hip.incomeSourceDetails.{CreateBusinessDetailsHipErrorResponse, IncomeSource}
 import play.api.Logging
@@ -30,14 +28,8 @@ import scala.concurrent.Future
 @Singleton
 class CreateBusinessDetailsService @Inject()(createBusinessDetailsHipConnector: CreateBusinessDetailsHipConnector) extends Logging {
 
-  def createBusinessDetails(mtdbsaRef: String, body: CreateIncomeSourceRequest)
+  def createBusinessDetails(body: CreateIncomeSourceHipRequest)
                            (implicit headerCarrier: HeaderCarrier): Future[Either[CreateBusinessDetailsHipErrorResponse, List[IncomeSource]]] = {
-      val requestModel: CreateIncomeSourceHipRequest = body match {
-        case CreateBusinessIncomeSourceRequest(bd) => CreateBusinessIncomeSourceHipRequest(mtdbsaRef, bd.map(_.toHipModel))
-        case CreateForeignPropertyIncomeSourceRequest(fp) => CreateForeignPropertyIncomeSourceHipRequest(mtdbsaRef, fp.toHipModel)
-        case CreateUKPropertyIncomeSourceRequest(ukp) => CreateUKPropertyIncomeSourceHipRequest(mtdbsaRef, ukp.toHipModel)
-        case _ => CreateBusinessDetailsRequestError("Invalid income source type for HIP API")
-      }
-      createBusinessDetailsHipConnector.create(requestModel)
+      createBusinessDetailsHipConnector.create(body)
   }
 }
