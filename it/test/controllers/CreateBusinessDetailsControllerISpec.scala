@@ -37,7 +37,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
               testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest())
+          val res = IncomeTaxViewChange.createBusinessDetails(testCreateSelfEmploymentIncomeSourceRequest())
 
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest())
 
@@ -52,7 +52,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
             .stubPostHipBusinessDetails(OK, testCreateSelfEmploymentHipIncomeSourceRequest(None), testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest(None))
+          val res = IncomeTaxViewChange.createBusinessDetails(testCreateSelfEmploymentIncomeSourceRequest(None))
 
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest(None))
 
@@ -71,7 +71,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
             .stubPostHipBusinessDetails(OK, testCreateUKPropertyHipRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateUKPropertyRequest)
+          val res = IncomeTaxViewChange.createBusinessDetails(testCreateUKPropertyRequest)
 
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateUKPropertyHipRequest)
 
@@ -90,7 +90,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
             .stubPostHipBusinessDetails(OK, testCreateForeignPropertyHipRequest, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequest)
+          val res = IncomeTaxViewChange.createBusinessDetails(testCreateForeignPropertyRequest)
 
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateForeignPropertyHipRequest)
 
@@ -105,7 +105,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
             .stubPostHipBusinessDetails(OK, testCreateHipForeignPropertyRequestNoFlag, testCreateBusinessDetailsSuccessResponse)
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateForeignPropertyRequestNoFlag)
+          val res = IncomeTaxViewChange.createBusinessDetails(testCreateForeignPropertyRequestNoFlag)
 
           HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateHipForeignPropertyRequestNoFlag)
 
@@ -122,7 +122,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
         val invalidRequest = Json.obj()
 
         When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-        val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, invalidRequest)
+        val res = IncomeTaxViewChange.createBusinessDetails(invalidRequest)
 
         Then(s"a status of $BAD_REQUEST is returned ")
 
@@ -142,7 +142,7 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           )
 
           When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testMtdbsa, testCreateSelfEmploymentIncomeSourceRequest())
+          val res = IncomeTaxViewChange.createBusinessDetails(testCreateSelfEmploymentIncomeSourceRequest())
 
           res should have(httpStatus(INTERNAL_SERVER_ERROR))
         }

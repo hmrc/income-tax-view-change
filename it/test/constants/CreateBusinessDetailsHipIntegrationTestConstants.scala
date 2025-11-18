@@ -16,8 +16,7 @@
 
 package constants
 
-import models.createIncomeSource.{AddressDetails, BusinessDetails, CreateBusinessIncomeSourceRequest, CreateForeignPropertyIncomeSourceRequest, CreateUKPropertyIncomeSourceRequest, PropertyDetails}
-import models.hip.createIncomeSource.{CreateBusinessIncomeSourceHipRequest, CreateForeignPropertyIncomeSourceHipRequest, CreateUKPropertyIncomeSourceHipRequest}
+import models.hip.createIncomeSource.{AddressDetails, BusinessDetails, CreateBusinessIncomeSourceHipRequest, CreateForeignPropertyIncomeSourceHipRequest, CreateUKPropertyIncomeSourceHipRequest, PropertyDetails}
 import models.hip.incomeSourceDetails.{CreateBusinessDetailsHipModel, IncomeSource, IncomeSourceIdDetails}
 import play.api.libs.json.{JsValue, Json}
 
@@ -53,17 +52,18 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
   val testDate: String = LocalDate.of(2022, 5, 1).toString
 
   def createBusinessIncomeSourceRequest
-    (cashOrAccFlag: Option[String]): CreateBusinessIncomeSourceRequest =
-    CreateBusinessIncomeSourceRequest(
+    (cashOrAccFlag: Option[String]): CreateBusinessIncomeSourceHipRequest =
+    CreateBusinessIncomeSourceHipRequest(
+      mtdbsa = testMtdbsa,
       List(
         BusinessDetails(
           accountingPeriodStartDate = testDate,
           accountingPeriodEndDate = testDate,
           tradingName = "Big Business",
-          addressDetails = AddressDetails("10 FooBar Street", None, None, None, Some("GB"), None),
-          typeOfBusiness = Some("test business type"),
+          address = AddressDetails("10 FooBar Street", None, None, None, "GB", None),
+          typeOfBusiness = "test business type",
           tradingStartDate = testDate,
-          cashOrAccrualsFlag = cashOrAccFlag,
+          cashAccrualsFlag = cashOrAccFlag,
           cessationDate = None,
           cessationReason = None
         )
@@ -75,11 +75,11 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
     CreateBusinessIncomeSourceHipRequest(
       testMtdbsa,
       List(
-        models.hip.createIncomeSource.BusinessDetails(
+        BusinessDetails(
           accountingPeriodStartDate = testDate,
           accountingPeriodEndDate = testDate,
           tradingName = "Big Business",
-          address = models.hip.createIncomeSource.AddressDetails("10 FooBar Street", None, None, None, "GB", None),
+          address = AddressDetails("10 FooBar Street", None, None, None, "GB", None),
           typeOfBusiness = "test business type",
           tradingStartDate = testDate,
           cashAccrualsFlag = cashOrAccFlag,
@@ -89,7 +89,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
       )
     )
 
-  def testCreateSelfEmploymentIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("CASH")): JsValue =
+  def testCreateSelfEmploymentIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("C")): JsValue =
     Json.toJson(createBusinessIncomeSourceRequest(cashOrAccFlag))
 
   def testCreateSelfEmploymentHipIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("C")): JsValue =
@@ -97,10 +97,11 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
 
   val testCreateUKPropertyRequest: JsValue =
     Json.toJson(
-      CreateUKPropertyIncomeSourceRequest(
+      CreateUKPropertyIncomeSourceHipRequest(
+        mtdbsa = testMtdbsa,
         PropertyDetails(
-          tradingStartDate = testDate,
-          cashOrAccrualsFlag = Some("CASH"),
+          tradingStartDate = Some(testDate),
+          cashAccrualsFlag = Some("C"),
           startDate = testDate
         )
       )
@@ -120,10 +121,11 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
 
   val testCreateForeignPropertyRequest: JsValue =
     Json.toJson(
-      CreateForeignPropertyIncomeSourceRequest(
+      CreateForeignPropertyIncomeSourceHipRequest(
+        mtdbsa = testMtdbsa,
         PropertyDetails(
-          tradingStartDate = testDate,
-          cashOrAccrualsFlag = Some("ACCRUALS"),
+          tradingStartDate = Some(testDate),
+          cashAccrualsFlag = Some("A"),
           startDate = testDate
         )
       )
@@ -143,10 +145,11 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
 
   val testCreateForeignPropertyRequestNoFlag: JsValue =
     Json.toJson(
-      CreateForeignPropertyIncomeSourceRequest(
+      CreateForeignPropertyIncomeSourceHipRequest(
+        mtdbsa = testMtdbsa,
         PropertyDetails(
-          tradingStartDate = testDate,
-          cashOrAccrualsFlag = None,
+          tradingStartDate = Some(testDate),
+          cashAccrualsFlag = None,
           startDate = testDate
         )
       )
