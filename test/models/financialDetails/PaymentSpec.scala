@@ -16,54 +16,120 @@
 
 package models.financialDetails
 
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.{JsObject, Json}
-
+import org.scalatest.matchers.should.Matchers
+import play.api.libs.json._
 import java.time.LocalDate
 
 class PaymentSpec extends AnyWordSpec with Matchers {
 
-  val paymentEmpty: Payment = Payment(None, 1000.00, 300.00, None, None, None, None, None, LocalDate.parse("2022-06-23"), "DOCID01", None, None)
+  "Payment" should {
 
-  val paymentEmptyJson: JsObject = Json.obj("amount" -> 1000.00, "outstandingAmount" -> 300.00, "documentDate" -> LocalDate.parse("2022-06-23"), "transactionId" -> "DOCID01")
+    "serialize to JSON correctly" in {
+      val payment = Payment(
+        reference = Some("REF12345"),
+        amount = BigDecimal(500.50),
+        outstandingAmount = BigDecimal(200.25),
+        documentDescription = Some("Payment on account"),
+        method = Some("Bank Transfer"),
+        lot = Some("LOT123"),
+        lotItem = Some("ITEM1"),
+        dueDate = Some(LocalDate.parse("2025-03-31")),
+        documentDate = LocalDate.parse("2025-02-01"),
+        transactionId = "TXN123",
+        mainType = Some("SA Payment"),
+        mainTransaction = Some("Payment on Account")
+      )
 
-  val paymentFull: Payment = Payment(
-    reference = Some("reference"),
-    amount = 100.00,
-    outstandingAmount = 100.00,
-    documentDescription = Some("documentDescriptionX"),
-    method = Some("method"),
-    lot = Some("lot"),
-    lotItem = Some("lotItem"),
-    dueDate = Some(LocalDate.parse("2022-06-23")),
-    documentDate = LocalDate.parse("2022-06-23"),
-    transactionId = "DOCID01",
-    None,
-    None
-  )
+      val json = Json.toJson(payment)
 
-  val paymentFullJson: JsObject = Json.obj(
-    "reference" -> "reference",
-    "amount" -> 100.00,
-    "outstandingAmount" -> 100.00,
-    "documentDescription" -> "documentDescriptionX",
-    "method" -> "method",
-    "lot" -> "lot",
-    "lotItem" -> "lotItem",
-    "dueDate" -> "2022-06-23",
-    "documentDate" -> "2022-06-23",
-    "transactionId" -> "DOCID01"
-  )
+      val expectedJson = Json.obj(
+        "reference" -> "REF12345",
+        "amount" -> 500.50,
+        "outstandingAmount" -> 200.25,
+        "documentDescription" -> "Payment on account",
+        "method" -> "Bank Transfer",
+        "lot" -> "LOT123",
+        "lotItem" -> "ITEM1",
+        "dueDate" -> "2025-03-31",
+        "documentDate" -> "2025-02-01",
+        "transactionId" -> "TXN123",
+        "mainType" -> "SA Payment",
+        "mainTransaction" -> "Payment on Account"
+      )
 
-  "Charge" should {
-    "write to json" when {
-      "the model is complete" in {
-        Json.toJson(paymentFull) shouldBe paymentFullJson
-      }
-      "the model is empty" in {
-        Json.toJson(paymentEmpty) shouldBe paymentEmptyJson
-      }
+      json shouldBe expectedJson
+    }
+
+    "deserialize from JSON correctly" in {
+      val json = Json.obj(
+        "reference" -> "REF12345",
+        "amount" -> 500.50,
+        "outstandingAmount" -> 200.25,
+        "documentDescription" -> "Payment on account",
+        "method" -> "Bank Transfer",
+        "lot" -> "LOT123",
+        "lotItem" -> "ITEM1",
+        "dueDate" -> "2025-03-31",
+        "documentDate" -> "2025-02-01",
+        "transactionId" -> "TXN123",
+        "mainType" -> "SA Payment",
+        "mainTransaction" -> "Payment on Account"
+      )
+
+      val result = json.as[Payment]
+
+      result shouldBe Payment(
+        reference = Some("REF12345"),
+        amount = BigDecimal(500.50),
+        outstandingAmount = BigDecimal(200.25),
+        documentDescription = Some("Payment on account"),
+        method = Some("Bank Transfer"),
+        lot = Some("LOT123"),
+        lotItem = Some("ITEM1"),
+        dueDate = Some(LocalDate.parse("2025-03-31")),
+        documentDate = LocalDate.parse("2025-02-01"),
+        transactionId = "TXN123",
+        mainType = Some("SA Payment"),
+        mainTransaction = Some("Payment on Account")
+      )
+    }
+
+    "handle optional fields correctly when None" in {
+      val payment = Payment(
+        reference = None,
+        amount = BigDecimal(100.00),
+        outstandingAmount = BigDecimal(0.00),
+        documentDescription = None,
+        method = None,
+        lot = None,
+        lotItem = None,
+        dueDate = None,
+        documentDate = LocalDate.parse("2025-02-01"),
+        transactionId = "TXN999",
+        mainType = None,
+        mainTransaction = None
+      )
+
+      val json = Json.toJson(payment)
+
+      (json \ "reference").asOpt[String] shouldBe None
+      (json \ "dueDate").asOpt[String] shouldBe None
+      (json \ "method").asOpt[String] shouldBe None
+
+      val roundTrip = json.as[Payment]
+      roundTrip shouldBe payment
+    }
+
+    "fail to deserialize if required fields are missing" in {
+      val invalidJson = Json.obj(
+        "amount" -> 123.45
+      )
+
+      val result = invalidJson.validate[Payment]
+      result.isError shouldBe true
     }
   }
 }
+
+

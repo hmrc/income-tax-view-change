@@ -45,28 +45,28 @@ class CreditsModelSpec extends TestSupport with Matchers {
 
       val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
-        val json = Json.toJson(creditsModel)
+      val json = Json.toJson(creditsModel)
 
-        (json \ "availableCreditForRepayment").get shouldBe JsNumber(200.0)
-        (json \ "allocatedCredit").get shouldBe JsNumber(100.0)
-        (json \ "allocatedCreditForFutureCharges").get shouldBe JsNumber(300.0)
-        (json \ "unallocatedCredit").get shouldBe JsNumber(250.0)
-        (json \ "totalCredit").get shouldBe JsNumber(150.0)
+      (json \ "availableCreditForRepayment").get shouldBe JsNumber(200.0)
+      (json \ "allocatedCredit").get shouldBe JsNumber(100.0)
+      (json \ "allocatedCreditForFutureCharges").get shouldBe JsNumber(300.0)
+      (json \ "unallocatedCredit").get shouldBe JsNumber(250.0)
+      (json \ "totalCredit").get shouldBe JsNumber(150.0)
 
-        val transactions = (json \ "transactions").get
-        transactions match {
-          case r: JsArray =>
-            r.value.size shouldBe 7
-          case _ => fail("transactions should be JsArray")
-        }
+      val transactions = (json \ "transactions").get
+      transactions match {
+        case r: JsArray =>
+          r.value.size shouldBe 7
+        case _ => fail("transactions should be JsArray")
+      }
 
-        (json \ "transactions" \ 0 \ "transactionType").get shouldBe JsString("cutOver")
-        (json \ "transactions" \ 1 \ "transactionType").get shouldBe JsString("balancingCharge")
-        (json \ "transactions" \ 2 \ "transactionType").get shouldBe JsString("mfa")
-        (json \ "transactions" \ 3 \ "transactionType").get shouldBe JsString("payment")
-        (json \ "transactions" \ 4 \ "transactionType").get shouldBe JsString("repaymentInterest")
-        (json \ "transactions" \ 5 \ "transactionType").get shouldBe JsString("refund")
-        (json \ "transactions" \ 6 \ "transactionType").get shouldBe JsString("refund")
+      (json \ "transactions" \ 0 \ "transactionType").get shouldBe JsString("cutOver")
+      (json \ "transactions" \ 1 \ "transactionType").get shouldBe JsString("balancingCharge")
+      (json \ "transactions" \ 2 \ "transactionType").get shouldBe JsString("mfa")
+      (json \ "transactions" \ 3 \ "transactionType").get shouldBe JsString("payment")
+      (json \ "transactions" \ 4 \ "transactionType").get shouldBe JsString("repaymentInterest")
+      (json \ "transactions" \ 5 \ "transactionType").get shouldBe JsString("refund")
+      (json \ "transactions" \ 6 \ "transactionType").get shouldBe JsString("refund")
     }
   }
 
