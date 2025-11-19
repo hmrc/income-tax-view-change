@@ -39,8 +39,7 @@ class ITSAStatusControllerSpec extends ControllerBaseSpec with MockMicroserviceA
 
   object TestITSAStatusController extends ITSAStatusController(
     authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig), mockCC,
-    hipConnector = mockHIPITSAStatusConnector,
-    appConfig = mockConfig
+    hipConnector = mockHIPITSAStatusConnector
   )
 
   lazy val mockCC: ControllerComponents = stubControllerComponents()

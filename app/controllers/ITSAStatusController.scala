@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.MicroserviceAppConfig
 import connectors.hip
 import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
@@ -35,8 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ITSAStatusController @Inject()(authentication: AuthenticationPredicate,
                                      cc: ControllerComponents,
-                                     hipConnector: hip.ITSAStatusConnector,
-                                     appConfig: MicroserviceAppConfig)
+                                     hipConnector: hip.ITSAStatusConnector
+                                    )
                                     (implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean,
