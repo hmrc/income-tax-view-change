@@ -44,7 +44,6 @@ trait ErrorResponseHttpParsers extends Logging {
             case expected@(_: OriginWithErrorCodeAndResponse) =>
               logger.error(s"Bad request error response: $expected")
               Left(ErrorResponse(BAD_REQUEST, Json.toJson(expected)))
-            case _ => Left(UnexpectedJsonResponse)
           }
         )
       case UNAUTHORIZED | NOT_FOUND =>

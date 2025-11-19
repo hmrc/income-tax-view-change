@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with OptionValues with BeforeAndAfterEach {
     val mockFinancialDetailsService: FinancialDetailService = mock(classOf[FinancialDetailService])
 
-  def mockListCharges(nino: String, from: String, to: String)
+    def mockListCharges(nino: String, from: String, to: String)
                      (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getChargeDetails(
       ArgumentMatchers.eq(nino),
@@ -50,7 +50,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
     )
   }
 
-  def mockGetPayments(nino: String, from: String, to: String)
+    def mockGetPayments(nino: String, from: String, to: String)
                      (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getPayments(
       ArgumentMatchers.eq(nino),
@@ -65,7 +65,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
     //Future.successful(response)
   }
 
-  def mockCredits(nino: String, from: String, to: String)
+    def mockCredits(nino: String, from: String, to: String)
                      (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getCredits(
       ArgumentMatchers.eq(nino),
@@ -82,7 +82,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
     )
   }
 
-  def mockSingleDocumentDetails(nino: String, documentId: String)
+    def mockSingleDocumentDetails(nino: String, documentId: String)
                                (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getPaymentAllocationDetails(
       ArgumentMatchers.eq(nino),
@@ -95,7 +95,7 @@ trait MockFinancialDetailsConnector extends AnyWordSpecLike with Matchers with O
     )
   }
 
-  def mockOnlyOpenItems(nino: String)
+    def mockOnlyOpenItems(nino: String)
                        (response: ChargeHipResponse): Unit = {
     when(mockFinancialDetailsService.getOnlyOpenItems(
       ArgumentMatchers.eq(nino)
