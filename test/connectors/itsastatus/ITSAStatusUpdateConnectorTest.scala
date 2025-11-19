@@ -32,7 +32,8 @@
 
 package connectors.itsastatus
 
-import connectors.itsastatus.ITSAStatusConnector._
+import connectors.hip.ITSAStatusConnector
+import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel._
 import mocks.MockHttpV2
 import org.mockito.Mockito.mock
@@ -49,7 +50,7 @@ class ITSAStatusUpdateConnectorTest extends TestSupport with MockHttpV2 {
   val connector = new ITSAStatusConnector(mockHttpClientV2, microserviceAppConfig)
   val taxYear = "23-24"
   val taxableEntityId: String = "AB123456A"
-  val url: String = s"${microserviceAppConfig.ifUrl}/income-tax/itsa-status/update/$taxableEntityId"
+  val url: String = s"${microserviceAppConfig.hipUrl}/itsd/itsa-status/update/$taxableEntityId"
 
   "For OptOutConnector.requestOptOutForTaxYear " when {
 
