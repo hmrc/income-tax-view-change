@@ -28,6 +28,7 @@ import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
 import helpers.servicemocks.AuthStub
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import scala.concurrent.ExecutionContext
 
