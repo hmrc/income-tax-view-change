@@ -48,7 +48,6 @@ class GetChargeHistoryConnector @Inject()(val http: HttpClientV2,
       .execute[HttpResponse]
       .map {
         response =>
-          println(s"$response responseBody: ${response.body}")
           response.status match {
             case OK =>
               logger.debug(s"RESPONSE status:${response.status}, body:${response.body}")
