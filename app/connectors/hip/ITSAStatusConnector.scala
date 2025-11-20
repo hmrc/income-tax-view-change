@@ -18,8 +18,7 @@ package connectors.hip
 
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
-import connectors.itsastatus.ITSAStatusConnector.CorrelationIdHeader
-import connectors.itsastatus.ITSAStatusConnectorTrait
+import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
 import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponse, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
 import models.hip.ITSAStatusHipApi
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
@@ -39,7 +38,7 @@ object ITSAStatusConnector {
 
 class ITSAStatusConnector @Inject()(val http: HttpClientV2,
                                     val appConfig: MicroserviceAppConfig
-                                   )(implicit ec: ExecutionContext) extends ITSAStatusConnectorTrait with RawResponseReads with Logging {
+                                   )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {
 
   val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(ITSAStatusHipApi)
 

@@ -20,7 +20,7 @@ import config.MicroserviceAppConfig
 import constants.BaseTestConstants.{testNino, testTaxYearRange}
 import constants.ITSAStatusTestConstants._
 import controllers.predicates.AuthenticationPredicate
-import mocks.{MockITSAStatusConnector, MockMicroserviceAuthConnector, hip}
+import mocks.{MockMicroserviceAuthConnector, hip}
 import models.hip.ITSAStatusHipApi
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -33,15 +33,13 @@ import uk.gov.hmrc.auth.core.MissingBearerToken
 
 import scala.concurrent.Future
 
-class ITSAStatusControllerSpec extends ControllerBaseSpec with MockITSAStatusConnector with MockMicroserviceAuthConnector with hip.MockITSAStatusConnector {
+class ITSAStatusControllerSpec extends ControllerBaseSpec with MockMicroserviceAuthConnector with hip.MockITSAStatusConnector {
 
   val mockConfig: MicroserviceAppConfig = mock[MicroserviceAppConfig]
 
   object TestITSAStatusController extends ITSAStatusController(
     authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig), mockCC,
-    ifConnector = mockITSAStatusConnector,
-    hipConnector = mockHIPITSAStatusConnector,
-    appConfig = mockConfig
+    hipConnector = mockHIPITSAStatusConnector
   )
 
   lazy val mockCC: ControllerComponents = stubControllerComponents()
@@ -84,57 +82,6 @@ class ITSAStatusControllerSpec extends ControllerBaseSpec with MockITSAStatusCon
           mockAuth()
           mockHIPGetITSAStatus(Left(badJsonErrorITSAStatusError))
           when(mockConfig.hipFeatureSwitchEnabled(ITSAStatusHipApi)).thenReturn(true)
-          lazy val result = callGetITSAStatus
-
-          contentType(result) shouldBe Some("application/json")
-          status(result) shouldBe badJsonErrorITSAStatusError.status
-          contentAsJson(result) shouldBe Json.toJson(badJsonErrorITSAStatusError)
-        }
-      }
-
-      "return an UNAUTHORIZED response" when {
-
-        "called by an unauthenticated user" in {
-          mockAuth(Future.failed(new MissingBearerToken))
-          lazy val result = callGetITSAStatus
-
-          status(result) shouldBe UNAUTHORIZED
-        }
-      }
-    }
-    "the HIP feature switch is disabled" should {
-      "return a valid ITSA status response" when {
-
-        "called by an authenticated user and ITSAStatusConnector gives a valid response" in {
-          mockAuth()
-          mockGetITSAStatus(Right(List(successITSAStatusResponseModel)))
-          when(mockConfig.hipFeatureSwitchEnabled(ITSAStatusHipApi)).thenReturn(false)
-
-          lazy val result = callGetITSAStatus
-
-          contentType(result) shouldBe Some("application/json")
-          status(result) shouldBe OK
-          contentAsJson(result) shouldBe Json.toJson(successITSAStatusListResponseJson)
-
-        }
-
-        "called by an authenticated user and ITSAStatusConnector gives an error response" in {
-          mockAuth()
-          mockGetITSAStatus(Left(errorITSAStatusNotFoundError))
-          when(mockConfig.hipFeatureSwitchEnabled(ITSAStatusHipApi)).thenReturn(false)
-
-          lazy val result = callGetITSAStatus
-
-          contentType(result) shouldBe Some("application/json")
-          status(result) shouldBe errorITSAStatusNotFoundError.status
-          contentAsJson(result) shouldBe Json.toJson(errorITSAStatusNotFoundError)
-        }
-
-        "called by an authenticated user and ITSAStatusConnector gives an invalid JSON response" in {
-          mockAuth()
-          mockGetITSAStatus(Left(badJsonErrorITSAStatusError))
-          when(mockConfig.hipFeatureSwitchEnabled(ITSAStatusHipApi)).thenReturn(false)
-
           lazy val result = callGetITSAStatus
 
           contentType(result) shouldBe Some("application/json")
