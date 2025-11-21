@@ -21,7 +21,7 @@ import play.api.libs.json.JsValue
 
 object HipCreateBusinessDetailsStub {
 
-  val url: String = s"""/etmp/RESTAdapter/itsa/taxpayer/income-source"""
+  val url: String = "/etmp/RESTAdapter/itsa/taxpayer/income-source"
 
   def stubPostHipBusinessDetails(status: Int, request: JsValue, response: JsValue): Unit = {
     WiremockHelper.stubPost(url, status, request.toString, response.toString)

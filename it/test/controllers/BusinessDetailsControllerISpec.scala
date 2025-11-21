@@ -17,7 +17,7 @@
 package controllers
 
 import constants.BaseIntegrationTestConstants._
-import constants.BusinessDetailsIntegrationTestConstants.jsonSuccessOutput
+import constants.HipBusinessDetailsIntegrationTestConstants.jsonSuccessOutput
 import constants.HipIncomeSourceIntegrationTestConstants._
 import helpers.ComponentSpecBase
 import helpers.servicemocks.BusinessDetailsHipCallWithNinoStub
@@ -28,7 +28,7 @@ class BusinessDetailsControllerISpec extends ComponentSpecBase {
 
   "Calling the BusinessDetailsController.getBusinessDetails method with HipApi enabled" when {
     "authorised with a valid request" when {
-      "A successful response is returned from IF" should {
+      "A successful response is returned from HIP" should {
         "return a valid IncomeSourceDetails model" in {
 
           isAuthorised(true)

@@ -17,24 +17,20 @@
 package constants
 
 import java.time.LocalDate
-
-import models.core.CessationModel
+import models.hip.core.CessationModel
 import play.api.libs.json.Json
 
 object CessationTestConstants {
 
   val testCessationModel = CessationModel(
-    Some(LocalDate.parse("2017-06-01")),
-    Some("Dummy reason")
+    Some(LocalDate.parse("2017-06-01"))
   )
 
   val testCessationJson = Json.obj(
-    "cessationDate" -> "2017-06-01",
-    "cessationReason" -> "Dummy reason"
+    "cessationDate" -> "2017-06-01"
   )
 
   val testCessationToJson = Json.obj(
-    "date" -> "2017-06-01",
-    "reason" -> "Dummy reason"
+    "date" -> "2017-06-01"
   )
 }

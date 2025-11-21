@@ -17,10 +17,8 @@
 package services
 
 import config.MicroserviceAppConfig
-import connectors.BusinessDetailsConnector
 import connectors.hip.GetBusinessDetailsConnector
-import models.core.{NinoErrorModel, NinoModel}
-import models.hip.GetBusinessDetailsHipApi
+import models.hip.core.{NinoErrorModel, NinoModel}
 import play.api.Logging
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
@@ -32,79 +30,36 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IncomeSourceDetailsService @Inject()(val businessDetailsConnector: BusinessDetailsConnector,
-                                           val getBusinessDetailsFromHipConnector: GetBusinessDetailsConnector,
+class IncomeSourceDetailsService @Inject()(val getBusinessDetailsFromHipConnector: GetBusinessDetailsConnector,
                                            val appConfig: MicroserviceAppConfig
                                           )
                                           (implicit ec: ExecutionContext) extends Logging {
 
-  // Either of HIP or IF IncomeSourceDetailsResponseModel
-  private type ResponseModel = Either[models.incomeSourceDetails.IncomeSourceDetailsResponseModel,
-    models.hip.incomeSourceDetails.IncomeSourceDetailsResponseModel]
-
   def getIncomeSourceDetails(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {
-    getIncomeSourceDetailsModels(mtdRef).map {
-      case Right(hipResponseModel) =>
-        hipResponseModel match {
-          case success: models.hip.incomeSourceDetails.IncomeSourceDetailsModel =>
-            logger.debug(s"Retrieved Income Source Details:\n\n$success")
-            Status(OK)(Json.toJson(success))
-          case error: models.hip.incomeSourceDetails.IncomeSourceDetailsError =>
-            logger.error(s"Retrieved error Income Source Details:\n\n$error")
-            Status(error.status)(Json.toJson(error))
-          case notFound: models.hip.incomeSourceDetails.IncomeSourceDetailsNotFound =>
-            logger.warn(s"Retrieved not found Income Source Details: \n\n$notFound")
-            Status(NOT_FOUND)(Json.toJson(notFound))
-        }
-      case Left(ifResponseModel) =>
-        ifResponseModel match {
-          case success: models.incomeSourceDetails.IncomeSourceDetailsModel =>
-            logger.debug(s"Retrieved Income Source Details:\n\n$success")
-            Status(OK)(Json.toJson(success))
-          case error: models.incomeSourceDetails.IncomeSourceDetailsError =>
-            logger.error(s"Retrieved error Income Source Details:\n$error")
-            Status(error.status)(Json.toJson(error))
-          case notFound: models.incomeSourceDetails.IncomeSourceDetailsNotFound =>
-            logger.warn(s"Retrieved not found Income Source Details: \n\n$notFound")
-            Status(NOT_FOUND)(Json.toJson(notFound))
-        }
+    getBusinessDetailsFromHipConnector.getBusinessDetails(mtdRef, models.hip.incomeSourceDetails.MtdId).map {
+      case success: models.hip.incomeSourceDetails.IncomeSourceDetailsModel =>
+        logger.debug(s"Retrieved Income Source Details:\n\n$success")
+        Status(OK)(Json.toJson(success))
+      case error: models.hip.incomeSourceDetails.IncomeSourceDetailsError =>
+        logger.error(s"Retrieved error Income Source Details:\n\n$error")
+        Status(error.status)(Json.toJson(error))
+      case notFound: models.hip.incomeSourceDetails.IncomeSourceDetailsNotFound =>
+        logger.warn(s"Retrieved not found Income Source Details: \n\n$notFound")
+        Status(NOT_FOUND)(Json.toJson(notFound))
     }
   }
 
-  private def getIncomeSourceDetailsModels(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[ResponseModel] = {
-    logger.debug("Requesting Income Source Details from Connector")
-    if(appConfig.hipFeatureSwitchEnabled(GetBusinessDetailsHipApi))
-      getBusinessDetailsFromHipConnector.getBusinessDetails(mtdRef, models.hip.incomeSourceDetails.MtdId).map(Right(_))
-    else
-      businessDetailsConnector.getBusinessDetails(mtdRef, models.incomeSourceDetails.MtdId).map(Left(_))
-  }
-
   def getNino(mtdRef: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {
-    getIncomeSourceDetailsModels(mtdRef).map {
-      case Right(hipResponseModel) =>
-        hipResponseModel match {
-          case success: models.hip.incomeSourceDetails.IncomeSourceDetailsModel =>
-            logger.debug("Converting to Nino Model")
-            Status(OK)(Json.toJson(NinoModel(success.nino)))
-          case error: models.hip.incomeSourceDetails.IncomeSourceDetailsError =>
-            logger.error(s"Error Response: $error")
-            Status(error.status)(Json.toJson(NinoErrorModel(error.status, error.reason)))
-          case notFound: models.hip.incomeSourceDetails.IncomeSourceDetailsNotFound =>
-            logger.warn(s"Income tax details not found: $notFound")
-            Status(NOT_FOUND)(Json.toJson(NinoErrorModel(notFound.status, notFound.reason)))
-        }
-      case Left(ifResponseModel) =>
-      ifResponseModel match {
-        case success: models.incomeSourceDetails.IncomeSourceDetailsModel =>
-          logger.debug ("Converting to Nino Model")
-          Status (OK) (Json.toJson (NinoModel(success.nino) ) )
-        case error@models.incomeSourceDetails.IncomeSourceDetailsError(status, reason) =>
-          logger.error(s"Error Response: $error")
-          Status(error.status)(Json.toJson(NinoErrorModel(status, reason)))
-        case notFound@models.incomeSourceDetails.IncomeSourceDetailsNotFound(status, reason) =>
-          logger.warn(s"Income tax details not found: $notFound")
-          Status(NOT_FOUND)(Json.toJson(NinoErrorModel(status, reason)))
-      }
+    getBusinessDetailsFromHipConnector.getBusinessDetails(mtdRef, models.hip.incomeSourceDetails.MtdId).map {
+      case success: models.hip.incomeSourceDetails.IncomeSourceDetailsModel =>
+        logger.debug("Converting to Nino Model")
+        Status(OK)(Json.toJson(NinoModel(success.nino)))
+      case error: models.hip.incomeSourceDetails.IncomeSourceDetailsError =>
+        logger.error(s"Error Response: $error")
+        Status(error.status)(Json.toJson(NinoErrorModel(error.status, error.reason)))
+      case notFound: models.hip.incomeSourceDetails.IncomeSourceDetailsNotFound =>
+        logger.warn(s"Income tax details not found: $notFound")
+        Status(NOT_FOUND)(Json.toJson(NinoErrorModel(notFound.status, notFound.reason)))
     }
   }
 }

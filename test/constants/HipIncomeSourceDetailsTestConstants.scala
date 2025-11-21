@@ -54,16 +54,99 @@ object HipIncomeSourceDetailsTestConstants {
       "propertyData" -> Json.arr(testPropertyDetailsJson))
   ))
 
-
-  val testIncomeSourceDetailsToJson = Json.obj(
-    "nino" -> testNino,
-    "mtdbsa" -> testMtdId,
-    "yearOfMigration" -> "2019",
-    "businesses" -> Json.arr(
-      testBusinessDetailsToJson,
-      testMinimumBusinessDetailsToJson),
-    "properties" -> Json.arr(
-      testPropertyDetailsToJson)
+  val testIncomeSourceDetailsToJson = Json.parse("""{
+               |  "nino" : "BB123456A",
+               |  "mtdbsa" : "XIAT0000000000A",
+               |  "yearOfMigration" : "2019",
+               |  "businesses" : [ {
+               |    "incomeSourceId" : "111111111111111",
+               |    "incomeSource" : "Fruit Ltd",
+               |    "accountingPeriod" : {
+               |      "start" : "2017-06-01",
+               |      "end" : "2018-05-31"
+               |    },
+               |    "tradingName" : "Test Business",
+               |    "address" : {
+               |      "addressLine1" : "Test Lane",
+               |      "addressLine2" : "Test Unit",
+               |      "addressLine3" : "Test Town",
+               |      "addressLine4" : "Test City",
+               |      "postCode" : "TE5 7TE",
+               |      "countryCode" : "GB"
+               |    },
+               |    "contactDetails" : {
+               |      "phoneNumber" : "01332752856",
+               |      "mobileNumber" : "07782565326",
+               |      "faxNumber" : "01332754256",
+               |      "emailAddress" : "stephen@manncorpone.co.uk"
+               |    },
+               |    "contextualTaxYear" : "2015",
+               |    "tradingStartDate" : "2017-01-01",
+               |    "cashOrAccruals" : false,
+               |    "seasonal" : true,
+               |    "cessation" : {
+               |      "date" : "2017-06-01"
+               |    },
+               |    "paperless" : true,
+               |    "firstAccountingPeriodEndDate" : "2016-01-01",
+               |    "latencyDetails" : {
+               |      "latencyEndDate" : "2022-01-01",
+               |      "taxYear1" : "2022",
+               |      "latencyIndicator1" : "A",
+               |      "taxYear2" : "2023",
+               |      "latencyIndicator2" : "Q"
+               |    },
+               |    "quarterTypeElection" : {
+               |      "quarterReportingType" : "STANDARD",
+               |      "taxYearofElection" : "2021"
+               |    }
+               |  }, {
+               |    "incomeSourceId" : "111111111111111",
+               |    "incomeSource" : "Fruit Ltd",
+               |    "accountingPeriod" : {
+               |      "start" : "2017-06-01",
+               |      "end" : "2018-05-31"
+               |    },
+               |    "cashOrAccruals" : true
+               |  } ],
+               |  "properties" : [ {
+               |    "incomeSourceId" : "111111111111111",
+               |    "accountingPeriod" : {
+               |      "start" : "2017-06-01",
+               |      "end" : "2018-05-31"
+               |    },
+               |    "contactDetails" : {
+               |      "emailAddress" : "stephen@manncorpone.co.uk"
+               |    },
+               |    "propertiesRented" : {
+               |      "uk" : 3,
+               |      "eea" : 2,
+               |      "nonEea" : 1,
+               |      "total" : 4
+               |    },
+               |    "cessation" : {
+               |      "date" : "2017-06-01"
+               |    },
+               |    "paperless" : true,
+               |    "firstAccountingPeriodEndDate" : "2016-01-01",
+               |    "incomeSourceType" : "uk-property",
+               |    "contextualTaxYear" : "2015",
+               |    "tradingStartDate" : "2015-01-01",
+               |    "latencyDetails" : {
+               |      "latencyEndDate" : "2022-01-01",
+               |      "taxYear1" : "2022",
+               |      "latencyIndicator1" : "A",
+               |      "taxYear2" : "2023",
+               |      "latencyIndicator2" : "Q"
+               |    },
+               |    "cashOrAccruals" : true,
+               |    "quarterTypeElection" : {
+               |      "quarterReportingType" : "STANDARD",
+               |      "taxYearofElection" : "2021"
+               |    }
+               |  } ]
+               |}
+               |""".stripMargin
   )
 
   val testHipMinimumIncomeSourceDetailsJson = Json.obj(

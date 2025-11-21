@@ -17,7 +17,7 @@
 package controllers
 
 import constants.BaseTestConstants.mtdRef
-import constants.IncomeSourceDetailsTestConstants._
+import constants.HipIncomeSourceDetailsTestConstants.{testIncomeSourceDetailsError, testIncomeSourceDetailsModel, testNinoError, testNinoModel}
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockIncomeSourceDetailsService, MockMicroserviceAuthConnector}
 import play.api.http.Status

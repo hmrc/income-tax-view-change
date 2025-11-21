@@ -16,7 +16,8 @@
 
 package models.incomeSourceDetails
 
-import constants.PropertyDetailsTestConstants._
+import constants.HipPropertyDetailsTestConstants._
+import models.hip.incomeSourceDetails.PropertiesRentedModel
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport

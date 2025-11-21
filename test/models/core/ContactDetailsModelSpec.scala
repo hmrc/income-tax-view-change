@@ -17,6 +17,7 @@
 package models.core
 
 import constants.ContactDetailsTestConstants._
+import models.hip.core.ContactDetailsModel
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json._
 import utils.TestSupport
@@ -26,7 +27,7 @@ class ContactDetailsModelSpec extends TestSupport with Matchers {
   "The ContactDetailsModel" should {
 
     "read from json with all fields" in {
-      Json.fromJson(testContactDetailsJson)(ContactDetailsModel.reads) shouldBe JsSuccess(testContactDetailsModel)
+      Json.fromJson(testContactDetailsReadsJson)(ContactDetailsModel.reads) shouldBe JsSuccess(testContactDetailsModel)
     }
 
     "read from Json with minimum fields" in {

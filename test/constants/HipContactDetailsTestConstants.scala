@@ -27,6 +27,20 @@ object HipContactDetailsTestConstants {
     faxNumber = Some("01332754256"),
     emailAddress = Some("stephen@manncorpone.co.uk"))
 
+  val testContactDetailsToJsonWrites = Json.obj(
+    "phoneNumber" -> "01332752856",
+    "mobileNumber" -> "07782565326",
+    "faxNumber" -> "01332754256",
+    "emailAddress" -> "stephen@manncorpone.co.uk"
+  )
+
+  val hipTestContactDetailsJson = Json.obj(
+    "phoneNumber" -> "01332752856",
+    "mobileNumber" -> "07782565326",
+    "faxNumber" -> "01332754256",
+    "emailAddress" -> "stephen@manncorpone.co.uk"
+  )
+
   val testSomeContactDetailsModel = ContactDetailsModel(None, None, None, emailAddress = Some("stephen@manncorpone.co.uk"))
 
   val testContactDetailsJson = Json.obj(
@@ -38,6 +52,10 @@ object HipContactDetailsTestConstants {
 
   val testSomeContactDetailsJson = Json.obj(
     "email" -> "stephen@manncorpone.co.uk"
+  )
+
+  val testContactDetailsToJson = Json.obj(
+    "emailAddress" -> "stephen@manncorpone.co.uk"
   )
 
 }

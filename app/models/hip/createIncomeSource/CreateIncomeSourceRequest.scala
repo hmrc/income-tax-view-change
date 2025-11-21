@@ -41,7 +41,7 @@ object CreateIncomeSourceHipRequest {
 // *********************************************************************************************************************
 
 final case class CreateBusinessIncomeSourceHipRequest(mtdbsa: String, businessDetails: List[BusinessDetails]) extends CreateIncomeSourceHipRequest {
-  require(mtdbsa.matches("^[A-Z]{4}[0-9]{11}$"), "MTDBSA ID should of 11 characters and specific format")
+  require(mtdbsa.matches("^[A-Z]{4}[0-9]{11}$"), "MTDBSA ID should be of 11 characters and a specific format")
   require(businessDetails.length == 1, "Only single business can be created at a time")
   require(businessDetails.head.cashAccrualsFlag.forall(_.matches("^[C | A]$")), "Accounting method must be capitalised")
 }
@@ -93,11 +93,11 @@ final case class PropertyDetails(tradingStartDate: Option[String],
 }
 
 final case class CreateForeignPropertyIncomeSourceHipRequest(mtdbsa: String, foreignPropertyDetails: PropertyDetails) extends CreateIncomeSourceHipRequest {
-  require(mtdbsa.matches("^[A-Z]{4}[0-9]{11}$"), "MTDBSA ID should of 11 characters and specific format")
+  require(mtdbsa.matches("^[A-Z]{4}[0-9]{11}$"), "MTDBSA ID should be of 11 characters and a specific format")
 }
 
 final case class CreateUKPropertyIncomeSourceHipRequest(mtdbsa: String, ukPropertyDetails: PropertyDetails) extends CreateIncomeSourceHipRequest{
-  require(mtdbsa.matches("^[A-Z]{4}[0-9]{11}$"), "MTDBSA ID should of 11 characters and specific format")
+  require(mtdbsa.matches("^[A-Z]{4}[0-9]{11}$"), "MTDBSA ID should be of 11 characters and a specific format")
 }
 
 object PropertyDetails {

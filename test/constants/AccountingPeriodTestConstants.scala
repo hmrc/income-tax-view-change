@@ -16,7 +16,7 @@
 
 package constants
 
-import models.core.AccountingPeriodModel
+import models.hip.core.AccountingPeriodModel
 import play.api.libs.json.Json
 
 import java.time.LocalDate
@@ -30,8 +30,8 @@ object AccountingPeriodTestConstants {
     )
 
   val testAccountingPeriodJson = Json.obj(
-    "accountingPeriodStartDate" -> "2017-06-01",
-    "accountingPeriodEndDate" -> "2018-05-31"
+    "accPeriodSDate" -> "2017-06-01",
+    "accPeriodEDate" -> "2018-05-31"
   )
 
   val testAccountingPeriodToJson = Json.obj(
