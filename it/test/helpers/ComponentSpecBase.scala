@@ -52,8 +52,6 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
     "microservice.services.hip.host" -> mockHost,
     "microservice.services.hip.port" -> mockPort,
     s"microservice.services.hip.${GetLegacyCalcListHipApi()}.feature-switch" -> "false",
-    s"microservice.services.hip.${ITSAStatusHipApi()}.feature-switch" -> "false",
-    "useBusinessDetailsIFPlatform" -> "false",
     s"microservice.services.hip.${GetFinancialDetailsHipApi()}.feature-switch" -> "false",
     s"microservice.services.hip.${GetCalcListTYSHipApi()}.feature-switch" -> "false"
   )

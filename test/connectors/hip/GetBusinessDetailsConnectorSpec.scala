@@ -73,7 +73,7 @@ class GetBusinessDetailsConnectorSpec extends TestSupport with MockHttpV2 {
   }
   "GetBusinessDetailsConnector.getBusinessDetails(IncomeSourceAccess)" should {
 
-    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getBusinessDetailsUrl(MtdId, mtdRef), microserviceAppConfig.getIFHeaders("1171"))(_)
+    lazy val mock: HttpResponse => Unit = setupMockHttpGetWithHeaderCarrier(getBusinessDetailsUrl(MtdId, mtdRef), getHeaders)(_)
 
     "return Status (OK) and a JSON body when successful as a GetBusinessDetails" in {
       mock(successResponse)
