@@ -50,7 +50,6 @@ object HipPropertyDetailsTestConstants {
       latencyIndicator1 = "A",
       taxYear2 = "2023",
       latencyIndicator2 = "Q")),
-    cashOrAccruals = Some(true),
     quarterTypeElection = Some(QuarterTypeElection("STANDARD", "2021"))
   )
 
@@ -66,7 +65,6 @@ object HipPropertyDetailsTestConstants {
     contextualTaxYear = None,
     tradingStartDate = None,
     latencyDetails = None,
-    cashOrAccruals = Some(true),
     quarterTypeElection = None
   )
 
@@ -114,7 +112,6 @@ object HipPropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccrualsFlag" -> true,
     "quarterTypeElection" -> Json.obj(
       "quarterReportingType" -> "STANDARD",
       "taxYearofElection" -> "2021"
@@ -142,7 +139,6 @@ object HipPropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccrualsFlag" -> true,
     "quarterTypeElection" -> Json.obj(
       "quarterReportingType" -> "STANDARD",
       "taxYearofElection" -> "2021"
@@ -166,7 +162,6 @@ object HipPropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccruals" -> true,
     "quarterTypeElection" -> Json.obj(
       "quarterReportingType" -> "STANDARD",
       "taxYearofElection" -> "2021"
@@ -176,8 +171,7 @@ object HipPropertyDetailsTestConstants {
   val testMinimumPropertyDetailsJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
     "accPeriodSDate" -> "2017-06-01",
-    "accPeriodEDate" -> "2018-05-31",
-    "cashOrAccrualsFlag" -> true
+    "accPeriodEDate" -> "2018-05-31"
   )
 
   val testPropertyDetailsModelToJson = Json.obj(
@@ -197,7 +191,6 @@ object HipPropertyDetailsTestConstants {
       "latencyIndicator1" -> "A",
       "taxYear2" -> "2023",
       "latencyIndicator2" -> "Q"),
-    "cashOrAccruals" -> true,
     "quarterTypeElection" -> Json.obj(
       "quarterReportingType" -> "STANDARD",
       "taxYearofElection" -> "2021"

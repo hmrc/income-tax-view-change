@@ -82,7 +82,6 @@ object HipIncomeSourceDetailsTestConstants {
                |    },
                |    "contextualTaxYear" : "2015",
                |    "tradingStartDate" : "2017-01-01",
-               |    "cashOrAccruals" : false,
                |    "seasonal" : true,
                |    "cessation" : {
                |      "date" : "2017-06-01"
@@ -106,8 +105,7 @@ object HipIncomeSourceDetailsTestConstants {
                |    "accountingPeriod" : {
                |      "start" : "2017-06-01",
                |      "end" : "2018-05-31"
-               |    },
-               |    "cashOrAccruals" : true
+               |    }
                |  } ],
                |  "properties" : [ {
                |    "incomeSourceId" : "111111111111111",
@@ -139,7 +137,6 @@ object HipIncomeSourceDetailsTestConstants {
                |      "taxYear2" : "2023",
                |      "latencyIndicator2" : "Q"
                |    },
-               |    "cashOrAccruals" : true,
                |    "quarterTypeElection" : {
                |      "quarterReportingType" : "STANDARD",
                |      "taxYearofElection" : "2021"

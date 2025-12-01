@@ -51,8 +51,7 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
 
   val testDate: String = LocalDate.of(2022, 5, 1).toString
 
-  def createBusinessIncomeSourceRequest
-    (cashOrAccFlag: Option[String]): CreateBusinessIncomeSourceHipRequest =
+  def createBusinessIncomeSourceRequest(): CreateBusinessIncomeSourceHipRequest =
     CreateBusinessIncomeSourceHipRequest(
       mtdbsa = testMtdbsa,
       List(
@@ -63,15 +62,13 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
           address = AddressDetails("10 FooBar Street", None, None, None, "GB", None),
           typeOfBusiness = "test business type",
           tradingStartDate = testDate,
-          cashAccrualsFlag = cashOrAccFlag,
           cessationDate = None,
           cessationReason = None
         )
       )
     )
 
-  def createBusinessHipIncomeSourceRequest
-  (cashOrAccFlag: Option[String]): CreateBusinessIncomeSourceHipRequest =
+  def createBusinessHipIncomeSourceRequest(): CreateBusinessIncomeSourceHipRequest =
     CreateBusinessIncomeSourceHipRequest(
       testMtdbsa,
       List(
@@ -82,18 +79,15 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
           address = AddressDetails("10 FooBar Street", None, None, None, "GB", None),
           typeOfBusiness = "test business type",
           tradingStartDate = testDate,
-          cashAccrualsFlag = cashOrAccFlag,
           cessationDate = None,
           cessationReason = None
         )
       )
     )
 
-  def testCreateSelfEmploymentIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("C")): JsValue =
-    Json.toJson(createBusinessIncomeSourceRequest(cashOrAccFlag))
+  def testCreateSelfEmploymentIncomeSourceRequest(): JsValue = Json.toJson(createBusinessIncomeSourceRequest())
 
-  def testCreateSelfEmploymentHipIncomeSourceRequest(cashOrAccFlag: Option[String] = Some("C")): JsValue =
-    Json.toJson(createBusinessHipIncomeSourceRequest(cashOrAccFlag))
+  def testCreateSelfEmploymentHipIncomeSourceRequest(): JsValue = Json.toJson(createBusinessHipIncomeSourceRequest())
 
   val testCreateUKPropertyRequest: JsValue =
     Json.toJson(
@@ -101,7 +95,6 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         mtdbsa = testMtdbsa,
         PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = Some("C"),
           startDate = testDate
         )
       )
@@ -113,7 +106,6 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = Some("C"),
           startDate = testDate
         )
       )
@@ -125,7 +117,6 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         mtdbsa = testMtdbsa,
         PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = Some("A"),
           startDate = testDate
         )
       )
@@ -137,7 +128,6 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = Some("A"),
           startDate = testDate
         )
       )
@@ -149,7 +139,6 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         mtdbsa = testMtdbsa,
         PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = None,
           startDate = testDate
         )
       )
@@ -161,7 +150,6 @@ object CreateBusinessDetailsHipIntegrationTestConstants {
         testMtdbsa,
         models.hip.createIncomeSource.PropertyDetails(
           tradingStartDate = Some(testDate),
-          cashAccrualsFlag = None,
           startDate = testDate
         )
       )
