@@ -48,7 +48,7 @@ object SelectYourReason {
     AllowanceOrReliefHigher,
     MoreTaxedAtSource,
     Increase
-  ).map(reason => (reason.code -> reason))
+  ).map(reason => reason.code -> reason)
     .toMap
 
   implicit val format: Format[SelectYourReason] = Format(

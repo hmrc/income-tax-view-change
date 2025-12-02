@@ -23,9 +23,7 @@ case class RepaymentItem(repaymentSupplementItem: Option[Seq[RepaymentSupplement
 
 object RepaymentItem {
 
-  implicit val reads: Reads[RepaymentItem] = (
-    (__ \ "repaymentSupplementItem").readNullable[Seq[RepaymentSupplementItem]]
-    ).map(RepaymentItem.apply)
+  implicit val reads: Reads[RepaymentItem] = (__ \ "repaymentSupplementItem").readNullable[Seq[RepaymentSupplementItem]].map(RepaymentItem.apply)
 
   implicit val writes: OWrites[RepaymentItem] = Json.writes[RepaymentItem]
 

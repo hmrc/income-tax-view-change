@@ -28,7 +28,7 @@ object ClaimToAdjustPoaHttpParser {
     implicit object ClaimToAdjustPoaResponseReads extends HttpReads[ClaimToAdjustPoaResponse] {
 
         override def read(method: String, url: String, response: HttpResponse): ClaimToAdjustPoaResponse = {
-                (response.status match {
+                response.status match {
             case CREATED =>
                 response.json.validate[ClaimToAdjustPoaApiSuccess] match {
                 case JsSuccess(model, _) =>
@@ -48,7 +48,7 @@ object ClaimToAdjustPoaHttpParser {
                         ClaimToAdjustPoaResponse(INTERNAL_SERVER_ERROR,
                             Left(ErrorResponse("Invalid JSON in failure response")))
                 }
-          })
+          }
         }
     }
 }
