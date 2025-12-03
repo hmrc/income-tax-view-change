@@ -66,7 +66,7 @@ object TransactionType {
     }
   }
 
-  val read: Reads[TransactionType] = (JsPath).read[String].collect(JsonValidationError("Could not parse transactionType")) {
+  val read: Reads[TransactionType] = JsPath.read[String].collect(JsonValidationError("Could not parse transactionType")) {
     case MfaCreditType.key => MfaCreditType
     case CutOverCreditType.key => CutOverCreditType
     case BalancingChargeCreditType.key => BalancingChargeCreditType

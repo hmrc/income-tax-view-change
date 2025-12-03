@@ -33,12 +33,6 @@ object Response {
   implicit val format: Format[Response] = Json.format[Response]
 }
 
-case class OriginResponse(origin: String, response: Seq[Response]) extends Errors
-
-object OriginResponse {
-  implicit val format: Format[OriginResponse] = Json.format[OriginResponse]
-}
-
 case class FailureResponse(errorCode: String, errorDescription: String)
 
 object FailureResponse {
