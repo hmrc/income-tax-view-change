@@ -46,21 +46,6 @@ class CreateBusinessDetailsControllerISpec extends ComponentSpecBase {
           res should have(httpStatus(OK))
           res.body.toString should include(testIncomeSourceId)
         }
-
-        s"return $OK response with an incomeSourceId with a missing cashOrAccrualFlag" in {
-          isAuthorised(true)
-
-          HipCreateBusinessDetailsStub
-            .stubPostHipBusinessDetails(OK, testCreateSelfEmploymentHipIncomeSourceRequest(None), testCreateBusinessDetailsSuccessResponse)
-
-          When(s"I call POST /income-tax/income-sources/mtdbsa/$testMtdbsa/ITSA/business")
-          val res = IncomeTaxViewChange.createBusinessDetails(testCreateSelfEmploymentIncomeSourceRequest(None))
-
-          HipCreateBusinessDetailsStub.verifyCreateHipBusinessDetails(testCreateSelfEmploymentHipIncomeSourceRequest(None))
-
-          res should have(httpStatus(OK))
-          res.body.toString should include(testIncomeSourceId)
-        }
       }
     }
     "authorised with a CreateUKPropertyIncomeSourceRequest model" when {

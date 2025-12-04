@@ -47,7 +47,6 @@ object HipBusinessDetailsIntegrationTestConstants {
         emailAddress = Some("stephen@manncorpone.co.uk"))),
       contextualTaxYear = Some("2015"),
       tradingStartDate = Some(LocalDate.parse("2017-01-01")),
-      cashOrAccruals = Some(false),
       seasonal = Some(true),
       cessation = None,
       paperless = Some(true),
@@ -77,7 +76,6 @@ object HipBusinessDetailsIntegrationTestConstants {
       contextualTaxYear = None,
       tradingStartDate = None,
       latencyDetails = None,
-      cashOrAccruals = Some(true),
       quarterTypeElection = None
     )
 
@@ -118,7 +116,6 @@ object HipBusinessDetailsIntegrationTestConstants {
           ),
           "contextualTaxYear" -> "2015",
           "tradingSDate" -> "2017-01-01",
-          "cashOrAccrualsFlag" -> false,
           "seasonalFlag" -> true,
           "paperLessFlag" -> true,
           "firstAccountingPeriodEndDate" -> "2016-01-01",
@@ -136,8 +133,7 @@ object HipBusinessDetailsIntegrationTestConstants {
           "accPeriodSDate" -> "2017-06-01",
           "accPeriodEDate" -> "2018-05-31",
           "paperLessFlag" -> true,
-          "firstAccountingPeriodEndDate" -> "2017-06-01",
-          "cashOrAccrualsFlag" -> false
+          "firstAccountingPeriodEndDate" -> "2017-06-01"
         )
       )
     )
@@ -181,7 +177,6 @@ object HipBusinessDetailsIntegrationTestConstants {
         |            },
         |            "contextualTaxYear": "2015",
         |            "tradingStartDate": "2017-01-01",
-        |            "cashOrAccruals": false,
         |            "seasonal": true,
         |            "paperless": true,
         |            "firstAccountingPeriodEndDate": "2016-01-01",
@@ -202,8 +197,7 @@ object HipBusinessDetailsIntegrationTestConstants {
         |                "end": "2018-05-31"
         |            },
         |            "paperless": true,
-        |            "firstAccountingPeriodEndDate": "2017-06-01",
-        |            "cashOrAccruals": false
+        |            "firstAccountingPeriodEndDate": "2017-06-01"
         |        }
         |    ]
         |}""".stripMargin)

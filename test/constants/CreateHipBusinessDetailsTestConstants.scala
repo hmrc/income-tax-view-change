@@ -41,7 +41,6 @@ object CreateHipBusinessDetailsTestConstants {
           address = AddressDetails("10 FooBar Street", None, None, None, "GB", None),
           typeOfBusiness = "test business type",
           tradingStartDate = testDate,
-          cashAccrualsFlag = Some("C"),
           cessationDate = None,
           cessationReason = None
         )

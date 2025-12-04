@@ -46,7 +46,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
           fakePostRequest.withJsonBody(
             Json.toJson(
               CreateForeignPropertyIncomeSourceHipRequest(mtdbsa,
-                PropertyDetails(Some(testDate), Some("A"), testDate)
+                PropertyDetails(Some(testDate), testDate)
               )
             )
           )
@@ -93,7 +93,6 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
                     address = AddressDetails("10 FooBar Street", None, None, None, "GB", None),
                     typeOfBusiness = "",
                     tradingStartDate = testDate,
-                    cashAccrualsFlag = Some("C"),
                     cessationDate = None,
                     cessationReason = None
                   )
@@ -117,7 +116,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
           fakePostRequest.withJsonBody(
             Json.toJson(
               CreateForeignPropertyIncomeSourceHipRequest(mtdbsa,
-                PropertyDetails(Some(testDate), Some("A"), testDate)
+                PropertyDetails(Some(testDate), testDate)
               )
             )
           )
@@ -129,27 +128,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
             List(IncomeSource(testIncomeSourceId))
           )
       }
-
-      "a CreateForeignPropertyIncomeSourceRequest model as json body is sent with no cash or accurals flag" in {
-        mockAuth()
-        mockCreateIncomeSourceSuccessResponse()
-
-        val result = TestCreateBusinessDetailsController.createBusinessDetails()(
-          fakePostRequest.withJsonBody(
-            Json.toJson(
-              CreateForeignPropertyIncomeSourceHipRequest(mtdbsa,
-                PropertyDetails(Some(testDate), None, testDate)
-              )
-            )
-          )
-        )
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe
-          Json.toJson(
-            List(IncomeSource(testIncomeSourceId))
-          )
-      }
+      
       "a CreateUKPropertyIncomeSourceRequest model as json body is sent" in {
         mockAuth()
         mockCreateIncomeSourceSuccessResponse()
@@ -158,7 +137,7 @@ class CreateBusinessDetailsControllerSpec extends ControllerBaseSpec with MockMi
           fakePostRequest.withJsonBody(
             Json.toJson(
               CreateUKPropertyIncomeSourceHipRequest(mtdbsa,
-                PropertyDetails(Some(testDate), Some("C"), testDate)
+                PropertyDetails(Some(testDate), testDate)
               )
             )
           )

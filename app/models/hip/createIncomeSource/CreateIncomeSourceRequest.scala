@@ -43,7 +43,6 @@ object CreateIncomeSourceHipRequest {
 final case class CreateBusinessIncomeSourceHipRequest(mtdbsa: String, businessDetails: List[BusinessDetails]) extends CreateIncomeSourceHipRequest {
   require(mtdbsa.matches("^[A-Z]{4}[0-9]{11}$"), "MTDBSA ID should be of 11 characters and a specific format")
   require(businessDetails.length == 1, "Only single business can be created at a time")
-  require(businessDetails.head.cashAccrualsFlag.forall(_.matches("^[C | A]$")), "Accounting method must be capitalised")
 }
 
 case class BusinessDetails(accountingPeriodStartDate: String,
@@ -52,7 +51,6 @@ case class BusinessDetails(accountingPeriodStartDate: String,
                            address: AddressDetails,
                            typeOfBusiness: String,
                            tradingStartDate: String,
-                           cashAccrualsFlag: Option[String],
                            cessationDate: Option[String],
                            cessationReason: Option[String]
                           )
@@ -84,10 +82,8 @@ object AddressDetails {
 // *********************************************************************************************************************
 
 final case class PropertyDetails(tradingStartDate: Option[String],
-                                 cashAccrualsFlag: Option[String],
                                  startDate: String
                                 ) {
-  require(cashAccrualsFlag.forall(_.matches("^[C | A]$")), "Accounting method must be capitalised and single character")
   require(tradingStartDate.nonEmpty, "Trading start date must be provided")
   require(tradingStartDate.contains(startDate), "Trading start date and start date must be the same")
 }

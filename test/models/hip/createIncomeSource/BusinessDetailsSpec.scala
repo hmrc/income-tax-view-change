@@ -39,7 +39,6 @@ class BusinessDetailsSpec extends AnyWordSpec with Matchers {
         ),
         typeOfBusiness = "Software Development",
         tradingStartDate = "2020-01-15",
-        cashAccrualsFlag = Some("Y"),
         cessationDate = None,
         cessationReason = None
       )
@@ -58,8 +57,7 @@ class BusinessDetailsSpec extends AnyWordSpec with Matchers {
           "postcode" -> "AB12 3CD"
         ),
         "typeOfBusiness" -> "Software Development",
-        "tradingStartDate" -> "2020-01-15",
-        "cashAccrualsFlag" -> "Y"
+        "tradingStartDate" -> "2020-01-15"
       )
 
       json shouldBe expectedJson
@@ -80,7 +78,6 @@ class BusinessDetailsSpec extends AnyWordSpec with Matchers {
         ),
         "typeOfBusiness" -> "Software Development",
         "tradingStartDate" -> "2020-01-15",
-        "cashAccrualsFlag" -> JsNull,
         "cessationDate" -> "2025-05-01",
         "cessationReason" -> "Business closed"
       )
@@ -101,7 +98,6 @@ class BusinessDetailsSpec extends AnyWordSpec with Matchers {
         ),
         typeOfBusiness = "Software Development",
         tradingStartDate = "2020-01-15",
-        cashAccrualsFlag = None,
         cessationDate = Some("2025-05-01"),
         cessationReason = Some("Business closed")
       )
@@ -122,14 +118,12 @@ class BusinessDetailsSpec extends AnyWordSpec with Matchers {
         ),
         typeOfBusiness = "Retail",
         tradingStartDate = "2021-01-01",
-        cashAccrualsFlag = None,
         cessationDate = None,
         cessationReason = None
       )
 
       val json = Json.toJson(businessDetails)
-
-      (json \ "cashAccrualsFlag").asOpt[String] shouldBe None
+      
       (json \ "cessationDate").asOpt[String] shouldBe None
       (json \ "cessationReason").asOpt[String] shouldBe None
 

@@ -37,7 +37,6 @@ object HipBusinessDetailsTestConstants {
       contactDetails = Some(testContactDetailsModel),
       contextualTaxYear = Some("2015"),
       tradingStartDate = Some(LocalDate.parse("2017-01-01")),
-      cashOrAccruals = Some(false),
       seasonal = Some(true),
       cessation = Some(testCessationModel),
       paperless = Some(true),
@@ -77,7 +76,6 @@ object HipBusinessDetailsTestConstants {
       |  },
       |  "contextualTaxYear" : "2015",
       |  "tradingStartDate" : "2017-01-01",
-      |  "cashOrAccruals" : false,
       |  "seasonal" : true,
       |  "cessation" : {
       |    "date" : "2017-06-01"
@@ -109,7 +107,6 @@ object HipBusinessDetailsTestConstants {
     contactDetails = None,
     contextualTaxYear = None,
     tradingStartDate = None,
-    cashOrAccruals = Some(true),
     seasonal = None,
     cessation = None,
     paperless = None,
@@ -128,7 +125,6 @@ object HipBusinessDetailsTestConstants {
     "businessContactDetails" -> testContactDetailsJson,
     "contextualTaxYear" -> "2015",
     "tradingSDate" -> "2017-01-01",
-    "cashOrAccrualsFlag" -> false,
     "seasonalFlag" -> true,
     "cessationDate" -> "2017-06-01",
     "paperLessFlag" -> true,
@@ -155,7 +151,6 @@ object HipBusinessDetailsTestConstants {
     "contactDetails" -> testContactDetailsJson,
     "contextualTaxYear" -> "2015",
     "tradingStartDate" -> "2017-01-01",
-    "cashOrAccruals" -> false,
     "seasonal" -> true,
     "cessation" -> testCessationToJson,
     "paperless" -> true,
@@ -176,15 +171,13 @@ object HipBusinessDetailsTestConstants {
     "incomeSourceId" -> "111111111111111",
     "incomeSource" -> "Fruit Ltd",
     "accPeriodSDate" -> "2017-06-01",
-    "accPeriodEDate" -> "2018-05-31",
-    "cashOrAccrualsFlag" -> true
+    "accPeriodEDate" -> "2018-05-31"
   )
 
   val testMinimumBusinessDetailsToJson = Json.obj(
     "incomeSourceId" -> "111111111111111",
     "incomeSource" -> "Fruit Ltd",
-    "accountingPeriod" -> testAccountingPeriodToJson,
-    "cashOrAccruals" -> true
+    "accountingPeriod" -> testAccountingPeriodToJson
   )
 
 }

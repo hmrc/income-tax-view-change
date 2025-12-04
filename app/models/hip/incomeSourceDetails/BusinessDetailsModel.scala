@@ -30,7 +30,6 @@ case class BusinessDetailsModel(incomeSourceId: String,
                                 contactDetails: Option[ContactDetailsModel],
                                 contextualTaxYear: Option[String],
                                 tradingStartDate: Option[LocalDate],
-                                cashOrAccruals: Option[Boolean],
                                 seasonal: Option[Boolean],
                                 cessation: Option[CessationModel],
                                 paperless: Option[Boolean],
@@ -49,7 +48,6 @@ object BusinessDetailsModel extends CustomReads {
                       contactDetails: Option[ContactDetailsModel],
                       contextualTaxYear: Option[String],
                       tradingStartDate: Option[LocalDate],
-                      cashOrAccruals: Option[Boolean],
                       seasonal: Option[Boolean],
                       cessationDate: Option[LocalDate],
                       paperless: Option[Boolean],
@@ -65,7 +63,6 @@ object BusinessDetailsModel extends CustomReads {
       contactDetails,
       contextualTaxYear,
       tradingStartDate,
-      cashOrAccruals,
       seasonal,
       CessationModel.cessation(cessationDate),
       paperless,
@@ -83,7 +80,6 @@ object BusinessDetailsModel extends CustomReads {
       (__ \ "businessContactDetails").readNullable(ContactDetailsModel.reads) and
       (__ \ "contextualTaxYear").readNullable[String] and
       (__ \ "tradingSDate").readNullable[LocalDate] and
-      (__ \ "cashOrAccrualsFlag").readNullable[Boolean] and
       (__ \ "seasonalFlag").readNullable[Boolean] and
       (__ \ "cessationDate").readNullable[LocalDate] and
       (__ \ "paperLessFlag").readNullable[Boolean] and
