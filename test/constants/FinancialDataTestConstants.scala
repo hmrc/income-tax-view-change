@@ -398,7 +398,6 @@ object FinancialDataTestConstants {
     amountCodedOut = Some(340.55),
     totalBCDBalance = None,
     unallocatedCredit = None,
-    allocatedCredit = None,
     totalCredit = Some(123.00),
     firstPendingAmountRequested = Some(120.00),
     secondPendingAmountRequested = None,

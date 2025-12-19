@@ -30,7 +30,6 @@ class CreditsModelSpec extends TestSupport with Matchers {
 
       val chargesResponse = AChargesResponse()
         .withAvailableCredit(200.0)
-        .withAllocatedOverdueCredit(100.0)
         .withAllocatedFutureCredit(300.00)
         .withUnallocatedCredit(250.0)
         .withTotalCredit(150.0)
@@ -48,7 +47,6 @@ class CreditsModelSpec extends TestSupport with Matchers {
       val json = Json.toJson(creditsModel)
 
       (json \ "availableCreditForRepayment").get shouldBe JsNumber(200.0)
-      (json \ "allocatedCredit").get shouldBe JsNumber(100.0)
       (json \ "allocatedCreditForFutureCharges").get shouldBe JsNumber(300.0)
       (json \ "unallocatedCredit").get shouldBe JsNumber(250.0)
       (json \ "totalCredit").get shouldBe JsNumber(150.0)
