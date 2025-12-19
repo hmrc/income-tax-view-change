@@ -69,13 +69,8 @@ object CreditsModel {
   }
 
   def fromHipChargesResponse(chargesResponse: ChargesHipResponse): CreditsModel = {
-    val availableCredit: Option[BigDecimal] = chargesResponse.balanceDetails.availableCredit match {
-      //Logic deprecated after R18, should just read from totalCreditAvailableForRepayment
-      case Some(value) => Some(value)
-      case None => chargesResponse.balanceDetails.totalCreditAvailableForRepayment
-    }
     CreditsModel(
-      availableCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.totalCreditAvailableForRepayment.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.allocatedCredit.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.allocatedCreditForFutureCharges.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.unallocatedCredit.map(_.abs).getOrElse(0.0),

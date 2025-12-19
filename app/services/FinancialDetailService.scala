@@ -39,12 +39,7 @@ class FinancialDetailService @Inject()(val hipConnector: FinancialDetailsHipConn
       hipConnector.getChargeDetails(nino, fromDate, toDate)
         .collect{
           case Right(charges) =>
-            val cred = charges.balanceDetails.availableCredit match {
-              case Some(value) => Some(value)
-              case None => charges.balanceDetails.totalCreditAvailableForRepayment
-            }
-            val x = charges.copy(balanceDetails = charges.balanceDetails.copy(totalCreditAvailableForRepayment = cred))
-            Right(Json.toJson(x))
+            Right(Json.toJson(charges))
           case Left(err) =>
            Left(err)
         }

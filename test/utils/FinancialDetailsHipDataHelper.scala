@@ -98,20 +98,8 @@ trait FinancialDetailsHipDataHelper {
   val chargeHipDef : ChargesHipResponse = ChargesHipResponse(testTaxPayerHipDetails,
     testBalanceHipDetails, List(testCodingDetailsHip),
     documentDetails, financialDetails)
-  val chargeHipDefAvailableCredit : ChargesHipResponse = ChargesHipResponse(testTaxPayerHipDetails,
-    testBalanceHipDetails.copy(totalCreditAvailableForRepayment = None, availableCredit = Some(99.00)), List(testCodingDetailsHip),
-    documentDetails, financialDetails)
-  val chargeHipDefTotalAvailableCredit : ChargesHipResponse = ChargesHipResponse(testTaxPayerHipDetails,
-    testBalanceHipDetails.copy(totalCreditAvailableForRepayment = Some(100.00), availableCredit = None), List(testCodingDetailsHip),
-    documentDetails, financialDetails)
-  val chargeHipDefBothAvailableCredits : ChargesHipResponse = ChargesHipResponse(testTaxPayerHipDetails,
-    testBalanceHipDetails.copy(totalCreditAvailableForRepayment = Some(99.00), availableCredit = Some(99.00)), List(testCodingDetailsHip),
-    documentDetails, financialDetails)
 
   val successResponse: Right[Nothing, ChargesHipResponse] = Right(chargeHipDef)
-  val successResponseTotalAvailableCredit: Right[Nothing, ChargesHipResponse] = Right(chargeHipDefTotalAvailableCredit)
-  val successResponseAvailableCredit: Right[Nothing, ChargesHipResponse] = Right(chargeHipDefAvailableCredit)
-  val successResponseBothAvailableCredits: Right[Nothing, ChargesHipResponse] = Right(chargeHipDefBothAvailableCredits)
 
 
 }
