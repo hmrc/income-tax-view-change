@@ -42,7 +42,6 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "overDueAmount" : 0,
                |    "totalBalance" : 0,
                |    "totalCreditAvailableForRepayment" : 200,
-               |    "allocatedCredit" : 100,
                |    "allocatedCreditForChargesBecomingDueIn30Days" : 150,
                |    "totalCredit" : 175,
                |    "unallocatedCredit" : 125,
@@ -151,7 +150,6 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
 
         val expectedResponse = CreditsModel.fromHipChargesResponse(AChargesResponse()
           .withAvailableCredit(200.0)
-          .withAllocatedOverdueCredit(100.0)
           .withAllocatedFutureCredit(150.0)
           .withTotalCredit(175.0)
           .withUnallocatedCredit(125.0)

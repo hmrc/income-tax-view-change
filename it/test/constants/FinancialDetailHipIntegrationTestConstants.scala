@@ -36,7 +36,6 @@ object FinancialDetailHipIntegrationTestConstants {
     amountCodedOut = None,
     totalBCDBalance = None,
     unallocatedCredit = Some(400.00),
-    allocatedCredit = None,
     allocatedCreditForFutureCharges = None,
     totalCredit = None,
     firstPendingAmountRequested = None,
