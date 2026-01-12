@@ -17,8 +17,8 @@
 package controllers
 
 import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
-import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
-import constants.ITSAStatusIntegrationTestConstants._
+import connectors.itsastatus.OptOutUpdateRequestModel.{ErrorItem, OptOutUpdateRequest, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess, optOutUpdateReason}
+import constants.ITSAStatusIntegrationTestConstants.*
 import helpers.ComponentSpecBase
 import helpers.servicemocks.HipITSAStatusStub
 import models.hip.ITSAStatusHipApi
@@ -148,14 +148,14 @@ class HipITSAStatusControllerISpec extends ComponentSpecBase {
 
           val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
           val headers = Map(CorrelationIdHeader -> "123")
-          HipITSAStatusStub.stubPutHipITSAStatusUpdate(Status.INTERNAL_SERVER_ERROR, expectedResponse, headers)
+          HipITSAStatusStub.stubPutHipITSAStatusUpdate(Status.NOT_FOUND, expectedResponse, headers)
 
           val request = OptOutUpdateRequest(optOutTaxYear, optOutUpdateReason)
           val result = IncomeTaxViewChange.updateItsaStatus(taxableEntityId, Json.toJson(request))
 
           result should have(
             httpStatus(Status.INTERNAL_SERVER_ERROR),
-            bodyMatching(expectedResponse)
+            bodyMatching(Json.toJson(OptOutUpdateResponseFailure("123", 500, List(ErrorItem("INTERNAL_SERVER_ERROR", "Unexpected response status: 404")))).toString)
           )
         }
       }
