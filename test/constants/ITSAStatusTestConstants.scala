@@ -112,8 +112,72 @@ object ITSAStatusTestConstants {
       |  }]
       |""".stripMargin)
 
+  val badRequestPutITSAStatusResponseJson = Json.parse(
+    """
+      |{
+      |  "origin": "HIP",
+      |  "response": [
+      |    {
+      |      "type": "Type of Failure",
+      |      "reason": "Reason for Failure"
+      |    }
+      |  ]
+      |}
+      |""".stripMargin
+  )
+
+  val unprocessableEntityPutITSAStatusResponseJson = Json.parse(
+    """
+      |[
+      |  {
+      |    "errorCode": "6001",
+      |    "errorDescription": "string"
+      |  }
+      |]
+      |""".stripMargin
+  )
+
+  val internalServerErrorPutITSAStatusResponseJson = Json.parse(
+    """
+      |{
+      |  "origin": "HIP",
+      |  "response": {
+      |    "failures": [
+      |      {
+      |        "type": "string",
+      |        "reason": "string"
+      |      }
+      |    ]
+      |  }
+      |}
+      |""".stripMargin
+  )
+
+  val serviceUnavalablePutITSAStatusResponseJson = Json.parse(
+    """
+      |{
+      |  "origin": "HIP",
+      |  "response": {
+      |    "failures": [
+      |      {
+      |        "type": "string",
+      |        "reason": "string"
+      |      }
+      |    ]
+      |  }
+      |}
+      |""".stripMargin
+  )
+
   val successHttpResponse = HttpResponse(Status.OK, Json.arr(successITSAStatusResponseJson), Map.empty)
   val errorHttpResponse = HttpResponse(Status.BAD_REQUEST, "Dummy message", Map.empty)
   val notFoundHttpResponse = HttpResponse(Status.NOT_FOUND, "Dummy message", Map.empty)
   val badJsonHttpResponse = HttpResponse(Status.OK, Json.obj(), Map.empty)
+
+  val putSuccessHttpResponse = HttpResponse(Status.NO_CONTENT, "", Map("CorrelationId" -> Seq("test-correlation-id")))
+  val putBadRequestHttpResponse = HttpResponse(Status.BAD_REQUEST, badRequestPutITSAStatusResponseJson, Map("CorrelationId" -> Seq("test-correlation-id")))
+  val putUnprocessableEntityHttpResponse = HttpResponse(Status.UNPROCESSABLE_ENTITY, unprocessableEntityPutITSAStatusResponseJson, Map("CorrelationId" -> Seq("test-correlation-id")))
+  val putInternalServerErrorHttpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, internalServerErrorPutITSAStatusResponseJson, Map("CorrelationId" -> Seq("test-correlation-id")))
+  val putServiceUnavailableHttpResponse = HttpResponse(Status.SERVICE_UNAVAILABLE, serviceUnavalablePutITSAStatusResponseJson, Map("CorrelationId" -> Seq("test-correlation-id")))
+  
 }

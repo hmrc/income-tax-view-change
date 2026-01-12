@@ -104,10 +104,10 @@ class ITSAStatusConnectorISpec extends ComponentSpecBase {
         "return an OptOutUpdateResponseFailure when there has been an error with the request" in {
           val expectedResponse = Json.toJson(OptOutUpdateResponseFailure.defaultFailure(correlationId)).toString()
           val headers = Map("correlationId" -> correlationId)
-          WiremockHelper.stubPutWithHeaders(updateRequestUrl, INTERNAL_SERVER_ERROR, expectedResponse, headers)
+          WiremockHelper.stubPutWithHeaders(updateRequestUrl, NOT_FOUND, expectedResponse, headers)
           val result = connector.requestOptOutForTaxYear(taxableEntityId, request).futureValue
 
-          result shouldBe OptOutUpdateResponseFailure.defaultFailure(correlationId)
+          result shouldBe OptOutUpdateResponseFailure("123-456-789", 500, List(ErrorItem("INTERNAL_SERVER_ERROR", "Unexpected response status: 404")))
         }
       }
     }

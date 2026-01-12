@@ -17,9 +17,11 @@
 package connectors
 
 import connectors.hip.ITSAStatusConnector
-import constants.ITSAStatusTestConstants._
+import connectors.itsastatus.OptOutUpdateRequestModel.{ErrorItem, OptOutUpdateRequest, OptOutUpdateResponse, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
+import constants.ITSAStatusTestConstants.*
 import mocks.MockHttpV2
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseModel}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -62,4 +64,41 @@ class ITSAStatusConnectorSpec extends TestSupport with MockHttpV2 {
     }
   }
 
+  "ITSAStatusConnector.requestOptOutForTaxYear" should {
+    import TestITSAStatusConnector._
+
+    lazy val putMock = setupMockHttpV2PutWithHeaderCarrier[HttpResponse](updateItsaStatusUrl(""))(_)
+    def requestOptOutForTaxYearCall: Future[OptOutUpdateResponse] = requestOptOutForTaxYear("", OptOutUpdateRequest("", ""))
+
+    "return Status (NO_CONTENT) and a JSON body when successful" in {
+      putMock(putSuccessHttpResponse)
+      requestOptOutForTaxYearCall.futureValue shouldBe OptOutUpdateResponseSuccess("test-correlation-id")
+    }
+
+    "return OptOutUpdateResponseFailure when the downstream returns a 400" in {
+      putMock(putBadRequestHttpResponse)
+      requestOptOutForTaxYearCall.futureValue shouldBe OptOutUpdateResponseFailure("test-correlation-id", 400, List(ErrorItem("Type of Failure", "Reason for Failure")))
+    }
+
+    "return OptOutUpdateResponseFailure when the downstream returns a 422" in {
+      putMock(putUnprocessableEntityHttpResponse)
+      requestOptOutForTaxYearCall.futureValue shouldBe OptOutUpdateResponseFailure("test-correlation-id", 422, List(ErrorItem("6001", "string")))
+    }
+
+    "return OptOutUpdateResponseFailure when the downstream returns a 500" in {
+      putMock(putInternalServerErrorHttpResponse)
+      requestOptOutForTaxYearCall.futureValue shouldBe OptOutUpdateResponseFailure("test-correlation-id", 500, List(ErrorItem("string", "string")))
+    }
+
+    "return OptOutUpdateResponseFailure when the downstream returns a 503" in {
+      putMock(putServiceUnavailableHttpResponse)
+      requestOptOutForTaxYearCall.futureValue shouldBe OptOutUpdateResponseFailure("test-correlation-id", 503, List(ErrorItem("string", "string")))
+    }
+
+    "return OptOutUpdateResponseFailure for other error scenarios" in {
+      val httpResponse = HttpResponse(NOT_FOUND, "", Map("CorrelationId" -> Seq("test-correlation-id")))
+      putMock(httpResponse)
+      requestOptOutForTaxYearCall.futureValue shouldBe OptOutUpdateResponseFailure("test-correlation-id", INTERNAL_SERVER_ERROR, List(ErrorItem("INTERNAL_SERVER_ERROR", "Unexpected response status: 404")))
+    }
+  }
 }

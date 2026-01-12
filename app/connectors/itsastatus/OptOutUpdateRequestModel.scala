@@ -31,6 +31,15 @@ object OptOutUpdateRequestModel {
   case class ErrorItem(code: String, reason: String)
   case class OptOutUpdateResponseFailure(correlationId: String, statusCode: Int, failures: List[ErrorItem]) extends OptOutUpdateResponse
 
+  case class OptOutTypeErrorItem(`type`: String, reason: String)
+
+  case class OptOutBadRequestFailure(origin: String, response: List[OptOutTypeErrorItem])
+
+  case class OptOutResponseModel(failures: List[OptOutTypeErrorItem])
+  case class OptOutBackendFailure(origin: String, response: OptOutResponseModel)
+
+  case class OptOutUnprocessableEntityFailure(errorCode: String, errorDescription: String)
+
   object OptOutUpdateResponseFailure {
     def defaultFailure(correlationId: String = "unknown",
                        message: String = "Request failed due to unknown error"): OptOutUpdateResponseFailure =
@@ -45,4 +54,9 @@ object OptOutUpdateRequestModel {
   implicit val formatFailure: Format[OptOutUpdateResponseFailure] = Json.format[OptOutUpdateResponseFailure]
   implicit val format: Format[OptOutUpdateRequest] = Json.format[OptOutUpdateRequest]
 
+  implicit val formatOptOutTypeErrorItemModel: Format[OptOutTypeErrorItem] = Json.format[OptOutTypeErrorItem]
+  implicit val formatBadRequestFailure: Format[OptOutBadRequestFailure] = Json.format[OptOutBadRequestFailure]
+  implicit val formatOptOutResponseModel: Format[OptOutResponseModel] = Json.format[OptOutResponseModel]
+  implicit val formatOptOutBackendFailure: Format[OptOutBackendFailure] = Json.format[OptOutBackendFailure]
+  implicit val formatOptOutUnprocessableEntityFailure: Format[OptOutUnprocessableEntityFailure] = Json.format[OptOutUnprocessableEntityFailure]
 }
