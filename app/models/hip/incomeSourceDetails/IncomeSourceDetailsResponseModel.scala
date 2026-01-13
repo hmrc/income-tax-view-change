@@ -25,6 +25,7 @@ case class IncomeSourceDetailsModel(
                                      nino: String,
                                      mtdbsa: String,
                                      yearOfMigration: Option[String],
+                                     channel: Option[List[ChannelTypes]] = None,
                                      businesses: List[BusinessDetailsModel],
                                      properties: List[PropertyDetailsModel]
                                    ) extends IncomeSourceDetailsResponseModel
@@ -38,6 +39,7 @@ object IncomeSourceDetailsModel {
   def applyWithFields(nino: String,
                       mtdbsa: String,
                       yearOfMigration: Option[String],
+                      channel: String,
                       businessData: Option[List[BusinessDetailsModel]],
                       propertyData: Option[List[PropertyDetailsModel]]): IncomeSourceDetailsModel = {
     val businessDetails = businessData match {
@@ -48,19 +50,32 @@ object IncomeSourceDetailsModel {
       case Some(data) => data
       case None => List()
     }
+    
     IncomeSourceDetailsModel(
       nino,
       mtdbsa,
       yearOfMigration,
+      channel,
       businessDetails,
       propertyDetails
     )
   }
 
+  val channelMapping = Map(
+    "1" -> "Customer-led",
+    "2" -> "Hmrc-led-unconfirmed",
+    "3" -> "Hmrc-led-confirmed"
+  )
+
+  val convertChannelToReadableString: Reads[String] = {
+    implicitly[Reads[String]].map(channelMapping.getOrElse(_, "Customer-led"))
+  }
+  
   implicit val ifReads: Reads[IncomeSourceDetailsModel] = (
     (__ \ "success" \ "taxPayerDisplayResponse" \ "nino").read[String] and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "mtdId").read[String] and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "yearOfMigration").readNullable[String] and
+      (__ \ "success" \ "taxPayerDisplayResponse" \ "channel").read[String](convertChannelToReadableString) and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "businessData").readNullable(Reads.list(BusinessDetailsModel.reads)) and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.reads))
     )(IncomeSourceDetailsModel.applyWithFields _)
