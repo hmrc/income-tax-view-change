@@ -25,7 +25,7 @@ case class IncomeSourceDetailsModel(
                                      nino: String,
                                      mtdbsa: String,
                                      yearOfMigration: Option[String],
-                                     channel: Option[List[ChannelTypes]] = None,
+                                     channel: String,
                                      businesses: List[BusinessDetailsModel],
                                      properties: List[PropertyDetailsModel]
                                    ) extends IncomeSourceDetailsResponseModel
@@ -75,7 +75,7 @@ object IncomeSourceDetailsModel {
     (__ \ "success" \ "taxPayerDisplayResponse" \ "nino").read[String] and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "mtdId").read[String] and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "yearOfMigration").readNullable[String] and
-      (__ \ "success" \ "taxPayerDisplayResponse" \ "channel").read[String](convertChannelToReadableString) and
+      (__ \ "success" \ "taxPayerDisplayResponse" \ "channel").readNullable[String](convertChannelToReadableString).map(_.getOrElse("")) and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "businessData").readNullable(Reads.list(BusinessDetailsModel.reads)) and
       (__ \ "success" \ "taxPayerDisplayResponse" \ "propertyData").readNullable(Reads.list(PropertyDetailsModel.reads))
     )(IncomeSourceDetailsModel.applyWithFields _)
