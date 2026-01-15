@@ -61,7 +61,7 @@ object HipIncomeSourceDetailsTestConstants {
                |  "nino" : "BB123456A",
                |  "mtdbsa" : "XIAT0000000000A",
                |  "yearOfMigration" : "2019",
-               |  "channel" : "Customer-led"
+               |  "channel" : "Customer-led",
                |  "businesses" : [ {
                |    "incomeSourceId" : "111111111111111",
                |    "incomeSource" : "Fruit Ltd",
