@@ -31,7 +31,7 @@ object HipIncomeSourceDetailsTestConstants {
     nino = testNino,
     mtdbsa = testMtdId,
     yearOfMigration = Some("2019"),
-   // channel = List(testChannelTypes),
+    channel = "Customer-led",
     businesses = List(testBusinessDetailsModel, testMinimumBusinessDetailsModel),
     properties = List(testPropertyDetailsModel)
   )
@@ -40,7 +40,7 @@ object HipIncomeSourceDetailsTestConstants {
     nino = testNino,
     mtdbsa = testMtdId,
     yearOfMigration = None,
-    // channel = List() = None,
+    channel = "Customer-led",
     businesses = List(),
     properties = List()
   )
@@ -51,7 +51,7 @@ object HipIncomeSourceDetailsTestConstants {
       "safeId" -> "XAIT12345678908",
       "nino" -> testNino,
       "mtdId" -> testMtdId,
-     // "channel" -> 
+      "channel" -> "Customer-led",
       "yearOfMigration" -> "2019",
       "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
       "propertyData" -> Json.arr(testPropertyDetailsJson))
@@ -61,7 +61,7 @@ object HipIncomeSourceDetailsTestConstants {
                |  "nino" : "BB123456A",
                |  "mtdbsa" : "XIAT0000000000A",
                |  "yearOfMigration" : "2019",
-               |  "channel" : "1"
+               |  "channel" : "Customer-led"
                |  "businesses" : [ {
                |    "incomeSourceId" : "111111111111111",
                |    "incomeSource" : "Fruit Ltd",
