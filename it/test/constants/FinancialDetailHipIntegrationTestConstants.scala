@@ -61,6 +61,7 @@ object FinancialDetailHipIntegrationTestConstants {
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
+    latePaymentInterestAmount = Some(201.00),
     lpiWithDunningLock = Some(12.50),
     interestOutstandingAmount = Some(31.00),
     amountCodedOut = Some(3.21))
