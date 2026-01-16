@@ -40,7 +40,7 @@ object HipIncomeSourceDetailsTestConstants {
     nino = testNino,
     mtdbsa = testMtdId,
     yearOfMigration = None,
-    channel = "",
+    channel = "Customer-led",
     businesses = List(),
     properties = List()
   )
