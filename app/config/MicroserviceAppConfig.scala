@@ -16,7 +16,7 @@
 
 package config
 
-import models.hip.{CreateIncomeSourceHipApi, GetBusinessDetailsHipApi, GetChargeHistoryHipApi, HipApi}
+import models.hip.{CreateIncomeSourceHipApi, GetBusinessDetailsHipApi, GetChargeHistoryHipApi, HipApi, UpdateCustomerFactHipApi}
 import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import utils.DateUtils
@@ -74,7 +74,7 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
   def getHIPHeaders(hipApi: HipApi, messageTypeHeaderValue: Option[String] = None): Seq[(String, String)] = {
     val additionalHeaders: Seq[(String, String)] = {
       hipApi match {
-        case GetBusinessDetailsHipApi =>
+        case GetBusinessDetailsHipApi | GetChargeHistoryHipApi | UpdateCustomerFactHipApi =>
           Seq(
             ("X-Originating-System", "MDTPITVC"),
             ("X-Receipt-Date", DateUtils.nowAsUtc),
@@ -86,13 +86,6 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
             ("X-Originating-System", "MDTPITVC"),
             ("X-Receipt-Date", DateUtils.nowAsUtc),
             ("X-Regime", "ITSA"),
-            ("X-Transmitting-System", "HIP")
-          )
-        case GetChargeHistoryHipApi =>
-          Seq(
-            ("X-Originating-System", "MDTPITVC"),
-            ("X-Receipt-Date", DateUtils.nowAsUtc),
-            ("X-Regime-Type", "ITSA"),
             ("X-Transmitting-System", "HIP")
           )
         case _ => Seq.empty
