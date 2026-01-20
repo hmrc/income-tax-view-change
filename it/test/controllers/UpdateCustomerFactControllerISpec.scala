@@ -18,7 +18,7 @@ package controllers
 
 import helpers.ComponentSpecBase
 import helpers.servicemocks.HipUpdateCustomerFactStub
-import play.api.http.Status.{OK, UNPROCESSABLE_ENTITY, UNAUTHORIZED}
+import play.api.http.Status.{OK, UNAUTHORIZED, UNPROCESSABLE_ENTITY}
 
 class UpdateCustomerFactControllerISpec extends ComponentSpecBase {
 
