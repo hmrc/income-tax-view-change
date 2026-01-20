@@ -34,7 +34,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 object UpdateCustomerFactConnector {
-  val CorrelationIdHeader = "correlationId"
+  val CorrelationIdHeader = "correlationid"
 }
 
 class UpdateCustomerFactConnector @Inject()(val http: HttpClientV2,
