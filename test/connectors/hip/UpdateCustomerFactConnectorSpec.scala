@@ -21,8 +21,11 @@ import models.hip.UpdateCustomerFactHipApi
 import play.api.http.Status
 import play.api.http.Status.{OK, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{JsValue, Json}
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
+
+import scala.concurrent.Future
 
 class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
@@ -74,7 +77,11 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
     "return a OK response" when {
       "calling updateCustomerFactsToConfirmed with a valid MTDSA ID" in {
         mockUrl5170(httpSuccessResponse)
-        TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue.header.status shouldBe Status.OK
+
+        val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+        result.header.status shouldBe OK
+        contentAsJson(Future.successful(result)) shouldBe successResponse
       }
     }
 

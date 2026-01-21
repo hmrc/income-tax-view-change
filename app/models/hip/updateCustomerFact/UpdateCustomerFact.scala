@@ -32,6 +32,12 @@ object UpdateCustomerFactRequest {
   implicit val format: Format[UpdateCustomerFactRequest] = Json.format[UpdateCustomerFactRequest]
 }
 
+case class UpdateCustomerFactResponse(processingDateTime: String) extends UpdateCustomerFact
+
+object UpdateCustomerFactResponse {
+  implicit val format: Format[UpdateCustomerFactResponse] = Json.format[UpdateCustomerFactResponse]
+}
+
 case class ErrorResponse(error: Error)
 
 object ErrorResponse {

@@ -19,7 +19,7 @@ package connectors.hip
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
 import models.hip.UpdateCustomerFactHipApi
-import models.hip.updateCustomerFact.{ErrorResponse, ErrorsResponse, UpdateCustomerFactRequest}
+import models.hip.updateCustomerFact.{ErrorResponse, ErrorsResponse, UpdateCustomerFactRequest, UpdateCustomerFactResponse}
 import play.api.Logging
 import play.api.http.Status.*
 import play.api.libs.json.Json
@@ -66,8 +66,16 @@ class UpdateCustomerFactConnector @Inject()(
 
         response.status match {
           case OK =>
-            logger.info("Customer fact successfully updated to Confirmed")
-            Ok
+            response.json.validate[UpdateCustomerFactResponse].fold(
+              invalid => {
+                logger.warn(s"Customer fact updated (200) but response didn't match expected schema. CorrelationId: $correlationId, errors: $invalid, body: ${response.json}")
+                Ok(response.json)
+              },
+              _ => {
+                logger.info(s"Customer fact successfully updated to Confirmed. CorrelationId: $correlationId")
+                Ok(response.json)
+              }
+            )
           case BAD_REQUEST =>
             logger.error(s"Bad request while updating customer facts. CorrelationId: $correlationId, Reason: ${response.json.toString}")
             BadRequest
