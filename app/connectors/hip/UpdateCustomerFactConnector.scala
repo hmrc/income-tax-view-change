@@ -18,7 +18,6 @@ package connectors.hip
 
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
-import connectors.hip.UpdateCustomerFactConnector.CorrelationIdHeader
 import models.hip.UpdateCustomerFactHipApi
 import models.hip.updateCustomerFact.{ErrorResponse, ErrorsResponse, UpdateCustomerFactRequest}
 import play.api.Logging
@@ -33,26 +32,38 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-object UpdateCustomerFactConnector {
-  val CorrelationIdHeader = "correlationid"
-}
+class UpdateCustomerFactConnector @Inject()(
+                                             val http: HttpClientV2,
+                                             val appConfig: MicroserviceAppConfig
+                                           )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {
 
-class UpdateCustomerFactConnector @Inject()(val http: HttpClientV2,
-                                    val appConfig: MicroserviceAppConfig
-                                   )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {
+  private val CorrelationIdHeader = "correlationid"
 
-  val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(UpdateCustomerFactHipApi)
-
+  private val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(UpdateCustomerFactHipApi)
   private val updateCustomerFactsUrl: String = s"${appConfig.hipUrl}/etmp/RESTAdapter/customer/facts"
+
+  private final val IdTypeMTDBSA = "MTDBSA"
+  private final val RegimeTypeITSA = "ITSA"
+  private final val FactIdZORIGIN = "ZORIGIN"
+  private final val ValueConfirmed = "C"
 
   def updateCustomerFactsToConfirmed(mtdsa: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {
 
+    val request = UpdateCustomerFactRequest(
+      idType = IdTypeMTDBSA,
+      idValue = mtdsa,
+      regimeType = RegimeTypeITSA,
+      factId = FactIdZORIGIN,
+      value = ValueConfirmed
+    )
+
     http.put(url"$updateCustomerFactsUrl")
-      .withBody(Json.toJson[UpdateCustomerFactRequest](UpdateCustomerFactRequest(idValue = mtdsa)))
+      .withBody(Json.toJson(request))
       .setHeader(hipHeaders: _*)
       .execute[HttpResponse]
       .map { response =>
-        val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
+        val correlationId = response.headers.get(CorrelationIdHeader).flatMap(_.headOption).getOrElse(s"Unknown_$CorrelationIdHeader")
+
         response.status match {
           case OK =>
             logger.info("Customer fact successfully updated to Confirmed")

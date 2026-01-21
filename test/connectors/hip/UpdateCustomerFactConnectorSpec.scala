@@ -16,7 +16,6 @@
 
 package connectors.hip
 
-import connectors.hip.UpdateCustomerFactConnector.CorrelationIdHeader
 import mocks.MockHttpV2
 import models.hip.UpdateCustomerFactHipApi
 import play.api.http.Status
@@ -26,6 +25,8 @@ import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
 class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
+
+  private val CorrelationIdHeader = "correlationid"
 
   object TestUpdateCustomerFactConnector extends UpdateCustomerFactConnector(mockHttpClientV2, microserviceAppConfig)
   val platform: String = microserviceAppConfig.hipUrl

@@ -20,15 +20,13 @@ import play.api.libs.json.*
 
 sealed trait UpdateCustomerFact
 
-case class UpdateCustomerFactRequest(idType: String = "MTDBSA",
-                                     idValue: String,
-                                     regimeType: String = "ITSA",
-                                     factId: String = "ZORIGIN",
-                                     value: String = "C"
-                                    ) extends UpdateCustomerFact {
-
-}
-
+case class UpdateCustomerFactRequest(
+                                      idType: String,
+                                      idValue: String,
+                                      regimeType: String,
+                                      factId: String,
+                                      value: String
+                                    ) extends UpdateCustomerFact
 
 object UpdateCustomerFactRequest {
   implicit val format: Format[UpdateCustomerFactRequest] = Json.format[UpdateCustomerFactRequest]
