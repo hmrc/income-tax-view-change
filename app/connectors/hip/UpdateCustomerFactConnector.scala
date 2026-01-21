@@ -22,15 +22,16 @@ import models.hip.UpdateCustomerFactHipApi
 import models.hip.updateCustomerFact.{ErrorResponse, ErrorsResponse, UpdateCustomerFactRequest, UpdateCustomerFactResponse}
 import play.api.Logging
 import play.api.http.Status.*
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.writeableOf_JsValue
 import play.api.mvc.Result
-import play.api.mvc.Results.{BadRequest, InternalServerError, Ok, UnprocessableEntity}
+import play.api.mvc.Results.{Ok, Status, UnprocessableEntity}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class UpdateCustomerFactConnector @Inject()(
                                              val http: HttpClientV2,
@@ -46,6 +47,14 @@ class UpdateCustomerFactConnector @Inject()(
   private final val RegimeTypeITSA = "ITSA"
   private final val FactIdZORIGIN = "ZORIGIN"
   private final val ValueConfirmed = "C"
+
+  private def responseJsonOpt(response: HttpResponse): Option[JsValue] =
+    Try(Json.parse(response.body)).toOption
+
+  private def resultWithBody(status: Int, response: HttpResponse): Result =
+    responseJsonOpt(response)
+      .map(json => Status(status)(json))
+      .getOrElse(Status(status)(response.body))
 
   def updateCustomerFactsToConfirmed(mtdsa: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {
 
@@ -68,7 +77,10 @@ class UpdateCustomerFactConnector @Inject()(
           case OK =>
             response.json.validate[UpdateCustomerFactResponse].fold(
               invalid => {
-                logger.warn(s"Customer fact updated (200) but response didn't match expected schema. CorrelationId: $correlationId, errors: $invalid, body: ${response.json}")
+                logger.warn(
+                  s"Customer fact updated (200) but response didn't match expected schema. " +
+                    s"CorrelationId: $correlationId, errors: $invalid, body: ${response.json}"
+                )
                 Ok(response.json)
               },
               _ => {
@@ -77,28 +89,36 @@ class UpdateCustomerFactConnector @Inject()(
               }
             )
           case BAD_REQUEST =>
-            logger.error(s"Bad request while updating customer facts. CorrelationId: $correlationId, Reason: ${response.json.toString}")
-            BadRequest
+            logger.error(s"Bad request while updating customer facts. CorrelationId: $correlationId, body: ${response.body}")
+            resultWithBody(BAD_REQUEST, response)
           case UNPROCESSABLE_ENTITY =>
-            response.json.validate[ErrorResponse].orElse(response.json.validate[ErrorsResponse]).fold(
-              invalid => {
-                logger.error(s"Unexpected response with status code: $UNPROCESSABLE_ENTITY, response: $invalid, CorrelationId: $correlationId")
-                UnprocessableEntity
-              },
-              {
-                case expected@(_: ErrorResponse) =>
-                  logger.error(s"Business Error Unprocessable. CorrelationId: $correlationId, " +
-                    s"LogId:${expected.error.logID}, Code: ${expected.error.code}, Message: ${expected.error.message}")
-                  UnprocessableEntity
-                case expected@(_: ErrorsResponse) =>
-                  logger.error(s"Business Error Unprocessable. CorrelationId: $correlationId, " +
-                    s"Code: ${expected.errors.code}, Message: ${expected.errors.text}")
-                  UnprocessableEntity
+            val payload: JsValue = responseJsonOpt(response).getOrElse(Json.obj("raw" -> response.body))
+            payload.validate[ErrorResponse].fold(
+              _ => payload.validate[ErrorsResponse].fold(
+                invalid => {
+                  logger.error(s"Business Error Unprocessable but payload didn't match expected schemas." +
+                    s"CorrelationId: $correlationId, errors: $invalid, body: $payload")
+                  UnprocessableEntity(payload)
+                },
+                ers => {
+                  logger.error(s"Business Error Unprocessable." +
+                    s"CorrelationId: $correlationId, Code: ${ers.errors.code}, Message: ${ers.errors.text}")
+                  UnprocessableEntity(payload)
+                }
+              ),
+              er => {
+                logger.error(s"Business Error Unprocessable." +
+                  s"CorrelationId: $correlationId, LogId: ${er.error.logID}, Code: ${er.error.code}, Message: ${er.error.message}")
+                UnprocessableEntity(payload)
               }
             )
+          case INTERNAL_SERVER_ERROR | SERVICE_UNAVAILABLE =>
+            logger.error(s"HIP error while updating customer facts." +
+              s"CorrelationId: $correlationId, status: ${response.status}, body: ${response.body}")
+            resultWithBody(response.status, response)
           case status =>
             logger.error(s"Unexpected response CorrelationId: $correlationId, status: $status, body: ${response.body}")
-            InternalServerError
+            resultWithBody(status, response)
         }
       }
   }

@@ -17,7 +17,6 @@
 package connectors.hip
 
 import mocks.MockHttpV2
-import models.hip.UpdateCustomerFactHipApi
 import play.api.http.Status
 import play.api.http.Status.{OK, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{JsValue, Json}
@@ -34,7 +33,6 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
   object TestUpdateCustomerFactConnector extends UpdateCustomerFactConnector(mockHttpClientV2, microserviceAppConfig)
   val platform: String = microserviceAppConfig.hipUrl
   val url5170 = s"$platform/etmp/RESTAdapter/customer/facts"
-  val header5170: Seq[(String, String)] = microserviceAppConfig.getHIPHeaders(UpdateCustomerFactHipApi)
   val successResponse: JsValue = Json.parse(
     """
       | {
@@ -73,6 +71,13 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
   lazy val mockUrl5170Failed: HttpResponse => Unit =
     setupMockHttpV2PutFailed(url5170)(_)
 
+  val internalServerErrorBody: JsValue = Json.parse("""{ "error": { "code": "500", "message": "boom", "logID": "ABC" } }""")
+  val serviceUnavailableBody: JsValue = Json.parse("""{ "error": { "code": "503", "message": "down", "logID": "DEF" } }""")
+
+  private val http500 = HttpResponse(INTERNAL_SERVER_ERROR, internalServerErrorBody, Map(CorrelationIdHeader -> Seq("123")))
+  private val http503 = HttpResponse(SERVICE_UNAVAILABLE, serviceUnavailableBody, Map(CorrelationIdHeader -> Seq("123")))
+
+
   "The UpdateCustomerFactConnector" should {
     "return a OK response" when {
       "calling updateCustomerFactsToConfirmed with a valid MTDSA ID" in {
@@ -85,15 +90,55 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
       }
     }
 
+    "return 200 and the json body even when the response doesn't match the expected schema" in {
+      val unexpectedSuccessBody = Json.parse("""{ "invalidField": "value" }""")
+      val httpSuccessUnexpected = HttpResponse(OK, unexpectedSuccessBody, Map(CorrelationIdHeader -> Seq("123")))
+
+      mockUrl5170(httpSuccessUnexpected)
+
+      val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+      result.header.status shouldBe OK
+      contentAsJson(Future.successful(result)) shouldBe unexpectedSuccessBody
+    }
+
+
     "return a 422 response" when {
       "calling updateCustomerFactsToConfirmed with a valid MTDSA ID return an 422 error with Errors json" in {
         mockUrl5170(http422ErrorsResponse)
-        TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue.header.status shouldBe Status.UNPROCESSABLE_ENTITY
+
+        val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+        result.header.status shouldBe UNPROCESSABLE_ENTITY
+        contentAsJson(Future.successful(result)) shouldBe unprocessableEntityErrorsResponse
       }
+
       "calling updateCustomerFactsToConfirmed with a valid MTDSA ID return an 422 error with Error json" in {
         mockUrl5170(http422ErrorResponse)
-        TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue.header.status shouldBe Status.UNPROCESSABLE_ENTITY
+
+        val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+        result.header.status shouldBe UNPROCESSABLE_ENTITY
+        contentAsJson(Future.successful(result)) shouldBe unprocessableEntityErrorResponse
       }
+    }
+
+    "return 500 and pass through the response body" in {
+      mockUrl5170(http500)
+
+      val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+      result.header.status shouldBe INTERNAL_SERVER_ERROR
+      contentAsJson(Future.successful(result)) shouldBe internalServerErrorBody
+    }
+
+    "return 503 and pass through the response body" in {
+      mockUrl5170(http503)
+
+      val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+      result.header.status shouldBe SERVICE_UNAVAILABLE
+      contentAsJson(Future.successful(result)) shouldBe serviceUnavailableBody
     }
   }
 }
