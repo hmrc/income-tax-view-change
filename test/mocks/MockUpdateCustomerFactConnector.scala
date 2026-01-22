@@ -17,10 +17,10 @@
 package mocks
 
 import connectors.hip.UpdateCustomerFactConnector
+import models.hip.updateCustomerFact.UpdateCustomerFactResponseModel
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -29,7 +29,7 @@ trait MockUpdateCustomerFactConnector extends MockitoSugar {
 
   val mockUpdateCustomerFactConnector: UpdateCustomerFactConnector = mock[UpdateCustomerFactConnector]
 
-  def mockUpdateCustomerFactsToConfirmed(mtdId: String, result: Result): Unit =
+  def mockUpdateCustomerFactsToConfirmed(mtdId: String, result: UpdateCustomerFactResponseModel): Unit =
     when(mockUpdateCustomerFactConnector.updateCustomerFactsToConfirmed(eqTo(mtdId))(any[HeaderCarrier]()))
       .thenReturn(Future.successful(result))
 }

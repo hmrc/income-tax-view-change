@@ -19,13 +19,11 @@ package connectors.hip
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
 import models.hip.UpdateCustomerFactHipApi
-import models.hip.updateCustomerFact.{ErrorResponse, ErrorsResponse, UpdateCustomerFactRequest, UpdateCustomerFactResponse}
+import models.hip.updateCustomerFact.*
 import play.api.Logging
 import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.writeableOf_JsValue
-import play.api.mvc.Result
-import play.api.mvc.Results.{Ok, Status, UnprocessableEntity}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
@@ -46,12 +44,10 @@ class UpdateCustomerFactConnector @Inject()(
   private def responseJsonOpt(response: HttpResponse): Option[JsValue] =
     Try(Json.parse(response.body)).toOption
 
-  private def resultWithBody(status: Int, response: HttpResponse): Result =
-    responseJsonOpt(response)
-      .map(json => Status(status)(json))
-      .getOrElse(Status(status)(response.body))
+  private def responseJsonOrRaw(response: HttpResponse): JsValue =
+    responseJsonOpt(response).getOrElse(Json.obj("raw" -> response.body))
 
-  def updateCustomerFactsToConfirmed(mtdsa: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {
+  def updateCustomerFactsToConfirmed(mtdsa: String)(implicit headerCarrier: HeaderCarrier): Future[UpdateCustomerFactResponseModel] = {
 
     val request = UpdateCustomerFactRequest.confirmedZorigin(mtdsa)
 
@@ -70,44 +66,47 @@ class UpdateCustomerFactConnector @Inject()(
                   s"Customer fact updated (200) but response didn't match expected schema. " +
                     s"CorrelationId: $correlationId, errors: $invalid, body: ${response.json}"
                 )
-                Ok(response.json)
+                UpdateCustomerFactSuccess(response.json, correlationId)
               },
               _ => {
                 logger.info(s"Customer fact successfully updated to Confirmed. CorrelationId: $correlationId")
-                Ok(response.json)
+                UpdateCustomerFactSuccess(response.json, correlationId)
               }
             )
           case BAD_REQUEST =>
+            val payload = responseJsonOrRaw(response)
             logger.error(s"Bad request while updating customer facts. CorrelationId: $correlationId, body: ${response.body}")
-            resultWithBody(BAD_REQUEST, response)
+            UpdateCustomerFactFailure(BAD_REQUEST, payload, correlationId)
           case UNPROCESSABLE_ENTITY =>
-            val payload: JsValue = responseJsonOpt(response).getOrElse(Json.obj("raw" -> response.body))
+            val payload: JsValue = responseJsonOrRaw(response)
             payload.validate[ErrorResponse].fold(
               _ => payload.validate[ErrorsResponse].fold(
                 invalid => {
                   logger.error(s"Business Error Unprocessable but payload didn't match expected schemas." +
-                    s"CorrelationId: $correlationId, errors: $invalid, body: $payload")
-                  UnprocessableEntity(payload)
+                      s"CorrelationId: $correlationId, errors: $invalid, body: $payload")
                 },
                 ers => {
                   logger.error(s"Business Error Unprocessable." +
-                    s"CorrelationId: $correlationId, Code: ${ers.errors.code}, Message: ${ers.errors.text}")
-                  UnprocessableEntity(payload)
+                      s"CorrelationId: $correlationId, Code: ${ers.errors.code}, Message: ${ers.errors.text}")
                 }
               ),
               er => {
                 logger.error(s"Business Error Unprocessable." +
-                  s"CorrelationId: $correlationId, LogId: ${er.error.logID}, Code: ${er.error.code}, Message: ${er.error.message}")
-                UnprocessableEntity(payload)
+                    s"CorrelationId: $correlationId, LogId: ${er.error.logID}, Code: ${er.error.code}, Message: ${er.error.message}")
               }
             )
+            UpdateCustomerFactFailure(UNPROCESSABLE_ENTITY, payload, correlationId)
           case INTERNAL_SERVER_ERROR | SERVICE_UNAVAILABLE =>
-            logger.error(s"HIP error while updating customer facts." +
-              s"CorrelationId: $correlationId, status: ${response.status}, body: ${response.body}")
-            resultWithBody(response.status, response)
+            val payload = responseJsonOrRaw(response)
+            logger.error(
+              s"HIP error while updating customer facts." +
+                s"CorrelationId: $correlationId, status: ${response.status}, body: ${response.body}"
+            )
+            UpdateCustomerFactFailure(response.status, payload, correlationId)
           case status =>
+            val payload = responseJsonOrRaw(response)
             logger.error(s"Unexpected response CorrelationId: $correlationId, status: $status, body: ${response.body}")
-            resultWithBody(status, response)
+            UpdateCustomerFactFailure(status, payload, correlationId)
         }
       }
   }
