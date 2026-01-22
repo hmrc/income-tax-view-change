@@ -17,14 +17,12 @@
 package connectors.hip
 
 import mocks.MockHttpV2
+import models.hip.updateCustomerFact.{UpdateCustomerFactFailure, UpdateCustomerFactSuccess}
 import play.api.http.Status
-import play.api.http.Status.{OK, UNPROCESSABLE_ENTITY}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{JsValue, Json}
-import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
-
-import scala.concurrent.Future
 
 class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
@@ -83,8 +81,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
         val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
 
-        result.header.status shouldBe OK
-        contentAsJson(Future.successful(result)) shouldBe successResponse
+        result shouldBe UpdateCustomerFactSuccess(successResponse, "123")
       }
     }
 
@@ -96,8 +93,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
       val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
 
-      result.header.status shouldBe OK
-      contentAsJson(Future.successful(result)) shouldBe unexpectedSuccessBody
+      result shouldBe UpdateCustomerFactSuccess(unexpectedSuccessBody, "123")
     }
 
 
@@ -107,8 +103,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
         val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
 
-        result.header.status shouldBe UNPROCESSABLE_ENTITY
-        contentAsJson(Future.successful(result)) shouldBe unprocessableEntityErrorsResponse
+        result shouldBe UpdateCustomerFactFailure(UNPROCESSABLE_ENTITY, unprocessableEntityErrorsResponse, "123")
       }
 
       "calling updateCustomerFactsToConfirmed with a valid MTDSA ID return an 422 error with Error json" in {
@@ -116,8 +111,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
         val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
 
-        result.header.status shouldBe UNPROCESSABLE_ENTITY
-        contentAsJson(Future.successful(result)) shouldBe unprocessableEntityErrorResponse
+        result shouldBe UpdateCustomerFactFailure(UNPROCESSABLE_ENTITY, unprocessableEntityErrorResponse, "123")
       }
     }
 
@@ -126,8 +120,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
       val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
 
-      result.header.status shouldBe INTERNAL_SERVER_ERROR
-      contentAsJson(Future.successful(result)) shouldBe internalServerErrorBody
+      result shouldBe UpdateCustomerFactFailure(INTERNAL_SERVER_ERROR, internalServerErrorBody, "123")
     }
 
     "return 503 and pass through the response body" in {
@@ -135,8 +128,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
       val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
 
-      result.header.status shouldBe SERVICE_UNAVAILABLE
-      contentAsJson(Future.successful(result)) shouldBe serviceUnavailableBody
+      result shouldBe UpdateCustomerFactFailure(SERVICE_UNAVAILABLE, serviceUnavailableBody, "123")
     }
   }
 }

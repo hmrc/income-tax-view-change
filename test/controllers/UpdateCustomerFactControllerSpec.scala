@@ -18,13 +18,13 @@ package controllers
 
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockUpdateCustomerFactConnector}
+import models.hip.updateCustomerFact.UpdateCustomerFactSuccess
 import play.api.http.Status.{OK, UNAUTHORIZED}
 import play.api.libs.json.Json
-import play.api.mvc.Results.Ok
 import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.auth.core.MissingBearerToken
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateCustomerFactControllerSpec
   extends ControllerBaseSpec
@@ -36,6 +36,7 @@ class UpdateCustomerFactControllerSpec
     "called with an Authenticated user" should {
 
       val mockCC = stubControllerComponents()
+      implicit val ec: ExecutionContext = mockCC.executionContext
 
       object TestUpdateCustomerFactController extends UpdateCustomerFactController(
         authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
@@ -44,7 +45,7 @@ class UpdateCustomerFactControllerSpec
       )
 
       mockAuth()
-      mockUpdateCustomerFactsToConfirmed("testMtdId", Ok(Json.obj("processingDateTime" -> "2022-01-31T09:26:17Z")))
+      mockUpdateCustomerFactsToConfirmed("testMtdId", UpdateCustomerFactSuccess(Json.obj("processingDateTime" -> "2022-01-31T09:26:17Z"), "123"))
 
       val futureResult = TestUpdateCustomerFactController.updateKnownFacts("testMtdId")(fakeRequest)
 
