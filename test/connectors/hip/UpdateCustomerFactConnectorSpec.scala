@@ -68,8 +68,6 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
   private val http422ErrorsResponse = HttpResponse(UNPROCESSABLE_ENTITY, unprocessableEntityErrorsResponse, Map(CorrelationIdHeader -> Seq("123")))
   private val http422ErrorResponse = HttpResponse(UNPROCESSABLE_ENTITY, unprocessableEntityErrorResponse, Map(CorrelationIdHeader -> Seq("123")))
   lazy val mockUrl5170: HttpResponse => Unit = setupMockHttpV2PutWithHeaderCarrier(url5170)(_)
-  lazy val mockUrl5170Failed: HttpResponse => Unit =
-    setupMockHttpV2PutFailed(url5170)(_)
 
   val internalServerErrorBody: JsValue = Json.parse("""{ "error": { "code": "500", "message": "boom", "logID": "ABC" } }""")
   val serviceUnavailableBody: JsValue = Json.parse("""{ "error": { "code": "503", "message": "down", "logID": "DEF" } }""")

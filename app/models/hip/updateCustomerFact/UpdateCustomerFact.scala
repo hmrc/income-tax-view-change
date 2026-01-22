@@ -29,6 +29,21 @@ case class UpdateCustomerFactRequest(
                                     ) extends UpdateCustomerFact
 
 object UpdateCustomerFactRequest {
+
+  private final val IdTypeMTDBSA = "MTDBSA"
+  private final val RegimeTypeITSA = "ITSA"
+  private final val FactIdZORIGIN = "ZORIGIN"
+  private final val ValueConfirmed = "C"
+
+  def confirmedZorigin(mtdsa: String): UpdateCustomerFactRequest =
+    UpdateCustomerFactRequest(
+      idType = IdTypeMTDBSA,
+      idValue = mtdsa,
+      regimeType = RegimeTypeITSA,
+      factId = FactIdZORIGIN,
+      value = ValueConfirmed
+    )
+
   implicit val format: Format[UpdateCustomerFactRequest] = Json.format[UpdateCustomerFactRequest]
 }
 

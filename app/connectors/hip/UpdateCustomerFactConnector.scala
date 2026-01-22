@@ -43,11 +43,6 @@ class UpdateCustomerFactConnector @Inject()(
   private val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(UpdateCustomerFactHipApi)
   private val updateCustomerFactsUrl: String = s"${appConfig.hipUrl}/etmp/RESTAdapter/customer/facts"
 
-  private final val IdTypeMTDBSA = "MTDBSA"
-  private final val RegimeTypeITSA = "ITSA"
-  private final val FactIdZORIGIN = "ZORIGIN"
-  private final val ValueConfirmed = "C"
-
   private def responseJsonOpt(response: HttpResponse): Option[JsValue] =
     Try(Json.parse(response.body)).toOption
 
@@ -58,13 +53,7 @@ class UpdateCustomerFactConnector @Inject()(
 
   def updateCustomerFactsToConfirmed(mtdsa: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {
 
-    val request = UpdateCustomerFactRequest(
-      idType = IdTypeMTDBSA,
-      idValue = mtdsa,
-      regimeType = RegimeTypeITSA,
-      factId = FactIdZORIGIN,
-      value = ValueConfirmed
-    )
+    val request = UpdateCustomerFactRequest.confirmedZorigin(mtdsa)
 
     http.put(url"$updateCustomerFactsUrl")
       .withBody(Json.toJson(request))
