@@ -51,8 +51,8 @@ object HipIncomeSourceDetailsTestConstants {
       "safeId" -> "XAIT12345678908",
       "nino" -> testNino,
       "mtdId" -> testMtdId,
-      "channel" -> "Customer-led",
       "yearOfMigration" -> "2019",
+      "channel" -> "Customer-led",
       "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
       "propertyData" -> Json.arr(testPropertyDetailsJson))
   ))
