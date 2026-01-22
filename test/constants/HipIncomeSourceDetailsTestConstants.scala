@@ -31,6 +31,7 @@ object HipIncomeSourceDetailsTestConstants {
     nino = testNino,
     mtdbsa = testMtdId,
     yearOfMigration = Some("2019"),
+    channel = "Customer-led",
     businesses = List(testBusinessDetailsModel, testMinimumBusinessDetailsModel),
     properties = List(testPropertyDetailsModel)
   )
@@ -39,6 +40,7 @@ object HipIncomeSourceDetailsTestConstants {
     nino = testNino,
     mtdbsa = testMtdId,
     yearOfMigration = None,
+    channel = "Customer-led",
     businesses = List(),
     properties = List()
   )
@@ -50,6 +52,7 @@ object HipIncomeSourceDetailsTestConstants {
       "nino" -> testNino,
       "mtdId" -> testMtdId,
       "yearOfMigration" -> "2019",
+      "channel" -> "Customer-led",
       "businessData" -> Json.arr(testBusinessDetailsJson, testMinimumBusinessDetailsJson),
       "propertyData" -> Json.arr(testPropertyDetailsJson))
   ))
@@ -58,6 +61,7 @@ object HipIncomeSourceDetailsTestConstants {
                |  "nino" : "BB123456A",
                |  "mtdbsa" : "XIAT0000000000A",
                |  "yearOfMigration" : "2019",
+               |  "channel" : "Customer-led",
                |  "businesses" : [ {
                |    "incomeSourceId" : "111111111111111",
                |    "incomeSource" : "Fruit Ltd",
