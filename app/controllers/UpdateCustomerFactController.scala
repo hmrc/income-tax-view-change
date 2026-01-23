@@ -18,26 +18,19 @@ package controllers
 
 import connectors.hip.UpdateCustomerFactConnector
 import controllers.predicates.AuthenticationPredicate
-import models.hip.updateCustomerFact.{UpdateCustomerFactFailure, UpdateCustomerFactSuccess}
 import play.api.Logging
-import play.api.mvc.Results.Status
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
 class UpdateCustomerFactController @Inject()(authentication: AuthenticationPredicate,
                                              cc: ControllerComponents,
                                              connector: UpdateCustomerFactConnector)
-                                            (implicit ec: ExecutionContext)
   extends BackendController(cc) with Logging {
 
 
   def updateKnownFacts(mtdId: String): Action[AnyContent] = authentication.async { implicit request =>
-    connector.updateCustomerFactsToConfirmed(mtdId).map {
-      case UpdateCustomerFactSuccess(json, _) => Ok(json)
-      case UpdateCustomerFactFailure(status, body, _) => Status(status)(body)
-    }
+    connector.updateCustomerFactsToConfirmed(mtdId)
   }
 }

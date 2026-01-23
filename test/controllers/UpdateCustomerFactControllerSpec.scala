@@ -18,9 +18,8 @@ package controllers
 
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockUpdateCustomerFactConnector}
-import models.hip.updateCustomerFact.UpdateCustomerFactSuccess
 import play.api.http.Status.{OK, UNAUTHORIZED}
-import play.api.libs.json.Json
+import play.api.mvc.Results.Ok
 import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.auth.core.MissingBearerToken
 
@@ -45,15 +44,12 @@ class UpdateCustomerFactControllerSpec
       )
 
       mockAuth()
-      mockUpdateCustomerFactsToConfirmed("testMtdId", UpdateCustomerFactSuccess(Json.obj("processingDateTime" -> "2022-01-31T09:26:17Z"), "123"))
+      mockUpdateCustomerFactsToConfirmed("testMtdId", Ok)
 
       val futureResult = TestUpdateCustomerFactController.updateKnownFacts("testMtdId")(fakeRequest)
 
       whenReady(futureResult) { result =>
         checkStatusOf(result)(OK)
-        checkJsonBodyOf(result)(
-          Json.parse("""{"processingDateTime":"2022-01-31T09:26:17Z"}""")
-        )
       }
     }
 

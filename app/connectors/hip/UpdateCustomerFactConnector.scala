@@ -24,6 +24,8 @@ import play.api.Logging
 import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.writeableOf_JsValue
+import play.api.mvc.Result
+import play.api.mvc.Results.{BadRequest, InternalServerError, Ok, UnprocessableEntity}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
@@ -47,7 +49,7 @@ class UpdateCustomerFactConnector @Inject()(
   private def responseJsonOrRaw(response: HttpResponse): JsValue =
     responseJsonOpt(response).getOrElse(Json.obj("raw" -> response.body))
 
-  def updateCustomerFactsToConfirmed(mtdsa: String)(implicit headerCarrier: HeaderCarrier): Future[UpdateCustomerFactResponseModel] = {
+  def updateCustomerFactsToConfirmed(mtdsa: String)(implicit headerCarrier: HeaderCarrier): Future[Result] = {
 
     val request = UpdateCustomerFactRequest.confirmedZorigin(mtdsa)
 
@@ -60,30 +62,21 @@ class UpdateCustomerFactConnector @Inject()(
 
         response.status match {
           case OK =>
-            response.json.validate[UpdateCustomerFactResponse].fold(
-              invalid => {
-                logger.warn(
-                  s"Customer fact updated (200) but response didn't match expected schema. " +
-                    s"CorrelationId: $correlationId, errors: $invalid, body: ${response.json}"
-                )
-                UpdateCustomerFactSuccess(response.json, correlationId)
-              },
-              _ => {
-                logger.info(s"Customer fact successfully updated to Confirmed. CorrelationId: $correlationId")
-                UpdateCustomerFactSuccess(response.json, correlationId)
-              }
-            )
+            logger.info(s"Customer fact successfully updated to Confirmed. CorrelationId: $correlationId")
+            Ok
+
           case BAD_REQUEST =>
-            val payload = responseJsonOrRaw(response)
-            logger.error(s"Bad request while updating customer facts. CorrelationId: $correlationId, body: ${response.body}")
-            UpdateCustomerFactFailure(BAD_REQUEST, payload, correlationId)
+            val body = responseJsonOrRaw(response)
+            logger.error(s"Bad request while updating customer facts. CorrelationId: $correlationId, body: $body")
+            BadRequest
+
           case UNPROCESSABLE_ENTITY =>
-            val payload: JsValue = responseJsonOrRaw(response)
-            payload.validate[ErrorResponse].fold(
-              _ => payload.validate[ErrorsResponse].fold(
+            val body = responseJsonOrRaw(response)
+            body.validate[ErrorResponse].fold(
+              _ => body.validate[ErrorsResponse].fold(
                 invalid => {
                   logger.error(s"Business Error Unprocessable but payload didn't match expected schemas." +
-                      s"CorrelationId: $correlationId, errors: $invalid, body: $payload")
+                      s"CorrelationId: $correlationId, errors: $invalid, body: $body")
                 },
                 ers => {
                   logger.error(s"Business Error Unprocessable." +
@@ -95,18 +88,12 @@ class UpdateCustomerFactConnector @Inject()(
                     s"CorrelationId: $correlationId, LogId: ${er.error.logID}, Code: ${er.error.code}, Message: ${er.error.message}")
               }
             )
-            UpdateCustomerFactFailure(UNPROCESSABLE_ENTITY, payload, correlationId)
-          case INTERNAL_SERVER_ERROR | SERVICE_UNAVAILABLE =>
-            val payload = responseJsonOrRaw(response)
-            logger.error(
-              s"HIP error while updating customer facts." +
-                s"CorrelationId: $correlationId, status: ${response.status}, body: ${response.body}"
-            )
-            UpdateCustomerFactFailure(response.status, payload, correlationId)
+            UnprocessableEntity
+
           case status =>
-            val payload = responseJsonOrRaw(response)
-            logger.error(s"Unexpected response CorrelationId: $correlationId, status: $status, body: ${response.body}")
-            UpdateCustomerFactFailure(status, payload, correlationId)
+            val body = responseJsonOpt(response).getOrElse(Json.obj("raw" -> response.body))
+            logger.error(s"Unexpected response. CorrelationId: $correlationId, status: $status, body: $body")
+            InternalServerError
         }
       }
   }

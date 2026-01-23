@@ -16,9 +16,7 @@
 
 package models.hip.updateCustomerFact
 
-import play.api.libs.json.*
-
-sealed trait UpdateCustomerFact
+import play.api.libs.json.{Format, Json}
 
 case class UpdateCustomerFactRequest(
                                       idType: String,
@@ -26,7 +24,7 @@ case class UpdateCustomerFactRequest(
                                       regimeType: String,
                                       factId: String,
                                       value: String
-                                    ) extends UpdateCustomerFact
+                                    )
 
 object UpdateCustomerFactRequest {
 
@@ -47,19 +45,13 @@ object UpdateCustomerFactRequest {
   implicit val format: Format[UpdateCustomerFactRequest] = Json.format[UpdateCustomerFactRequest]
 }
 
-case class UpdateCustomerFactResponse(processingDateTime: String) extends UpdateCustomerFact
-
-object UpdateCustomerFactResponse {
-  implicit val format: Format[UpdateCustomerFactResponse] = Json.format[UpdateCustomerFactResponse]
-}
-
 case class ErrorResponse(error: Error)
 
 object ErrorResponse {
   implicit val format: Format[ErrorResponse] = Json.format[ErrorResponse]
 }
 
-case class Error(code: String, message: String, logID: String) extends UpdateCustomerFact
+case class Error(code: String, message: String, logID: String)
 
 object Error {
   implicit val format: Format[Error] = Json.format[Error]
@@ -71,7 +63,7 @@ object ErrorsResponse {
   implicit val format: Format[ErrorsResponse] = Json.format[ErrorsResponse]
 }
 
-case class Errors(processingDate: String, code: String, text: String) extends UpdateCustomerFact
+case class Errors(processingDate: String, code: String, text: String)
 
 object Errors {
   implicit val format: Format[Errors] = Json.format[Errors]
