@@ -18,12 +18,13 @@ package controllers
 
 import controllers.predicates.AuthenticationPredicate
 import mocks.{MockMicroserviceAuthConnector, MockUpdateCustomerFactConnector}
-import play.api.http.Status.{OK, UNAUTHORIZED}
-import play.api.mvc.Results.Ok
+import play.api.http.Status.{OK, UNAUTHORIZED, UNPROCESSABLE_ENTITY}
+import play.api.mvc.Results.{Ok, UnprocessableEntity}
 import play.api.test.Helpers.stubControllerComponents
 import uk.gov.hmrc.auth.core.MissingBearerToken
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
+
 
 class UpdateCustomerFactControllerSpec
   extends ControllerBaseSpec
@@ -34,41 +35,63 @@ class UpdateCustomerFactControllerSpec
 
     "called with an Authenticated user" should {
 
-      val mockCC = stubControllerComponents()
-      implicit val ec: ExecutionContext = mockCC.executionContext
+      "return 200" in {
+        val mockCC = stubControllerComponents()
 
-      object TestUpdateCustomerFactController extends UpdateCustomerFactController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
-        cc = mockCC,
-        connector = mockUpdateCustomerFactConnector
-      )
+        object TestUpdateCustomerFactController extends UpdateCustomerFactController(
+          authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+          cc = mockCC,
+          connector = mockUpdateCustomerFactConnector
+        )
 
-      mockAuth()
-      mockUpdateCustomerFactsToConfirmed("testMtdId", Ok)
+        mockAuth()
+        mockUpdateCustomerFactsToConfirmed("testMtdId", Ok)
 
-      val futureResult = TestUpdateCustomerFactController.updateKnownFacts("testMtdId")(fakeRequest)
+        val futureResult = TestUpdateCustomerFactController.updateKnownFacts("testMtdId")(fakeRequest)
 
-      whenReady(futureResult) { result =>
-        checkStatusOf(result)(OK)
+        whenReady(futureResult) { result =>
+          result.header.status shouldBe OK
+        }
+      }
+
+      "return 422" in {
+        val mockCC = stubControllerComponents()
+
+        object TestUpdateCustomerFactController extends UpdateCustomerFactController(
+          authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+          cc = mockCC,
+          connector = mockUpdateCustomerFactConnector
+        )
+
+        mockAuth()
+        mockUpdateCustomerFactsToConfirmed("testMtdId", UnprocessableEntity)
+
+        val futureResult = TestUpdateCustomerFactController.updateKnownFacts("testMtdId")(fakeRequest)
+
+        whenReady(futureResult) { result =>
+          result.header.status shouldBe UNPROCESSABLE_ENTITY
+        }
       }
     }
 
     "called with an Unauthenticated user" should {
 
-      val mockCC = stubControllerComponents()
+      "return 401" in {
+        val mockCC = stubControllerComponents()
 
-      object TestUpdateCustomerFactController extends UpdateCustomerFactController(
-        authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
-        cc = mockCC,
-        connector = mockUpdateCustomerFactConnector
-      )
+        object TestUpdateCustomerFactController extends UpdateCustomerFactController(
+          authentication = new AuthenticationPredicate(mockMicroserviceAuthConnector, mockCC, microserviceAppConfig),
+          cc = mockCC,
+          connector = mockUpdateCustomerFactConnector
+        )
 
-      mockAuth(Future.failed(new MissingBearerToken))
+        mockAuth(Future.failed(new MissingBearerToken))
 
-      val futureResult = TestUpdateCustomerFactController.updateKnownFacts("testMtdId")(fakeRequest)
+        val futureResult = TestUpdateCustomerFactController.updateKnownFacts("testMtdId")(fakeRequest)
 
-      whenReady(futureResult) { result =>
-        checkStatusOf(result)(UNAUTHORIZED)
+        whenReady(futureResult) { result =>
+          result.header.status shouldBe UNAUTHORIZED
+        }
       }
     }
   }
