@@ -18,13 +18,13 @@ package controllers
 
 import helpers.ComponentSpecBase
 import helpers.servicemocks.HipUpdateCustomerFactStub
-import play.api.http.Status.{OK, UNAUTHORIZED, UNPROCESSABLE_ENTITY}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED, UNPROCESSABLE_ENTITY}
 
 class UpdateCustomerFactControllerISpec extends ComponentSpecBase {
 
   private val mtdId = "testMtdId"
 
-  "Calling the UpdateCustomerFactController.updateKnownFacts method" when {
+  "Calling PUT /customer-facts/update/:mtdId" when {
 
     "authorised" when {
 
@@ -45,6 +45,23 @@ class UpdateCustomerFactControllerISpec extends ComponentSpecBase {
         }
       }
 
+      "HIP returns 400" should {
+        "return 400" in {
+          isAuthorised(true)
+
+          HipUpdateCustomerFactStub.stubPutUpdateCustomerFactBadRequest(mtdId)
+
+          When(s"I call PUT /customer-facts/update/$mtdId")
+          val res = IncomeTaxViewChange.putUpdateCustomerFacts(mtdId)
+
+          HipUpdateCustomerFactStub.verifyPutUpdateCustomerFact(mtdId)
+
+          res should have(
+            httpStatus(BAD_REQUEST)
+          )
+        }
+      }
+
       "HIP returns 422" should {
         "return 422" in {
           isAuthorised(true)
@@ -58,6 +75,40 @@ class UpdateCustomerFactControllerISpec extends ComponentSpecBase {
 
           res should have(
             httpStatus(UNPROCESSABLE_ENTITY)
+          )
+        }
+      }
+
+      "HIP returns 500" should {
+        "return 500" in {
+          isAuthorised(true)
+
+          HipUpdateCustomerFactStub.stubPutUpdateCustomerFactServerError(mtdId)
+
+          When(s"I call PUT /customer-facts/update/$mtdId")
+          val res = IncomeTaxViewChange.putUpdateCustomerFacts(mtdId)
+
+          HipUpdateCustomerFactStub.verifyPutUpdateCustomerFact(mtdId)
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR)
+          )
+        }
+      }
+
+      "HIP returns 503" should {
+        "return 500 mapped from 503" in {
+          isAuthorised(true)
+
+          HipUpdateCustomerFactStub.stubPutUpdateCustomerFactServiceUnavailable(mtdId)
+
+          When(s"I call PUT /customer-facts/update/$mtdId")
+          val res = IncomeTaxViewChange.putUpdateCustomerFacts(mtdId)
+
+          HipUpdateCustomerFactStub.verifyPutUpdateCustomerFact(mtdId)
+
+          res should have(
+            httpStatus(INTERNAL_SERVER_ERROR)
           )
         }
       }

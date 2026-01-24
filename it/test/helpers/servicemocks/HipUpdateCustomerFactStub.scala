@@ -50,6 +50,30 @@ object HipUpdateCustomerFactStub {
       """{"errors":{"processingDate":"2001-12-17T09:30:47Z","code":"001","text":"Regime missing or invalid"}}"""
     )
 
+  def stubPutUpdateCustomerFactBadRequest(mtdId: String): Unit =
+    WiremockHelper.stubPut(
+      url,
+      Status.BAD_REQUEST,
+      requestBody(mtdId),
+      """{"error":"bad-request"}"""
+    )
+
+  def stubPutUpdateCustomerFactServerError(mtdId: String): Unit =
+    WiremockHelper.stubPut(
+      url,
+      Status.INTERNAL_SERVER_ERROR,
+      requestBody(mtdId),
+      """{"error":{"code":"500","message":"boom","logID":"123"}}"""
+    )
+
+  def stubPutUpdateCustomerFactServiceUnavailable(mtdId: String): Unit =
+    WiremockHelper.stubPut(
+      url,
+      Status.SERVICE_UNAVAILABLE,
+      requestBody(mtdId),
+      """{"error":{"code":"503","message":"down","logID":"123"}}"""
+    )
+
   def verifyPutUpdateCustomerFact(mtdId: String): Unit =
     WiremockHelper.verifyPut(url, requestBody(mtdId))
 }
