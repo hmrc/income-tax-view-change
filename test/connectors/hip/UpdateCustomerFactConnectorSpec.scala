@@ -17,18 +17,29 @@
 package connectors.hip
 
 import mocks.MockHttpV2
-import play.api.http.Status
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, when}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Results.{BadRequest, InternalServerError, Ok, UnprocessableEntity}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
+
 class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
   private val CorrelationIdHeader = "correlationid"
 
-  object TestUpdateCustomerFactConnector extends UpdateCustomerFactConnector(mockHttpClientV2, microserviceAppConfig)
+  object TestUpdateCustomerFactConnector extends UpdateCustomerFactConnector(
+    http = mockHttpClientV2,
+    appConfig = microserviceAppConfig
+  )
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockRequestBuilder)
+  }
+
   val platform: String = microserviceAppConfig.hipUrl
   val url5170 = s"$platform/etmp/RESTAdapter/customer/facts"
   val successResponse: JsValue = Json.parse(
@@ -64,10 +75,14 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
 
   private val httpSuccessResponse = HttpResponse(OK, successResponse, Map(CorrelationIdHeader -> Seq("123")))
   private val badRequestBody: JsValue = Json.parse("""{ "error": "bad-request" }""")
-  private val http400 = HttpResponse(Status.BAD_REQUEST, badRequestBody, Map(CorrelationIdHeader -> Seq("123")))
+  private val http400 = HttpResponse(BAD_REQUEST, badRequestBody, Map(CorrelationIdHeader -> Seq("123")))
   private val http422ErrorsResponse = HttpResponse(UNPROCESSABLE_ENTITY, unprocessableEntityErrorsResponse, Map(CorrelationIdHeader -> Seq("123")))
   private val http422ErrorResponse = HttpResponse(UNPROCESSABLE_ENTITY, unprocessableEntityErrorResponse, Map(CorrelationIdHeader -> Seq("123")))
-  lazy val mockUrl5170: HttpResponse => Unit = setupMockHttpV2PutWithHeaderCarrier(url5170)(_)
+
+  lazy val mockUrl5170: HttpResponse => Unit = { response =>
+    setupMockHttpV2PutWithHeaderCarrier(url5170)(response)
+    when(mockRequestBuilder.transform(any())).thenReturn(mockRequestBuilder)
+  }
 
   val internalServerErrorBody: JsValue = Json.parse("""{ "error": { "code": "500", "message": "boom", "logID": "ABC" } }""")
   val serviceUnavailableBody: JsValue = Json.parse("""{ "error": { "code": "503", "message": "down", "logID": "DEF" } }""")
@@ -125,7 +140,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
       }
     }
 
-    "return 500 and pass through the response body" in {
+    "return 500 when HIP returns 500" in {
       mockUrl5170(http500)
 
       val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
@@ -133,7 +148,7 @@ class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
       result shouldBe InternalServerError
     }
 
-    "return 503 and pass through the response body" in {
+    "return 500 when HIP returns 503" in {
       mockUrl5170(http503)
 
       val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
