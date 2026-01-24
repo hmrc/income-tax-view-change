@@ -19,9 +19,9 @@ package connectors.hip
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
 import models.hip.UpdateCustomerFactHipApi
-import models.hip.updateCustomerFact.*
+import models.hip.updateCustomerFact.{ErrorResponse, ErrorsResponse, UpdateCustomerFactRequest}
 import play.api.Logging
-import play.api.http.Status.*
+import play.api.http.Status.{BAD_REQUEST, OK, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.writeableOf_JsValue
 import play.api.mvc.Result
