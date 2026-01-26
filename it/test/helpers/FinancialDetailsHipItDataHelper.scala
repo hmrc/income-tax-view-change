@@ -122,6 +122,7 @@ trait FinancialDetailsHipItDataHelper {
             "interestFromDate" -> "2018-08-01",
             "interestEndDate" -> "2019-01-15",
             "latePaymentInterestID" -> "latePaymentInterestID",
+            "latePaymentInterestAmount" -> 201.00,
             "lpiWithDunningBlock" -> 12.50,
             "interestOutstandingAmount" -> 31.00,
             "amountCodedOut" -> 3.21,

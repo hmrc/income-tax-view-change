@@ -30,6 +30,7 @@ object HipIncomeSourceIntegrationTestConstants {
       nino = testNino,
       mtdbsa = testMtdbsa,
       yearOfMigration = Some("2019"),
+      channel = "Customer-led",
       businesses = testBusinessModel,
       properties = List(testPropertyDetailsModel)
     )

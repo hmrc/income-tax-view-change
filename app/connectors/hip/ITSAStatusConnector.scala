@@ -19,12 +19,12 @@ package connectors.hip
 import config.MicroserviceAppConfig
 import connectors.RawResponseReads
 import connectors.hip.ITSAStatusConnector.CorrelationIdHeader
-import connectors.itsastatus.OptOutUpdateRequestModel.{OptOutUpdateRequest, OptOutUpdateResponse, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
+import connectors.itsastatus.OptOutUpdateRequestModel.{ErrorItem, OptOutBackendFailure, OptOutBadRequestFailure, OptOutUnprocessableEntityFailure, OptOutUpdateRequest, OptOutUpdateResponse, OptOutUpdateResponseFailure, OptOutUpdateResponseSuccess}
 import models.hip.ITSAStatusHipApi
 import models.itsaStatus.{ITSAStatusResponse, ITSAStatusResponseError, ITSAStatusResponseModel, ITSAStatusResponseNotFound}
 import play.api.Logging
-import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.http.Status.*
+import play.api.libs.json.{JsResult, Json}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import play.api.libs.ws.writeableOf_JsValue
@@ -97,25 +97,47 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
       .withBody(Json.toJson[OptOutUpdateRequest](optOutUpdateRequest))
       .setHeader(hipHeaders: _*)
       .execute[HttpResponse]
-      .map{ response =>
+      .map { response =>
         val correlationId = response.headers.get(CorrelationIdHeader).map(_.head).getOrElse(s"Unknown_$CorrelationIdHeader")
         response.status match {
           case NO_CONTENT =>
             logger.info("ITSA status successfully updated")
             OptOutUpdateResponseSuccess(correlationId)
-          case _ =>
-            response.json.validate[OptOutUpdateResponseFailure].fold(
-              invalid => {
-                val msg = s"Json validation error parsing itsa-status update response, error $invalid"
-                logger.error(msg)
-                OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
-              },
-              valid => {
-                logger.debug(s"Unsuccessful response: $valid")
-                valid.copy(correlationId = correlationId, statusCode = response.status)
-              }
-            )
+
+          case BAD_REQUEST =>
+            handleValidation(response.json.validate[OptOutBadRequestFailure], correlationId, response.status) { valid =>
+              valid.response.map(item => ErrorItem(item.`type`, item.reason))
+            }
+
+          case UNPROCESSABLE_ENTITY =>
+            handleValidation(response.json.validate[List[OptOutUnprocessableEntityFailure]], correlationId, response.status) { valid =>
+              valid.map(item => ErrorItem(item.errorCode, item.errorDescription))
+            }
+
+          case INTERNAL_SERVER_ERROR | SERVICE_UNAVAILABLE =>
+            handleValidation(response.json.validate[OptOutBackendFailure], correlationId, response.status) { valid =>
+              valid.response.failures.map(item => ErrorItem(item.`type`, item.reason))
+            }
+
+          case status =>
+            logger.error(s"Unexpected response status: $status, body: ${response.body}")
+            OptOutUpdateResponseFailure.defaultFailure(correlationId = correlationId, message = s"Unexpected response status: $status")
         }
       }
+  }
+
+  private def handleValidation[T](validationResult: JsResult[T], correlationId: String, status: Int)
+                                 (extractErrorItems: T => List[ErrorItem]): OptOutUpdateResponseFailure = {
+    validationResult.fold(
+      invalid => {
+        val msg = s"Json validation error parsing itsa-status update response, error $invalid"
+        logger.error(msg)
+        OptOutUpdateResponseFailure.defaultFailure(msg, correlationId)
+      },
+      valid => {
+        logger.debug(s"Unsuccessful response: $valid")
+        OptOutUpdateResponseFailure(correlationId, status, extractErrorItems(valid))
+      }
+    )
   }
 }

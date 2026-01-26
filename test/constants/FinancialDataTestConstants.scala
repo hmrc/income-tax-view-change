@@ -69,6 +69,7 @@ object FinancialDataTestConstants {
       |        "interestFromDate": "2018-08-01",
       |        "interestEndDate": "2019-01-15",
       |        "latePaymentInterestID": "latePaymentInterestID",
+      |        "latePaymentInterestAmount": 201.00,
       |        "lpiWithDunningLock": 12.50,
       |        "interestOutstandingAmount": 31.0,
       |        "amountCodedOut": 3.21,
@@ -153,6 +154,7 @@ object FinancialDataTestConstants {
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
+    latePaymentInterestAmount = Some(201.00),
     interestOutstandingAmount = Some(31.00),
     paymentLotItem = Some("paymentLotItem"),
     paymentLot = Some("paymentLot"),
@@ -426,6 +428,7 @@ object FinancialDataTestConstants {
     interestFromDate = Some(LocalDate.parse("2018-08-01")),
     interestEndDate = Some(LocalDate.parse("2019-01-15")),
     latePaymentInterestId = Some("latePaymentInterestID"),
+    latePaymentInterestAmount = Some(201.00),
     lpiWithDunningLock = Some(12.50),
     interestOutstandingAmount = Some(31.00),
     amountCodedOut = Some(3.21))

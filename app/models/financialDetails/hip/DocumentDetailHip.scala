@@ -66,6 +66,8 @@ case class DocumentDetailHip(
                               /* Late Payment Interets Id */
                               latePaymentInterestId: Option[String] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
+                              latePaymentInterestAmount: Option[BigDecimal] = None,
+                              /* Currency amount. 13-digits total with 2 decimal places */
                               lpiWithDunningLock: Option[BigDecimal] = None,
                               /* Currency amount. 13-digits total with 2 decimal places */
                               interestOutstandingAmount: Option[BigDecimal] = None,
@@ -102,6 +104,7 @@ object DocumentDetailHip {
       (__ \ "interestFromDate").readNullable[LocalDate] and
       (__ \ "interestEndDate").readNullable[LocalDate] and
       (__ \ "latePaymentInterestID").readNullable[String] and
+      (__ \ "latePaymentInterestAmount").readNullable[BigDecimal] and
       (__ \ "lpiWithDunningBlock").read[BigDecimal].map(Option(_)).orElse((__ \ "lpiWithDunningLock").readNullable[BigDecimal]) and
       (__ \ "interestOutstandingAmount").readNullable[BigDecimal] and
       (__ \ "amountCodedOut").readNullable[BigDecimal]

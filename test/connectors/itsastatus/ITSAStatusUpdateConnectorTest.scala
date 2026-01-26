@@ -72,44 +72,34 @@ class ITSAStatusUpdateConnectorTest extends TestSupport with MockHttpV2 {
     }
 
     "unhappy case" should {
-
       "return failure response" in {
-
-        val errorItems = List(ErrorItem("INVALID_TAXABLE_ENTITY_ID",
-          "Submission has not passed validation. Invalid parameter taxableEntityId."))
+        val errorItems = List(ErrorItem("9001", "Some error message"))
         val correlationId = "123"
         val apiRequest = OptOutUpdateRequest(taxYear, optOutUpdateReason)
-        val apiFailResponse = OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
-        val httpResponse = HttpResponse(BAD_REQUEST, Json.toJson(apiFailResponse), Map(CorrelationIdHeader -> Seq("123")))
+        val apiFailResponse = List(OptOutUnprocessableEntityFailure("9001", "Some error message"))
+        val httpResponse = HttpResponse(UNPROCESSABLE_ENTITY, Json.toJson(apiFailResponse), Map(CorrelationIdHeader -> Seq("123")))
 
         setupMockHttpV2PutWithHeaderCarrier(url)(httpResponse)
 
         val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxableEntityId, apiRequest)
 
-        result.futureValue shouldBe OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
-
+        result.futureValue shouldBe OptOutUpdateResponseFailure(correlationId, UNPROCESSABLE_ENTITY, errorItems)
       }
     }
 
     "unhappy case, missing header" should {
-
       "return failure response" in {
-
-        val errorItems = List(ErrorItem("INVALID_TAXABLE_ENTITY_ID",
-          "Submission has not passed validation. Invalid parameter taxableEntityId."))
-        val correlationId = "123"
+        val errorItems = List(ErrorItem("9001", "Some error message"))
         val apiRequest = OptOutUpdateRequest(taxYear, optOutUpdateReason)
-        val apiFailResponse = OptOutUpdateResponseFailure(correlationId, BAD_REQUEST, errorItems)
-        val httpResponse = HttpResponse(BAD_REQUEST, Json.toJson(apiFailResponse), Map.empty)
+        val apiFailResponse = List(OptOutUnprocessableEntityFailure("9001", "Some error message"))
+        val httpResponse = HttpResponse(UNPROCESSABLE_ENTITY, Json.toJson(apiFailResponse), Map.empty)
 
         setupMockHttpV2PutWithHeaderCarrier(url)(httpResponse)
 
         val result: Future[OptOutUpdateResponse] = connector.requestOptOutForTaxYear(taxableEntityId, apiRequest)
 
-        result.futureValue shouldBe OptOutUpdateResponseFailure("Unknown_CorrelationId", BAD_REQUEST, errorItems)
-
+        result.futureValue shouldBe OptOutUpdateResponseFailure("Unknown_CorrelationId", UNPROCESSABLE_ENTITY, errorItems)
       }
     }
   }
-
 }
