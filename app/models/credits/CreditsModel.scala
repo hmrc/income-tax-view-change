@@ -22,6 +22,8 @@ case class CreditsModel(availableCreditForRepayment: BigDecimal,
                         allocatedCreditForFutureCharges: BigDecimal,
                         unallocatedCredit: BigDecimal,
                         totalCredit: BigDecimal,
+                        firstPendingAmountRequested: Option[BigDecimal],
+                        secondPendingAmountRequested: Option[BigDecimal],
                         transactions: List[Transaction] )
 
 object CreditsModel {
@@ -73,6 +75,8 @@ object CreditsModel {
       chargesResponse.balanceDetails.allocatedCreditForFutureCharges.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.unallocatedCredit.map(_.abs).getOrElse(0.0),
       chargesResponse.balanceDetails.totalCredit.map(_.abs).getOrElse(0.0),
+      chargesResponse.balanceDetails.firstPendingAmountRequested.map(_.abs),
+      chargesResponse.balanceDetails.secondPendingAmountRequested.map(_.abs),
       getCreditTransactionsForHip(chargesResponse) :++ createPendingRefundTransactionsForHip(chargesResponse)
     )
   }
