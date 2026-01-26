@@ -54,3 +54,8 @@ case object GetChargeHistoryHipApi extends HipApi {
   val name = "get-charge-history"
   def apply(): String = name
 }
+
+case object UpdateCustomerFactHipApi extends HipApi {
+  val name = "update-customer-fact"
+  def apply(): String = name
+}

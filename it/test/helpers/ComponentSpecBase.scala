@@ -23,12 +23,11 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, TestSuite}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.WSResponse
 import play.api.{Application, Environment, Mode}
-import helpers.servicemocks.AuthStub
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
-import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import scala.concurrent.ExecutionContext
 
@@ -141,6 +140,10 @@ trait ComponentSpecBase extends TestSuite with CustomMatchers
 
     def putUpdateIncomeSource(body: JsValue): WSResponse = {
       buildClient("/update-income-source").put(body).futureValue
+    }
+
+    def putUpdateCustomerFacts(mtdId: String): WSResponse = {
+      buildClient(s"/customer-facts/update/$mtdId").put(Json.obj()).futureValue
     }
 
     def getITSAStatus(taxableEntityId: String, taxYear: String, futureYears: Boolean = true, history: Boolean = true): WSResponse = {

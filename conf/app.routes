@@ -41,3 +41,5 @@ PUT         /itsa-status/update/:nino                                controllers
 POST        /create-income-source/business                           controllers.CreateBusinessDetailsController.createBusinessDetails()
 
 POST        /submit-claim-to-adjust-poa                              controllers.ClaimToAdjustPoaController.submitClaimToAdjustPoa()
+
+PUT         /customer-facts/update/:mtdId                            controllers.UpdateCustomerFactController.updateKnownFacts(mtdId: String)

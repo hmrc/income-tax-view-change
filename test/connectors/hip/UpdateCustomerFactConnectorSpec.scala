@@ -1,0 +1,159 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package connectors.hip
+
+import mocks.MockHttpV2
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, when}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.Results.{BadRequest, InternalServerError, Ok, UnprocessableEntity}
+import uk.gov.hmrc.http.HttpResponse
+import utils.TestSupport
+
+
+class UpdateCustomerFactConnectorSpec extends TestSupport with MockHttpV2 {
+
+  private val CorrelationIdHeader = "correlationid"
+
+  object TestUpdateCustomerFactConnector extends UpdateCustomerFactConnector(
+    http = mockHttpClientV2,
+    appConfig = microserviceAppConfig
+  )
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockRequestBuilder)
+  }
+
+  val platform: String = microserviceAppConfig.hipUrl
+  val url5170 = s"$platform/etmp/RESTAdapter/customer/facts"
+  val successResponse: JsValue = Json.parse(
+    """
+      | {
+      |   "processingDateTime": "2022-01-31T09:26:17Z"
+      | }
+      |""".stripMargin)
+
+  val unprocessableEntityErrorResponse: JsValue = Json.parse(
+    """
+      | {
+      |    "error":
+      |    {
+      |        "code": "400",
+      |        "message": "Invalid request",
+      |        "logID": "C0000AB8190C86300000000200006836"
+      |    }
+      |}
+      |""".stripMargin)
+
+  val unprocessableEntityErrorsResponse: JsValue = Json.parse(
+    """
+      | {
+      |    "errors":
+      |    {
+      |        "processingDate": "2001-12-17T09:30:47Z",
+      |        "code": "001",
+      |        "text": "Regime missing or invalid"
+      |    }
+      |}
+      |""".stripMargin)
+
+  private val httpSuccessResponse = HttpResponse(OK, successResponse, Map(CorrelationIdHeader -> Seq("123")))
+  private val badRequestBody: JsValue = Json.parse("""{ "error": "bad-request" }""")
+  private val http400 = HttpResponse(BAD_REQUEST, badRequestBody, Map(CorrelationIdHeader -> Seq("123")))
+  private val http422ErrorsResponse = HttpResponse(UNPROCESSABLE_ENTITY, unprocessableEntityErrorsResponse, Map(CorrelationIdHeader -> Seq("123")))
+  private val http422ErrorResponse = HttpResponse(UNPROCESSABLE_ENTITY, unprocessableEntityErrorResponse, Map(CorrelationIdHeader -> Seq("123")))
+
+  lazy val mockUrl5170: HttpResponse => Unit = { response =>
+    setupMockHttpV2PutWithHeaderCarrier(url5170)(response)
+    when(mockRequestBuilder.transform(any())).thenReturn(mockRequestBuilder)
+  }
+
+  val internalServerErrorBody: JsValue = Json.parse("""{ "error": { "code": "500", "message": "boom", "logID": "ABC" } }""")
+  val serviceUnavailableBody: JsValue = Json.parse("""{ "error": { "code": "503", "message": "down", "logID": "DEF" } }""")
+
+  private val http500 = HttpResponse(INTERNAL_SERVER_ERROR, internalServerErrorBody, Map(CorrelationIdHeader -> Seq("123")))
+  private val http503 = HttpResponse(SERVICE_UNAVAILABLE, serviceUnavailableBody, Map(CorrelationIdHeader -> Seq("123")))
+
+
+  "The UpdateCustomerFactConnector" should {
+    "return a OK response" when {
+      "calling updateCustomerFactsToConfirmed with a valid MTDSA ID" in {
+        mockUrl5170(httpSuccessResponse)
+
+        val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+        result shouldBe Ok
+      }
+    }
+
+    "return 200 and the json body even when the response doesn't match the expected schema" in {
+      val unexpectedSuccessBody = Json.parse("""{ "invalidField": "value" }""")
+      val httpSuccessUnexpected = HttpResponse(OK, unexpectedSuccessBody, Map(CorrelationIdHeader -> Seq("123")))
+
+      mockUrl5170(httpSuccessUnexpected)
+
+      val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+      result shouldBe Ok
+    }
+
+    "return 400 when HIP returns 400" in {
+      mockUrl5170(http400)
+
+      val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+      result shouldBe BadRequest
+    }
+
+
+    "return a 422 response" when {
+      "calling updateCustomerFactsToConfirmed with a valid MTDSA ID return an 422 error with Errors json" in {
+        mockUrl5170(http422ErrorsResponse)
+
+        val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+        result shouldBe UnprocessableEntity
+      }
+
+      "calling updateCustomerFactsToConfirmed with a valid MTDSA ID return an 422 error with Error json" in {
+        mockUrl5170(http422ErrorResponse)
+
+        val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+        result shouldBe UnprocessableEntity
+      }
+    }
+
+    "return 500 when HIP returns 500" in {
+      mockUrl5170(http500)
+
+      val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+      result shouldBe InternalServerError
+    }
+
+    "return 500 when HIP returns 503" in {
+      mockUrl5170(http503)
+
+      val result = TestUpdateCustomerFactConnector.updateCustomerFactsToConfirmed("testMtdId").futureValue
+
+      result shouldBe InternalServerError
+    }
+  }
+}
