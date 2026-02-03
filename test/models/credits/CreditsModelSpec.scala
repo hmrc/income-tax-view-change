@@ -50,6 +50,8 @@ class CreditsModelSpec extends TestSupport with Matchers {
       (json \ "allocatedCreditForFutureCharges").get shouldBe JsNumber(300.0)
       (json \ "unallocatedCredit").get shouldBe JsNumber(250.0)
       (json \ "totalCredit").get shouldBe JsNumber(150.0)
+      (json \ "firstPendingAmountRequested").get shouldBe JsNumber(200)
+      (json \ "secondPendingAmountRequested").get shouldBe JsNumber(100)
 
       val transactions = (json \ "transactions").get
       transactions match {
