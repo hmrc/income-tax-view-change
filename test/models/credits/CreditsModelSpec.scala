@@ -38,7 +38,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)
         .withBalancingChargeCredit("BALANCING01", LocalDate.of(2024, 6, 19), -200)
         .withMfaCredit("MFA01", LocalDate.of(2024, 6, 18), -300)
-        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), -400)
+        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), LocalDate.of(2024, 6, 17), -400)
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
         .get()
 
@@ -78,18 +78,18 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)
         .withBalancingChargeCredit("BALANCING01", LocalDate.of(2024, 6, 19), -200)
         .withMfaCredit("MFA01", LocalDate.of(2024, 6, 18), -300)
-        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), -400)
+        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), LocalDate.of(2024, 6, 17), -400)
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
         .get()
 
       val creditsModel = CreditsModel.fromHipChargesResponse(chargesResponse)
 
       creditsModel.transactions.size shouldBe 5
-      creditsModel.transactions.head shouldBe Transaction(CutOverCreditType, 100.0, Some(2024), Some(LocalDate.of(2024, 6, 20)), "CUTOVER01")
-      creditsModel.transactions(1) shouldBe Transaction(BalancingChargeCreditType, 200.0, Some(2024), Some(LocalDate.of(2024, 6, 19)), "BALANCING01")
-      creditsModel.transactions(2) shouldBe Transaction(MfaCreditType, 300.0, Some(2024), Some(LocalDate.of(2024, 6, 18)), "MFA01")
-      creditsModel.transactions(3) shouldBe Transaction(PaymentType, 400.0, Some(2024), Some(LocalDate.of(2024, 6, 17)), "PAYMENT01")
-      creditsModel.transactions(4) shouldBe Transaction(RepaymentInterest, 500.0, Some(2024), Some(LocalDate.of(2024, 6, 16)), "INTEREST01")
+      creditsModel.transactions.head shouldBe Transaction(CutOverCreditType, 100.0, Some(2024), Some(LocalDate.of(2024, 6, 20)), None, "CUTOVER01")
+      creditsModel.transactions(1) shouldBe Transaction(BalancingChargeCreditType, 200.0, Some(2024), Some(LocalDate.of(2024, 6, 19)), None, "BALANCING01")
+      creditsModel.transactions(2) shouldBe Transaction(MfaCreditType, 300.0, Some(2024), Some(LocalDate.of(2024, 6, 18)), None, "MFA01")
+      creditsModel.transactions(3) shouldBe Transaction(PaymentType, 400.0, Some(2024), Some(LocalDate.of(2024, 6, 17)), Some(LocalDate.of(2024, 6, 17)), "PAYMENT01")
+      creditsModel.transactions(4) shouldBe Transaction(RepaymentInterest, 500.0, Some(2024), Some(LocalDate.of(2024, 6, 16)), None, "INTEREST01")
     }
 
     "parse refund requests as transactions" in {
@@ -113,7 +113,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)
         .withBalancingChargeCredit("BALANCING01", LocalDate.of(2024, 6, 19), -200)
         .withMfaCredit("MFA01", LocalDate.of(2024, 6, 18), -300)
-        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), -400)
+        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), LocalDate.of(2024, 6, 17), -400)
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
         .get()
 
@@ -130,7 +130,7 @@ class CreditsModelSpec extends TestSupport with Matchers {
         .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), 100.0)
         .withBalancingChargeCredit("BALANCING01", LocalDate.of(2024, 6, 19), 200)
         .withMfaCredit("MFA01", LocalDate.of(2024, 6, 18), 300)
-        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), 400)
+        .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), LocalDate.of(2024, 6, 17), 400)
         .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), 500)
         .get()
 

@@ -55,7 +55,7 @@ class FinancialDetailCreditsControllerSpec extends ControllerBaseSpec with MockF
           .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)
           .withBalancingChargeCredit("BALANCING01", LocalDate.of(2024, 6, 19), -200)
           .withMfaCredit("MFA01", LocalDate.of(2024, 6, 18), -300)
-          .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), -400)
+          .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), LocalDate.of(2024, 6, 17), -400)
           .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
           .get()
 
