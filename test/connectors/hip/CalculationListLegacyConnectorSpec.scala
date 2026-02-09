@@ -19,7 +19,7 @@ package connectors.hip
 import constants.BaseTestConstants.{testNino, testTaxYearEnd}
 import constants.CalculationListTestConstants._
 import mocks.MockHttpV2
-import models.hip.{ErrorResponse, GetLegacyCalcListHipApi, UnexpectedJsonResponse}
+import models.hip.{ErrorResponse, GetLegacyCalcListHipApi}
 import uk.gov.hmrc.http.HttpResponse
 import utils.TestSupport
 
@@ -56,8 +56,8 @@ class CalculationListLegacyConnectorSpec extends TestSupport with MockHttpV2 {
 
     "return an ErrorResponse model" when {
       "calling getCalculationList and a non-success response is received" in {
-        mockUrl1404Failed(Left(UnexpectedJsonResponse))
-        TestCalculationListLegacyConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe Left(UnexpectedJsonResponse)
+        mockUrl1404Failed(Left(ErrorResponse.UnexpectedJsonResponse))
+        TestCalculationListLegacyConnector.getCalculationList(testNino, testTaxYearEnd).futureValue shouldBe Left(ErrorResponse.UnexpectedJsonResponse)
       }
     }
   }

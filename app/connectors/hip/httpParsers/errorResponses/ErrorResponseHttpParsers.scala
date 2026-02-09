@@ -16,9 +16,9 @@
 
 package connectors.hip.httpParsers.errorResponses
 
-import models.hip.{BadGatewayResponse, CustomResponse, ErrorResponse, FailureResponse, OriginFailuresResponse, OriginWithErrorCodeAndResponse, UnexpectedJsonResponse, UnexpectedResponse}
+import models.hip.*
 import play.api.Logging
-import play.api.http.Status.{BAD_GATEWAY, BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE, UNAUTHORIZED}
+import play.api.http.Status.*
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 
@@ -35,47 +35,48 @@ trait ErrorResponseHttpParsers extends Logging {
         httpResponse.json.validate[OriginFailuresResponse].orElse(httpResponse.json.validate[OriginWithErrorCodeAndResponse]).fold(
           invalid => {
             logger.error(s"Unexpected response with status code: $BAD_REQUEST, response: $invalid")
-            Left(UnexpectedJsonResponse)
+            Left(ErrorResponse.UnexpectedJsonResponse)
           },
           {
             case expected@(_: OriginFailuresResponse) =>
               logger.error(s"Bad request error response: $expected")
-              Left(ErrorResponse(BAD_REQUEST, Json.toJson(expected)))
+              Left(ErrorResponse.GenericError(BAD_REQUEST, Json.toJson(expected)))
             case expected@(_: OriginWithErrorCodeAndResponse) =>
               logger.error(s"Bad request error response: $expected")
-              Left(ErrorResponse(BAD_REQUEST, Json.toJson(expected)))
+              Left(ErrorResponse.GenericError(BAD_REQUEST, Json.toJson(expected)))
           }
         )
       case UNAUTHORIZED | NOT_FOUND =>
         httpResponse.json.validate[Seq[FailureResponse]].fold(
           invalid => {
             logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: $invalid")
-            Left(ErrorResponse(httpResponse.status, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
+            Left(ErrorResponse.GenericError(httpResponse.status, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
           },
           expected => {
             logger.error(s"Unauthorised or Not found error response, status: ${httpResponse.status}, response: $expected")
-            Left(ErrorResponse(httpResponse.status, Json.toJson(expected)))
+            Left(ErrorResponse.GenericError(httpResponse.status, Json.toJson(expected)))
           }
         )
       case INTERNAL_SERVER_ERROR | SERVICE_UNAVAILABLE =>
         httpResponse.json.validate[OriginFailuresResponse].fold(
           invalid => {
             logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: $invalid")
-            Left(UnexpectedJsonResponse)
+            Left(ErrorResponse.UnexpectedJsonResponse)
           },
           expected => {
             logger.error(s"InternalServerError or ServiceUnavailable error response, status: ${httpResponse.status}, response: $expected")
-            Left(ErrorResponse(httpResponse.status, Json.toJson(expected)))
+            Left(ErrorResponse.GenericError(httpResponse.status, Json.toJson(expected)))
           }
         )
-      case BAD_GATEWAY => Left(BadGatewayResponse)
+      case BAD_GATEWAY => Left(ErrorResponse.BadGatewayResponse)
+      case UNPROCESSABLE_ENTITY => Left(ErrorResponse.UnprocessableData(httpResponse.body))
       case _ =>
         logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: ${httpResponse.body}")
-        Left(UnexpectedJsonResponse)
+        Left(ErrorResponse.UnexpectedJsonResponse)
 
     }).getOrElse {
       logger.error(s"Non Json response returned with status code: ${httpResponse.status}, response: ${httpResponse.body}")
-      Left(UnexpectedResponse)
+      Left(ErrorResponse.UnexpectedResponse)
     }
   }
 }

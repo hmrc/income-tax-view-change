@@ -16,7 +16,7 @@
 
 package config
 
-import models.hip.{CreateIncomeSourceHipApi, GetBusinessDetailsHipApi, GetChargeHistoryHipApi, HipApi, UpdateCustomerFactHipApi}
+import models.hip.*
 import uk.gov.hmrc.http.HeaderNames
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import utils.DateUtils
@@ -87,6 +87,13 @@ class MicroserviceAppConfig @Inject()(servicesConfig: ServicesConfig) {
             ("X-Receipt-Date", DateUtils.nowAsUtc),
             ("X-Regime", "ITSA"),
             ("X-Transmitting-System", "HIP")
+          )
+        case GetRepaymentHistoryDetails =>
+          Seq(
+            ("X-Transmitting-System", "HIP"),
+            ("X-Originating-System", "MDTPITVC"),
+            ("X-Receipt-Date", DateUtils.nowAsUtc),
+            ("X-Regime-Type", "ITSA")
           )
         case _ => Seq.empty
       }

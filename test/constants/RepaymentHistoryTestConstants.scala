@@ -16,10 +16,11 @@
 
 package constants
 
-import models.repaymentHistory._
+import models.hip.repayments.{CreditReason, RepaymentViewerDetail, ResponseDetails, SuccessfulRepaymentResponse, TransactionHeader}
+import models.repaymentHistory.*
 import play.api.libs.json.{JsValue, Json}
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 object RepaymentHistoryTestConstants {
 
@@ -126,4 +127,123 @@ object RepaymentHistoryTestConstants {
     status = "A"
   )
 
+
+  val hipRepaymentHistoryList: SuccessfulRepaymentResponse = SuccessfulRepaymentResponse(
+    TransactionHeader(status = "OK", processingDate = LocalDateTime.of(LocalDate.of(2025, 12, 17), LocalTime.of(9, 30, 17))),
+    responseDetails = ResponseDetails(
+      Seq(RepaymentViewerDetail(
+        repaymentRequestNumber = "000000003135",
+        actor = "Taxpayer",
+        channel = "CESA Return",
+        status = "Approved",
+        amountRequested = BigDecimal(200),
+        amountApprovedforRepayment = Some(BigDecimal(200)),
+        totalAmountforRepaymentSupplement = Some(BigDecimal(200)),
+        totalRepaymentAmount = Some(BigDecimal(200)),
+        repaymentMethod = Some("CARD"),
+        creationDate = Some(LocalDate.parse("2020-12-03")),
+        estimatedRepaymentDate = Some(LocalDate.parse("2020-12-05")),
+        repaymentItems = Some(Seq(models.hip.repayments.RepaymentItem(
+          creditItems = None,
+          paymentItems = None,
+          creditReasons = Some(Seq(CreditReason(
+            creditReference = None,
+            creditReason = "Credit",
+            receivedDate = None,
+            edp = None,
+            amount = None,
+            originalChargeReduced = None,
+            amendmentDate = None,
+            taxYear = None
+          ))),
+          repaymentSupplementItem = Some(Seq(models.hip.repayments.RepaymentSupplementItem(
+            creditReference = Some("002420002231"),
+            parentCreditReference = Some("002420002231"),
+            amount = Some(BigDecimal(200)),
+            fromDate = Some(LocalDate.parse("2020-12-01")),
+            toDate = Some(LocalDate.parse("2020-12-03")),
+            rate = Some(BigDecimal(7.25))
+          )))
+        )))
+      ),
+        RepaymentViewerDetail(
+          repaymentRequestNumber = "000000003136",
+          actor = "Taxpayer",
+          channel = "CESA Return",
+          status = "Approved",
+          amountRequested = BigDecimal(200),
+          amountApprovedforRepayment = Some(BigDecimal(200)),
+          totalAmountforRepaymentSupplement = Some(BigDecimal(200)),
+          totalRepaymentAmount = Some(BigDecimal(200)),
+          repaymentMethod = Some("CARD"),
+          creationDate = Some(LocalDate.parse("2021-12-03")),
+          estimatedRepaymentDate = Some(LocalDate.parse("2021-12-05")),
+          repaymentItems = Some(Seq(models.hip.repayments.RepaymentItem(
+            creditItems = None,
+            paymentItems = None,
+            creditReasons = Some(Seq(CreditReason(
+              creditReference = None,
+              creditReason = "Credit",
+              receivedDate = None,
+              edp = None,
+              amount = None,
+              originalChargeReduced = None,
+              amendmentDate = None,
+              taxYear = None
+            ))),
+            repaymentSupplementItem = Some(Seq(models.hip.repayments.RepaymentSupplementItem(
+              creditReference = Some("002420002274"),
+              parentCreditReference = Some("002420002274"),
+              amount = Some(BigDecimal(200)),
+              fromDate = Some(LocalDate.parse("2021-12-01")),
+              toDate = Some(LocalDate.parse("2021-12-03")),
+              rate = Some(BigDecimal(7.25))
+            )))
+          )))
+        )
+      )
+    )
+  )
+
+  val hipRepaymentHistorySingleItem: SuccessfulRepaymentResponse = SuccessfulRepaymentResponse(
+    TransactionHeader(status = "OK", processingDate = LocalDateTime.of(LocalDate.of(2025, 12, 17), LocalTime.of(9, 30, 17))),
+    responseDetails = ResponseDetails(
+      Seq(RepaymentViewerDetail(
+        repaymentRequestNumber = "000000003135",
+        actor = "Taxpayer",
+        channel = "CESA Return",
+        status = "Approved",
+        amountRequested = BigDecimal(200),
+        amountApprovedforRepayment = Some(BigDecimal(200)),
+        totalAmountforRepaymentSupplement = Some(BigDecimal(200)),
+        totalRepaymentAmount = Some(BigDecimal(200)),
+        repaymentMethod = Some("CARD"),
+        creationDate = Some(LocalDate.parse("2020-12-03")),
+        estimatedRepaymentDate = Some(LocalDate.parse("2020-12-05")),
+        repaymentItems = Some(Seq(models.hip.repayments.RepaymentItem(
+          creditItems = None,
+          paymentItems = None,
+          creditReasons = Some(Seq(CreditReason(
+            creditReference = None,
+            creditReason = "Credit",
+            receivedDate = None,
+            edp = None,
+            amount = None,
+            originalChargeReduced = None,
+            amendmentDate = None,
+            taxYear = None
+          ))),
+          repaymentSupplementItem = Some(Seq(models.hip.repayments.RepaymentSupplementItem(
+            creditReference = Some("002420002231"),
+            parentCreditReference = Some("002420002231"),
+            amount = Some(BigDecimal(200)),
+            fromDate = Some(LocalDate.parse("2020-12-01")),
+            toDate = Some(LocalDate.parse("2020-12-03")),
+            rate = Some(BigDecimal(7.25))
+          )))
+        )))
+      )
+      )
+    )
+  )
 }
