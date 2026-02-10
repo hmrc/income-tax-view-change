@@ -18,34 +18,47 @@ package models.hip.repayments
 
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
-
 import java.time.{LocalDate, LocalDateTime}
 
 case class SuccessfulRepaymentResponse(
-                              transactionHeader: TransactionHeader,
-                              responseDetails: ResponseDetails
-                            )
+                                        transactionHeader: TransactionHeader,
+                                        responseDetails: ResponseDetails
+                                      )
 
-object SuccessfulRepaymentResponse:
-  given Format[SuccessfulRepaymentResponse] = (
-    (__ \ "etmp_transaction_header").format[TransactionHeader] and
-      (__ \ "etmp_Response_Details").format[ResponseDetails]
-    )(SuccessfulRepaymentResponse.apply, res => (res.transactionHeader, res.responseDetails))
+object SuccessfulRepaymentResponse {
+  given Format[SuccessfulRepaymentResponse] with {
+    private val baseFormat: Format[SuccessfulRepaymentResponse] = (
+      (__ \ "etmp_transaction_header").format[TransactionHeader] and
+        (__ \ "etmp_Response_Details").format[ResponseDetails]
+      )(SuccessfulRepaymentResponse.apply, res => (res.transactionHeader, res.responseDetails))
+
+    def reads(json: JsValue): JsResult[SuccessfulRepaymentResponse] = baseFormat.reads(json)
+    def writes(o: SuccessfulRepaymentResponse): JsValue = baseFormat.writes(o)
+  }
+}
 
 case class TransactionHeader(
                               status: String,
                               processingDate: LocalDateTime
                             )
 
-object TransactionHeader:
-  given Format[TransactionHeader] = Json.format
+object TransactionHeader {
+  given Format[TransactionHeader] with {
+    def reads(json: JsValue): JsResult[TransactionHeader] = Json.reads[TransactionHeader].reads(json)
+    def writes(o: TransactionHeader): JsValue = Json.writes[TransactionHeader].writes(o)
+  }
+}
 
 case class ResponseDetails(
                             repaymentsViewerDetails: Seq[RepaymentViewerDetail]
                           )
 
-object ResponseDetails:
-  given Format[ResponseDetails] = Json.format
+object ResponseDetails {
+  given Format[ResponseDetails] with {
+    def reads(json: JsValue): JsResult[ResponseDetails] = Json.reads[ResponseDetails].reads(json)
+    def writes(o: ResponseDetails): JsValue = Json.writes[ResponseDetails].writes(o)
+  }
+}
 
 case class RepaymentViewerDetail(
                                   repaymentRequestNumber: String,
@@ -62,8 +75,12 @@ case class RepaymentViewerDetail(
                                   repaymentItems: Option[Seq[RepaymentItem]]
                                 )
 
-object RepaymentViewerDetail:
-  given Format[RepaymentViewerDetail] = Json.format
+object RepaymentViewerDetail {
+  given Format[RepaymentViewerDetail] with {
+    def reads(json: JsValue): JsResult[RepaymentViewerDetail] = Json.reads[RepaymentViewerDetail].reads(json)
+    def writes(o: RepaymentViewerDetail): JsValue = Json.writes[RepaymentViewerDetail].writes(o)
+  }
+}
 
 case class RepaymentItem(
                           creditItems: Option[Seq[CreditItem]],
@@ -72,8 +89,12 @@ case class RepaymentItem(
                           repaymentSupplementItem: Option[Seq[RepaymentSupplementItem]]
                         )
 
-object RepaymentItem:
-  given Format[RepaymentItem] = Json.format
+object RepaymentItem {
+  given Format[RepaymentItem] with {
+    def reads(json: JsValue): JsResult[RepaymentItem] = Json.reads[RepaymentItem].reads(json)
+    def writes(o: RepaymentItem): JsValue = Json.writes[RepaymentItem].writes(o)
+  }
+}
 
 case class CreditItem(
                        creditReference: String,
@@ -83,8 +104,12 @@ case class CreditItem(
                        taxYear: String
                      )
 
-object CreditItem:
-  given Format[CreditItem] = Json.format
+object CreditItem {
+  given Format[CreditItem] with {
+    def reads(json: JsValue): JsResult[CreditItem] = Json.reads[CreditItem].reads(json)
+    def writes(o: CreditItem): JsValue = Json.writes[CreditItem].writes(o)
+  }
+}
 
 case class PaymentItem(
                         paymentReference: String,
@@ -93,8 +118,12 @@ case class PaymentItem(
                         edp: LocalDate
                       )
 
-object PaymentItem:
-  given Format[PaymentItem] = Json.format
+object PaymentItem {
+  given Format[PaymentItem] with {
+    def reads(json: JsValue): JsResult[PaymentItem] = Json.reads[PaymentItem].reads(json)
+    def writes(o: PaymentItem): JsValue = Json.writes[PaymentItem].writes(o)
+  }
+}
 
 case class CreditReason(
                          creditReference: Option[String],
@@ -107,8 +136,12 @@ case class CreditReason(
                          taxYear: Option[String]
                        )
 
-object CreditReason:
-  given Format[CreditReason] = Json.format
+object CreditReason {
+  given Format[CreditReason] with {
+    def reads(json: JsValue): JsResult[CreditReason] = Json.reads[CreditReason].reads(json)
+    def writes(o: CreditReason): JsValue = Json.writes[CreditReason].writes(o)
+  }
+}
 
 case class RepaymentSupplementItem(
                                     creditReference: Option[String],
@@ -119,5 +152,9 @@ case class RepaymentSupplementItem(
                                     rate: Option[BigDecimal]
                                   )
 
-object RepaymentSupplementItem:
-  given Format[RepaymentSupplementItem] = Json.format
+object RepaymentSupplementItem {
+  given Format[RepaymentSupplementItem] with {
+    def reads(json: JsValue): JsResult[RepaymentSupplementItem] = Json.reads[RepaymentSupplementItem].reads(json)
+    def writes(o: RepaymentSupplementItem): JsValue = Json.writes[RepaymentSupplementItem].writes(o)
+  }
+}
