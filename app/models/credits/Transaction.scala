@@ -24,6 +24,7 @@ case class Transaction(transactionType: TransactionType,
                        amount: BigDecimal,
                        taxYear: Option[Int],
                        dueDate: Option[LocalDate],
+                       effectiveDateOfPayment: Option[LocalDate],
                        transactionId: String)
 
 object Transaction {

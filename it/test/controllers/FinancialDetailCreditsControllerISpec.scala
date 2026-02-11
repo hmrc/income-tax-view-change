@@ -79,7 +79,8 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
                |    "totalAmount" : -1000,
                |    "documentOutstandingAmount" : -400,
                |    "documentDate" : "2024-06-17",
-               |    "documentDueDate" : "2024-06-17"
+               |    "documentDueDate" : "2024-06-17",
+               |    "effectiveDateOfPayment": "2024-06-16"
                |  }, {
                |    "taxYear" : "2024",
                |    "documentID" : "INTEREST01",
@@ -158,7 +159,7 @@ class FinancialDetailCreditsControllerISpec extends ComponentSpecBase {
           .withCutoverCredit("CUTOVER01", LocalDate.of(2024, 6, 20), -100.0)
           .withBalancingChargeCredit("BALANCING01", LocalDate.of(2024, 6, 19), -200)
           .withMfaCredit("MFA01", LocalDate.of(2024, 6, 18), -300)
-          .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), -400)
+          .withPayment("PAYMENT01", LocalDate.of(2024, 6, 17), LocalDate.of(2024, 6, 16), -400)
           .withRepaymentInterest("INTEREST01", LocalDate.of(2024, 6, 16), -500)
           .get())
 

@@ -15,6 +15,7 @@
  */
 
 package models.credits
+
 import models.financialDetails.hip.model.{ChargesHipResponse, DocumentDetailHip}
 import play.api.libs.json.{Json, OFormat}
 
@@ -24,11 +25,11 @@ case class CreditsModel(availableCreditForRepayment: BigDecimal,
                         totalCredit: BigDecimal,
                         firstPendingAmountRequested: Option[BigDecimal],
                         secondPendingAmountRequested: Option[BigDecimal],
-                        transactions: List[Transaction] )
+                        transactions: List[Transaction])
 
 object CreditsModel {
 
-  implicit val format: OFormat[CreditsModel] = Json.format[CreditsModel ]
+  implicit val format: OFormat[CreditsModel] = Json.format[CreditsModel]
 
   private def getCreditOrPaymentAmountForHip(documentDetail: DocumentDetailHip): BigDecimal = {
     Option(documentDetail.outstandingAmount)
@@ -44,6 +45,7 @@ object CreditsModel {
       .flatten.map(amount => Transaction(
         Repayment,
         amount,
+        None,
         None,
         None,
         ""
@@ -63,6 +65,7 @@ object CreditsModel {
           // TODO: convert TaxYear to Int in the actual model?
           taxYear = Some(documentDetail.taxYear),
           dueDate = documentDetail.documentDueDate,
+          effectiveDateOfPayment = documentDetail.effectiveDateOfPayment,
           transactionId = documentDetail.transactionId
         )
       }

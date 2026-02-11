@@ -31,6 +31,7 @@ class TransactionSpec extends AnyWordSpec with Matchers {
         amount = BigDecimal(250.75),
         taxYear = Some(2025),
         dueDate = Some(LocalDate.parse("2025-03-31")),
+        effectiveDateOfPayment = Some(LocalDate.parse("2025-03-31")),
         transactionId = "TXN12345"
       )
 
@@ -41,6 +42,7 @@ class TransactionSpec extends AnyWordSpec with Matchers {
         "amount" -> 250.75,
         "taxYear" -> 2025,
         "dueDate" -> "2025-03-31",
+        "effectiveDateOfPayment" -> "2025-03-31",
         "transactionId" -> "TXN12345"
       )
 
@@ -53,6 +55,7 @@ class TransactionSpec extends AnyWordSpec with Matchers {
         "amount" -> 100.50,
         "taxYear" -> JsNull,
         "dueDate" -> "2025-04-15",
+        "effectiveDateOfPayment" -> "2025-04-15",
         "transactionId" -> "TXN67890"
       )
 
@@ -63,6 +66,7 @@ class TransactionSpec extends AnyWordSpec with Matchers {
         amount = BigDecimal(100.50),
         taxYear = None,
         dueDate = Some(LocalDate.parse("2025-04-15")),
+        effectiveDateOfPayment = Some(LocalDate.parse("2025-04-15")),
         transactionId = "TXN67890"
       )
     }
@@ -73,13 +77,15 @@ class TransactionSpec extends AnyWordSpec with Matchers {
         amount = BigDecimal(500),
         taxYear = None,
         dueDate = None,
+        effectiveDateOfPayment = None,
         transactionId = "TXN999"
       )
 
       val json = Json.toJson(transaction)
 
       (json \ "taxYear").asOpt[Int] shouldBe None
-      (json \ "dueDate").asOpt[String] shouldBe None
+      (json \ "dueDate").asOpt[Int] shouldBe None
+      (json \ "effectiveDateOfPayment").asOpt[String] shouldBe None
 
       val roundTrip = json.as[Transaction]
       roundTrip shouldBe transaction
