@@ -23,5 +23,5 @@ object BaseTestConstants {
   val mtdRef = "123456789012345"
   val testTaxYearEnd = "2022"
   val testTaxYearRange = "23-24"
-
+  val testRepaymentId = "XIE000000000AA"
 }

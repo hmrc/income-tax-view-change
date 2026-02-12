@@ -16,7 +16,7 @@
 
 package models.hip
 
-import play.api.http.Status.{BAD_GATEWAY, INTERNAL_SERVER_ERROR}
+import play.api.http.Status.{BAD_GATEWAY, INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{Format, JsValue, Json}
 
 sealed trait Errors
@@ -57,23 +57,29 @@ object OriginWithErrorCodeAndResponse {
   implicit val format: Format[OriginWithErrorCodeAndResponse] = Json.format[OriginWithErrorCodeAndResponse]
 }
 
-case class ErrorResponse(status: Int, jsonError: JsValue)
+enum ErrorResponse(val status: Int, val jsonError: JsValue):
 
-object UnexpectedJsonResponse extends ErrorResponse(
-  INTERNAL_SERVER_ERROR,
-  Json.toJson(CustomResponse("Unexpected json response"))
-)
+  case UnexpectedJsonResponse extends ErrorResponse(
+    INTERNAL_SERVER_ERROR,
+    Json.toJson(CustomResponse("Unexpected json response"))
+  )
 
-object UnexpectedResponse extends ErrorResponse(
-  INTERNAL_SERVER_ERROR,
-  Json.toJson(CustomResponse("Unexpected response"))
-)
+  case UnexpectedResponse extends ErrorResponse(
+    INTERNAL_SERVER_ERROR,
+    Json.toJson(CustomResponse("Unexpected response"))
+  )
 
-object BadGatewayResponse extends ErrorResponse(
-  BAD_GATEWAY,
-  Json.toJson(CustomResponse("BAD_GATEWAY response"))
-)
+  case BadGatewayResponse extends ErrorResponse(
+    BAD_GATEWAY,
+    Json.toJson(CustomResponse("BAD_GATEWAY response"))
+  )
 
+  case UnprocessableData(response: String) extends ErrorResponse(
+    UNPROCESSABLE_ENTITY,
+    Json.toJson(response))
+  
+
+  case GenericError(s: Int, response: JsValue) extends ErrorResponse(s, response)
 case class HipResponseError(code: String, text: String)
 
 object HipResponseError {

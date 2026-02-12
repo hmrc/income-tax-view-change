@@ -18,7 +18,7 @@ package connectors.hip.httpParsers
 
 import connectors.hip.httpParsers.errorResponses.ErrorResponseHttpParsers
 import models.calculationList.{CalculationListModel, CalculationListResponseModel}
-import models.hip.UnexpectedJsonResponse
+import models.hip.ErrorResponse.UnexpectedJsonResponse
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 

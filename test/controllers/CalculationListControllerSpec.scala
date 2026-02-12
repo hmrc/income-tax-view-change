@@ -70,7 +70,7 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
         mockAuth()
         when(mockHipCalcListConnector.getCalculationList(
           ArgumentMatchers.eq(testNino), ArgumentMatchers.eq(testTaxYearEnd))(any(), any())).thenReturn(
-          Future.successful(Left(ErrorResponse(BAD_REQUEST, Json.toJson("{}")))))
+          Future.successful(Left(ErrorResponse.GenericError(BAD_REQUEST, Json.toJson("{}")))))
 
         val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
@@ -81,7 +81,7 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
         mockAuth()
         when(mockHipCalcListConnector.getCalculationList(
           ArgumentMatchers.eq(testNino), ArgumentMatchers.eq(testTaxYearEnd))(any(), any())).thenReturn(
-          Future.successful(Left(ErrorResponse(BAD_REQUEST, invalidNinoResponse))))
+          Future.successful(Left(ErrorResponse.GenericError(BAD_REQUEST, invalidNinoResponse))))
 
         val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
@@ -93,7 +93,7 @@ class CalculationListControllerSpec extends ControllerBaseSpec with MockMicroser
         mockAuth()
         when(mockHipCalcListConnector.getCalculationList(
           ArgumentMatchers.eq(testNino), ArgumentMatchers.eq(testTaxYearEnd))(any(), any())).thenReturn(
-          Future.successful(Left(ErrorResponse(BAD_REQUEST, invalidTaxYearResponse))))
+          Future.successful(Left(ErrorResponse.GenericError(BAD_REQUEST, invalidTaxYearResponse))))
 
         val result = TestCalculationListController.getCalculationList(testNino, testTaxYearEnd)(fakeRequest)
         status(result) shouldBe Status.BAD_REQUEST
