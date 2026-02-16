@@ -105,7 +105,10 @@ object DocumentDetailHip {
       (__ \ "interestEndDate").readNullable[LocalDate] and
       (__ \ "latePaymentInterestID").readNullable[String] and
       (__ \ "latePaymentInterestAmount").readNullable[BigDecimal] and
-      (__ \ "lpiWithDunningBlock").read[BigDecimal].map(Option(_)).orElse((__ \ "lpiWithDunningLock").readNullable[BigDecimal]) and
+      (__ \ "lpiWithDunningBlock").readNullable[BigDecimal].flatMap {
+        case Some(value) => Reads.pure(Some(value))
+        case None        => (__ \ "lpiWithDunningLock").readNullable[BigDecimal]
+      } and
       (__ \ "interestOutstandingAmount").readNullable[BigDecimal] and
       (__ \ "amountCodedOut").readNullable[BigDecimal]
     )(DocumentDetailHip.apply _)
