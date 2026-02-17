@@ -84,7 +84,7 @@ class FinancialDetailsHipConnector @Inject()(val http: HttpClientV2,
       ("X-Receipt-Date", DateUtils.nowAsUtc),
       ("X-Transmitting-System", xTransmittingSystem)
     )
-    val headerCarrier: Seq[(String, String)] = appConfig.getHIPHeaders(GetFinancialDetailsHipApi) ++ extraHeaders
+    def headerCarrier: Seq[(String, String)] = appConfig.getHIPHeaders(GetFinancialDetailsHipApi) ++ extraHeaders
     logger.info("" +
       s"FinancialDetailsHipConnector::URL: $url \n\nHeaders: $headerCarrier")
 

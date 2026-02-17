@@ -40,7 +40,7 @@ class ITSAStatusConnector @Inject()(val http: HttpClientV2,
                                     val appConfig: MicroserviceAppConfig
                                    )(implicit ec: ExecutionContext) extends RawResponseReads with Logging {
 
-  val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(ITSAStatusHipApi)
+  def hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(ITSAStatusHipApi)
 
   def getITSAStatusUrl(taxableEntityId: String, taxYear: String, futureYears: String, history: String): String =
     s"${appConfig.hipUrl}/itsd/person-itd/itsa-status/$taxableEntityId?taxYear=$taxYear&futureYears=$futureYears&history=$history"
