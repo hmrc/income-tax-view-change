@@ -40,7 +40,7 @@ class UpdateCustomerFactConnector @Inject()(
 
   private val CorrelationIdHeader = "correlationid"
 
-  private val hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(UpdateCustomerFactHipApi)
+  private def hipHeaders: Seq[(String, String)] = appConfig.getHIPHeaders(UpdateCustomerFactHipApi)
   private val updateCustomerFactsUrl: String = s"${appConfig.hipUrl}/etmp/RESTAdapter/customer/facts"
 
   private def responseJsonOpt(response: HttpResponse): Option[JsValue] =
