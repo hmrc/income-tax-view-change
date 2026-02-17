@@ -28,7 +28,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
+import play.api.http.Status.{OK, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.Json
 import play.api.mvc.ControllerComponents
 import play.api.test.Helpers.{contentAsJson, defaultAwaitTimeout, status, stubControllerComponents}
@@ -61,7 +61,7 @@ class RepaymentHistoryControllerSpec extends ControllerBaseSpec with MockMicrose
       }
     }
 
-    "return 500 INTERNAL_SERVER_ERROR" when {
+    "return 422 UNPROCESSABLE_ENTITY" when {
       "user is authenticated and HipRepaymentHistoryDetailsConnector returns UNPROCESSABLE_ENTITY" in {
         mockAuth()
         when(mockAppConfig.hipFeatureSwitchEnabled(GetRepaymentHistoryDetails)).thenReturn(true)
@@ -69,7 +69,7 @@ class RepaymentHistoryControllerSpec extends ControllerBaseSpec with MockMicrose
           .thenReturn(Future.successful(Left(ErrorResponse.UnprocessableData("Error"))))
 
         val result = TestRepaymentHistoryController.getAllRepaymentHistory(testNino)(fakeRequest)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        status(result) shouldBe UNPROCESSABLE_ENTITY
         contentAsJson(result) shouldBe Json.toJson("Error")
       }
     }
@@ -90,7 +90,7 @@ class RepaymentHistoryControllerSpec extends ControllerBaseSpec with MockMicrose
         }
       }
 
-    "return 500 INTERNAL_SERVER_ERROR" when {
+    "return 422 UNPROCESSABLE_ENTITY" when {
       "user is authenticated and HipRepaymentHistoryDetailsConnector returns UNPROCESSABLE_ENTITY" in {
         mockAuth()
         when(mockAppConfig.hipFeatureSwitchEnabled(GetRepaymentHistoryDetails)).thenReturn(true)
@@ -99,7 +99,7 @@ class RepaymentHistoryControllerSpec extends ControllerBaseSpec with MockMicrose
           .thenReturn(Future.successful(Left(ErrorResponse.UnprocessableData("Error"))))
 
         val result = TestRepaymentHistoryController.getRepaymentHistoryById(testNino, testRepaymentId)(fakeRequest)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        status(result) shouldBe UNPROCESSABLE_ENTITY
         contentAsJson(result) shouldBe Json.toJson("Error")
       }
     }
