@@ -47,16 +47,23 @@ trait ErrorResponseHttpParsers extends Logging {
           }
         )
       case UNAUTHORIZED | NOT_FOUND =>
-        httpResponse.json.validate[Seq[FailureResponse]].fold(
-          invalid => {
-            logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: $invalid")
-            Left(ErrorResponse.GenericError(httpResponse.status, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
-          },
-          expected => {
-            logger.error(s"Unauthorised or Not found error response, status: ${httpResponse.status}, response: $expected")
-            Left(ErrorResponse.GenericError(httpResponse.status, Json.toJson(expected)))
-          }
-        )
+        Try(httpResponse.json).toOption match {
+          case Some(json) =>
+            json.validate[Seq[FailureResponse]].fold(
+              invalid => {
+                logger.error(s"Unexpected response with status code: ${httpResponse.status}, response: $invalid")
+                Left(ErrorResponse.GenericError(httpResponse.status, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
+              },
+              expected => {
+                logger.error(s"Unauthorised or Not found error response, status: ${httpResponse.status}, response: $expected")
+                Left(ErrorResponse.GenericError(httpResponse.status, Json.toJson(expected)))
+
+              }
+            )
+          case None =>
+            logger.warn(s"Non-JSON error body received for ${httpResponse.status}: ${httpResponse.body}")
+            Left(ErrorResponse.GenericError(httpResponse.status, Json.obj("error" -> httpResponse.body)))
+        }
       case INTERNAL_SERVER_ERROR | SERVICE_UNAVAILABLE =>
         httpResponse.json.validate[OriginFailuresResponse].fold(
           invalid => {
