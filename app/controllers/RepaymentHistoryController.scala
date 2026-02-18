@@ -52,7 +52,12 @@ class RepaymentHistoryController @Inject()(authentication: AuthenticationPredica
       } else {
         hipRepaymentHistoryDetailsConnector.getRepaymentHistoryDetailsList(nino) map {
           case Right(repaymentHistory) => Ok(Json.toJson(repaymentHistory))
-          case Left(error) => InternalServerError(Json.stringify(error.jsonError))
+          case Left(error) =>
+            if (error.status >= 400 && error.status < 500 ){
+              Status(error.status)(Json.stringify(error.jsonError))
+            }else {
+              InternalServerError(Json.stringify(error.jsonError))
+            }
         }
       }
     }
@@ -73,7 +78,12 @@ class RepaymentHistoryController @Inject()(authentication: AuthenticationPredica
       } else {
           hipRepaymentHistoryDetailsConnector.getRepaymentHistoryDetails(nino, repaymentId).map {
             case Right(repaymentHistory) => Ok(Json.toJson(repaymentHistory))
-            case Left(error) => InternalServerError(Json.stringify(error.jsonError))
+            case Left(error) =>
+              if (error.status >= 400 && error.status < 500 ){
+                Status(error.status)(Json.stringify(error.jsonError))
+              }else {
+                InternalServerError(Json.stringify(error.jsonError))
+              }
           }
       }
     }
