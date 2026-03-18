@@ -25,7 +25,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
 
     "read from application.conf the values for calling DES APIs" which {
       "has a correct DES base url" in {
-        microserviceAppConfig.desUrl shouldBe "http://localhost:9084"
+        microserviceAppConfig.desUrl shouldBe "http://localhost:65535"
       }
 
       "has a correct HTTP headers for DES" in {
@@ -39,7 +39,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
     "read from application.conf the values for calling IF APIs" which {
 
       "has a correct IF base url" in {
-        microserviceAppConfig.ifUrl shouldBe "http://localhost:9084"
+        microserviceAppConfig.ifUrl shouldBe "http://localhost:65535"
       }
 
       "has a correct HTTP headers for IF" in {
@@ -54,7 +54,7 @@ class MicroserviceAppConfigSpec extends TestSupport {
     "read from application.conf values for calling HiP APIs" which {
 
       "has a correct HiP base url" in {
-        microserviceAppConfig.ifUrl shouldBe "http://localhost:9084"
+        microserviceAppConfig.ifUrl shouldBe "http://localhost:65535"
       }
 
       "has a correct Http Hip auth headers" in {

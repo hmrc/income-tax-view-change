@@ -55,7 +55,7 @@ class ObligationsConnectorSpec extends TestSupport with MockHttpV2{
 
       "called for open obligations" in new Setup {
         connector.getOpenObligationsUrl(testNino) shouldBe
-          s"http://localhost:9084/enterprise/obligation-data/nino/$testNino/ITSA?status=O"
+          s"http://localhost:65535/enterprise/obligation-data/nino/$testNino/ITSA?status=O"
       }
     }
   }
