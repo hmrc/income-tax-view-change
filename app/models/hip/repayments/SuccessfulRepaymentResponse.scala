@@ -39,13 +39,27 @@ object SuccessfulRepaymentResponse {
 
 case class TransactionHeader(
                               status: String,
-                              processingDate: LocalDateTime
+                              processingDate: LocalDateTime,
+                              returnParameters: Option[Seq[ReturnParameters]] = None
                             )
 
 object TransactionHeader {
   given Format[TransactionHeader] with {
     def reads(json: JsValue): JsResult[TransactionHeader] = Json.reads[TransactionHeader].reads(json)
     def writes(o: TransactionHeader): JsValue = Json.writes[TransactionHeader].writes(o)
+  }
+}
+
+case class ReturnParameters(
+                             paramName: String,
+                             paramValue: String
+                           )
+
+object ReturnParameters {
+  given Format[ReturnParameters] with {
+    def reads(json: JsValue): JsResult[ReturnParameters] = Json.reads[ReturnParameters].reads(json)
+
+    def writes(o: ReturnParameters): JsValue = Json.writes[ReturnParameters].writes(o)
   }
 }
 
