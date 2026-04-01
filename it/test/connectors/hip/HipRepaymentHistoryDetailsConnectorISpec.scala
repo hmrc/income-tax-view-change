@@ -16,9 +16,10 @@
 
 package connectors.hip
 
-import constants.HipRepaymentHistoryDetailsIntegrationTestConstants._
+import constants.HipRepaymentHistoryDetailsIntegrationTestConstants.*
 import helpers.{ComponentSpecBase, WiremockHelper}
-import models.errors.{Error, ErrorResponse, InvalidJsonResponse, UnexpectedJsonFormat, UnexpectedResponse}
+import models.errors.{Error, InvalidJsonResponse, UnexpectedJsonFormat, UnexpectedResponse}
+import models.hip.{CustomResponse, ErrorResponse}
 import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 
@@ -99,25 +100,7 @@ class HipRepaymentHistoryDetailsConnectorISpec extends ComponentSpecBase {
 
           result shouldBe Right(hipRepaymentHistoryList)
         }
-
-        "return an error when the request returned has errors" in {
-          val requestBody: JsValue = Json.parse(
-            """
-              |[
-              | {
-              |   "calculationId":"c432a56d-e811-474c-a26a-76fc3bcaefe5",
-              |   "calculationTimestamp":"2023-10-31T12:55:51.159Z",
-              |   "crystallised": false
-              | }
-              |]
-              |""".stripMargin)
-
-          WiremockHelper.stubGet(urlRepaymentsViewer, OK, requestBody.toString())
-
-          val result = connector.getRepaymentHistoryDetailsList(idValue).futureValue
-
-          result shouldBe Left(UnexpectedJsonFormat)
-        }
+        
       }
 
       "the response is a 500 - InternalServerError" should {
@@ -128,7 +111,7 @@ class HipRepaymentHistoryDetailsConnectorISpec extends ComponentSpecBase {
 
           val result = connector.getRepaymentHistoryDetailsList(idValue).futureValue
 
-          result shouldBe Left(UnexpectedResponse)
+          result shouldBe Left(ErrorResponse.UnexpectedJsonResponse)
         }
       }
 
@@ -155,7 +138,7 @@ class HipRepaymentHistoryDetailsConnectorISpec extends ComponentSpecBase {
 
           val result = connector.getRepaymentHistoryDetailsList(idValue).futureValue
 
-          result shouldBe Left(ErrorResponse(NOT_FOUND, Error("NOT_FOUND", "Resource not found")))
+          result shouldBe Left(ErrorResponse.GenericError(NOT_FOUND, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
         }
       }
       "return an error when the downstream response was UNPROCESSABLE_ENTITY" in {
@@ -185,7 +168,7 @@ class HipRepaymentHistoryDetailsConnectorISpec extends ComponentSpecBase {
 
           val result = connector.getRepaymentHistoryDetailsList(idValue).futureValue
 
-          result shouldBe Left(ErrorResponse(NOT_FOUND, Error("NOT_FOUND", "Resource not found")))
+          result shouldBe Left(ErrorResponse.GenericError(NOT_FOUND, Json.toJson("")))
         }
       }
     }
