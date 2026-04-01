@@ -19,43 +19,50 @@ package connectors.hip.httpParsers
 import connectors.hip.httpParsers.CalculationListLegacyHttpParser.handleErrorResponse
 import connectors.hip.httpParsers.errorResponses.ErrorResponseHttpParsers
 import connectors.httpParsers.RepaymentHistoryHttpParser.logger
-import models.hip.HipResponseErrorsObject
+import models.hip.{ErrorResponse, HipRepaymentResponseErrorsObject}
 import models.hip.repayments.SuccessfulRepaymentResponse
 import play.api.http.Status.*
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-object RepaymentsHistoryDetailsHttpParser extends ErrorResponseHttpParsers{
+import play.api.libs.json.{JsError, JsSuccess, Json}
+
+object RepaymentsHistoryDetailsHttpParser extends ErrorResponseHttpParsers {
 
   given RepaymentsHistoryDetailsReads: HttpReads[HttpGetResult[SuccessfulRepaymentResponse]] with {
 
-    override def read(method: String, url: String, response: HttpResponse): HttpGetResult[SuccessfulRepaymentResponse] =
+    override def read(method: String, url: String, response: HttpResponse): HttpGetResult[SuccessfulRepaymentResponse] = {
+
       response.status match {
+
         case OK =>
-          logger.info("successfulely parsed response to List[RepaymentHistory]")
+          logger.info("Successfully parsed response to List[RepaymentHistory]")
           Right(response.json.as[SuccessfulRepaymentResponse])
-        case status if status == UNPROCESSABLE_ENTITY =>
-          logger.info(s"$status returned from HiP with body: ${response.body}, checking for data not found scenario")
-          handleUnprocessableStatusResponse(response)
+
+        case UNPROCESSABLE_ENTITY =>
+          handleUnprocessableEntity(response)
+
         case status =>
-          logger.error(s"Call to RepaymentsHistory failed with status: $status and response body: ${response.body}")
+          logger.error(s"Call to RepaymentsHistory failed with status: $status, body: ${response.body}")
           handleErrorResponse(response)
       }
-  }
+    }
 
-  private def handleUnprocessableStatusResponse(unprocessableResponse: HttpResponse): SuccessfulRepaymentResponse = {
-    unprocessableResponse.json.validate[HipResponseErrorsObject] match {
-      case JsError(errors) =>
-        logger.error("Unable to parse response as Business Validation Error - " + errors)
-        logger.error(s"$unprocessableResponse.status returned from HiP with body: ${unprocessableResponse.body}")
-        Left(UnexpectedChargeResponse(unprocessableResponse.status, unprocessableResponse.body))
-      case JsSuccess(success, _) =>
-        success match {
-          case error: HipResponseErrorsObject if error.errors.code == "005" =>
-            logger.info(s"Resource not found code identified, converting to 404 response")
-            Left(UnexpectedChargeResponse(NOT_FOUND, unprocessableResponse.body))
-          case _ =>
-            logger.error(s"$unprocessableResponse.status returned from HiP with body: ${unprocessableResponse.body}")
-            Left(UnexpectedChargeResponse(unprocessableResponse.status, unprocessableResponse.body))
-        }
+    private def handleUnprocessableEntity(response: HttpResponse): HttpGetResult[SuccessfulRepaymentResponse] = {
+
+      response.json.validate[HipRepaymentResponseErrorsObject] match {
+
+        case JsError(errors) =>
+          logger.error("[RepaymentsHistoryDetailsHttpParser] - Unable to process 422 error from HIP Repayment History: " + errors)
+          handleErrorResponse(response)
+
+        case JsSuccess(errorObj, _) =>
+          if (errorObj.etmp_transaction_header.status == "NOT_OK") {
+            logger.info(s"[RepaymentsHistoryDetailsHttpParser] HIP Repayment History API could not find this customer, converting to 404 response")
+            Left(ErrorResponse.GenericError(NOT_FOUND, Json.toJson("")))
+          } else {
+            logger.error(s"[RepaymentsHistoryDetailsHttpParser] HIP Repayment History API provided 422 response with unexpected status of: ${errorObj.etmp_transaction_header.status}")
+            handleErrorResponse(response)
+          }
+      }
     }
   }
 }

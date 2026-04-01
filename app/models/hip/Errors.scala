@@ -91,3 +91,15 @@ case class HipResponseErrorsObject(errors: HipResponseError)
 object HipResponseErrorsObject {
   implicit val formats: Format[HipResponseErrorsObject] = Json.format[HipResponseErrorsObject]
 }
+
+case class HipRepaymentResponseError(status: String)
+
+object HipRepaymentResponseError {
+  implicit val formats: Format[HipRepaymentResponseError] = Json.format[HipRepaymentResponseError]
+}
+
+case class HipRepaymentResponseErrorsObject(etmp_transaction_header: HipRepaymentResponseError)
+
+object HipRepaymentResponseErrorsObject {
+  implicit val formats: Format[HipRepaymentResponseErrorsObject] = Json.format[HipRepaymentResponseErrorsObject]
+}
