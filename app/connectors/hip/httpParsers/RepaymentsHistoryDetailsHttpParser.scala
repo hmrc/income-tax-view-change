@@ -19,7 +19,7 @@ package connectors.hip.httpParsers
 import connectors.hip.httpParsers.CalculationListLegacyHttpParser.handleErrorResponse
 import connectors.hip.httpParsers.errorResponses.ErrorResponseHttpParsers
 import connectors.httpParsers.RepaymentHistoryHttpParser.logger
-import models.hip.{ErrorResponse, HipRepaymentResponseErrorsObject}
+import models.hip.{ErrorResponse, HipRepaymentResponseError, HipRepaymentResponseErrorsObject}
 import models.hip.repayments.SuccessfulRepaymentResponse
 import play.api.http.Status.*
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
@@ -55,14 +55,21 @@ object RepaymentsHistoryDetailsHttpParser extends ErrorResponseHttpParsers {
           handleErrorResponse(response)
 
         case JsSuccess(errorObj, _) =>
-          if (errorObj.etmp_transaction_header.status == "NOT_OK") {
+          if (hasError001(errorObj.etmp_transaction_header)) {
             logger.info(s"[RepaymentsHistoryDetailsHttpParser] HIP Repayment History API could not find this customer, converting to 404 response")
             Left(ErrorResponse.GenericError(NOT_FOUND, Json.toJson("")))
           } else {
-            logger.error(s"[RepaymentsHistoryDetailsHttpParser] HIP Repayment History API provided 422 response with unexpected status of: ${errorObj.etmp_transaction_header.status}")
+            logger.error(s"[RepaymentsHistoryDetailsHttpParser] HIP Repayment History API provided 422 response that wasn't a No data found.  Instead got: ${errorObj.etmp_transaction_header}")
             handleErrorResponse(response)
           }
       }
+    }
+
+    private def hasError001(hipError: HipRepaymentResponseError): Boolean = {
+      hipError.status == "NOT_OK" &&
+        hipError.returnParameters.exists { params =>
+          params.exists(p => p.paramName == "ERRORCODE" && p.paramValue == "001")
+        }
     }
   }
 }

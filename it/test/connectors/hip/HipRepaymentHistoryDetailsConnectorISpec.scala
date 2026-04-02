@@ -18,7 +18,6 @@ package connectors.hip
 
 import constants.HipRepaymentHistoryDetailsIntegrationTestConstants.*
 import helpers.{ComponentSpecBase, WiremockHelper}
-import models.errors.{Error, InvalidJsonResponse, UnexpectedJsonFormat, UnexpectedResponse}
 import models.hip.{CustomResponse, ErrorResponse}
 import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
@@ -100,7 +99,7 @@ class HipRepaymentHistoryDetailsConnectorISpec extends ComponentSpecBase {
 
           result shouldBe Right(hipRepaymentHistoryList)
         }
-        
+
       }
 
       "the response is a 500 - InternalServerError" should {
@@ -141,7 +140,7 @@ class HipRepaymentHistoryDetailsConnectorISpec extends ComponentSpecBase {
           result shouldBe Left(ErrorResponse.GenericError(NOT_FOUND, Json.toJson(CustomResponse("Unexpected Unauthorized or Not found error"))))
         }
       }
-      "return an error when the downstream response was UNPROCESSABLE_ENTITY" in {
+      "convert to a NOT_FOUND when downstream response was UNPROCESSABLE_ENTITY with a 001 Error Code" in {
 
           val json = Json.parse(
             """
@@ -170,6 +169,36 @@ class HipRepaymentHistoryDetailsConnectorISpec extends ComponentSpecBase {
 
           result shouldBe Left(ErrorResponse.GenericError(NOT_FOUND, Json.toJson("")))
         }
+
+      "return an error when downstream response was UNPROCESSABLE_ENTITY without a 001 Error Code" in {
+
+        val json = Json.parse(
+          """
+            |{
+            |  "etmp_transaction_header": {
+            |    "status": "NOT_OK",
+            |    "statusText": "No Data Found",
+            |    "processingDate": "2001-12-17T09:30:47.02Z",
+            |    "returnParameters": [
+            |      {
+            |        "paramName": "ERRORCODE",
+            |        "paramValue": "002"
+            |      },
+            |      {
+            |        "paramName": "ERRORTEXT",
+            |        "paramValue": "No Data Found "
+            |      }
+            |    ]
+            |  }
+            |}
+            |""".stripMargin)
+
+        WiremockHelper.stubGet(urlRepaymentsViewer, UNPROCESSABLE_ENTITY, json.toString())
+
+        val result = connector.getRepaymentHistoryDetailsList(idValue).futureValue
+
+        result shouldBe Left(ErrorResponse.UnprocessableData(json.toString))
+      }
       }
     }
 }
