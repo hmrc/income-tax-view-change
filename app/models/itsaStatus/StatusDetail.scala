@@ -49,7 +49,14 @@ object StatusDetail {
     "09" -> "Income Source Latency Changes",
     "10" -> "MTD ITSA Opt-Out",
     "11" -> "MTD ITSA Opt-In",
-    "12" -> "Digitally Exempt"
+    "12" -> "Digitally Exempt",
+    "13" -> "Capacitor",
+    "14" -> "Residence and remittance (SA109)",
+    "15" -> "Ministers of religion",
+    "16" -> "Lloyds underwriters",
+    "17" -> "Blind persons allowance",
+    "18" -> "Married couples allowance",
+    "19" -> "Return not considered"
   )
 
   val convertStatusKeyToStatus: Reads[String] = {
