@@ -16,6 +16,7 @@
 
 package models.hip
 
+import models.hip.repayments.ReturnParameters
 import play.api.http.Status.{BAD_GATEWAY, INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.{Format, JsValue, Json}
 
@@ -90,4 +91,18 @@ case class HipResponseErrorsObject(errors: HipResponseError)
 
 object HipResponseErrorsObject {
   implicit val formats: Format[HipResponseErrorsObject] = Json.format[HipResponseErrorsObject]
+}
+
+case class HipRepaymentResponseError(status: String,
+                                     returnParameters: Option[Seq[ReturnParameters]]
+                                    )
+
+object HipRepaymentResponseError {
+  implicit val formats: Format[HipRepaymentResponseError] = Json.format[HipRepaymentResponseError]
+}
+
+case class HipRepaymentResponseErrorsObject(etmp_transaction_header: HipRepaymentResponseError)
+
+object HipRepaymentResponseErrorsObject {
+  implicit val formats: Format[HipRepaymentResponseErrorsObject] = Json.format[HipRepaymentResponseErrorsObject]
 }
