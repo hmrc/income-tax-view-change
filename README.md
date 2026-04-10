@@ -11,7 +11,7 @@ Stub: https://github.com/hmrc/income-tax-view-change-dynamic-stub
 To run all income-view-and-change services via **service-manager-2**:
 
 ```
-sm2 --start ITVC_BACKEND_ALL -r
+sm2 --start ITVC_TEST --appendArgs '{"CITIZEN_DETAILS":["-Dmongodb.cid-sautr-cache.enabled=false"]}'
 ```
 
 
