@@ -51,6 +51,13 @@ class ObligationsController @Inject()(val authentication: AuthenticationPredicat
     )
   }
 
+  def getFulfilledObligations(nino: String): Action[AnyContent] = authentication.async { implicit request =>
+    logger.debug(s"Requesting fulfilled obligations for nino: $nino")
+    obligationsConnector.getFulfilledObligations(nino).map(response =>
+      handleObligationsResponse(response)
+    )
+  }
+
   def getAllObligations(nino: String, from: String, to: String): Action[AnyContent] = authentication.async { implicit request =>
     logger.debug("" +
       s"Requesting obligations for nino: $nino, from: $from, to: $to")

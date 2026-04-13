@@ -57,8 +57,7 @@ class GetChargeHistoryConnectorISpec extends ComponentSpecBase {
     ChargeHistorySuccessWrapper(chargeHistorySuccessModel)
 
   val toJsonModel = Json.prettyPrint(Json.toJson(chargeHistorySuccessWrapper))
-  println(toJsonModel)
-
+  
   val chargeHistorySuccessJsonReads: JsValue = Json.parse(
     """{
       |  "success" : {
