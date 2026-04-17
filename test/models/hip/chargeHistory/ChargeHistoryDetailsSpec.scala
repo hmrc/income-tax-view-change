@@ -26,10 +26,6 @@ class ChargeHistoryDetailsSpec extends AnyWordSpec with Matchers {
   "ChargeHistoryDetails" should {
     "write to JSON" in {
       val result = Json.toJson(chargeHistoryDetails)
-      println("XXXXX")
-      println("XXXXX")
-      println("XXXXX")
-      println(Json.prettyPrint(result))
       result shouldBe chargeHistoryDetailsJsonWrites
     }
 

@@ -119,4 +119,37 @@ class ObligationsControllerSpec extends TestSupport with MockMicroserviceAuthCon
     }
   }
 
+  "getFulfilledObligations" should {
+    s"return ${Status.OK} with valid report deadlines" in new Setup {
+      mockAuth()
+      when(obligationsConnector.getFulfilledObligations(matches(testNino))(any()))
+        .thenReturn(Future.successful(testObligations))
+
+      val result: Future[Result] = controller.getFulfilledObligations(testNino)(FakeRequest())
+
+      status(result) shouldBe Status.OK
+      contentType(result) shouldBe Some("application/json")
+      contentAsJson(result) shouldBe Json.toJson(testObligations)
+    }
+
+    "return the status of the error model when the connector returns one" in new Setup {
+      mockAuth()
+      when(obligationsConnector.getFulfilledObligations(matches(testNino))(any()))
+        .thenReturn(Future.successful(testReportDeadlinesError))
+
+      val result: Future[Result] = controller.getFulfilledObligations(testNino)(FakeRequest())
+
+      status(result) shouldBe testReportDeadlinesError.status
+      contentType(result) shouldBe Some("application/json")
+      contentAsJson(result) shouldBe Json.toJson(testReportDeadlinesError)
+    }
+
+    s"return ${Status.UNAUTHORIZED} when called by an unauthorised user" in new Setup {
+      mockAuth(Future.failed(new MissingBearerToken))
+      val result: Future[Result] = controller.getFulfilledObligations(testNino)(FakeRequest())
+
+      status(result) shouldBe Status.UNAUTHORIZED
+    }
+  }
+
 }
