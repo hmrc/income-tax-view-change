@@ -56,6 +56,7 @@ case class ChargesHipResponse(
         )
 
         Payment(
+          taxYear = document.taxYear,
           reference = subItem.flatMap(_.paymentReference),
           amount = document.originalAmount,
           outstandingAmount = document.outstandingAmount,

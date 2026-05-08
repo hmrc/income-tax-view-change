@@ -20,7 +20,8 @@ import play.api.libs.json._
 
 import java.time.LocalDate
 
-case class Payment(reference: Option[String],
+case class Payment(taxYear: Int,
+                   reference: Option[String],
                    amount: BigDecimal,
                    outstandingAmount: BigDecimal,
                    documentDescription: Option[String],

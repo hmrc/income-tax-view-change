@@ -31,6 +31,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
 
   val paymentJson: JsArray = Json.arr(
     Json.obj(
+      "taxYear" -> 2018,
       "reference" -> "paymentReference",
       "amount" -> 300,
       "outstandingAmount" -> 0,
@@ -47,6 +48,7 @@ class FinancialDetailPaymentsControllerSpec extends ControllerBaseSpec with Mock
 
   val paymentJsonCredit: JsArray = Json.arr(
     Json.obj(
+      "taxYear" -> 2018,
       "reference" -> "paymentReference",
       "amount" -> -1000,
       "outstandingAmount" -> 0,
