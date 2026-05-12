@@ -105,8 +105,16 @@ class ChargeHipHttpParserSpec extends TestSupport {
 
         actualResponse shouldBe expectedResponse
       }
-      "a non 200 or 4xx status is returned" in {
+      "a non 200 or 4xx status is returned which is a 500" in {
         val httpResponse: HttpResponse = HttpResponse(INTERNAL_SERVER_ERROR, body = "{}")
+
+        val expectedResult: ChargeHipResponse = Left(UnexpectedChargeErrorResponse)
+        val actualResult: ChargeHipResponse = ChargeHipReads.read("", "", httpResponse)
+
+        actualResult shouldBe expectedResult
+      }
+      "a non 200 or 4xx status is returned which is a 502" in {
+        val httpResponse: HttpResponse = HttpResponse(BAD_GATEWAY, body = "{}")
 
         val expectedResult: ChargeHipResponse = Left(UnexpectedChargeErrorResponse)
         val actualResult: ChargeHipResponse = ChargeHipReads.read("", "", httpResponse)

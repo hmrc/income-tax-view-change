@@ -20,7 +20,7 @@ import connectors.hip.httpParsers.errorResponses.ErrorResponseHttpParsers
 import connectors.httpParsers.ChargeHttpParser.{ChargeResponseError, UnexpectedChargeErrorResponse, UnexpectedChargeResponse}
 import models.financialDetails.hip.model.ChargesHipResponse
 import models.hip.HipResponseErrorsObject
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY, NOT_FOUND}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NETWORK_AUTHENTICATION_REQUIRED, NOT_FOUND, UNPROCESSABLE_ENTITY}
 
 object ChargeHipHttpParser extends ErrorResponseHttpParsers {
 
@@ -49,6 +49,9 @@ object ChargeHipHttpParser extends ErrorResponseHttpParsers {
         case status if status >= BAD_REQUEST && status < INTERNAL_SERVER_ERROR =>
           logger.error(s"$status returned from HiP with body: ${response.body}")
           Left(UnexpectedChargeResponse(status, response.body))
+        case status if status >= INTERNAL_SERVER_ERROR && status <= NETWORK_AUTHENTICATION_REQUIRED =>
+          logger.warn(s"$status returned from HiP with body: ${response.body}")
+          Left(UnexpectedChargeErrorResponse)
         case status =>
           logger.info(s"Unexpected Response from Hip with status: $status")
           Left(UnexpectedChargeErrorResponse)
