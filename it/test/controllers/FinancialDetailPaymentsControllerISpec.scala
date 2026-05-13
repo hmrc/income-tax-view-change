@@ -33,6 +33,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
   val to: String = "to"
 
   val payments1: Payment = Payment(
+    taxYear = 2018,
     reference = Some("paymentReference"),
     amount = BigDecimal("-1000.00"),
     outstandingAmount = BigDecimal("100"),
@@ -48,6 +49,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
   )
 
   val payments2: Payment = Payment(
+    taxYear = 2018,
     reference = Some("paymentReference2"),
     amount = BigDecimal("-1000.00"),
     outstandingAmount = BigDecimal("100"),
@@ -93,7 +95,7 @@ class FinancialDetailPaymentsControllerISpec extends ComponentSpecBase {
         "effectiveDateOfPayment" -> LocalDate.parse("2018-03-29")
       ),
       Json.obj(
-        "taxYear" -> "2019",
+        "taxYear" -> "2018",
         "documentID" -> "id2",
         "documentDescription" -> "documentDescription2",
         "documentText" -> "documentText2",

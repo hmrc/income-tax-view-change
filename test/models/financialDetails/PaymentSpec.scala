@@ -27,6 +27,7 @@ class PaymentSpec extends AnyWordSpec with Matchers {
 
     "serialize to JSON correctly" in {
       val payment = Payment(
+        taxYear = 2025,
         reference = Some("REF12345"),
         amount = BigDecimal(500.50),
         outstandingAmount = BigDecimal(200.25),
@@ -44,6 +45,7 @@ class PaymentSpec extends AnyWordSpec with Matchers {
       val json = Json.toJson(payment)
 
       val expectedJson = Json.obj(
+        "taxYear" -> 2025,
         "reference" -> "REF12345",
         "amount" -> 500.50,
         "outstandingAmount" -> 200.25,
@@ -63,6 +65,7 @@ class PaymentSpec extends AnyWordSpec with Matchers {
 
     "deserialize from JSON correctly" in {
       val json = Json.obj(
+        "taxYear" -> 2025,
         "reference" -> "REF12345",
         "amount" -> 500.50,
         "outstandingAmount" -> 200.25,
@@ -80,6 +83,7 @@ class PaymentSpec extends AnyWordSpec with Matchers {
       val result = json.as[Payment]
 
       result shouldBe Payment(
+        taxYear = 2025,
         reference = Some("REF12345"),
         amount = BigDecimal(500.50),
         outstandingAmount = BigDecimal(200.25),
@@ -97,6 +101,7 @@ class PaymentSpec extends AnyWordSpec with Matchers {
 
     "handle optional fields correctly when None" in {
       val payment = Payment(
+        taxYear = 2025,
         reference = None,
         amount = BigDecimal(100.00),
         outstandingAmount = BigDecimal(0.00),
