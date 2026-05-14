@@ -3,7 +3,7 @@
 This is the protected backend for the Quarterly Reporting Service (MTD ITSA). 
 
 Frontend: https://github.com/hmrc/income-tax-view-change-frontend
-Stub: https://github.com/hmrc/income-tax-view-change-dynamic-stub
+Stub: https://github.com/hmrc/income-tax-vc-fs-and-stub
 
 ### Run the application
 
